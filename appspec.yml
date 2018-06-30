@@ -20,12 +20,13 @@ os: linux
 files:
   - source: /
     destination: /var/www/html
+    overwrite: true
 
 # (Optional) In the Hooks section, specify a validation Lambda function to run during 
 # a lifecycle event. Replace "LifeCycleEvent" with BeforeAllowTraffic
 # or AfterAllowTraffic. 
-Hooks:
-    BeforeInstall:
-    - location: scripts/remove_files.sh
-      timeout: 300
-      runas: root
+# Hooks:
+#     BeforeInstall:
+#     - location: scripts/remove_files.sh
+#       timeout: 300
+#       runas: root
