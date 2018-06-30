@@ -1,0 +1,17 @@
+.category-image > img,
+.category-products .products-list img {
+	max-height: 338px;
+	object-fit: cover;
+	width: 100%;
+}
+.csmarketplace-vendors-grid .product-image.vendor-logo-image > img, 
+.sidebar-additional .block-poll .block-content > img{
+	height: 180px !important;
+	object-fit: cover;
+	width: 200px;
+}
+.products-grid.products-grid--max-5-col.csmarketplace-vendors-grid li {
+	margin-bottom: 15px !important;
+	margin-top: 15px !important;
+	text-align: center;
+}

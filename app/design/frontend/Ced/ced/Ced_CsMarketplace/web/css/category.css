@@ -1,0 +1,176 @@
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+ .tree-node {
+  font-size: 12px;
+  font-weight: normal;
+  list-style-type: none;
+  clear: left;
+}
+.tree-icon, .tree-ec-icon, .tree-elbow-line, .tree-elbow, .tree-elbow-end, .tree-elbow-plus, .tree-elbow-minus, .tree-elbow-end-plus, .tree-elbow-end-minus {
+  background-repeat: no-repeat;
+  border: 0 none;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+  width: 16px;
+  float: left;
+}
+.tree-node-collapsed .tree-node-icon, .tree-node-expanded .tree-node-icon, .tree-node-leaf .tree-node-icon, .tree-node-loading .tree-node-icon {
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 0 none;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+  width: 16px;
+  float: left;
+}
+.tree-node-collapsed .tree-node-icon {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/folder.gif") no-repeat scroll 0 50%;
+}
+.tree-node-expanded .tree-node-icon {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/folder-open.gif") no-repeat scroll 0 50%;
+}
+.tree-node-leaf .tree-node-icon {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/leaf.gif") no-repeat scroll 0 50%;
+}
+.tree-noicon .tree-node-icon {
+  height: 0;
+  width: 0;
+}
+.tree-node-loading .tree-node-icon {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/loading.gif") repeat scroll 0 0 !important;
+}
+.tree-node-loading a span {
+  color: #444444;
+  font-style: italic;
+}
+.tree-node .tree-selected a span {
+  background: #f5d6c7 none repeat scroll 0 0;
+  color: #000;
+}
+.root-category-wrapper .tree-elbow {
+  background: transparent none repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-plus {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/elbow-plus.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-minus {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/elbow-minus.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-end {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/elbow-end.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-end-plus {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/elbow-end-plus.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-end-minus {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/elbow-end-minus.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-line {
+  background: transparent url("../images/vproducts/js/extjs/resources/images/magento/tree/elbow-line.gif") no-repeat scroll 0 0;
+}
+/*.root-category-wrapper .tree-elbow-line {
+    background: transparent none repeat scroll 0 0;
+    }*/
+    .tree-elbow-plus, .tree-elbow-minus, .tree-elbow-end-plus, .tree-elbow-end-minus {
+      cursor: pointer;
+    }
+    .ext-ie ul.x-tree-node-ct {
+      font-size: 0;
+      line-height: 0;
+    }
+    .tree-node {
+      color: black;
+      white-space: nowrap;
+    }
+    .tree-node{
+      margin-bottom: 1px !important;
+    }
+    .root-category-wrapper{
+      margin-top: -5px !important;
+      margin-left: 16px !important;
+    }
+    #tree-div{
+      margin-top: 17px;
+    }
+/*.rtl-is-active .tree-ec-icon{
+    float: right;
+    }*/
+
+    /*vendor shop*/
+    .sidebar-additional .block-poll .block-content li {
+      word-break: break-all;
+    }
+    .products.products-grid .products .product-item {
+      border: 0 none !important;
+    }
+    .products.products-grid .products .product-item .product-item-info{
+      width: 100%!important;
+      text-align: center;
+    }
+    .sidebar-additional .block-poll .block-content > img {
+      width: 100%;
+    }
+    .category-products .products-list {
+      padding-left: 0 !important;
+    }
+    @media screen and (max-width:767px){
+      .products.wrapper.products-grid .product-items .item{
+        margin-bottom: 20px;
+        margin-left: 0px;
+        padding: 15px;
+        width: 50%;
+      }
+      .column.main .products-grid .product-items {
+        margin-left: 0;
+      }
+    }
+    @media screen and (max-width:640px){
+      .products-grid .product-item-info:hover .product-item-inner, 
+      .products-grid .product-item-info:hover .product-item-actions,
+      .products-grid .product-item-info.active .product-item-inner{
+        display: block;
+      }
+      .products.wrapper.grid.products-grid .product-item-info:hover, 
+      .products.wrapper.grid.products-grid .product-item-info.active {
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #bbb;
+        box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.3);
+        margin: -10px;
+        padding: 9px;
+        position: relative;
+        z-index: 2;
+      }
+      .product-item-inner .product-item-actions .actions-primary {
+        display: table-cell;
+      }
+    }
+    @media screen and (max-width:640px) and (min-width: 360px){
+      .product-item-inner .product-item-actions .actions-primary + .actions-secondary {
+        display: table-cell;
+        padding-left: 10px;
+        vertical-align: middle;
+        width: 50%;
+      }
+    }
+    @media screen and (max-width:359px){
+      .products.products-grid .products .product-item .product-item-info {
+        text-align: left!important;
+      }

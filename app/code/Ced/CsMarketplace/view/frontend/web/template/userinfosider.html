@@ -1,0 +1,19 @@
+<div class="mobile-user-left">
+	<div class="vendor_profile_name" data-bind="text:customData.vendor().name"></div>
+	<div class="vendor_status_info">
+		
+		<i data-bind="attr:{'class':customData.vendor().status_itag}" ></i> <span data-bind="text:customData.vendor().status"></span>
+	</div>
+	<div class="vendor-mobile-logout">
+		
+	
+	<div class="links"><a data-bind="attr:{'href':customData.vendor().profile_url}"><i class="fa fa-user fa-fw"></i>User Profile</a>
+	</div>
+	<div class="links"><a data-bind="attr:{'href':customData.vendor().settings_url}"><i class="fa fa-gear fa-fw"></i>Settings</a>
+	</div>
+	
+	<div class="links"><a data-bind="attr:{'href':customData.vendor().logout_url}"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
+	</div>
+	</div>
+</ul>
+	

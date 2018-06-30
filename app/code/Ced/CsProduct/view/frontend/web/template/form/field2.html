@@ -1,0 +1,55 @@
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<div class="admin__field"
+     visible="visible"
+     css="$data.additionalClasses"
+     attr="'data-index': index">
+    <label class="admin__field-label" if="$data.label" visible="$data.labelVisible" attr="for: uid">
+        <span text="label" attr="'data-config-scope': $data.scopeLabel"/>
+    </label>
+    <div class="admin__field-control"
+         css="'_with-tooltip': $data.tooltip, '_with-reset': $data.showFallbackReset && $data.isDifferedFromDefault">
+        <render args="elementTmpl" ifnot="hasAddons()"/>
+
+        <div class="admin__control-addon" if="hasAddons()">
+            <render args="elementTmpl"/>
+
+            <label class="admin__addon-prefix" if="$data.addbefore" attr="for: uid">
+                <span text="addbefore"/>
+            </label>
+            <label class="admin__addon-suffix" if="$data.addafter" attr="for: uid">
+                <span text="addafter"/>
+            </label>
+        </div>
+
+        <render args="tooltipTpl" if="$data.tooltip"/>
+
+        <render args="fallbackResetTpl" if="$data.showFallbackReset && $data.isDifferedFromDefault"/>
+
+        <label class="admin__field-error" if="error" attr="for: uid" text="error"/>
+
+        <div class="admin__field-note" if="$data.notice" attr="id: noticeId">
+            <span text="notice"/>
+        </div>
+        
+        <div class="admin__additional-info" if="$data.additionalInfo" html="$data.additionalInfo"></div>
+
+        <render args="$data.service.template" if="$data.hasService()"/>
+    </div>
+</div>

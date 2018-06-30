@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<div class="vendor-login-wrapper">
+    <div class="login-panel panel panel-default">
+		<div class="panel-heading" style="text-align: center;font-weight:bold;">
+			<h3 style="font-size:20px;" class="panel-title vendor-login-tab active" id="vendor-login-tab"><?php echo __('Vendor Login') ?></h3>
+			<h3 class="vendor-sign-up-tab" id="vendor-sign-up-tab"><?php echo __("Sign Up")?></h3>
+			<div style="clear:both;"></div>
+		</div>
+		<div class="panel-body login-form-body-wrap" id="login-form-body">
+			<form class="form form-login"
+              action="<?php echo $block->getPostActionUrl() ?>"
+              method="post"
+              id="login-form"
+              data-mage-init='{"validation":{}}'>
+				<?php echo $block->getBlockHtml('formkey'); ?>
+				
+				<fieldset>
+					<div class="col2-set">
+						<div class="col-2 registered-users">
+							<div class="content">
+								<p><?php echo __('If you have a vendor account with us, please log in.') ?></p>
+								<div class="form-group input-box">
+									<input type="email" name="login[username]" value="<?php echo $block->escapeHtml($block->getUsername()) ?>" id="email" class="form-control input-text required-entry validate-email" placeholder="<?php echo __('Email Address') ?>" title="<?php echo __('Email Address') ?>" data-validate="{required:true, 'validate-email':true}" autofocus/>
+								</div>
+							
+								<div class="form-group input-box"><input type="password" name="login[password]" class="form-control input-text required-entry validate-password" placeholder="<?php echo __('Password') ?>" id="pass" title="<?php echo __('Password') ?>" data-validate="{required:true, 'validate-password':true}" />
+								</div>
+							
+								<div class="checkbox">
+									<label>
+										<input name="remember" type="checkbox" value="<?php echo __('Remember Me'); ?>"><?php echo __('Remember Me'); ?>
+									</label>
+								</div> 
+								<button type="submit" class="button" title="<?php echo __('Login') ?>" name="send" id="send2"><span><span><?php echo __('Login') ?></span></span></button>
+							</div>
+						</div>
+					</div>
+					<div class="col2-set forgot-your-password">
+						<div class="col-1 new-users">
+							<div class="buttons-set">
+								<a href="<?php echo $block->getForgotPasswordUrl(); ?>" class="f-left"><?php echo __('Forgot Your Password?') ?></a>
+							</div>
+						</div>						
+					</div>
+				</fieldset>
+			</form>
+			<?php echo $block->getChildHtml('ced_vendorsociallogin_login');?>
+		</div>
+		
+		<div class="panel-body sign-up-form-body-wrap" id="sign-up-form-body">
+			<?php echo $block->getChildHtml() ?>
+		</div>
+	</div>
+</div>
+<script>
+<?php $minicart = [
+            'shoppingCartUrl' => '',
+            'checkoutUrl' => '',
+            'updateItemQtyUrl' => '',
+            'removeItemUrl' => '',
+            'imageTemplate' => '',
+            'baseUrl' => ''
+        ]; ?>
+window.checkout = <?php echo \Zend_Json::encode($minicart); ?>;
+
+require([
+		'jquery',
+		'mage/mage',
+		'checkoutbalance',
+		'captcha'
+	], function($){
+		$(document).ready(function(){
+			$("#vendor-login-tab").click(function(){
+				$("#login-form-body").fadeIn(1000);
+				jQuery("#vendor-login-tab").addClass('active');
+				$("#vendor-sign-up-tab").removeClass('active');
+				$("#sign-up-form-body").fadeOut(1);
+
+			});
+			$("#vendor-sign-up-tab").click(function(){
+				$("#sign-up-form-body").fadeIn(1000);
+				$("#vendor-sign-up-tab").addClass('active');
+				$("#vendor-login-tab").removeClass('active');
+				$("#login-form-body").fadeOut(1);
+
+			});
+		});
+
+	});
+</script>

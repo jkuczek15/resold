@@ -1,0 +1,114 @@
+<?php 
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+	$isFirst = !count($block->getObjectManager()->get('Ced\CsMarketplace\Model\Vproducts')->getVendorProducts('',$block->getVendor()->getId()));
+	$vendor = $block->getVendor();
+	$helper = $block->getObjectManager()->get('Ced\CsMarketplace\Helper\Tool\Image');
+?>
+<!-- /.navbar-header -->
+
+<ul class="nav navbar-top-links navbar-right in" id="cedheaderitems" data-bind="scope:'cedheaderitems'">
+<?php 
+	try{
+?>
+	<?php echo $block->getChildHtml('sidebar'); ?>
+
+	<!-- ko template: getTemplate() -->
+	<li class="dropdown" databind="if : customData.contentLoading(),blockLoader: customData.contentLoading()"></li>
+	<!-- /ko -->
+	
+    <script type="text/x-magento-init">
+    {
+        "#cedheaderitems": {
+            "Magento_Ui/js/core/app": {
+               "components": {
+                    "cedheaderitems": {
+                        "component": "Ced_CsMarketplace/js/view/header",
+                        "template" : "Ced_CsMarketplace/headeritems",
+                        "url" : "<?= $this->getUrl('csmarketplace/vendor/navigation') ?>",
+                        "viewall" : "<?= $this->getUrl('csmarketplace/vendor/notifications') ?>"
+                    }
+                }
+            }
+        }
+    }
+    </script>
+	<!-- /.dropdown -->
+	
+	
+	<!-- /.dropdown -->
+</ul>
+<style>
+.navbar-top-links > li > a > span.label{
+    font-size: 9px !important;
+    line-height: 0.9;
+    padding: 2px 3px;
+    position: absolute;
+    right: 22px;
+    text-align: center;
+    top: 10px;
+}
+</style>
+
+<script type="text/javascript">
+
+
+	var childLis = document.getElementsByClassName("dropdown-tasks");
+	if(childLis && childLis[0] && childLis[0].childNodes && childLis.length > 0) {
+		childLis = childLis[0].childNodes;
+		var lisCnt = 0;
+		for(var i=0; i<childLis.length ; i++){
+			if(childLis[i].innerHTML != undefined && childLis[i].innerHTML != ''){
+				lisCnt++;
+			}
+		}
+		if(lisCnt > 0){
+			var labelElement = document.getElementById('dropdown-tasks-label');
+			if(labelElement){
+				labelElement.innerHTML = lisCnt;
+			}
+		}
+	}
+
+	var childLis = document.getElementsByClassName("dropdown-alerts");
+	if(childLis && childLis[0] && childLis[0].childNodes && childLis.length > 0) {
+		childLis = childLis[0].childNodes;
+		var lisCnt = 0;
+		for(var i=0; i<childLis.length ; i++){
+			if(childLis[i].innerHTML != undefined && childLis[i].innerHTML != ''){
+				lisCnt++;
+			}
+		}
+		if(lisCnt > 0){
+			var labelElement = document.getElementById('dropdown-alerts-label');
+			if(labelElement){
+				labelElement.innerHTML = lisCnt;
+			}
+		}
+	}
+	
+</script>
+<?php
+	} catch(Exception $e) {
+		echo $e->getMessage();die;
+	}
+?>
+
+

@@ -1,0 +1,55 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$helper = $this->helper('Ced\CsMarketplace\Helper\Tool\Image');
+$logo = $helper->getStoreConfig("ced_loginsignup/header/logo", $this->getCurrentStoreId()) ? "ced/csmarketplace/".$helper->getStoreConfig("ced_loginsignup/header/logo",$this->getCurrentStoreId()) : '';
+$logoImage = $helper->getResizeImage($logo, 'logo', 190, 45);
+?>
+<div class="ced_vendor_before_login_wrapper">
+	<div class="ced_vendor_before_wrap clearfix">
+		<div class="ced_vendor_login">
+			<div class="left-logo-sec">
+				<div class="left-logo-table">
+					<div class="left-logo-table-cell">
+						<?php if($logo): ?>
+							<a href="<?php echo $this->getBaseUrl(); ?>" target="_blank">
+								<img src="<?php echo $logoImage; ?>" alt="vendor panel logo">
+							</a>
+						<?php else: ?>
+							<img src="<?php echo $block->getViewFileUrl('images/demo.png'); ?>" alt="vendor panel logo">
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+			<div class="right">
+				<h3 class="ced_vendor_from_title">
+					<?php echo __('You are now logged out') ?>
+				</h3>
+				<div class="panel_body login_form_body">
+					<?php echo __('You have logged out and will be redirected to login page in 5 seconds.') ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+require(["jquery", "mage/mage"], function($) {
+   	$($.mage.redirect("<?php /* @escapeNotVerified */ echo $block->getUrl() ?>", "assign", 5000));
+});
+</script>

@@ -1,0 +1,180 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$image = $block->getObjectManager()->create('Ced\CsMarketplace\Helper\Tool\Image');
+if($block->getVendorId()) {  ?>
+<div class="vendor-dashboadrd">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="hello"><strong><?php  echo __('Hello,'); echo ' '; echo __($block->escapeHtml($block->getVendor()->getName())); ?>!</strong></p>
+			<p><?php echo __('From your Dashboard you have the ability to view a snapshot of your total orders , total sales , total sales country wise, sales statistics (week, month or year wise) and recent activity on your associated products.') ?></p>
+		</div>
+	</div>
+	<div class="row">
+		<?php  echo $block->getChildHtml('info') ?>
+	</div>
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rtl-active">
+			<?php  echo $block->getChildHtml('chart') ?>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 rtl-active">
+			<?php  echo $block->getChildHtml('products') ?>
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 rtl-active">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-calendar fa-fw"></i> 
+					<?php echo __('Calender')?>
+				</div>
+				<div class="panel-body" id ="vendor-calender" style="height: 265px">
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 rtl-active">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-envelope fa-fw"></i> 
+					<?php echo __('Top Selling Products')?>
+				</div>
+				<div class="panel-body" style="height: 265px">
+					<?php echo $this->getChildHtml('mostsoldproducts');?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="x_panel_tab">
+				<div class="card tabs-card">
+					<div class="card-block p-0">
+						<ul class="nav nav-tabs md-tabs" role="tablist">
+							<li class="nav-item active">
+								<a aria-expanded="false" class="nav-link" data-toggle="tab" href="#home3" role="tab">
+									<i class="icon-basket-loaded icons"></i>
+									<?php echo __('Latest order')?>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a aria-expanded="false" class="nav-link" data-toggle="tab" href="#profile3" role="tab">
+									<i class="icon-docs"></i>
+									<?php echo __('Latest product')?>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a aria-expanded="false" class="nav-link" data-toggle="tab" href="#messages3" role="tab">
+									<i class="icon-film icons"></i>
+									<?php echo __('Transaction')?>
+								</a>
+							</li>
+						</ul>
+						<div class="tab-content card-block">
+							<div aria-expanded="true" class="tab-pane active" id="home3" role="tabpanel">
+								<div class="table-responsive">
+									<?php echo $this->getChildHtml('extrainfo') ?>
+								</div>
+							</div>
+							<div aria-expanded="false" class="tab-pane" id="profile3" role="tabpanel">
+								<div class="table-responsive">
+									<?php echo $this->getChildHtml('productlist') ?>
+								</div>
+							</div>
+							<div aria-expanded="false" class="tab-pane" id="messages3" role="tabpanel">
+								<div class="table-responsive">
+									<?php echo $this->getChildHtml('paymentlist') ?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+			<?php  echo $block->getChildHtml('map') ?>
+		</div>
+		<?php if(1 || !$block->getObjectManager()->isEnabled('Ced_CsVendorChat')){ ?>
+		<?php }else{ ?>
+		<div class="col-lg-8">
+			<?php echo $this->getChildHtml('extrainfo') ?>
+		</div>
+		<div class="col-lg-4">
+			<?php echo $this->getChildHtml('chat') ?>
+		</div>
+		<?php } ?>
+	</div>
+	<div class="row ced-profile-detail">
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 rtl-active">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="icon-user icons fa-fw fa"></i> 
+					<?php echo __('Profile view')?>
+				</div>
+				<div class="panel-body">
+					<div class="card-block">
+						<div class="user-display profile-view">
+							<div class="user_display_wrapper">
+								<div class="user-display-bottom">
+									<a href="<?php echo $image->getResizeImage($block->getVendor()->getProfilePicture(),'logo', 107, 107); ?>" target="_blank">
+										<img src="<?php echo $image->getResizeImage($block->getVendor()->getProfilePicture(),'logo', 107, 107); ?>">
+									</a>
+								</div>
+								<div class="user_display_info">
+									<a href="">
+										<div class="name"><?php echo __('Hello') ?>,<?php echo ' '.$block->getVendor()->getName() ?>!</div>
+										<div class="nick"><span class="mdi mdi-account"></span><?php echo __('Approved Vendor!') ?></div>
+									</a>
+									<div class="vendor_edit">
+										<a href="<?php echo $this->getUrl('csmarketplace/vendor/profile',array('_secure'=>true)); ?>"><?php echo __("Edit")?></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 rtl-active">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="icon-bell icons fa-fw fa"></i> 
+					<?php echo __('Notification')?>
+				</div>
+				<div class="panel-body">
+					<div class="card-block">
+						<?php echo $this->getChildHtml('notificationlist') ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php } ?>
+<script>
+	require([
+		"jquery",
+		"mage/calendar"
+		], function($){
+			$("#vendor-calender").calendar({
+				buttonText:"<?php  ?>",
+			});
+		});
+</script>

@@ -1,0 +1,138 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * You can check the licence at this URL: http://cedcommerce.com/license-agreement.txt
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+?>
+<?php
+$_product=$block->getRegistry()->registry('current_product');?>
+<div class="form-group col-md-12">
+							<label><?php echo __('Product Images') ?>:</label>
+							<div class="input-box" >
+								<div class="image_set">
+							<?php 
+							$productGalleryImages=array();
+							$productGalleryImages =$_product->getMediaGalleryImages();
+							$productImage = $_product->getImage();
+							 if($_product && $_product->getId()) {  ?>
+								<?php $i=0;
+								  foreach($productGalleryImages as $_image) {
+								  $check=($productImage==$_image->getFile())?"checked='checked'":'';
+								  $i++; 
+
+								  $imageUrl = $this->helper('Magento\Catalog\Helper\Image')
+								            ->init($_product, 'category_page_grid')
+								            ->setImageFile($_image->getFile())
+								            ->getUrl();
+								  ?>
+								  <div class="setimage">
+								 <a def="<?php echo $_image->getFile(); ?>" onclick="imagePreview('<?php echo $_image->getFile(); ?>'); return false;" href="<?php  echo $imageUrl; ?>">
+									  <img style="float:left" id="<?php echo $_image->getFile(); ?>" pid="<?php echo $_product->getId(); ?>" src="<?php echo  $imageUrl; ?>" width="50" height="50" alt="<?php echo $this->escapeHtml($_image->getLabel());?>" title="<?php $this->escapeHtml($_image->getLabel()); ?>" >
+									  </a>
+									  <input  style="float:left;margin: 18px 0 11px 11px"  onClick="defaultSavedValue(this)" type="radio" name="defaultimage" <?php echo  $check ?>  class='defaultimage' value='<?php if($check!=='')echo $productImage; ?>'>
+									  <span style="float:left;margin: 13px 11px 11px 0"><?php echo __("Default Image"); ?></span>
+									  <a style="float:left;margin:13px 11px 11px 0" href="javascript:;" onclick="removeSavedImage(this,'<?php echo $_image->getFile();?>','<?php echo $_product->getId()?>')"><?php echo __('Remove') ?></a>
+								  </div>
+								  <div style="clear:both"></div>
+							   <?php  } 
+							   } ?>
+							    <input type="file" style="float:left" name="images[0]" class="dumimg imagetype" accept="image/*" size="33" />
+								<input type="radio" style="float:left" value="" class="defaultimage" onClick="setdefaultImage(this);" name="defaultimage"><span><?php echo __("Default Image"); ?></span>
+								<div style="clear:both"></div>
+							</div>
+							
+								<div id="addimagefields"></div>
+								<a class="add_btn button btn btn-info btn-circle" title="<?php echo __('Add')." ".__('More') ?>" href="#" onclick="addMoreImages(); return false;" style="width: 75px; height: 29px;margin-top:5px;">
+											            		<i class="fa  fa-plus"></i></a>
+								
+							</div>
+							
+			</div>
+<script type="text/javascript">
+
+
+function addMoreImages(){
+	
+	var childElemId = "childDiv"+i;
+	jQuery("#addimagefields").append("<div id='"+childElemId+"'><input type='file' style='float:left' name='images["+i+"]' accept='image/\*' class='imagetype'/><input style='float:left' type='radio'  onClick='setdefaultImage(this)'  value=''  class='defaultimage' name='defaultimage'><span>Default image</span>&nbsp;&nbsp;<a href=\"javascript:;\" onclick=\"removeImageRow('childDiv"+i+"')\" class='add_btn button btn btn-danger btn-circle' title='<?php echo __('Remove') ?>' style='height: 28px;width: 47px;'><i class='fa  fa-times'></i></a><div style='clear:both'></div><style>#childDiv"+i+"{padding-top:5px;}<style></div>");
+	i++;
+}
+function removeImageRow(elem){
+	jQuery('#'+elem).remove();
+	i--;
+}
+function setdefaultImage(elem){
+	var imgname = jQuery(elem).prev('input').attr('name');
+	jQuery('.defaultimage').each(function(){
+		jQuery(this).val(null);
+	});
+	jQuery(elem).val(imgname);
+}
+
+function defaultSavedValue(object){
+	var imgname = jQuery(object).prev('a').attr('def');
+	jQuery('.defaultimage').each(function(){
+		jQuery(this).val(null);
+	});
+	jQuery(object).val(imgname);
+}
+
+function removeSavedImage(object,imagename,productid){
+	var dicisionapp=confirm("<?php echo __('Are you sure?') ?>");
+	if(dicisionapp==true){
+ 	   jQuery('#activity-loading').show();
+		jQuery.ajax({
+			url: "<?php echo $this->getUrl('csmarketplace/vproducts/deleteImage',array('_nosid'=>true));?>",
+			type: "POST",
+			data: {imagename:imagename,productid:productid,storeid:'<?php echo $_product->getStoreId()?>'},
+			dataType: 'html',
+			success:function(content){
+				if(content==1){
+					jQuery(object).parent('div').remove();
+					alert("<?php echo __('Image Successfully Deleted') ?>");
+				}
+				else
+					alert("<?php echo __('Error processing the request please Try Again') ?>");
+				jQuery('#activity-loading').hide();
+			}
+		});
+	}		
+}
+
+
+
+require([
+    'jquery',
+    'mage/mage'
+], function($) {
+
+    $("#form-validate").on('change', '.imagetype',function() {
+
+        var ext = $(this).val().split('.').pop().toLowerCase();
+        if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+            $(this).val('');
+            alert("<?php echo __('Invalid Image! Please  upload image of type gif, png, jpg, jpeg') ?>");
+        } else {
+
+            $(this).after($("<input type='hidden' name='real_img_val[" + $(this).attr('name').substring(7, 8) + "]' value='" + $(this).val() + "'/>"));
+        }
+
+    });
+
+});
+
+</script>

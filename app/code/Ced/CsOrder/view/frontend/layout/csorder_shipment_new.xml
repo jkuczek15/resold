@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" >
+    <update handle="csmarketplace_vendor"/>
+    <head>
+       <!--  <link src="Magento_Sales::js/bootstrap/order-create-index.js"/>
+        <link src="Magento_Sales::js/bootstrap/order-post-action.js"/> -->
+    </head>
+    <body>
+       <referenceBlock name="head.components">
+            <block class="Magento\Framework\View\Element\Js\Components" name="sales_page_head_components" template="Magento_Sales::page/js/components.phtml"/>
+        </referenceBlock>
+        
+        <referenceContainer name="vendor.dashboard.wrapper">
+            <block class="Ced\CsOrder\Block\Order\Shipment\Create" name="sales_shipment_create">
+                <block class="Ced\CsOrder\Block\Order\Shipment\Create\Form" name="form" template="order/shipment/create/form.phtml">
+                    <block class="Ced\CsOrder\Block\Order\View\Info" name="order_info" template="order/view/info.phtml"/>
+                    <block class="Magento\Sales\Block\Adminhtml\Order\Payment" name="order_payment"/>
+                    <block class="Ced\CsOrder\Block\Order\Shipment\Create\Items" name="order_items" template="order/shipment/create/items.phtml">
+                        <block class="Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer" as="default" template="Magento_Shipping::create/items/renderer/default.phtml"/>
+                        <block class="Magento\Sales\Block\Adminhtml\Items\Column\Qty" name="column_qty" template="Magento_Sales::items/column/qty.phtml" group="column"/>
+                        <block class="Magento\Sales\Block\Adminhtml\Items\Column\Name" name="column_name" template="Magento_Sales::items/column/name.phtml" group="column"/>
+                        <block class="Magento\Framework\View\Element\Text\ListText" name="order_item_extra_info"/>
+                        <container name="submit_before" label="Submit Before"/>
+                        <container name="submit_after" label="Submit After"/>
+                    </block>
+                    <block class="Magento\Shipping\Block\Adminhtml\Order\Tracking" name="shipment_tracking" template="order/tracking.phtml"/>
+                    <block class="Magento\Shipping\Block\Adminhtml\Order\Packaging" name="shipment_packaging" template="Magento_Shipping::order/packaging/popup.phtml"/>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

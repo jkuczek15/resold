@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<!-- /.navbar-header -->
+<ul class="nav navbar-top-links navbar-right in">
+	<li class="dropdown">
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			<i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+		</a>
+		<ul class="dropdown-menu dropdown-alerts">
+			<?php  //if($this->getVendorId() && $this->getVendor()->getStatus() == Ced_CsMarketplace_Model_Vendor::VENDOR_APPROVED_STATUS ) { ?>
+				<?php //echo $this->getChildHtml('notification_links')?>
+				<?php //if(!$this->getVendor()->getProfilePicture()) { ?>
+					<li>
+						<a href="<?php //echo $this->getUrl('*/vendor/profile',array('_secure' => true)); ?>" title="<?php //echo __('Add Profile Picture') ?>">
+							<div>
+								<i class="fa fa-bell fw"></i>
+								<?php //echo __('Add Profile Picture') ?>
+								<span class="pull-right text-muted small">..</span>
+							</div>
+						</a>
+					</li>
+					<li class="divider"></li>
+				<?php //} ?>
+				<?php //if(!$this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->isShopEnabled($this->getVendor())) { ?>	
+					<li>	
+						<a href="#" title="<?php //echo __('Your Shop is disabled By Admin') ?>">
+							<div>
+								<i class="fa fa-bell fw"></i>
+								<?php //echo __('Your Shop is disabled By Admin') ?>
+								<span class="pull-right text-muted small">..</span>
+							</div>
+						</a>
+					</li>
+					<li class="divider"></li>
+				<?php // } ?>
+				<?php //if(!$this->getVendor()->getCompanyLogo()) { ?>	
+					<li>
+						<a href="<?php //echo $this->getUrl('*/vendor/profile',array('_secure' => true)); ?>" title="<?php //echo __('Add Company Logo') ?>">
+							<div>
+								<i class="fa fa-bell fw"></i>
+								<?php //echo __('Add Company Logo') ?>
+								<span class="pull-right text-muted small">..</span>
+							</div>
+						</a>
+					</li>
+					<li class="divider"></li>		</ul>
+		<!-- /.dropdown-alerts -->
+	</li>
+</ul>

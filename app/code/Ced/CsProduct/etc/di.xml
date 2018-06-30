@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<type name="Magento\Catalog\Model\Product\TypeTransitionManager">
+        <plugin name="downloadable_product_transition" type="Magento\Downloadable\Model\Product\TypeTransitionManager\Plugin\Downloadable" />
+        	<arguments>
+           		<argument name="compatibleTypes" xsi:type="array">
+               		<item name="downloadable" xsi:type="const">Magento\Downloadable\Model\Product\Type::TYPE_DOWNLOADABLE</item>
+            	</argument>
+        	</arguments>
+    	</type>
+    	
+	<preference for="Ced\CsMarketplace\Model\Vproducts" type="Ced\CsProduct\Model\Vproducts" />
+    <preference for="Ced\CsMarketplace\Model\System\Config\Source\Vproducts\Type" type="Ced\CsProduct\Model\System\Config\Source\Vproducts\Type" />
+     <!-- <preference for="Magento\ConfigurableProduct\Model\Product\VariationHandler" type="Ced\CsProduct\Model\ConfigurableProduct\Product\VariationHandler" /> -->
+    <preference for="Magento\Catalog\Block\Adminhtml\Helper\Form\Wysiwyg" type="Ced\CsProduct\Block\Helper\Form\Wysiwyg" />
+    <preference for="Magento\Cms\Model\Wysiwyg\Config" type="Ced\CsProduct\Model\Wysiwyg\Config" />
+    <preference for="Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Category" type="Ced\CsProduct\Block\Helper\Form\Category" />
+   <!--  <preference for="Magento\Catalog\Block\Adminhtml\Product\Helper\Form\BaseImage" type="Ced\CsProduct\Block\Helper\Form\BaseImage" /> -->
+    <preference for="Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery" type="Ced\CsProduct\Block\Helper\Form\Gallery" />
+</config>

@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<div class="block block-account"> 
+<?php if($this->getTitle()): ?>
+ 	<div class="block-title">
+        <strong><i class="fa fa-pencil-square-o"></i><span style="margin-left : 8px;"><?php echo $this->getTitle() ?></span></strong>
+    </div>
+<?php endif ?>
+<div class="block-content">
+<?php if(!empty($tabs)): ?>
+<ul id="<?php echo $this->getId() ?>" class="tabs">
+<?php $i=0;$count=count($tabs);?>
+<?php foreach ($tabs as $_tab): ?>
+<?php $i++;?>
+<?php if (!$this->canShowTab($_tab)): continue;  endif; ?>
+    <li class="<?php if($count==$i) echo "last";?>" <?php if($this->getTabIsHidden($_tab)): ?>  style="display:none"<?php endif; ?>>
+        <a href="<?php echo $this->getTabUrl($_tab) ?>" id="<?php echo $this->getTabId($_tab) ?>" name="<?php echo $this->getTabId($_tab, false) ?>" title="<?php echo $this->getTabTitle($_tab) ?>" class="tab-item-link <?php echo $this->getTabClass($_tab) ?><?php if (preg_match('/\s?ajax\s?/', $_tab->getClass())) {?> notloaded<?php }?>">
+            <span><i style="margin-right: 8px;" class="fa fa-file-text-o"></i><span class="changed" title="<?php echo $this->__('The information in this tab has been changed.') ?>"></span><span class="error" title="<?php echo $this->__('This tab contains invalid data. Please solve the problem before saving.') ?>"></span><?php echo $this->getTabLabel($_tab); ?></span>
+        </a>
+        
+        <div id="<?php echo $this->getTabId($_tab) ?>_content" style="display:none;"><?php echo $this->getTabContent($_tab) ?></div>
+    </li>
+<?php endforeach; ?>
+</ul>
+</div>
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+    <?php echo $this->getJsObjectName() ?> = new varienTabs('<?php echo $this->getId() ?>', '<?php echo $this->getDestElementId() ?>', '<?php echo $this->getActiveTabId() ?>', <?php echo $this->getAllShadowTabs()?>);
+</script>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+   
+        <section id="ced_csmarketplace">
+          
+           <group id="general">
+                <label>General</label>
+              <field id="vorders_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Advance Order Enable</label>
+                    <config_path>ced_vorders/general/vorders_active</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[If you select <b>Yes</b> then updated order view and advance feature will show on the vendor panel.]]></comment>
+                </field>                
+            </group>
+            <!-- Vendor Orders Configuration -->
+            <group id="vorders">
+            	<!--<field id="vorders_mode" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="0">
+                	<label>Separate Orders</label>
+                  <config_path>ced_vorders/general/vorders_mode</config_path>
+                  <comment><![CDATA[If you make it <b>Yes</b> it will split orders as per venors]]></comment>
+                  <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>-->
+                <field id="vorders_canshipment" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        					<label>Can Vendor Create Shipment?</label>
+                  <config_path>ced_vorders/general/vorders_canshipment</config_path>
+                  <comment><![CDATA[Enable this if vendor can create Shipment.]]></comment>
+                  <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="vorders_caninvoice" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                	<label>Can Vendor Create Invoice?</label>
+                  <config_path>ced_vorders/general/vorders_caninvoice</config_path>
+                  <comment><![CDATA[Enable this if vendor can create invoice]]></comment>
+                  <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="vorders_cancreditmemo" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                	<label>Can Vendor Create Credit Memo?</label>
+                  <config_path>ced_vorders/general/vorders_cancreditmemo</config_path>
+                  <comment><![CDATA[Enable this if vendor can create credit memo.]]></comment>
+                  <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

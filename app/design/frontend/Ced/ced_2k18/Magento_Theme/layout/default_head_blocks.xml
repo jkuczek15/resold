@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+
+        <remove src="Ced_CsMarketplace::css/ced/csmarketplace/vendor_responsive.css"/>
+        <remove src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel.css"/>
+        <remove src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel-admin.css"/>
+        <remove src="css/styles-l.css" /> 
+        <remove src="css/styles-m.css" /> 
+
+		<css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel-admin-2k18.css"  media="all and (min-width: 1px)"/>
+		<css src="Ced_CsMarketplace::css/ced/csmarketplace/ced_vpanel.css"  media="all and (min-width: 1px)"/>
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/rtltheme.css"  media="all and (min-width: 1px)"/>
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vendor_responsive2k18.css" media="all and (min-width: 1px)"/>
+    </head>
+</page>

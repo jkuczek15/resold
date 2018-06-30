@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+
+?>
+    <?php $_totals = $this->getTotals('')?>
+    <?php if ($_totals):?>
+    <?php foreach ($_totals as $_code => $_total): ?>
+        <?php if ($_total->getBlockName()): ?>
+            <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
+        <?php else:?>
+        <tr class="<?php echo $_code?>">
+            <td <?php echo $this->getLabelProperties()?> class="a-right" colspan="7">
+                <?php if ($_total->getStrong()):?>
+                <?php echo $_total->getLabel()?>
+                <?php else:?>
+                <?php echo $_total->getLabel()?>
+                <?php endif?>
+            </td>
+            <?php if ($_total->getStrong()):?>
+            <td <?php echo $this->getValueProperties()?> class=" a-right emph">
+                <?php echo $this->formatValue($_total) ?>
+            <?php else:?>
+            <td class="a-right" <?php echo $this->getValueProperties()?>>
+                <?php echo $this->formatValue($_total) ?>
+            <?php endif?>
+            </td>
+        </tr>
+        <?php endif?>
+    <?php endforeach?>
+    
+    <?php endif?>
+
+    <?php $_totals = $this->getTotals('footer')?>
+    <?php if ($_totals):?>
+    <?php foreach ($this->getTotals('footer') as $_code => $_total): ?>
+        <?php if ($_total->getBlockName()): ?>
+            <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
+        <?php else:?>
+        <tr class="<?php echo $_code?>">
+            <td <?php echo $this->getLabelProperties()?> class="a-right" colspan="7">
+                <?php echo $_total->getLabel()?>
+            </td>
+            <td <?php echo $this->getValueProperties()?> class="a-right">
+                <?php echo $this->formatValue($_total) ?>
+            </td>
+        </tr>
+        <?php endif?>
+    <?php endforeach?>
+    <?php endif?>

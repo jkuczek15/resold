@@ -1,0 +1,39 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * Product view template
+ *
+ * @see \Magento\Catalog\Block\Product\View
+ */
+?>
+<?php
+$_helper = $this->helper('Magento\Catalog\Helper\Output');
+$_product = $block->getProduct();
+$model =  \Magento\Framework\App\ObjectManager::getInstance();
+$productSku = $block->getProduct()->getSku();
+$VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()
+				->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+$VendorId = $VendorProduct->getVendorId();
+if (!empty($VendorId)) {
+	$array = array('name');
+	$vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
+	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
+	$vendorModel = current($vendorModel);
+	$public_name = $vendorModel['public_name'];?>
+	<div class="vendor-info"><?php echo __('Vendor').' : ';?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></div>
+<?php 
+}
+?>
+<style>
+.vendor-info {
+    margin-bottom: 8px;
+    margin-top: 4px;
+}
+</style>
+

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a style="font-size:24px;" class="navbar-brand panel-title" href="#"><?php echo __('Vendor')." ".__('Panel'); ?></a>
+			</div>
+			<?php echo $this->getChildHtml('top.links') ?>
+		</nav>
+		<div id="loading-mask" style="display:none">
+    		<p class="loader" id="loading_mask_loader"></p>
+		</div>
+

@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php if ($websites = $block->getWebsites()): ?>
+<div class="form-group">
+<select class="form-control" name="store_switcher" id="store_switcher" onchange="return switchStore(this);">
+<?php if ($block->hasDefaultOption()): ?>
+    <option value=""><?php echo $block->getDefaultStoreName() ?></option>
+<?php endif; ?>
+    <?php foreach ($websites as $website): ?>
+        <?php $showWebsite=false; ?>
+        <?php foreach ($website->getGroups() as $group): ?>
+            <?php $showGroup=false; ?>
+            <?php foreach ($block->getStores($group) as $store): ?>
+                <?php if ($showWebsite == false): ?>
+                    <?php $showWebsite = true; ?>
+                    <optgroup label="<?php echo $website->getName() ?>"></optgroup>
+                <?php endif; ?>
+                <?php if ($showGroup == false): ?>
+                    <?php $showGroup = true; ?>
+                    <optgroup label="&nbsp;&nbsp;&nbsp;<?php echo $group->getName() ?>">
+                <?php endif; ?>
+                <option value="<?php echo $store->getId() ?>"<?php if($this->getStoreId() == $store->getId()): ?> selected="selected"<?php endif; ?>>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $store->getName() ?></option>
+            <?php endforeach; ?>
+            <?php if ($showGroup): ?>
+                </optgroup>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+</select>
+</div>
+<script type="text/javascript">
+    function switchStore(obj){
+        var storeParam = obj.value ? 'store/'+obj.value + '/' : '';
+        if(obj.switchParams){
+            storeParam+= obj.switchParams;
+        }
+    <?php if($this->getUseConfirm() && $this->getRequest()->getActionName()!="index" && $this->getRequest()->getActionName()!="filter"): ?>
+        if(confirm("<?php echo __('Please confirm site switching. All data that hasn\'t been saved will be lost.') ?>")){
+            window.location='<?php echo $this->getSwitchUrl() ?>'+storeParam;
+            return true;
+        }
+        else {
+            obj.value = '<?php echo $this->getStoreId() ?>';
+        }
+        return false;
+    <?php else: ?>
+        window.location=('<?php echo $this->getSwitchUrl() ?>'+storeParam);
+    <?php endif; ?>
+    }
+</script>
+<?php endif; ?>

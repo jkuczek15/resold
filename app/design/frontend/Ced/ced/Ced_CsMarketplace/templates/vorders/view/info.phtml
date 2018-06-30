@@ -1,0 +1,251 @@
+<?php
+
+
+
+/**
+
+ * CedCommerce
+
+ *
+
+ * NOTICE OF LICENSE
+
+ *
+
+ * This source file is subject to the End User License Agreement (EULA)
+
+ * that is bundled with this package in the file LICENSE.txt.
+
+ * It is also available through the world-wide-web at this URL:
+
+ * http://cedcommerce.com/license-agreement.txt
+
+ *
+
+ * @category    Ced
+
+ * @package     Ced_CsMarketplace
+
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+
+ * @license      http://cedcommerce.com/license-agreement.txt
+
+ */
+?>
+
+<?php $_order = $this->getOrder() ?>
+
+<?php 
+
+	$orderAdminDate = $this->formatDate($_order->getCreatedAtDate());
+
+	$orderStoreDate = $this->formatDate($_order->getCreatedAtStoreDate());
+
+?>
+
+	<div class="panel panel-default for_print_order_button">
+
+		<div class="panel-heading panel-head col-md-12 clearfix" style="text-transform: uppercase;font-weight:bold;padding:4px 15px;">
+
+		<div class="order_title">
+
+        <span class="order-title-heading"> <?php echo __('Order #%1 - %2', $_order->getRealOrderId(), $_order->getStatusLabel()) ?></span>
+
+    <?php echo $this->getChildHtml('buttons') ?>
+
+		</div>
+
+		</div>
+
+	 	<div class="panel-body">
+
+		<div class="col-md-12">
+
+<?php echo $this->getStatusHistoryRssUrl($_order) ?>
+
+<div class="order-info-wrap">
+
+
+
+<div class="order-info col-md-12">
+
+		<h3 style="color:#23527C;"><?php echo  __('Order Information') ?></h3>
+
+</div>
+
+<div class="col2-set order-info-box col-md-12" >
+
+            <table width="100%" cellspacing="0" class="form-list">
+
+            <tr>
+
+                <td ><label><?php echo __('Order Date') ?></label></td>
+
+                <td class="value"><strong><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></strong></td>
+
+            </tr>
+
+            <?php if ($orderAdminDate != $orderStoreDate):?>
+
+            <tr>
+
+                <td ><label><?php echo __('Order Date (%1)', $_order->getCreatedAtStoreDate()->getTimezone()) ?></label></td>
+
+                <td class="value"><strong><?php echo $orderStoreDate ?></strong></td>
+
+            </tr>
+
+            <?php endif;?>
+
+            <tr>
+
+                <td ><label><?php echo __('Order Status') ?></label></td>
+
+                <td class="value"><strong><span id="order_status"><?php echo $_order->getStatusLabel() ?></span></strong></td>
+
+            </tr>
+
+            <tr>
+
+                <td ><label><?php echo __('Purchased From') ?></label></td>
+
+                <td class="value"><strong><?php echo $this->getOrderStoreName() ?></strong></td>
+
+            </tr>
+
+           
+
+            <?php if($_order->getGlobalCurrencyCode() != $_order->getBaseCurrencyCode()): ?>
+
+            <tr>
+
+                <td ><label><?php echo __('%1 / %2 rate:', $_order->getGlobalCurrencyCode(), $_order->getBaseCurrencyCode()) ?></label></td>
+
+                <td class="value"><strong><?php echo $_order->getBaseToGlobalRate() ?></strong></td>
+
+            </tr>
+
+            <?php endif; ?>
+
+            <?php if($_order->getBaseCurrencyCode() != $_order->getOrderCurrencyCode()): ?>
+
+            <tr>
+
+                <td ><label><?php echo __('%1 / %2 rate:', $_order->getOrderCurrencyCode(), $_order->getBaseCurrencyCode()) ?></label></td>
+
+                <td class="value"><strong><?php echo $_order->getBaseToOrderRate() ?></strong></td>
+
+            </tr>
+
+            <?php endif; ?>
+
+            </table>
+
+        </div>
+
+		<div style="clear:both"></div>
+
+	</div>
+
+<?php if (!$_order->getIsVirtual()): ?>
+
+<div class="col2-set order-info-box col-md-12">
+
+    <div class="col-1 col-md-6 order-info-box_custom order-info-box_billing space-adjust_left">
+
+        <div class="box">
+
+            <div class="box-title">
+
+                <h4><?php echo __('Shipping Address') ?></h4>
+
+            </div>
+
+            <div class="box-content">
+                <address><?php echo $block->getFormattedAddress($_order->getShippingAddress()) ?></address>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-2 col-md-6 order-info-box_custom order-info-box_billing space-adjust_right">
+
+        <div class="box">
+
+            <div class="box-title">
+
+                <h4><?php echo __('Shipping Method') ?></h4>
+
+            </div>
+
+            <div class="box-content">
+
+                <?php if ($_order->getShippingDescription()): ?>
+
+                    <?php echo $this->escapeHtml($_order->getShippingDescription()) ?>
+
+                <?php else: ?>
+
+                    <p><?php echo __('No shipping information available'); ?></p>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php endif; ?>
+
+<div class="col2-set order-info-box order-info-box_custom_wrap col-md-12" style="">
+
+    <div class="col-1 col-md-6 order-info-box_custom order-info-box_billing space-adjust_left">
+
+        <div class="box">
+
+            <div class="box-title">
+
+                <h4><?php echo __('Billing Address') ?></h4>
+
+            </div>
+
+            <div class="box-content">
+
+                <address><?php echo $block->getFormattedAddress($_order->getBillingAddress()) ?></address>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-2 col-md-6 order-info-box_custom order-info-box_payment space-adjust_right">
+
+        <div class="box box-payment">
+
+            <div class="box-title">
+
+                <h4><?php echo __('Payment Method') ?></h4>
+
+            </div>
+
+            <div class="box-content">
+
+                <?php echo $this->getPaymentInfoHtml() ?>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div style="clear:both;"></div>
+
+</div>

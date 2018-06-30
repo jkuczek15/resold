@@ -1,0 +1,117 @@
+<?php
+
+
+
+/**
+
+ * CedCommerce
+
+ *
+
+ * NOTICE OF LICENSE
+
+ *
+
+ * This source file is subject to the End User License Agreement (EULA)
+
+ * that is bundled with this package in the file LICENSE.txt.
+
+ * It is also available through the world-wide-web at this URL:
+
+ * http://cedcommerce.com/license-agreement.txt
+
+ *
+
+ * @category    Ced
+
+ * @package     Ced_CsMarketplace
+
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+
+ * @license      http://cedcommerce.com/license-agreement.txt
+
+ */
+
+?>
+
+<?php if($this->getVendorId()) { ?>
+
+
+
+<div class="row">
+
+	<div class="col-md-12" style="margin-top:10px;">
+
+		<div class="panel panel-default">
+
+			<div class="panel-heading uptransform clearfix" style="font-weight:bold;padding:8px 15px;font-size:17px;">
+
+				<div class=" panel_product_heading " style="line-height:31px;font-size:17px;padding-left:0; display: inline-block;">
+
+					<?php echo __('Transaction Settings'); ?>
+
+				</div>
+
+				<div class="buttons-set   buttons_scb" style="text-align:right; display: inline;">				
+
+					<button class="button btn btn-success uptransform product-button" title="Save" type="submit" onClick="jQuery('#form-validate').submit();" id="save_butn" style="float:right;">
+
+						<span><span><?php echo __('Save') ?></span></span>
+
+					</button>
+
+				</div>
+
+			</div>
+
+			<div class="panel-body">
+
+				<div class="col-md-12">
+
+					<?php echo $block->getChildHtml('vsettings_payment_methods') ?>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+<?php } ?>
+
+<script type="text/javascript">
+
+require([
+
+         "jquery",
+
+         "jquery/ui"
+
+     ], function($){
+
+			jQuery( "h2" ).addClass( "ced_shipping" );
+
+});
+
+</script>
+
+<style>
+
+h2.legend.ced_shipping{
+
+  margin-left: 0;
+
+}
+
+.admin__control-select, .ui-datepicker .ui-datepicker-title select{
+
+	 -moz-appearance: meterchunk !important;
+
+}
+
+</style>

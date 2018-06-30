@@ -1,0 +1,152 @@
+<!-- /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendorpanel" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+    	<meta name="x_ua_compatible" content="IE=edge,chrome=1"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+        
+		   <css src="mage/calendar.css"/>
+        <css src="Ced_CsMarketplace::bower_components/bootstrap/dist/css/bootstrap.min.css" />
+        <css src="Ced_CsMarketplace::bower_components/metisMenu/dist/metisMenu.min.css"/>
+        <css src="Ced_CsMarketplace::dist/css/timeline.css"/>
+        <css src="Ced_CsMarketplace::dist/css/sb-admin-2.css"/> 
+        <css src="Ced_CsMarketplace::bower_components/morrisjs/morris.css"/>
+         <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
+         <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel.css"/> 
+	    <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel-admin.css"  media="all"/> 
+    </head>
+    <body>
+    	<referenceBlock name="vendor_new_product" remove="true">
+    	</referenceBlock>
+    	<referenceBlock name="vendor_products" remove ="true">
+    	</referenceBlock>
+    	<referenceBlock name="csmarketplace_vendor_navigation">
+			    <block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_new_products" after="vendor_profile" ifconfig="ced_csmarketplace/general/ced_vproduct_activation">
+			       <arguments>
+					   <argument name="name" xsi:type="string">vendor_new_product</argument>
+					   <argument name="label" xsi:type="string" translate="true">New Product</argument>
+					   <argument name="path" xsi:type="string">#</argument>
+					  <argument name="font_awesome" xsi:type="string">fa fa-plus-square fa-fw</argument>
+			       </arguments>
+			       
+					<block class="Ced\CsMarketplace\Block\Links" name="vendor_new_products_container" as="vendor_new_products_container">
+						<arguments>
+							<argument name="css_class" xsi:type="string">nav nav-second-level collapse</argument>
+						</arguments>
+						<block class="Ced\CsMarketplace\Block\Link\Current" name="simple_product_creation">
+						<arguments>
+							<argument name="name" xsi:type="string">simple_product_creation</argument>
+							<argument name="label" xsi:type="string" translate="true">Add Simple Product</argument>
+							<!-- <argument name="path" xsi:type="helper" helper="Ced\CsProduct\Helper\Data::getSimpleUrl"/> -->
+							<argument name="path" xsi:type="string">csproduct/vproducts/new/set/4/type/simple</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+							<argument name="sort_order" xsi:type="string">10</argument>
+						</arguments>
+					</block>
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="configurable_product_creation">
+						<arguments>
+							<argument name="name" xsi:type="string">configurable_product_creation</argument>
+							<argument name="label" xsi:type="string" translate="true">Add Configurable Product</argument>
+							<!-- <argument name="path" xsi:type="helper" helper="Ced\CsProduct\Helper\Data::getConfigurableUrl"/> -->
+						   <argument name="path" xsi:type="string">csproduct/vproducts/new/set/4/type/configurable/</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+							<argument name="sort_order" xsi:type="string">20</argument>
+						</arguments>
+					</block>
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="bundle_product_creation">
+						<arguments>
+							<argument name="name" xsi:type="string">bundle_product_creation</argument>
+							<argument name="label" xsi:type="string" translate="true">Add Bundle Product</argument>
+							<!-- <argument name="path" xsi:type="helper" helper="Ced\CsProduct\Helper\Data::getBundleUrl"/> -->
+							<argument name="path" xsi:type="string">csproduct/vproducts/new/set/4/type/bundle/</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+							<argument name="sort_order" xsi:type="string">30</argument>
+						</arguments>
+					</block>
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="virtual_product_creation">
+						<arguments>
+							<argument name="name" xsi:type="string">virtual_product_creation</argument>
+							<argument name="label" xsi:type="string" translate="true">Add Virtual Product</argument>
+							<!-- <argument name="path" xsi:type="helper" helper="Ced\CsProduct\Helper\Data::getVirtualUrl"/> -->
+							<argument name="path" xsi:type="string">csproduct/vproducts/new/set/4/type/virtual/</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+							<argument name="sort_order" xsi:type="string">40</argument>
+						</arguments>
+					</block>
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="downloadable_product_creation">
+						<arguments>
+							<argument name="name" xsi:type="string">downloadable_product_creation</argument>
+							<argument name="label" xsi:type="string" translate="true">Add Downloadable Product</argument>
+							<!-- <argument name="path" xsi:type="helper" helper="Ced\CsProduct\Helper\Data::getDownloadableUrl"/> -->
+							 <argument name="path" xsi:type="string">csproduct/vproducts/new/set/4/type/downloadable/</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+							<argument name="sort_order" xsi:type="string">50</argument>
+						</arguments>
+					</block>
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="grouped_product_creation">
+						<arguments>
+							<argument name="name" xsi:type="string">grouped_product_creation</argument>
+							<argument name="label" xsi:type="string" translate="true">Add Grouped Product</argument>
+							<!-- <argument name="path" xsi:type="helper" helper="Ced\CsProduct\Helper\Data::getGroupedUrl"/> -->
+							 <argument name="path" xsi:type="string">csproduct/vproducts/new/set/4/type/grouped/</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+							<argument name="sort_order" xsi:type="string">60</argument>
+						</arguments>
+					</block>
+					</block>
+			    </block>
+			    
+			     <block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_products_csproduct" after="vendor_new_products" ifconfig="ced_csmarketplace/general/ced_vproduct_activation">
+						<arguments>
+							<argument name="name" xsi:type="string">vendor_products</argument>
+							<argument name="label" xsi:type="string" translate="true">Manage Products</argument>
+							<argument name="path" xsi:type="string">csproduct/vproducts/index</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-folder fa-fw</argument>
+							<argument name="sort_order" xsi:type="string">40</argument>
+							<argument name="level" xsi:type="string">1</argument>
+						</arguments>
+					</block>
+					
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_new_product_csproduct" after="vendor_profile">
+						<arguments>
+							<argument name="name" xsi:type="string">vendor_new_product</argument>
+							<argument name="label" xsi:type="string" translate="true">New Product</argument>
+							<argument name="path" xsi:type="string">csmarketplace/vproducts/new</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-plus-square fa-fw</argument>
+							<argument name="sort_order" xsi:type="string">40</argument>
+							<argument name="level" xsi:type="string">1</argument>
+						</arguments>
+					</block>
+					<block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_products_csproduct_new" after="vendor_new_product_csproduct">
+						<arguments>
+							<argument name="name" xsi:type="string">vendor_products</argument>
+							<argument name="label" xsi:type="string" translate="true">Manage Products</argument>
+							<argument name="path" xsi:type="string">csmarketplace/vproducts/index</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-folder fa-fw</argument>
+							<argument name="sort_order" xsi:type="string">50</argument>
+							<argument name="level" xsi:type="string">1</argument>
+						</arguments>
+					</block>
+				 <action method="unsetChild" ifconfig="ced_csmarketplace/general/ced_vproduct_activation">
+                     <argument name="block" xsi:type="string">vendor_new_product_csproduct</argument>
+                 </action>
+					<action method="unsetChild" ifconfig="ced_csmarketplace/general/ced_vproduct_activation">
+                     <argument name="block" xsi:type="string">vendor_products_csproduct_new</argument>
+                 </action>
+		</referenceBlock>
+    </body>
+</page>

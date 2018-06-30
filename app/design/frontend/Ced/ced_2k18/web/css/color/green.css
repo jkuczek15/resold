@@ -1,0 +1,142 @@
+/*========================================================
+=            Section comment green Color Swatch Css            =
+========================================================*/
+.slide .side-menu li .nav-second-level li a,
+.ced-vendor-sidebar-nav .side-menu li .nav-second-level li a.active,
+.nav-second-level > li > a,
+.nav-third-level > li > a {
+  background: #55C05A none repeat scroll 0 0!important;
+  color: #fff!important;
+}
+.ced-vendor-sidebar-nav .side-menu li .nav-second-level li a.active:hover,
+.nav.nav-second-level > li > a:hover,
+.nav.nav-third-level > li > a:hover {
+  background: #63C567 none repeat scroll 0 0!important;
+  color: #fff!important;
+}
+nav.navbar-default.navbar-static-top,
+.page-wrapper .panel-default .panel-heading,
+.ced-vendor-sidebar-nav .side-menu a.active,
+.nav > li > a:focus{
+  background-color: #4CAF50!important;
+} 
+.nav > li > a:hover{
+background-color:#69C36D!important;
+} 
+.bellow-list-wrapper li a {
+  background: #55C05A none repeat scroll 0 0;
+  border-bottom: 4px solid #4CAF50;
+}
+.page-wrapper .page-main .btn-primary,
+.btn-info,
+.btn-warning,
+.btn-success,
+.btn-danger,
+.csmarketplace-account-approval .login-form-body-wrap .btn.btn-primary {
+  background-color: #5cd562!important;
+  border-color: #85f28a!important;
+  color:#ffffff!important;
+}
+.page-wrapper .page-main .btn-primary:hover,
+.btn-success:hover,
+.btn-warning:hover,
+.btn-info:hover,
+.btn-danger:hover{
+  background-color: #4CC552!important;
+  border-color: #4CC552!important;
+}
+.navbar-header .navbar-toggle:hover,
+.navbar-header .navbar-toggle:focus {
+  background: #62E068 none repeat scroll 0 0!important;
+}
+.ced-chart-filter li.active a {
+  background: #62E068 none repeat scroll 0 0!important;
+}
+.ced-chart-filter{
+  border:1px solid #4CC552;
+}
+.x_panel.bg-c-blue {
+  background: #d33257 none repeat scroll 0 0;
+}
+.x_panel.bg-c-green {
+  background: #4CAF50 none repeat scroll 0 0;
+}
+.x_panel.bg-c-yellow {
+  background: #5659c9 none repeat scroll 0 0;
+}
+.x_panel.bg-c-red {
+  background: #f24d16 none repeat scroll 0 0;
+}
+.for_print_order_button .box-title, .for_print_order_button .order-info {
+  background: #4CAF50 none repeat scroll 0 0;
+}
+.csmarketplace-vpayments-view .fieldset h2 {
+  background: #4CAF50 none repeat scroll 0 0!important;
+}
+.panel-body .pager .pages-items .item a span {
+  color: #4CAF50;
+}
+.dropdown-menu .top-lis a:hover {
+  background-color: #4CAF50;
+}
+.for_print_order_button .box-title,
+.for_print_order_button .order-info,
+.csmarketplace-vpayments-view .fieldset h2,
+.dropdown-menu .top-lis a:hover {
+  background: #4caf50 none repeat scroll 0 0!important;
+}
+.panel-body .pager .pages-items .item a span {
+  color: #4caf50;
+}
+.csmarketplace-account-login .button,
+.csmarketplace-account-create .button,
+.csmarketplace-account-forgotpassword .button {
+  background: #4caf50 none repeat scroll 0 0;
+}
+.csmarketplace-account-login .button:hover,
+.csmarketplace-account-create .button:hover,
+.csmarketplace-account-forgotpassword .button:hover {
+  background: #3A9B3E none repeat scroll 0 0;
+}
+.userinfosider {
+  background: #4CAF50 none repeat scroll 0 0;
+}
+/*=====  End of Section comment green Color Swatch Css  ======*/
+/*=====  platinum color css  ======*/
+.abs-action-primary, button.primary, 
+.page-actions > button.action-primary, 
+.page-actions .page-actions-buttons > button.action-primary, 
+.page-actions > button.primary, 
+.page-actions .page-actions-buttons > button.primary, 
+.block-footer .action-add.primary, 
+.page-actions > .block-footer .action-add.action-primary, 
+.page-actions .page-actions-buttons > .block-footer .action-add.action-primary, 
+.page-actions > .block-footer .action-add.primary, 
+.page-actions .page-actions-buttons > .block-footer .action-add.primary {
+  background-color: #4CAF50 !important;
+  border-color: #4CAF50 !important;
+}
+.admin__collapsible-block-wrapper .admin__collapsible-title{
+  background-color: #4CAF50 !important;
+}
+.admin__collapsible-block-wrapper .admin__collapsible-title:hover{
+  color: #fff !important;
+}
+/* platinum html color */
+.admin__page-section-title {
+  background: #4CAF50 none repeat scroll 0 0 !important;
+}
+.admin__page-nav-item._active, .admin__page-nav-item.ui-state-active {
+  border-color: #4CAF50;
+}
+.page-wrapper .page-main .btn-primary, .btn-info, .btn-warning, .btn-success, .btn-danger, .csmarketplace-account-approval .login-form-body-wrap .btn.btn-primary {
+  background-color: #4CAF50 !important;
+  border-color: #4CAF50 !important;
+  color: #ffffff !important;
+}
+.ced-transactions-details .form-list .data.order-tables thead tr th {
+  background-color: #4CAF50 !important;
+}
+.dropdown-tasks .top-lis .progress .progress-bar {
+  background: #4CAF50 none repeat scroll 0 0;
+}

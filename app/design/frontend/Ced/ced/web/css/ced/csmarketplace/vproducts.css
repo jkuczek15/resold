@@ -1,0 +1,281 @@
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+ 
+ .tree-node {
+    font-size: 12px;
+    font-weight: normal;
+    list-style-type: none;
+    clear: left;
+}
+
+.tree-icon, .tree-ec-icon, .tree-elbow-line, .tree-elbow, .tree-elbow-end, .tree-elbow-plus, .tree-elbow-minus, .tree-elbow-end-plus, .tree-elbow-end-minus {
+    background-repeat: no-repeat;
+    border: 0 none;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 16px;
+    float: left;
+}
+.tree-node-collapsed .tree-node-icon, .tree-node-expanded .tree-node-icon, .tree-node-leaf .tree-node-icon, .tree-node-loading .tree-node-icon {
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 0 none;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 16px;
+    float: left;
+}
+
+.tree-node-collapsed .tree-node-icon {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/folder.gif") no-repeat scroll 0 50%;
+}
+.tree-node-expanded .tree-node-icon {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/folder-open.gif") no-repeat scroll 0 50%;
+}
+.tree-node-leaf .tree-node-icon {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/leaf.gif") no-repeat scroll 0 50%;
+}
+.tree-noicon .tree-node-icon {
+    height: 0;
+    width: 0;
+}
+.tree-node-loading .tree-node-icon {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/loading.gif") repeat scroll 0 0 !important;
+}
+.tree-node-loading a span {
+    color: #444444;
+    font-style: italic;
+}
+.tree-node .tree-selected a span {
+    background: #f5d6c7 none repeat scroll 0 0;
+    color: #000;
+}
+
+.root-category-wrapper .tree-elbow {
+    background: transparent none repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-plus {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/elbow-plus-nl.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-minus {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/elbow-minus-nl.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-end {
+    background: transparent none repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-end-plus {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/elbow-end-plus-nl.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-end-minus {
+    background: transparent url("../../../images/vproducts/js/extjs/resources/images/magento/tree/elbow-end-minus-nl.gif") no-repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-line {
+    background: transparent none repeat scroll 0 0;
+}
+.root-category-wrapper .tree-elbow-line {
+    background: transparent none repeat scroll 0 0;
+}
+.tree-elbow-plus, .tree-elbow-minus, .tree-elbow-end-plus, .tree-elbow-end-minus {
+    cursor: pointer;
+}
+.ext-ie ul.x-tree-node-ct {
+    font-size: 0;
+    line-height: 0;
+}
+.tree-node {
+    color: black;
+    white-space: nowrap;
+}
+.nicEdit-nice_textarea{
+    box-shadow: 0 0 1px 1px #CCCCCC inset;
+}
+#category_label{
+    background: #B8E8B7;
+    border: 1px solid #008000;
+    border-radius: 7px;
+    line-height: 16px;
+    padding: 0 4px;
+    width: 80px;
+}
+.cat_container{
+    position: relative;
+   
+}
+.elements{
+    margin-left:5px;
+}
+.cat_name{
+    float:left;
+}
+.category{
+    max-height: 200px;
+    overflow: auto;
+    clear: both;
+    display: block;
+}
+
+#sku_exist, #sku_not_exist {
+    display: none;
+}
+
+.sku_exist {
+    background-color: #000000;
+    min-height: 12px;
+    float: left;    
+    background-position: 15px 0;
+    padding: 0 5px 0 35px;
+}
+
+.sku_not_exist {
+    background-color: #000000;
+    min-height: 12px;
+    float: left;    
+    background-position: 15px 0;
+    padding: 0 5px 0 35px;
+}
+
+#sku_exist img, #sku_not_exist img {
+    margin-right: 5px;
+    vertical-align: middle;
+    width: 12px;
+}
+#sku_not_exist img {
+    float: left;
+    height: 20px;
+}
+
+.sku-error-msg, .sku-success-msg, .note-msg, .notice-msg {
+    background-position: 10px 5px !important;
+    background-repeat: no-repeat !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    min-height: 20px !important;
+/*     padding: 4px 8px 6px 32px !important; */
+}
+
+.sku-success-msg {
+    background-image: url("../../../images/ced/csmarketplace/success_msg_icon.gif");
+    color: #469743;
+}
+.sku-error-msg{
+    background-image: url("../../../images/ced/csmarketplace/error_msg_icon.gif");
+    color: #df280a
+}
+
+.input-text-large{
+    max-width:100% !important;
+    padding:2px;
+    border:1px solid silver;
+}
+
+.input-text-medium{
+    max-width:100% !important;
+    width:130px !important;
+    padding:2px;
+    border:1px solid silver;
+}
+.input-text-smallmedium{
+    max-width:100% !important;
+    width:112px !important;
+    padding:2px;
+    border:1px solid silver;
+}
+.input-text-small{
+    max-width:100% !important;
+    width:100% !important;
+    padding:2px;
+    border:1px solid silver;
+}
+
+.input-text-tiny{
+    max-width:100% !important;
+    width:100% !important;
+    padding:2px;
+    border:1px solid silver;
+}
+
+.input-select-small{
+    width:56px !important;
+}
+
+.data-table-downlodable td, .data-table-downloadable th {
+    padding: 3px !important;
+    vertical-align: top !important;
+}
+.data-table-products td, .data-table-products th {
+    padding: 7px !important;
+    vertical-align: top !important;
+}
+
+
+.csbutton{
+    border: 0 none;
+    color: #ffffff;
+    display: inline-block;
+    font-family: "Raleway","Helvetica Neue",Verdana,Arial,sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 19px;
+    padding: 5px 3px;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.link_delete {
+    background: url("../../../images/ced/csmarketplace/trash4.png") scroll center center rgba(0, 0, 0, 0);
+    background-size:20px;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    width: 14px;
+}
+.sample_delete {
+    background: url("../../../images/ced/csmarketplace/trash4.png") scroll center center rgba(0, 0, 0, 0);
+    background-size:20px;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    width: 14px;
+}
+
+.link_sample_name,.link_name,.sample_name{
+    font-size:10px    
+}
+.product-list-filter{
+    margin:2px;
+}
+.sample_add_btn,.add_btn{
+    height:29px;
+    width:79px;
+}
+label.required em, span.required em {
+    display: none;
+}
+label.required::after, span.required::after {
+    color: red;
+    content: " *";
+    font-family: "Helvetica Neue",Verdana,Arial,sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+}
+

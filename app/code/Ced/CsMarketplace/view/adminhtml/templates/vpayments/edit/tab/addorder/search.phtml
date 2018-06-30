@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <div style="float: right;"><?php echo $this->getButtonsHtml() ?></div>
+        <h4 class="fieldset-legend <?php echo ($this->getHeaderCssClass()) ? $this->getHeaderCssClass().' icon-head' : '' ?>"><?php echo $this->getHeaderText() ?></h4>
+    </div>
+    <div class="fieldset">
+		<?php echo $this->getLayout()->createBlock('Ced\CsMarketplace\Block\Adminhtml\Vpayments\Edit\Tab\Addorder\Search\Grid')->toHtml(); ?>
+    </div>
+</div>
+<script type="text/javascript">
+	var csaction = '';
+	function addorder() {
+		myArray= new Array();
+		var ids = document.getElementsByClassName("csmarketplace_relation_id checkbox");
+		document.getElementById('csmarketplace_vendor_total').value = 0.00;
+		csaction = ''; 
+		for(var i=0; i<ids.length ; i++) {
+			if (ids[i].checked) {
+				myArray.push(ids[i].value);
+				if(csaction.length > 0) {
+					csaction += ','+ids[i].value;
+				} else {
+					csaction = 'order_ids/'+ids[i].value;
+				}		
+			}
+		}
+		
+		var csloader = new varienLoader();
+		new Ajax.Updater('order-items_grid', '<?php echo $this->getUrl('*/*/addOrders')?>', {
+			  parameters: { 'vendor_id':document.getElementById('vendor_id').value,'order_ids[]': myArray ,'type' : <?php echo $this->getRequest()->getParam('type',\Ced\CsMarketplace\Model\Vpayment::TRANSACTION_TYPE_CREDIT); ?>},
+			  onComplete: function(transport) {
+							document.getElementById('csmarketplace_vendor_total').value = document.getElementById('csmarketplace_fetched_total').value;
+							document.getElementById("csmarketplace_add_more").style.display = "";
+							document.getElementById("order-search").style.display = "none";
+						},
+			});
+	}
+</script>

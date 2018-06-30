@@ -1,0 +1,73 @@
+<?php 
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+?>
+<?php
+$vorder = $this->getVorder();
+
+$_order  = $this->getOrder();
+$_source = $this->getSource();
+$_fullInfo  = $this->getFullTaxInfo();
+$localeCurrency = $this->_objectManager->get('Magento\Framework\Locale\Currency');
+?>
+<div class="order-totals">
+  <table width="100%" cellspacing="0">
+<tr>
+    <td class="a-right" colspan="7">
+        <div class="summary-collapse">
+        <strong>
+            <?php echo  __('Grand Total (Earned)')?>
+        </strong>
+        </div>
+    </td>
+    <td class="a-right last">
+    	<strong>
+        <?php echo  $block->displayPrices($_order,$vorder->getBaseOrderTotal(),$vorder->getOrderTotal(),false,''); ?>
+         </strong>
+    </td>
+</tr>
+<tr>
+    <td class="a-right" colspan="7">
+        <div class="summary-collapse">
+        	<strong>
+            <?php echo  __('Commission Fee')?>
+			</strong>
+        </div>
+    </td>
+    <td class="a-right last">
+    	<strong>
+        <?php echo $block->displayPrices($_order,$vorder->getShopCommissionBaseFee(), $vorder->getShopCommissionFee(), false, ' ');  ?>
+         </strong>
+    </td>
+</tr>
+<tr>
+    <td class="a-right" colspan="7">
+        <div class="summary-collapse">
+        	<strong>
+            <?php echo  __('Net Earned')?>
+             </strong>
+        </div> 
+    </td>
+    <td class="a-right last">
+    	<strong>
+    	    
+    	    <?php  echo $block->displayPrices($_order,$vorder->getBaseOrderTotal()-$vorder->getShopCommissionBaseFee(), $vorder->getOrderTotal()-$vorder->getShopCommissionFee(), false, ' ');?>
+         </strong>
+    </td>
+</tr>
+	</table>
+</div>	

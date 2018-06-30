@@ -1,0 +1,107 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php $collection = $this->getVordersReports(); 
+//print_r($collection->getData());die("ljmlk");
+?>
+
+<div style="clear:both"></div>
+<form id="payment_form"
+	action="javascript:void( 0 );"
+	enctype="multipart/form-data" method="post">
+<?php if(count($collection)>0){?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "jquery/ui"
+    ], function($) {
+        jQuery('#export_btn').show();
+        jQuery('#filter_butn6').show();
+        jQuery('#filter_butn12').hide();
+    });
+</script>
+<?php }?>
+<div class="order-items order-details table-responsive">
+		<table id="my-products-table" class="table table-bordered table-hover table-striped">
+	    <col width="2"/>
+	    <col width="1"/>
+	    <col width="1"/>
+	    <col width="1"/>
+	    <col width="1"/>
+	    <col width="1"/>
+		<thead>	
+			<tr>
+				<th class="head"><?php echo __('Period') ?></th>
+		        <th class="head"><?php echo __('Orders') ?></th> 
+		        <th class="head"><?php echo __('Sales Items') ?></th>
+				<th class="head"><?php echo __('Total Sales') ?></th>
+				<th class="head"><?php echo __('Total Commission') ?></th>
+				<th class="head"><?php echo __('Net Sales') ?></th>
+			</tr>		
+	    </thead>
+	    <tbody>
+		<?php if(count($collection)>0): ?>
+	    <?php $_odd = ''; ?>
+	    
+	    <?php foreach ($collection as $_report) { ?>
+	        <tr>
+	            <td class="number"><?php echo $_report->getPeriod();	 ?></td>
+	            <td class="date"><?php echo $_report->getOrderCount() ?></td>
+				<td class="number"><?php echo $_report->getProductQty() ?></td>     
+	            <td class="status"><?php echo $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_report->getOrderTotal(),false,2,null,$_report->getCurrency());  ?></td>
+	            <td class="status"><?php echo $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_report->getCommissionFee(), false,2,null,$_report->getCurrency()); ?></td>
+				<td class="number"><?php echo $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_report->getNetEarned(),false,2,null,$_report->getCurrency()); ?></td>
+	        </tr>
+	        <?php } ?>
+			<?php else: ?>
+			<tr>
+				<td colspan="6">
+					<div>
+					<p class="not_avail"><?php echo __('No Report Available'); ?></p>
+					</div>
+				</td>
+			</tr>		
+			<?php endif ?>
+		</tbody>
+	</table>
+</div>
+
+</form>
+<p class="required"><?php echo __('* Required Fields') ?></p>
+
+
+<script type="text/javascript">
+require([
+    "jquery",
+    "jquery/ui"
+], function($){
+<?php if($this->getRequest()->getActionName()=='vorders'){ ?>
+
+filterVordersReports(2);
+<?php } ?>
+  
+	jQuery(document).ready(function(){
+	  jQuery("#payment_form").submit(function() {
+				return false;
+			});
+	});
+});	
+</script>
+
+

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="ced_csmarketplace_vendor_account_confirmed_template" label="Vendor account confirmed" file="ced_csmarketplace/account_confirmed.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+    <template id="ced_csmarketplace_vendor_account_rejected_template" label="Vendor account rejected" file="ced_csmarketplace/account_rejected.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vendor_shop_enabled_template" label="Vendor shop enabled" file="ced_csmarketplace/shop_enabled.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vendor_shop_disabled_template" label="Vendor shop disabled" file="ced_csmarketplace/shop_disabled.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vendor_account_deleted_template" label="Vendor account deleted" file="ced_csmarketplace/account_deleted.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vproducts_product_approved_template" label="Vendor - Product approved notification" file="ced_csmarketplace/product_approved.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vproducts_product_rejected_template" label="Vendor - Product rejected notification" file="ced_csmarketplace/product_rejected.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vproducts_product_deleted_template" label="Vendor - Product deleted notification" file="ced_csmarketplace/product_deleted.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vorders_order_new_template" label="Vendor - New Order" file="ced_csmarketplace/order_new.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_csmarketplace_vorders_order_cancel_template" label="Vendor - Cancel Order" file="ced_csmarketplace/order_cancel.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+	<template id="ced_vdebug_report" label="Vendor - Debug Report" file="ced_csmarketplace/vdebug_report.html" type="html" module="Ced_CsMarketplace" area="frontend"/>
+</config>

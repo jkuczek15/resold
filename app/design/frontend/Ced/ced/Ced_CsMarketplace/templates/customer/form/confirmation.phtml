@@ -1,0 +1,49 @@
+<?php 
+
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+?>
+<div class="page-title">
+    <h1><?php echo __('Send confirmation link') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="" method="post" id="form-validate">
+    <div class="fieldset">
+        <h2 class="legend"><?php echo __('Retrieve your confirmation link here') ?></h2>
+        <p><?php echo __('Please enter your email below and we\'ll send you confirmation link for it.') ?></p>
+        <ul class="form-list">
+            <li>
+                <label for="email_address" class="required"><em>*</em><?php echo __('Email Address') ?></label>
+                <div class="input-box">
+                    <input type="text" name="email" id="email_address" title="<?php echo __('Email Address') ?>" class="input-text required-entry validate-email" value="<?php echo $this->htmlEscape($this->getEmail()) ?>" />
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="required"><?php echo __('* Required Fields') ?></p>
+        <p class="back-link"><a href="<?php echo $this->helper('customer')->getLoginUrl() ?>"><small>&laquo; </small><?php echo __('Back to Login') ?></a></p>
+        <button type="submit" title="<?php echo __('Submit') ?>" class="button"><span><span><?php echo __('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+   // var dataForm = new VarienForm('form-validate', true);
+//]]>
+</script>

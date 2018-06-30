@@ -1,0 +1,150 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$helper = $this->helper('Ced\CsMarketplace\Helper\Tool\Image');
+$logo = $helper->getStoreConfig("ced_loginsignup/header/logo",$this->getCurrentStoreId()) ? "ced/csmarketplace/".$helper->getStoreConfig("ced_loginsignup/header/logo",$this->getCurrentStoreId()) : '';
+$logoImage = $helper->getResizeImage($logo, 'logo', 335, 106);
+$footerContent = $helper->getStoreConfig("ced_csmarketplace/general/footer_content",$this->getCurrentStoreId());
+$isfooterEnable = $helper->getStoreConfig("ced_csmarketplace/general/enable_footer",$this->getCurrentStoreId());
+?>
+
+
+<div class="ced_vendor_header">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="pull-left">
+					<div class="v_header_logo">
+						<?php if($logo):?>
+							<a href="<?php echo $this->getBaseUrl(); ?>" target="_blank">
+								<img src="<?php echo $logoImage ?>" alt="vendor panel logo">
+							</a>
+						<?php else:?>
+							<a href="<?php echo $this->getBaseUrl(); ?>" target="_blank">
+							<img src="<?php echo $block->getViewFileUrl('images/demo.png'); ?>" alt="vendor panel logo">
+							</a>
+						<?php endif;?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="ced_vendor_before_login_wrapper">
+	<div class="ced_vendor_before_wrap clearfix">
+		<div class="ced_vendor_login">
+			<div class="right">
+				<div class="login-panel panel panel-default" >
+					<?php if($block->getVendorId()) { ?>
+					
+					<div class="panel-body">		
+						<p class="hello">
+							<strong>
+								<?php echo __('Hello, '.$block->escapeHtml($block->getVendor()->getName())) ?>!
+							</strong>
+						</p>
+						<p>
+							<span class="review_vendor" title="Under Review!"><i class="fa fa-eye fa-3"></i> Your account is under review
+							</span>
+						</p>
+						<p class="approval-status"><?php echo $block->getApprovalMessage(); ?></p>	
+						<div>
+							<button type="button" title="Log Out"class="btn btn-primary" onclick="location.href ='<?php  echo $block->getLogoutUrl(); ?>'">Log Out</button>
+							<button type="button" title="Go to Main Website" class="btn btn-primary" onclick="location.href ='<?php echo $block->getBaseUrl(); ?>'">Go to Main Website</button>
+							<div class="clear:both"></div>
+						</div>
+					</div>
+					<?php } else { ?>
+					<div class="panel-heading" class="panel-title vendor-login-tab"><?php echo __('Send Approval Request') ?></h3>
+					</div>
+					<div class="panel-body login-form-body-wrap">	
+						<p class="hello"><strong><?php echo __('Hello, '.$block->escapeHtml($block->getCustomer()->getFirstname().'!')) ?></strong></p>
+						<p><?php echo $block->getApprovalMessage(); ?></p>
+						<form id="form-validate" class="scaffold-form form-login" enctype="multipart/form-data" method="post" action="<?php echo $block->_vendorUrl->getApprovalPostUrl(); ?>">
+							<div class="fieldset">
+								<ul class="form-list" style="padding:10px;">
+									<?php echo $block->getChildHtml('vendor_after_reg_form'); ?>
+								</ul>
+							</div>
+							<div class="buttons-set">
+								<p class="required"><?php echo __('* Required Fields') ?></p>
+								<p class="back-link"><a href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>" class="back-link"><small>&laquo; </small><?php echo __('Back') ?></a></p>
+								<div style=" margin-top: 20px;">
+									<button style="float:left" type="submit" title="<?php echo __('Submit') ?>" class="button btn btn-primary"><span><span><?php echo __('Submit') ?></span></span></button>
+									<div style="float:right" >
+										<button type="button" title="<?php echo __('Log Out') ?>"  class="btn btn-primary" onclick="location.href ='<?php echo $block->_vendorUrl->getLogoutUrl(); ?>'"><?php echo __('Log Out') ?></button>
+										<button style="float:right;" type="button" title="<?php echo __('Go to Main Website') ?>" class="btn btn-primary" onclick="location.href = '<?php echo $block->_vendorUrl->getBaseUrl(); ?>'"><?php echo __('Go to Main Website') ?></button>
+										<div class="clear:both"></div>
+									</div>
+									<div class="clear:both"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<script>
+						require([
+							'jquery',
+							'mage/mage'
+							], function($){
+								var dataForm = $('#form-validate');
+								var ignore = <?php echo 'null'; ?>;
+								dataForm.mage('validation', {
+									ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+								}).find('input:text').attr('autocomplete', 'off');
+							});
+						</script>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php if($isfooterEnable):?>
+<div class="ced_vendor_footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="ced_vendor_footer_links">
+					<ul>
+						<li>
+							<a href="<?php echo $this->getBaseUrl(); ?>">
+								<?php echo __('Home') ?>
+							</a>
+							|
+						</li>
+						<li>
+							<a href="<?php echo $this->getBaseUrl().'contact'; ?>">
+								<?php echo __('Contact') ?>
+							</a>
+							|
+						</li>
+						<!--<li>
+							<a href="<?php //echo $this->getBaseUrl().'#'; ?>">
+								<?php //echo __('faq') ?>
+							</a>
+						</li>-->
+					</ul>
+				</div>
+				<p><?php echo $footerContent; ?></p>
+			</div>
+		</div>
+	</div>
+</div>
+<?php endif;?>

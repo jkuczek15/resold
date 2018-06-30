@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendorpanel" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel-admin.css"/>  
+	</head>
+	<body>
+    	<referenceBlock name="vendor_orders" remove ="true"/>
+    		<referenceBlock name="csmarketplace_vendor_navigation">
+			    <block class="Ced\CsMarketplace\Block\Link\Current" name="managevendor_order_data" after="vendor_profile" ifconfig="ced_vorders/general/vorders_active">
+			       <arguments>
+					   <argument name="name" xsi:type="string">vendor_order_data</argument>
+					   <argument name="label" xsi:type="string" translate="true">Manage Order</argument>
+					   <argument name="path" xsi:type="string">#</argument>
+					  <argument name="font_awesome" xsi:type="string">fa fa-shopping-cart fa-fw</argument>
+			       </arguments>
+						<block class="Ced\CsMarketplace\Block\Links" name="vendor_order_container" as="vendor_order_container">
+							<arguments>
+								<argument name="css_class" xsi:type="string">nav nav-second-level collapse</argument>
+								<argument name="path" xsi:type="string">#</argument>
+							</arguments>
+						<block class="Ced\CsMarketplace\Block\Link\Current" name="csorder_manage_order" ifconfig="ced_vorders/general/vorders_active">
+							<arguments>
+								<argument name="name" xsi:type="string">csorder_manage_order</argument>
+								<argument name="label" xsi:type="string" translate="true">Manage Orders</argument>
+								<argument name="path" xsi:type="string">csorder/vorders/index</argument>
+								<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+								<argument name="sort_order" xsi:type="string">10</argument>
+							</arguments>
+						</block>
+						<block class="Ced\CsMarketplace\Block\Link\Current" name="csorder_manage_invoice" ifconfig="ced_vorders/general/vorders_active">
+							<arguments>
+								<argument name="name" xsi:type="string">csorder_manage_invoice</argument>
+								<argument name="label" xsi:type="string" translate="true">Manage Invoice</argument>
+								<argument name="path" xsi:type="string">csorder/invoice/index</argument>
+								<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+								<argument name="sort_order" xsi:type="string">20</argument>
+							</arguments>
+						</block>
+						<block class="Ced\CsMarketplace\Block\Link\Current" name="csorder_manage_shipment" ifconfig="ced_vorders/general/vorders_active">
+							<arguments>
+								<argument name="name" xsi:type="string">csorder_manage_shipment</argument>
+								<argument name="label" xsi:type="string" translate="true">Manage Shipment</argument>
+								<argument name="path" xsi:type="string">csorder/shipment/index</argument>
+								<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+								<argument name="sort_order" xsi:type="string">20</argument>
+							</arguments>
+						</block>
+						<block class="Ced\CsMarketplace\Block\Link\Current" name="csorder_manage_creditmemo" ifconfig="ced_vorders/general/vorders_active">
+							<arguments>
+								<argument name="name" xsi:type="string">csorder_manage_creditmemo</argument>
+								<argument name="label" xsi:type="string" translate="true">Manage Credit Memo</argument>
+								<argument name="path" xsi:type="string">csorder/creditmemo/index</argument>
+								<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+								<argument name="sort_order" xsi:type="string">20</argument>
+							</arguments>
+						</block>
+					</block>
+				</block>
+				<block class="Ced\CsMarketplace\Block\Link\Current" name="manage_orders" after="vendor_profile">
+						<arguments>
+							<argument name="name" xsi:type="string">manage_orders</argument>
+							<argument name="label" xsi:type="string" translate="true">Manage Orders</argument>
+							<argument name="path" xsi:type="string">csmarketplace/vorders/index</argument>
+							<argument name="font_awesome" xsi:type="string">fa fa-shopping-cart fa-fw</argument>
+							<argument name="sort_order" xsi:type="string">40</argument>
+							<argument name="level" xsi:type="string">1</argument>
+						</arguments>
+					</block>
+					
+				 <action method="unsetChild" ifconfig="ced_vorders/general/vorders_active">
+                     <argument name="block" xsi:type="string">manage_orders</argument>
+                 </action>
+    	</referenceBlock>
+    </body>
+</page>

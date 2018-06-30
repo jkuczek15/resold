@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+	$helper = $this->getObjectManager()->get('Ced\CsMarketplace\Helper\Data');
+	$helper = $this->getObjectManager()->get('Ced\CsMarketplace\Helper\Data');
+	$groupCollection = $this->getVendorAttributeInfo();
+	$vendor_info = $this->getVendor();
+	$percent = round(($this->getSavedAttr() * 100)/$this->getTotalAttr());
+	$href = '#';
+	if($this->getVendorId() && $this->getVendor()->getStatus() == \Ced\CsMarketplace\Model\Vendor::VENDOR_APPROVED_STATUS ){
+		$href = $this->getUrl('csmarketplace/vendor/profile',array('_secure' => true));
+	}
+?>
+<a href="<?php echo $href; ?>">
+	<div>
+		<p>
+			<strong><?php echo __('Your Profile is'); ?></strong>
+			<span class="text-muted"><?php echo round($percent, 2).' '.__('% completed'); ?></span>
+		</p>
+		<div class="progress progress-striped active">
+			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<?php echo round($percent, 2); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo round($percent, 2); ?>%">
+				<span class="sr-only"><?php echo __('Your Profile is').' '.round($percent, 2).' '.__('% completed'); ?></span>
+			</div>
+		</div>
+	</div>
+</a>

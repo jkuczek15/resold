@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php  $_order = $this->getOrder();
+$vorder = $this->_objectManager->get('Magento\Framework\Registry')->registry('current_vorder');
+?>
+<?php 
+if($this->getRequest()->getActionName()!="print"){?>
+<div class="buttons-set col-md-6  col-xs-12 buttons_scb">	
+<button  type="button" onclick="window.open('<?php echo $this->getPrintUrl($vorder); ?>')" title="<?php echo __('Print Order') ?>" class="button btn btn-warning uptransform pull-right"><span><span><?php echo __('Print Order') ?></span></span></button>
+</div>
+<?php }?>
+<?php echo $this->getChildHtml(); ?>

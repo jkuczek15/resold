@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * You can check the licence at this URL: http://cedcommerce.com/license-agreement.txt
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php 
+
+	$vendor = $block->getVendor();
+	/* print_r($vendor->getData());die; */
+?>
+<?php $helper = $block->getObjectManager()->get('Ced\CsMarketplace\Helper\Data'); ?>
+<?php /** @var $block \Magento\Customer\Block\Account\Navigation */ ?>
+<div class="navbar-default sidebar" role="navigation">
+
+    <div class="sidebar-nav navbar-collapse">
+    	<div class="hidden-lg hidden-md hidden-sm">
+    		<?php	if ($helper->getIsDashboard()): ?>
+				<a style="padding: 2px 8px 4px;" class="logo navbar-brand panel-title" href="#" title="<?php echo __($helper->getLogoAlt()); ?>" class="logo"><img src="<?php echo $block->getViewFileUrl($helper->getLogoSrc()); ?>" alt="<?php echo __($helper->getLogoAlt()); ?>" width="43px" /></a>
+			<?php else: ?>
+				<a style="padding: 2px 8px 4px;" href="<?php echo $helper->getVendorUrl(); ?>" title="<?php echo __($helper->getLogoAlt()); ?>" class="logo navbar-brand panel-title"><img src="<?php echo $block->getViewFileUrl($helper->getLogoSrc()); ?>" alt="<?php echo __($helper->getLogoAlt()); ?>" width="43px" /></a>
+			<?php endif ?>
+			<a style="font-size:24px; padding: 15px 15px 15px 0;" class="navbar-brand panel-title" href="#"><?php echo __($helper->getLogoAlt()); ?></a>
+    	</div>
+		<ul id="side-menu" class="nav side-menu in">
+			<?php echo $block->getChildHtml();?>
+			<?php  if($this->getVendorId() && $this->getVendor()->getStatus() == \Ced\CsMarketplace\Model\Vendor::VENDOR_APPROVED_STATUS ) { ?>
+					<li>
+						<a href="<?php echo $this->getVendor()->getVendorShopUrl(); ?>" title="<?php echo __('Go to Shop') ?>" target="_blank"><i class="fa fa-external-link fw"></i><span style="margin-left: 3px;"><?php echo __('Go to Shop') ?></span></a>
+					</li>
+			 <?php } ?>
+		</ul>
+	</div>
+</div>
+<script>
+	require([
+		'jquery'
+		], function($){ 
+				$(".largeview-submenu .nav-second-level").removeClass("collapse");
+				$(".sidebar-nav li").removeClass("active");
+				setTimeout( function(){ 
+					$(".sidebar-nav li").removeClass("active");
+				  }  , 1000 );
+				 setTimeout( function(){ 
+					$(".sidebar-nav li").removeClass("active");
+				  }  , 1000 );
+
+				 var classes = $('body').attr('class').split(' ')[1];
+				  $('.'+classes).on('click','.page-main',function(){
+					 if($(".sidebar-nav li").hasClass("active")){
+						 $(".sidebar-nav li").removeClass("active");
+						 }
+					});
+		});
+</script>
+

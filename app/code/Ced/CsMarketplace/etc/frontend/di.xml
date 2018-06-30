@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="csmarketplacerouter" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsMarketplace\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">1</item>
+                </item>
+                <item name="csmarketplacemain" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsMarketplace\Controller\Main</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">2</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Theme\Model\View\Design">
+        <plugin name="set_vendor_panel_theme"
+                type="Ced\CsMarketplace\Plugin\SetVendorPanel"
+                sortOrder="1"
+                disabled="false"/>
+    </type>
+    <type name="Magento\Framework\View\Element\Message\MessageConfigurationsPool">
+        <arguments>
+            <argument name="configurationsMap" xsi:type="array">
+                <item name="addCustomSuccessMessage" xsi:type="array">
+                    <item name="renderer" xsi:type="const">\Magento\Framework\View\Element\Message\Renderer\BlockRenderer::CODE</item>
+                    <item name="data" xsi:type="array">
+                        <item name="template" xsi:type="string">Ced_CsMarketplace::addCustomSuccessMessage.phtml</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ced\CsMarketplace\Model\NotificationHandler">
+        <arguments>
+            <argument name="notificationList" xsi:type="array">
+                <item name="basic" xsi:type="object">Ced\CsMarketplace\Model\Notification</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Magento\Framework\View\Element\BlockFactory" type="Ced\CsMarketplace\Model\View\Element\BlockFactory"/>
+</config>

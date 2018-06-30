@@ -1,0 +1,69 @@
+<?php
+?>
+<?php if ($block->getAllQueries()): ?>
+<table class="qdn_table_2col">
+  <tr>
+    <th><?php echo __('Statistics'); ?></th>
+    </td>
+    <td>
+      <?php echo sprintf('%s queries in %s (average time: %s) - %s queries/second',
+              $block->getTotalNumQueries(),
+              $block->formatSqlTime($block->getTotalElapsedSecs()),
+              $block->formatSqlTime($block->getAverage()),
+              $block->getNumQueriesPerSecond()
+              ); ?>
+    </td>
+  </tr>
+  <tr>
+    <th></th>
+    <td>
+      <?php echo sprintf('%s SELECT - %s INSERT - %s UPDATE - %s DELETE - %s TRANSACTION',
+              $block->getTotalNumQueries(Zend_Db_Profiler::SELECT),
+              $block->getTotalNumQueries(Zend_Db_Profiler::INSERT),
+              $block->getTotalNumQueries(Zend_Db_Profiler::UPDATE),
+              $block->getTotalNumQueries(Zend_Db_Profiler::DELETE),
+              $block->getTotalNumQueries(Zend_Db_Profiler::TRANSACTION)); ?>
+    </td>
+  </tr>
+  <tr>
+    <th><?php echo __('Longest'); ?></th>
+    <td>
+      <?php echo $block->formatSql($block->getLongestQuery()); ?>
+    </td>
+  </tr>
+  <tr>
+    <th></th>
+    <td>
+      <span>(<?php echo  $block->formatSqlTime($block->getLongestQueryTime()); ?>)</span>
+    </td>
+  </tr>
+</table>
+
+<table class="qdn_table striped filterable sortable tablesorter grade">
+<thead>
+<tr>
+    <th>#</th>
+    <th class="{sorter: false}">SQL</th>
+    <th class="{sorter: 'digit'}">Time</th>
+</tr>
+</thead>
+<tbody>
+<?php
+  $i = 0;
+  foreach ($block->getAllQueries() as $i => $query): ?>
+    <tr class="<?php echo  $query['grade']; ?>">
+      <td><?php echo $i;?></td>
+      <td class="sqlquery"><?php echo $block->formatSql($query['sql']); ?></td>
+      <td class="sqltimer"><?php echo  $block->formatSqlTime($query['time']); ?></td>
+    </tr>
+    <?php $i++; ?>
+  <?php endforeach ?>
+</tbody>
+</table>
+
+
+<?php else:?>
+SQL profiler is not active<br/>
+You should set a new key for $config array in file app/etc/env.php<br/>
+<pre>$config[db][connection][default][profiler] = 1</pre>
+<?php  endif ?>

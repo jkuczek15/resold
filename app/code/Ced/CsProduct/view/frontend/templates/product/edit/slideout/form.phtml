@@ -1,0 +1,39 @@
+<?php
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+/* @var Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVideo $block */
+?>
+<div id="<?php /* @escapeNotVerified */ echo $block->getNameInLayout();?>" style="display:none"
+    data-modal-info='<?php /* @escapeNotVerified */ echo $block->getWidgetOptions();?>'
+>
+    <?php /* @escapeNotVerified */ echo $block->getFormHtml();?>
+    <div id="video-player-preview-location" class="video-player-sidebar">
+        <div class="video-player-container"></div>
+        <div class="video-information title">
+            <label><?php /* @escapeNotVerified */ echo __('Title:') ?> </label><span></span>
+        </div>
+        <div class="video-information uploaded">
+            <label><?php /* @escapeNotVerified */ echo __('Uploaded:') ?> </label><span></span>
+        </div>
+        <div class="video-information uploader">
+            <label><?php /* @escapeNotVerified */ echo __('Uploader:') ?> </label><span></span>
+        </div>
+        <div class="video-information duration">
+            <label><?php /* @escapeNotVerified */ echo __('Duration:') ?> </label><span></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+?>
+
+<!-- Total Pending Amount --> 
+<div class="new_test_class" data-bind="scope: 'myownko'">
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="x_panel bg-c-blue order-card">
+			<div class="card">
+				<div class="card-block">
+					<h6 class="m-b-20"><?php echo __('Total Pending Amount'); ?>!</h6>
+					<h2 class="text-right">
+						<i class="fa fa-credit-card fa-4x"></i>
+						<span data-bind="'html': getStaticsParam('pendingAmount_total')"></span>
+					</h2>
+					<p class="m-b-0">
+                        <a data-bind="attr: { href: getStaticsParam('pendingAmount_action')}"><?php echo __('Read more'); ?></a>
+                    </p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Total Earned Amount -->
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="x_panel bg-c-green order-card">
+			<div class="card">
+				<div class="card-block">
+					<h6 class="m-b-20"><?php echo __('Total Earned Amount'); ?>!</h6>
+					<h2 class="text-right">
+						<i class="fa fa-money fa-4x"></i>
+						<span data-bind="'html': getStaticsParam('earnedAmount_total')"></span>
+					</h2>
+					<p class="m-b-0">
+                        <a data-bind="attr: { href: getStaticsParam('earnedAmount_action')}"><?php echo __('Read more'); ?></a>
+                    </p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Total Orders Placed -->	
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="x_panel bg-c-yellow order-card">
+			<div class="card">
+				<div class="card-block">
+					<h6 class="m-b-20"><?php echo __('Total Orders Placed'); ?>!</h6>
+					<h2 class="text-right">
+						<i class="fa fa-shopping-cart fa-4x"></i>
+						<span data-bind="'text': getStaticsParam('ordersPlaced_total')"></span>
+					</h2>
+					<p class="m-b-0">
+                        <a data-bind="attr: { href: getStaticsParam('ordersPlaced_action')}"><?php echo __('Read more'); ?></a>
+                    </p>
+				</div>
+			</div>
+		</div>
+	</div>   
+	<!-- Total Products Sold -->
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="x_panel bg-c-red order-card">
+			<div class="card">
+				<div class="card-block">
+					<h6 class="m-b-20"><?php echo __('Total Products Sold') ?>!</h6>
+					<h2 class="text-right">
+						<i class="fa fa-bar-chart-o fa-4x"></i>
+						<span data-bind="'text': getStaticsParam('productsSold_total')"></span>
+					</h2>
+					<p class="m-b-0">
+                        <a data-bind="attr: { href: getStaticsParam('productsSold_action')}"><?php echo __('Read more'); ?></a>
+                    </p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#maincontent": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "myownko": {
+                        "component": "Ced_CsMarketplace/js/myownko",
+                        "url": "<?= $this->getUrl('csmarketplace/vendor/statics') ?>"
+                    }
+                }
+            }
+        }
+    }
+</script>

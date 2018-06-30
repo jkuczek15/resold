@@ -1,0 +1,413 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!--  <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
+    	<plugin name="configurable" type="Magento\ConfigurableProduct\Controller\Adminhtml\Product\Initialization\Helper\Plugin\Configurable" sortOrder="50" />
+        <plugin name="updateConfigurations" type="Magento\ConfigurableProduct\Controller\Adminhtml\Product\Initialization\Helper\Plugin\UpdateConfigurations" sortOrder="60" />
+        <plugin name="Producttype" type="Ced\CsProduct\Controller\Product\Initialization\Helper\Plugin\Type" sortOrder="70" />
+    </type>  -->
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
+         <plugin name="configurable" type="Ced\CsProduct\Controller\Product\Initialization\Helper\Plugin\Configurable" sortOrder="50" />
+         <plugin name="updateConfigurations" type="Ced\CsProduct\Controller\Product\Initialization\Helper\Plugin\UpdateConfigurations" sortOrder="60" />
+        <plugin name="Downloadable" type="Magento\Downloadable\Controller\Adminhtml\Product\Initialization\Helper\Plugin\Downloadable" sortOrder="70" />
+        <plugin name="Bundle" type="Magento\Bundle\Controller\Adminhtml\Product\Initialization\Helper\Plugin\Bundle" sortOrder="60" />
+    </type>
+    
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Builder">
+        <plugin name="configurable" type="Magento\ConfigurableProduct\Controller\Adminhtml\Product\Builder\Plugin" sortOrder="50" />
+    </type>
+    
+    <preference for="Magento\ConfigurableProduct\Model\AttributesListInterface" type="Magento\ConfigurableProduct\Model\AttributesList" />
+    <preference for="Magento\Catalog\Ui\Component\Listing\Attribute\RepositoryInterface" type="Magento\Catalog\Ui\Component\Listing\Attribute\Repository" />
+   
+   <!-- Wyssiyg Editor -->
+    <preference for="Magento\Ui\Component\Wysiwyg\ConfigInterface" type="Magento\Cms\Model\Wysiwyg\Config"/>
+   <!-- <preference for="Magento\Cms\Model\Wysiwyg\Config" type="Ced\CsProduct\Model\Wysiwyg\Config"/> -->
+   
+
+    <!-- copy constructor intilization   -->
+    <type name="Magento\Catalog\Model\Product\CopyConstructor\Composite">
+        <arguments>
+            <argument name="constructors" xsi:type="array">
+                <item name="crossSell" xsi:type="string">Magento\Catalog\Model\Product\CopyConstructor\CrossSell</item>
+                <item name="upSell" xsi:type="string">Magento\Catalog\Model\Product\CopyConstructor\UpSell</item>
+                <item name="related" xsi:type="string">Magento\Catalog\Model\Product\CopyConstructor\Related</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Catalog\Model\Product\Copier">
+        <arguments>
+            <argument name="copyConstructor" xsi:type="object">Magento\Catalog\Model\Product\CopyConstructor\Composite</argument>
+        </arguments>
+    </type>
+
+    <!-- End of Copy CONSTRUCTOR -->
+    <!-- custom chnages  -->
+    <preference for="Magento\Catalog\Model\Locator\LocatorInterface" type="Magento\Catalog\Model\Locator\RegistryLocator"/>
+     <preference for="Magento\Ui\DataProvider\Modifier\PoolInterface" type="Magento\Ui\DataProvider\Modifier\Pool" />
+    <preference for="Magento\Catalog\Ui\Component\Listing\Attribute\RepositoryInterface" type="Magento\Catalog\Ui\Component\Listing\Attribute\Repository"/>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="eav" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Eav</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="attribute_set_id" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\AttributeSet</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="websites" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Websites</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+                <item name="system" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\System</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+                 <item name="categories" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Categories</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                </item> 
+                <item name="custom-options" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\CustomOptions</item>
+                    <item name="sortOrder" xsi:type="number">70</item>
+                </item>
+                <item name="schedule-design-update" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\ScheduleDesignUpdate</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
+                </item>
+                <item name="advanced-pricing" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AdvancedPricing</item>
+                    <item name="sortOrder" xsi:type="number">90</item>
+                </item>
+                <item name="image-management" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Images</item>
+                    <item name="sortOrder" xsi:type="number">100</item>
+                </item>
+                <item name="related" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Related</item>
+                    <item name="sortOrder" xsi:type="number">110</item>
+                </item>
+                <item name="attributes" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Attributes</item>
+                    <item name="sortOrder" xsi:type="number">120</item>
+                </item>
+               <!-- <item name="alerts" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Alerts</item>
+                    <item name="sortOrder" xsi:type="number">130</item>
+                </item>-->
+                <item name="advanced-pricing-tier-price-type" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\TierPrice</item>
+                    <item name="sortOrder" xsi:type="number">150</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Custom Code -->
+   
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\ProductDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+    <type name="Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\CustomOptions">
+        <arguments>
+            <argument name="scopeName" xsi:type="string">product_form.product_form</argument>
+        </arguments>
+    </type>
+    <type name="Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Related">
+        <arguments>
+            <argument name="scopeName" xsi:type="string">product_form.product_form</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AdvancedPricing">
+        <arguments>
+            <argument name="scopeName" xsi:type="string">product_form.product_form</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\TierPrice">
+        <arguments>
+            <argument name="productPriceOptions" xsi:type="object">Magento\Catalog\Model\Config\Source\Product\Options\TierPrice</argument>
+        </arguments>
+    </type>
+        <type name="Magento\Ui\DataProvider\Mapper\FormElement">
+        <arguments>
+            <argument name="mappings" xsi:type="array">
+                <item name="text" xsi:type="string">input</item>
+                <item name="hidden" xsi:type="string">input</item>
+                <item name="boolean" xsi:type="string">checkbox</item>
+                <item name="media_image" xsi:type="string">image</item>
+                <item name="price" xsi:type="string">input</item>
+                <item name="weight" xsi:type="string">input</item>
+                <item name="gallery" xsi:type="string">image</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Ui\DataProvider\Mapper\MetaProperties">
+        <arguments>
+            <argument name="mappings" xsi:type="array">
+                <item name="dataType" xsi:type="string">frontend_input</item>
+                <item name="visible" xsi:type="string">is_visible</item>
+                <item name="required" xsi:type="string">is_required</item>
+                <item name="label" xsi:type="string">frontend_label</item>
+                <item name="sortOrder" xsi:type="string">sort_order</item>
+                <item name="notice" xsi:type="string">note</item>
+                <item name="default" xsi:type="string">default_value</item>
+                <item name="size" xsi:type="string">multiline_count</item>
+                <item name="scope" xsi:type="string">is_global</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Authorization\Model\CompositeUserContext">
+        <arguments>
+            <argument name="userContexts" xsi:type="array">
+                <item name="adminSessionUserContext" xsi:type="array">
+                    <item name="type" xsi:type="object">Magento\User\Model\Authorization\AdminSessionUserContext</item>
+                    <item name="sortOrder" xsi:type="string">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    
+    
+    <!-- Configurable Custom Code -->
+    
+    
+    
+    <type name="Magento\ConfigurableProduct\Ui\Component\Listing\AssociatedProduct\Columns">
+        <arguments>
+            <argument name="attributeRepository" xsi:type="object">Magento\ConfigurableProduct\Ui\Component\Listing\AssociatedProduct\Attribute\Repository</argument>
+        </arguments>
+    </type>
+    <type name="Magento\ConfigurableProduct\Ui\Component\Listing\AssociatedProduct\Filters">
+        <arguments>
+            <argument name="attributeRepository" xsi:type="object">Magento\ConfigurableProduct\Ui\Component\Listing\AssociatedProduct\Attribute\Repository</argument>
+        </arguments>
+    </type>
+    <preference for="Magento\ConfigurableProduct\Model\AttributesListInterface" type="Magento\ConfigurableProduct\Model\AttributesList" />
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="configurable" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\Composite</item>
+                    <item name="sortOrder" xsi:type="number">140</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Ced\CsProduct\Ui\DataProvider\Product\Config\Composite">
+        <arguments>
+            <argument name="allowedProductTypes" xsi:type="object">Magento\Catalog\Ui\BaseAllowedProductTypes</argument>
+            <argument name="modifiers" xsi:type="array">
+                <item name="configurablePanel" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\ConfigurablePanel</item>
+                <item name="configurablePrice" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\ConfigurablePrice</item>
+                <item name="configurableQty" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\ConfigurableQty</item>
+                <item name="configurableAttributeSetHandler" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\ConfigurableAttributeSetHandler</item>
+                <item name="StockData" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\StockData</item>
+                <item name="customOptions" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Config\CustomOptions</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ced\CsProduct\Ui\DataProvider\Product\Config\ConfigurablePanel">
+        <arguments>
+            <argument name="formName" xsi:type="string">product_form</argument>
+            <argument name="dataScopeName" xsi:type="string">product_form.product_form</argument>
+            <argument name="dataSourceName" xsi:type="string">product_form.product_form_data_source</argument>
+        </arguments>
+    </type>
+     <virtualType name="Magento\Catalog\Ui\BaseAllowedProductTypes" type="Magento\Catalog\Ui\AllowedProductTypes">
+        <arguments>
+            <argument name="productTypes" xsi:type="array">
+                <item name="simple" xsi:type="string">simple</item>
+                <item name="virtual" xsi:type="string">virtual</item>
+                <item name="configurable" xsi:type="string">configurable</item>
+            </argument>
+        </arguments>
+    </virtualType> 
+    
+     <preference for="Magento\CatalogInventory\Model\Stock\Item" type="Magento\CatalogInventory\Model\Adminhtml\Stock\Item" />
+    <type name="Magento\Catalog\Model\Product\CopyConstructor\Composite">
+        <arguments>
+            <argument name="constructors" xsi:type="array">
+                <item name="catalog_inventory" xsi:type="string">Magento\CatalogInventory\Model\Product\CopyConstructor\CatalogInventory</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogInventory\Model\Spi\StockStateProviderInterface">
+        <arguments>
+            <argument name="qtyCheckApplicable" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Ui\DataProvider\Product\ProductDataProvider">
+        <arguments>
+            <argument name="addFieldStrategies" xsi:type="array">
+                <item name="qty" xsi:type="object">Magento\CatalogInventory\Ui\DataProvider\Product\AddQuantityFieldToCollection</item>
+            </argument>
+            <argument name="addFilterStrategies" xsi:type="array">
+                <item name="qty" xsi:type="object">Magento\CatalogInventory\Ui\DataProvider\Product\AddQuantityFilterToCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="advancedInventory" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\CatalogInventory\Ui\DataProvider\Product\Form\Modifier\AdvancedInventory</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    
+    <!-- Custom Code for Downloadble Product -->
+    
+    
+     <type name="Magento\Catalog\Model\Product\CopyConstructor\Composite">
+        <arguments>
+            <argument name="constructors" xsi:type="array">
+                <item name="downloadable" xsi:type="string">Magento\Downloadable\Model\Product\CopyConstructor\Downloadable</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="downloadable" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier\Composite</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier\Composite">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="downloadablePanel" xsi:type="string">Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier\DownloadablePanel</item>
+                <item name="links" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Links</item>
+                <item name="samples" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Samples</item>
+                <item name="usedDefault" xsi:type="string">Magento\Downloadable\Ui\DataProvider\Product\Form\Modifier\UsedDefault</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\Ui\BaseAllowedProductTypes">
+        <arguments>
+            <argument name="productTypes" xsi:type="array">
+                <item name="downloadable" xsi:type="string">downloadable</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    
+    <!-- Custom Bundle Product -->
+    
+    <type name="Magento\Sales\Block\Adminhtml\Order\Create\Sidebar\AbstractSidebar">
+        <plugin name="Bundle" type="Magento\Bundle\Block\Adminhtml\Order\Create\Sidebar" sortOrder="200"/>
+    </type>
+    <type name="Magento\Bundle\Model\ResourceModel\Selection\Collection">
+        <plugin name="Bundle" type="Magento\Bundle\Model\ResourceModel\Selection\Plugin\Collection" sortOrder="60" />
+    </type>
+    <type name="Magento\Catalog\Model\Product\CopyConstructor\Composite">
+        <arguments>
+            <argument name="constructors" xsi:type="array">
+                <item name="bundle" xsi:type="string">Magento\Bundle\Model\Product\CopyConstructor\Bundle</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="bundle" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\Composite</item>
+                    <item name="sortOrder" xsi:type="number">125</item>
+                </item>
+                <item name="bundle_stock_data" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\StockData</item>
+                    <item name="sortOrder" xsi:type="number">126</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\Composite">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="bundleSku" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundleSku</item>
+                <item name="bundlePrice" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\BundlePrice</item>
+                <item name="bundleWeight" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundleWeight</item>
+                <item name="bundleQuantity" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundleQuantity</item>
+                <item name="bundleAdvancedPricing" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundleAdvancedPricing</item>
+                <item name="bundlePanel" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\BundlePanel</item>
+                <item name="bundleCustomOptions" xsi:type="string">Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\BundleCustomOptions</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <!-- Custom Grouped Product -->
+    <type name="Magento\Catalog\Model\Product\CopyConstructor\Composite">
+        <arguments>
+            <argument name="constructors" xsi:type="array">
+                <item name="grouped" xsi:type="string">Magento\GroupedProduct\Model\Product\CopyConstructor\Grouped</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Sales\Model\AdminOrder\Product\Quote\Initializer">
+        <plugin name="sales_adminorder_quote_initializer_plugin" type="Magento\GroupedProduct\Model\Sales\AdminOrder\Product\Quote\Plugin\Initializer" sortOrder="100"/>
+    </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="grouped-custom-options" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\GroupedCustomOptions</item>
+                    <item name="sortOrder" xsi:type="number">72</item>
+                </item>
+                <item name="grouped" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\Grouped</item>
+                    <item name="sortOrder" xsi:type="number">120</item>
+                </item>
+                <item name="grouped_stock_data" xsi:type="array">
+                    <item name="class" xsi:type="string">Ced\CsProduct\Ui\DataProvider\Product\Form\Modifier\StockData</item>
+                    <item name="sortOrder" xsi:type="number">121</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!--Gift Message Issue-->
+   <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="gift-message" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\GiftMessage\Ui\DataProvider\Product\Modifier\GiftMessage</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- <virtualType name="uiDefinitionFileCollector" type="Magento\Framework\View\Element\UiComponent\Config\FileCollector\AggregatedFileCollector">
+        <arguments>
+            <argument name="searchPattern" xsi:type="string">etc/definition.xml</argument>
+        </arguments>
+    </virtualType> -->
+</config>

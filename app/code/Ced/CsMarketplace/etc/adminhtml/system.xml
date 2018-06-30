@@ -1,0 +1,453 @@
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="csmarketplace" sortOrder="1">
+            <label>Marketplace</label>
+        </tab>
+        <section id="cedcore" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <tab>csmarketplace</tab>
+            <label>Installed Extensions</label>
+            <resource>Ced_CsMarketplace::cedcore</resource> 
+            <group id="installed_extensions" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Installed Extensions</label>
+                <frontend_model>Ced\CsMarketplace\Block\Extensions</frontend_model>  
+            </group>
+                      
+            
+            <group id="feeds_group" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Notifications</label>
+                <field id="feeds" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>I'd like to be informed by CedCommerce about:</label>
+                    <source_model>Ced\CsMarketplace\Model\Source\Updates\Type</source_model>
+                 </field>             
+            </group>
+             <group id="extensions_groups" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>CedCommerce Extensions Store</label>
+                
+                <field id="extensions" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CedCommerce</label>
+                    <frontend_model>Ced\CsMarketplace\Block\Cedcommerce\Store</frontend_model>
+                 </field>  
+              </group>
+        </section>
+        <section id="ced_csmarketplace" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <tab>csmarketplace</tab>
+            <label>Vendor Configuration</label>
+            <resource>Ced_CsMarketplace::ced_csmarketplace</resource>
+            
+            <!-- General Configuration -->
+            
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+				<field id="activation" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Vendor System</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <!-- Field for RTL support -->
+                <field id="rtl_active" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable RTL Theme For Vendor Panel</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>  
+                <!-- Vendor Panel Theme Option -->
+                <field id="theme" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Chosse Theme For Seller Panel</label>
+					<config_path>ced_csmarketplace/general/theme</config_path>
+                    <source_model>Ced\CsMarketplace\Model\System\Config\Source\Theme</source_model>
+				</field> 
+				 <field id="color" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Choose Color For New Theme</label>
+					<config_path>ced_csmarketplace/general/theme_color</config_path>
+                    <source_model>Ced\CsMarketplace\Model\System\Config\Source\ThemeColor</source_model>
+                    <depends><field id="theme">Ced/ced_2k18</field></depends>
+				</field> 
+				<field id="login_signup_logo" translate="label" type="image" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Insert Logo For Login/Signup Header</label>
+					<config_path>ced_loginsignup/header/logo</config_path>
+					<upload_dir config="system/filesystem/media" scope_info="1">ced/csmarketplace</upload_dir>
+					<base_url type="media" scope_info="1">ced/csmarketplace</base_url>
+					<backend_model>Ced\CsMarketplace\Model\System\Config\Backend\LoginSignup\Logo</backend_model>	
+                    <comment>Allowed file types:PNG,JPG,JPEG Not all browsers support all these formats!</comment>
+                    <depends><field id="theme">Ced/ced_2k18</field></depends>
+				</field>    
+				<field id="enable_footer" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Footer</label>
+                    <config_path>ced_csmarketplace/general/enable_footer</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends><field id="theme">Ced/ced_2k18</field></depends>
+                </field>
+				<field id="footer_content" translate="label" type="textarea" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enter Footer Content</label>
+					<config_path>ced_csmarketplace/general/footer_content</config_path>
+                    <depends><field id="theme">Ced/ced_2k18</field></depends>
+				</field>
+				
+            </group>
+             
+            <!-- Vendor Account Configuration -->
+            
+            <group id="vendor" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Vendor Account Options</label>             
+				<field id="confirmation" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Require Admin Approval</label>
+					<config_path>ced_csmarketplace/general/confirmation</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>           
+				<field id="group" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Group</label>
+                    <source_model>Ced\CsMarketplace\Model\System\Config\Source\Group</source_model>
+                </field>
+                <field id="email_identity" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                </field>
+                <field id="account_confirmed_template" translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor approved notification email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                	<comment>This email will be sent after account Approval.</comment>
+                </field>
+                <field id="account_rejected_template" translate="label comment" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor rejected notification email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                	<comment>This email will be sent after account Disapproval.</comment>
+                </field>
+                <field id="account_deleted_template" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor deleted notification email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                	<comment>This email will be sent after account Deletion.</comment>
+                </field>
+                <field id="shop_enabled_template" translate="label comment" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor Shop Enable notification email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                	<comment>This email will be sent after vendor shop will be enabled by admin.</comment>
+                </field>
+                <field id="shop_disabled_template" translate="label comment" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor Shop Disable notification email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                	<comment>This email will be sent after vendor shop will be disabled by admin.</comment>
+                </field> 
+                <field id="heading_design" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Vendor Panel Design</label>
+           <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field> 
+                <field id="vendor_logo_alt" translate="label comment" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor Panel Logo Image Alt</label>
+                </field>                      
+            </group>
+            
+            <!-- Vendor Product Configuration -->
+            
+            <group id="vproducts" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+               <label>Vendor Products</label>
+               <field id="confirmation" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Require Admin Approval</label>
+					<config_path>ced_vproducts/general/confirmation</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+               </field>
+               <field id="type" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed Product Type</label>
+					<config_path>ced_vproducts/general/type</config_path>
+                    <source_model>Ced\CsMarketplace\Model\System\Config\Source\Vproducts\Type</source_model> 
+               </field>
+               <field id="limit" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor Products Limit</label>
+					<config_path>ced_vproducts/general/limit</config_path>
+               </field>
+               <field id="category_mode" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Categories Display</label>
+					<config_path>ced_vproducts/general/category_mode</config_path>
+					<source_model>Ced\CsMarketplace\Model\System\Config\Source\Vproducts\Category</source_model>
+               </field>			   
+			   <field id="category" translate="label" type="multiselect" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed Categories</label>
+					<config_path>ced_vproducts/general/category</config_path>
+					<source_model>Ced\CsMarketplace\Model\System\Config\Source\Vproducts\CategoryCollection</source_model>
+					<!--<frontend_model>Ced\CsMarketplace\Block\Adminhtml\System\Config\Frontend\Vproducts\Category</frontend_model>
+					<backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vproducts\Category</backend_model> -->
+					<depends><field id="category_mode">1</field></depends>
+               </field>			   
+               <field id="product_approved_template" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product approved notification email</label>
+					<config_path>ced_vproducts/general/product_approved_template</config_path>
+					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+               		<comment>This notification email will be sent when the product is reviewed and approved</comment>
+               </field>
+               <field id="product_rejected_template" translate="label comment" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product rejected notification email</label>
+					<config_path>ced_vproducts/general/product_rejected_template</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+               		<comment>This notification email will be sent when the product is reviewed and rejected</comment>
+               </field> 
+               <field id="product_deleted_template" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product deleted notification email</label>
+					<config_path>ced_vproducts/general/product_deleted_template</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+               		<comment>This notification email will be sent when the product is reviewed and deleted</comment>
+               </field> 
+               <field id="product_email_sender" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email Sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+               </field>                       
+            </group>
+            <!-- Downloadable Product Configuration  -->
+           	<group id="vproducts_downloadable_config" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Downloadable Product Configuration</label>
+            	<field id="sample_formats" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Allowed Sample Formats</label>
+				   <config_path>ced_vproducts/downloadable_config/sample_formats</config_path>
+                   <comment>comma separated like zip,rar,pdf,doc</comment>
+                </field>
+                <field id="link_formats" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Allowed Link Formats</label>
+				   <config_path>ced_vproducts/downloadable_config/link_formats</config_path>
+                   <comment>comma separated like jpg,jpeg,png,gif,pdf</comment>
+                </field>
+            </group> 
+            <!-- Vendor Orders Configuration -->
+            <group id="vorders" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Vendor Orders</label>
+            	<field id="order_email_enable" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                	<label>Enable New Order Notification Email</label>
+					<config_path>ced_vorders/general/order_email_enable</config_path>
+                	<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                	<comment>Enable notification email which is sent to vendor when new order is placed.</comment>
+                </field>
+                <field id="order_new_template" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>New Order Notification Template</label>
+					<config_path>ced_vorders/general/order_new_template</config_path>
+					<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="order_cancel_email_enable" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                	<label>Enable Cancel Order Notification Email</label>
+					<config_path>ced_vorders/general/order_cancel_email_enable</config_path>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                	<comment>Enable notification email which is sent to vendor when order will be cancelled.</comment>
+                </field>
+                <field id="order_cancel_template" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                	<label>Order Cancel Notification Template</label>
+					<config_path>ced_vorders/general/order_cancel_template</config_path>
+                	<source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="email_identity" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Email Sender</label>
+				   <config_path>ced_vorders/general/email_identity</config_path>
+                   <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                </field>
+            </group>
+            <!-- Vendor Payments Configuration -->
+            <group id="vpayments" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Vendor Payments</label>
+            	<field id="commission_mode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Calculate Commission Fee</label>
+				   <config_path>ced_vpayments/general/commission_mode</config_path>
+                   <source_model>Ced\CsMarketplace\Model\System\Config\Source\Rate</source_model>
+				   <backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vpayments\Commission\Mode</backend_model>
+                </field>
+                <field id="commission_fee1" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Commission Fee</label>
+				   <config_path>ced_vpayments/general/commission_fee</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+				   <backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vpayments\Commission\Fee</backend_model>
+				   <depends>
+                        <field id="commission_mode">fixed</field>
+                    </depends>
+                </field>
+				 <field id="commission_fee2" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Commission Fee</label>
+				   <config_path>ced_vpayments/general/commission_fee</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+				   <backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vpayments\Commission\Fee</backend_model>
+				   <depends>
+                        <field id="commission_mode">percentage</field>
+                    </depends>
+                </field>
+            </group>
+            <!-- Vendor Shop pages (Frontend) -->
+            <group id="vshops" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Vendor Shop Pages (Frontend)</label>
+            	<field id="vshoppage" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>CsMarketplace Page</label>
+					<frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+				<field id="vshoppage_top_title_enable" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Csmarketplace Link</label>
+					 <config_path>ced_vshops/general/vshoppage_top_title_enable</config_path>
+                	 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+				<field id="vshoppage_top_title" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Top Link Title</label>
+                    <depends><field id="vshoppage_top_title_enable">1</field></depends>
+				   <config_path>ced_vshops/general/vshoppage_top_title</config_path>
+                </field>
+                 <field id="vshoppage_title_enable" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable I am a Vendor Link</label>
+					 <config_path>ced_vshops/general/vshoppage_title_enable</config_path>
+                	 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="vshoppage_title" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Heading/Title</label>
+                   <depends><field id="vshoppage_title_enable">1</field></depends>
+				   <config_path>ced_vshops/general/vshoppage_title</config_path>
+                </field>
+                <field id="vshoppage_banner" translate="label" type="image" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Banner</label>
+					<config_path>ced_vshops/general/vshoppage_banner</config_path>
+					<upload_dir config="system/filesystem/media" scope_info="1">ced/csmarketplace</upload_dir>
+					<base_url type="media" scope_info="1">ced/csmarketplace</base_url>
+					<backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vshops\Banner</backend_model>	
+                    <comment>Allowed file types:PNG, GIF, JPG, JPEG. Not all browsers support all these formats!</comment>
+				</field>
+                <field id="vshoppage_about" translate="label" type="textarea" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Description</label>
+					<config_path>ced_vshops/general/vshoppage_about</config_path>
+                </field>                
+                <field id="vshoppage_banner_image_width" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Banner Image Width</label>
+				   <config_path>ced_vshops/general/vshoppage_banner_image_width</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <field id="vshoppage_banner_image_height" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Banner Image Height</label>
+				   <config_path>ced_vshops/general/vshoppage_banner_image_height</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <!-- Shops Listing Grid View -->
+				<field id="grid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Shops Listing Grid View</label>
+				   <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="grid_image_width" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Image Width</label>
+				   <config_path>ced_vshops/general/grid_image_width</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <field id="grid_image_height" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Image Height</label>
+				   <config_path>ced_vshops/general/grid_image_height</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <!-- Shops Listing List View -->
+				<field id="list" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Shops Listing List View</label>
+				   <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="list_image_width" translate="label" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Image Width</label>
+				   <config_path>ced_vshops/general/list_image_width</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <field id="list_image_height" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Image Height</label>
+				   <config_path>ced_vshops/general/list_image_height</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <!-- Vendor Shop Page -->
+				<field id="profile" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Vendor Shop Page</label>
+				   <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="logo_image_width" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Logo Image Width</label>
+				   <config_path>ced_vshops/general/logo_image_width</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <field id="logo_image_height" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Logo Image Height</label>
+				   <config_path>ced_vshops/general/logo_image_height</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <field id="banner_image_width" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Banner Image width</label>
+				   <config_path>ced_vshops/general/banner_image_width</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+                <field id="banner_image_height" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                   <label>Banner Image Height</label>
+				   <config_path>ced_vshops/general/banner_image_height</config_path>
+				   <validate>validate-number validate-zero-or-greater</validate>
+                   <comment>[px]</comment>
+                </field>
+				
+				<field id="vshoppage_vendor_placeholder" translate="label" type="image" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Vendor Placeholder Image</label>
+					<config_path>ced_vshops/general/vshoppage_vendor_placeholder</config_path>
+					<upload_dir config="system/filesystem/media" scope_info="1">ced/csmarketplace</upload_dir>
+					<base_url type="media" scope_info="1">ced/csmarketplace</base_url>
+					<backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vshops\Banner</backend_model>	
+                    <comment>Allowed file types:PNG, GIF, JPG, JPEG. Not all browsers support all these formats!</comment>
+                </field>
+				
+				<field id="vshoppage_banner_placeholder" translate="label" type="image" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Banner Placeholder Image</label>
+					<config_path>ced_vshops/general/vshoppage_banner_placeholder</config_path>
+					<upload_dir config="system/filesystem/media" scope_info="1">ced/csmarketplace</upload_dir>
+					<base_url type="media" scope_info="1">ced/csmarketplace</base_url>
+					<backend_model>Ced\CsMarketplace\Model\System\Config\Backend\Vshops\Banner</backend_model>	
+                    <comment>Allowed file types:PNG, GIF, JPG, JPEG. Not all browsers support all these formats!</comment>
+                </field>
+																
+            </group>
+            <!-- Vendor Seo Information -->
+            <group id="vseo" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Seo Information (CsMarketplace Page)</label>
+            	<field id="meta_keywords" translate="label" type="textarea" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Meta Keywords</label>
+					<config_path>ced_vseo/general/meta_keywords</config_path>
+                </field>
+                <field id="meta_description" translate="label" type="textarea" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Meta Description</label>
+					<config_path>ced_vseo/general/meta_description</config_path>
+                </field>
+            </group>
+            <!-- Vendor Log Information -->
+            <group id="vlogs" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Vendor Log/Debug Settings</label>
+            	<field id="active" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                	<comment>If enable then it will create log files.</comment>
+                </field>
+                <field id="process_file" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor Data Process Log File Name</label>
+					<config_path>ced_vlogs/general/process_file</config_path>
+                	<comment>All the process data will be capture.</comment>
+                </field>
+                <field id="exception_file" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vendor Exception Log File Name</label>
+					<config_path>ced_vlogs/general/exception_file</config_path>					
+                	<comment>All exception will be capture.</comment>
+                </field>
+                <field id="debug_active" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Debug Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                	<comment>Allow admin/vendor to capture the bugs if any found and report to the developer</comment>
+                </field>
+            </group>		
+        </section>
+    </system>
+</config>

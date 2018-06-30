@@ -1,0 +1,84 @@
+<?php
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+?>
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$csOrderHelper = $objectManager->get('Ced\CsOrder\Helper\Data');
+$register = $objectManager->get('Magento\Framework\Registry');
+$vorder = $register->registry('current_vorder');
+?>
+<form id="edit_form" method="post" action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>">
+    <?php echo $block->getBlockHtml('formkey')?>
+    <?php  $_order = $block->getShipment()->getOrder() ?>
+    <?php echo $block->getChildHtml('order_info') ?>
+    <div class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?php /* @escapeNotVerified */ echo __('Payment &amp; Shipping Method') ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-payment-method">
+                <?php /* Billing Address */ ?>
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php /* @escapeNotVerified */ echo __('Payment Information') ?></span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <div><?php echo $block->getPaymentHtml() ?></div>
+                    <div class="order-payment-currency"><?php /* @escapeNotVerified */ echo __('The order was placed using %1.', $_order->getOrderCurrencyCode()) ?></div>
+                </div>
+            </div>
+            <div class="admin__page-section-item order-shipping-address">
+                <?php /* Shipping Address */ ?>
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php /* @escapeNotVerified */ echo __('Shipping Information') ?></span>
+                </div>
+                <div class="admin__page-section-item-content shipping-description-wrapper">
+                    <div class="shipping-description-title"><?php echo $block->escapeHtml($vorder->getShippingDescription()) ?></div>
+                    <div class="shipping-description-content">
+                        <?php /* @escapeNotVerified */ echo __('Total Shipping Charges'); ?>:
+
+                        <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingPriceIncludingTax()): ?>
+                            <?php $_excl = $block->displayShippingPriceInclTax($vorder); ?>
+                        <?php else: ?>
+                            <?php $_excl = $block->displayPriceAttribute('shipping_amount', false, ' '); ?>
+                        <?php endif; ?>
+                        <?php $_incl = $block->displayShippingPriceInclTax($vorder); ?>
+                        <?php /* @escapeNotVerified */ echo $_incl; ?>
+                        <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                        (<?php /* @escapeNotVerified */ echo __('Incl. Tax'); ?> <?php /* @escapeNotVerified */ echo $_incl; ?>)
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div><?php echo $block->getChildHtml('shipment_tracking') ?></div>
+            </div>
+        </div>
+    </div>
+    <div id="ship_items_container">
+        <?php echo $block->getItemsHtml() ?>
+    </div>
+</form>
+<script>
+require([
+    "jquery",
+    "mage/mage",
+    "prototype"
+], function(jQuery){
+    jQuery('#edit_form').mage('form').mage('validation');
+
+});
+</script>
+<?php echo $block->getChildHtml('shipment_packaging');

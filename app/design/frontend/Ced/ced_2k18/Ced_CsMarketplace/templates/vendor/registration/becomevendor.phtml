@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php if(version_compare(Mage::getVersion(), '1.6', '>=') && Mage::helper('csmarketplace/acl')->isEnabled()) { ?>
+<div id="vendor-wraper" style="display: none !important;">
+	<div id="vendor-data" style="display: none !important;">
+		<div class="checkbox">
+		<label>
+			<input onchange="ced_csmarketplace.showVendorFrom(this);" type="checkbox" name="is_vendor" title="<?php echo __('Become a Vendor'); ?>" value="1" id="is_vendor">  <?php echo __('Become a Vendor'); ?>
+		</label>
+		</div>
+		<?php echo $this->getChildHtml('vendorRegForm'); ?>
+	</div>
+	<script type="text/javascript">
+		function vendorFields(){
+			var formElement = document.getElementById('email_address').parentNode;
+			if(formElement) {
+				while(formElement.nodeName != 'FIELDSET') {
+					formElement = formElement.parentNode;
+				}
+				var formData 	= formElement.innerHTML;
+				
+				formElement.innerHTML =  formData + document.getElementById('vendor-data').innerHTML;
+				document.getElementById('vendor-wraper').innerHTML = '';
+			}
+		}
+		window.onload = function() {
+			vendorFields();
+			document.getElementById('is_vendor').checked = true;
+			jced('#is_vendor').change();
+			document.getElementById('is_vendor').parentNode.parentNode.style.display = 'none';
+		}
+	</script>
+</div>
+<?php } ?>

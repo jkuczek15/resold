@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendorpanel" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <!-- <update handle="catalog_product_superconfig_config"/> -->
+    <head>
+        <css src="jquery/fileUploader/css/jquery.fileupload-ui.css"/>
+    </head>
+     <update handle="csmarketplace_vendor"/>
+     <update handle="editor"/>
+      <update handle="csproduct_vproducts_video"/>
+    <body>
+     <block name="require.js" class="Ced\CsMarketplace\Block\Page\RequireJs" template="Magento_Backend::page/js/require_js.phtml"/> 
+         <referenceContainer name="page.main.actions">
+            <block class="Magento\Framework\View\Element\Template" name="page.actions.toolbar" template="Magento_Backend::pageactions.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="admin.scope.col.wrap" htmlClass="admin__old" />  <!-- ToDo UI: remove this wrapper with old styles removal. The class name "admin__old" is for tests only, we shouldn't use it in any way -->
+    <referenceContainer name="vendor.dashboard.wrapper">
+           <uiComponent name="product_form"/>
+            <referenceContainer name="product_form">
+        <block name="gallery" class="Ced\CsProduct\Block\Helper\Form\Gallery">
+            <arguments>
+                <argument name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Images And Videos</item>
+                    <item name="collapsible" xsi:type="boolean">true</item>
+                    <item name="opened" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">22</item>
+                    <item name="canShow" xsi:type="boolean">true</item>
+                    <item name="componentType" xsi:type="string">fieldset</item>
+                </argument>
+            </arguments>
+            <block class="Ced\CsProduct\Block\Helper\Form\Gallery\Content" as="content">
+                <arguments>
+                    <argument name="config" xsi:type="array">
+                        <item name="parentComponent" xsi:type="string">product_form.product_form.block_gallery.block_gallery</item>
+                    </argument>
+                </arguments>
+                <block class="Ced\CsProduct\Block\Product\Edit\NewVideo" name="new-video" template="Ced_CsProduct::product/edit/slideout/form.phtml"/>
+            </block>
+        </block>
+    </referenceContainer>
+        </referenceContainer>
+    </body>
+</page>

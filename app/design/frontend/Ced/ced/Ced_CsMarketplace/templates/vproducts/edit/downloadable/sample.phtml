@@ -1,0 +1,210 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+
+$_product=$this->_objectManager->get('Magento\Framework\Registry')->registry('current_product');
+$sample_extensions = $this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->getStoreConfig('ced_vproducts/downloadable_config/sample_formats' );
+$supported_samples = explode(',',$sample_extensions);
+?>
+
+<div id="samples_container col-md-12">
+<h4 style="margin-bottom: 10px;" class="page-title col-md-12"><?php echo __('Samples') ?></h4>
+<div class="form-group col-md-6">
+<label><?php echo __('Title') ?>:</label>	
+<div class="input-box">
+<input type="text" name="product[samples_title]" value="<?php echo $_product->getSamplesTitle()?>" id="samples_title" class="input-text form-control" />
+</div>	
+</div>
+<div style="clear:both;"></div>
+<br/>
+<div class="table-responsive col-md-12">
+<table cellspacing="0" class="data-table linearize-table-large sampletable table table-bordered table-hover table-striped" id="sample_table">
+<colgroup>
+<col />
+<col />
+<col />
+<col width="1"/>
+</colgroup>
+<thead>
+<tr >
+<th><label class="required"><em>*</em><?php echo __('Title'); ?></label></th>
+<th ><?php echo __('File'); ?></th>
+<th class="nobr"><?php echo __('Sort Order'); ?></th>
+<th>&nbsp;</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td class="a-right" colspan="7">
+<button class="sample_add_btn button btn btn-info btn-circle" type="button" title="<?php echo __('Add New Row'); ?>">
+<i class="fa  fa-plus"></i>
+</button>
+</td>
+</tr>
+</tfoot>
+<?php $j=0;
+$productsamples = $this->getDownloadableProductSamples($_product);	
+foreach ( $productsamples as $productsample ){
+?>
+<tbody class="sample_body">
+<tr>
+<td data-rwd-label="<?php echo __('Title') ?>" class="number">
+<input  type="text" class="sample_title input-text input-text-large required-entry form-control" value="<?php echo $productsample->getTitle()?>" name="downloadable[sample][<?php echo $j?>][title]">
+<input type="hidden" class="sample_id" value="<?php echo $productsample->getSampleId()?>" name="downloadable[sample][<?php echo $j?>][sample_id]">
+</td>
+
+<td data-rwd-label="<?php echo __('File') ?>" >
+<ul style="list-style:none;padding: 0;text-align: left;">
+<li>
+<input type="radio" <?php echo $productsample->getSampleType()=='file'?'checked="checked"':''?>  value='file' class='sample_type' name="downloadable[sample][<?php echo $j?>][type]">
+<label><?php echo __('File') ?>:</label>
+<label class="label csbutton btn btn-circle btn-warning" for="sample<?php echo $j?>" title="<?php echo __('Upload')?>"><i class="fa  fa-upload "></i></label>
+<input type="file" style="display:none;" id="sample<?php echo $j?>" class="sample" name="samples[<?php echo $j?>]">
+<?php 	
+$shortname='';
+$samplename= '';
+if($productsample->getSampleType()=='file'){
+if($samplename=$productsample->getSampleFile()){
+$sample=explode('/',$samplename);
+if(isset($sample[1])){
+$ext=explode('.',$sample[1]);
+if(isset($ext[1]))
+$shortname=substr($sample[1],0,4)."...".$ext[1];
+else
+$shortname=substr($sample[1],0,4)."...";
+}
+}
+else {
+$shortname=__('No File Choosen');
+$samplename=__('No File Choosen');
+}
+}
+
+?>
+<span title="<?php echo $samplename;?>" class="sample_name"><?php echo $shortname; ?></span>
+
+</li>
+<li style="padding-top: 2px;">	
+<input type="radio"  value='url' class='sample_type' <?php echo $productsample->getSampleType()=='url'?'checked="checked"':''?>  name="downloadable[sample][<?php echo $j?>][type]">
+<label><?php echo __('Url') ?>:</label>	
+<input  type="text" class="sample_url form-control input-text input-text-large validate-url" value="<?php echo $productsample->getSampleUrl()?>" name="downloadable[sample][<?php echo $j?>][sample_url]">
+</li>
+</ul>
+</td>
+<td data-rwd-label="<?php echo __('Sort Order') ?>" class="number">
+<input type="text" class="sample_sort_order input-text input-text-tiny form-control" value="<?php echo $productsample->getSortOrder()?>" name="downloadable[sample][<?php echo $j?>][sort_order]">
+</td>
+
+<td data-rwd-label="<?php echo __('Remove') ?>">
+<button title="<?php echo __('Remove') ?>" onclick="sampledelinkrow(this,'<?php echo $productsample->getSampleId()?>');" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>
+</td>
+
+</tr>
+</tbody>
+<?php $j++;}?>										    
+</table>
+</div>
+</div>
+<script type="text/javascript">
+/* downloadable  product sample scripts */
+function sampledelinknewrow(this_this){
+jced(this_this).parents(".sample_body").remove();
+}
+
+function sampledelinkrow(this_this,id){
+var dicisionapp=confirm('<?php echo __('Are you sure?') ?>');
+if(dicisionapp==true){
+jced('#activity-loading').show();
+var link_id_val=jced(this_this).parents(".sample_body").find('.sample_id').val();
+var links=jced('.sample_ids').val();
+var tot_link=link_id_val+","+links;
+jced('.sample_ids').val(tot_link);
+jced.ajax({
+url: "<?php echo $this->getUrl('csmarketplace/vproducts/deleteSample',array('_nosid'=>true));?>",
+type: "POST",
+data: {
+sampleid:id,
+},
+dataType: 'html',
+success:function(content){
+if(content==1){
+jced(this).parent('div').remove();
+jced(this_this).parents(".sample_body").remove();		
+alert("<?php echo __('Product Sample Successfully Deleted') ?>");		
+}
+else
+alert("<?php echo __('Error processing the request please Try Again') ?>");
+jced('#activity-loading').hide();
+}
+});
+
+}
+}
+
+var sample_row_count = <?php echo $j?>;
+jced(".sample_add_btn").click(function(){
+var samplehtml=	'<tbody class="sample_body">'+
+'<tr>'+
+'<td data-rwd-label="<?php echo __('Title') ?>" class="number">'+
+'<input type="text" class="sample_title input-text input-text-large required-entry form-control" name="downloadable[sample]['+sample_row_count+'][title]">'+
+'<input type="hidden" class="sample_id" name="downloadable[sample]['+sample_row_count+'][sample_id]">'+
+'</td>'+
+'<td data-rwd-label="<?php echo __('File') ?>">'+
+'<ul style="list-style:none;padding: 0;text-align: left;">'+
+'<li>'+
+'<input type="radio"  checked="checked" value="file" class="sample_type" name="downloadable[sample]['+sample_row_count+'][type]">'+
+'<label><?php echo __('File') ?>:</label>'+
+'<label class="label csbutton btn btn-circle btn-warning" for="sample'+sample_row_count+'" title="<?php echo __('Upload')?>"><i class="fa  fa-upload "></i></label>'+
+'<input type="file" style="display:none;" id="sample'+sample_row_count+'" class="sample" name="samples['+sample_row_count+']">'+
+'<span class="sample_name"><?php echo __('No File Choosen') ?></span>'+
+'</li>'+
+'<li style="padding-top: 2px;">'+
+'<input type="radio"  value="url" class="sample_type" name="downloadable[sample]['+sample_row_count+'][type]">'+
+'<label><?php echo __('Url') ?>:</label>'+
+'<input  type="text" class="sample_url form-control input-text input-text-large validate-url form-control" name="downloadable[sample]['+sample_row_count+'][sample_url]">'+
+'</li>'+
+'</ul>'+
+'</td>'+
+'<td data-rwd-label="<?php echo __('Sort Order') ?>" class="number">'+
+'<input  class="sample_sort_order input-text input-text-tiny form-control" name="downloadable[sample]['+sample_row_count+'][sort_order]">'+
+'</td>'+
+'<td data-rwd-label="<?php echo __('Remove') ?>">'+
+'<button title="<?php echo __('Remove') ?>" onclick="sampledelinknewrow(this);" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>'+
+'</td>'+
+'</tr>'+
+'</tbody>';
+jced("#sample_table").append(samplehtml);
+sample_row_count++;					
+});
+jced( "body" ).delegate( ".sample", "change", function() {
+var uploaded_file = jced(this).val();
+var extension=uploaded_file.split(".").pop();
+var extensions = <?php echo json_encode($supported_samples);?>;
+if (extensions.indexOf(extension) < 0){
+alert('Check File Type,\nAllowed file: <?php echo json_encode($supported_samples);?>');
+jced(this).val('');
+}
+else{
+var samplename=uploaded_file.substr(0,6)+"..."+uploaded_file.split('.').pop();
+jced(this).parent().children('.sample_name').text(samplename);
+jced(this).parent().children('.sample_name').attr('title',val);
+}
+});
+</script>

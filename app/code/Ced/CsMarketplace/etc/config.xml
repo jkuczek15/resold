@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+    	<vendor_acl>
+	       	<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all> 
+				<vendor>
+					<title>Vendor Panel</title>
+					<path>#</path>
+					<sort_order>1</sort_order>
+					<children>
+								<vendor_dashboard>
+									<title>Dashboard and Profile</title>
+									<sort_order>10</sort_order>
+									<path>csmarketplace/vendor/index</path>
+									<children>
+										<vendor_map>
+											<title>Vendor Map</title>
+											<sort_order>10</sort_order>
+											<path>csmarketplace/vendor/map</path>
+										</vendor_map>
+										<vendor_chart>
+											<title>Vendor Chart</title>
+											<sort_order>20</sort_order>
+											<path>csmarketplace/vendor/chart</path>
+										</vendor_chart>
+									</children>
+								</vendor_dashboard>
+								<vendor_profile>
+									<title>Vendor Profile View</title>
+									<sort_order>20</sort_order>
+									<path>csmarketplace/vendor/profileview</path>
+								</vendor_profile>
+								<profile_edit>
+											<title>Edit Profile Information</title>
+											<sort_order>30</sort_order>
+											<path>csmarketplace/vendor/profile</path>
+								</profile_edit>
+								
+								<vendor_new_product>
+								     <path>csmarketplace/vproducts/new</path>
+									<title>New Product</title>
+									<sort_order>40</sort_order>	
+								</vendor_new_product>
+								
+								<vendor_products>
+								        <path>csmarketplace/vproducts/index</path>
+											<title>Manage Products</title>
+											<sort_order>50</sort_order>
+								</vendor_products>
+
+								<vendor_orders>
+									<title>Orders</title>
+									<sort_order>60</sort_order>
+									<path>csmarketplace/vorders/index</path>
+								</vendor_orders>
+								<vendor_payments>
+									<title>Transactions</title>
+									<sort_order>70</sort_order>
+									<path>csmarketplace/vpayments/index</path>
+								</vendor_payments>
+								<vendor_reports>
+									<title>Reports</title>
+									<sort_order>50</sort_order>
+									<path>#</path>
+									<children>
+										<order_reports>
+											<title>Orders Report</title>
+											<sort_order>10</sort_order>
+											<path>csmarketplace/vreports/vorders</path>
+										</order_reports>
+										<product_reports>
+											<title>Products Report</title>
+											<sort_order>20</sort_order>
+											<path>csmarketplace/vreports/vproducts</path>
+										</product_reports>
+									</children>
+								</vendor_reports>
+								<vendor_settings>
+									<title>Settings</title>
+									<sort_order>60</sort_order>
+									<path>#</path>
+									<children>
+										<vendor_payment_settings>
+											<title>Transaction Settings</title>
+											<sort_order>10</sort_order>
+											<path>csmarketplace/vsettings/index</path>
+										</vendor_payment_settings>
+									</children>
+								</vendor_settings>
+					</children>
+				</vendor>
+			</resources>
+	    </vendor_acl>
+        <ced_csmarketplace>
+			<vproducts>
+				<types>
+					<simple>*</simple>
+					<downloadable>*</downloadable>
+					<virtual>*</virtual>
+				</types>
+				<category_mode>1</category_mode>
+			</vproducts>
+            <general>
+				<activation>1</activation>
+				<confirmation>1</confirmation>
+				<vendor_groups_active>0</vendor_groups_active>
+				<theme>Ced/ced</theme>
+				<enable_footer>1</enable_footer>
+				<footer_content>© 2018 - cedcommerce.com (site name) vendor Portal</footer_content>
+            </general>
+			<vendor>
+				<groups>
+	        		<general><model>Ced\CsMarketplace\Model\Vendor\Group\General</model></general>
+				</groups>
+				<rates>
+					<percentage><model>Ced\CsMarketplace\Model\Vendor\Rate\Percentage</model></percentage>
+					<fixed><model>Ced\CsMarketplace\Model\Vendor\Rate\Fixed</model></fixed>
+				</rates>
+				<theme>
+					<default>Ced/ced</default>
+					<ced_2k18>Ced/ced_2k18</ced_2k18>
+				</theme>
+				<themecolor>
+					<blue>default.css</blue>
+					<green>green.css</green>
+					<red>red.css</red>
+					<orange>orng.css</orange>
+					<yellow>yellow.css</yellow>
+					<lightblue>light-blue.css</lightblue>
+					<purple>purple.css</purple>
+				</themecolor>
+				<payment_methods>
+					<cheque>*</cheque> 
+					<paypal>*</paypal>
+					<banktransfer>*</banktransfer>
+				</payment_methods>
+				
+				<group>general</group>
+				<status>new</status>
+				<email_identity>general</email_identity>
+				<account_confirmed_template>ced_csmarketplace_vendor_account_confirmed_template</account_confirmed_template>
+				<account_rejected_template>ced_csmarketplace_vendor_account_rejected_template</account_rejected_template>
+				<account_deleted_template>ced_csmarketplace_vendor_account_deleted_template</account_deleted_template>
+				<shop_enabled_template>ced_csmarketplace_vendor_shop_enabled_template</shop_enabled_template>
+				<shop_disabled_template>ced_csmarketplace_vendor_shop_disabled_template</shop_disabled_template>
+				<vendor_theme>Ced/ced</vendor_theme>
+				<vendor_logo_src>images/logo.gif</vendor_logo_src>
+				<vendor_logo_alt>Vendor Panel</vendor_logo_alt>
+				<vendor_footer_text><![CDATA[&copy; 2015 <strong>CedCommerce</strong>. All Rights Reserved.]]></vendor_footer_text>
+				<theme_css></theme_css>
+			</vendor>
+		</ced_csmarketplace>
+		<ced_vproducts>
+			<general>
+				<activation>1</activation>
+				<confirmation>1</confirmation>
+				<type>simple,downloadable,virtual</type>
+				<limit>100</limit>
+				<category_mode>0</category_mode>
+				<email_identity>general</email_identity>
+				<product_approved_template>ced_csmarketplace_vproducts_product_approved_template</product_approved_template>
+				<product_rejected_template>ced_csmarketplace_vproducts_product_rejected_template</product_rejected_template>
+				<product_deleted_template>ced_csmarketplace_vproducts_product_deleted_template</product_deleted_template>
+			</general>
+			<downloadable_config>
+				<link_formats>zip,rar,pdf,doc</link_formats>
+				<sample_formats>jpg,jpeg,png,gif,pdf,rar</sample_formats>
+			</downloadable_config>
+		</ced_vproducts>
+        <ced_vorders>
+			<general>
+				<order_email_enable>1</order_email_enable>
+				<order_cancel_email_enable>1</order_cancel_email_enable>
+				<email_identity>general</email_identity>
+				<order_new_template>ced_csmarketplace_vorders_order_new_template</order_new_template>
+				<order_cancel_template>ced_csmarketplace_vorders_order_cancel_template</order_cancel_template>			
+			</general>
+		</ced_vorders>
+		<ced_vpayments>
+			<general>
+				<online>0</online>
+				<payment_approval>0</payment_approval>
+				<commission_mode>percentage</commission_mode>
+				<commission_fee>10</commission_fee>
+			</general>
+		</ced_vpayments>                            	
+		<ced_vshops>
+			<general>
+				<logo_image_width>175</logo_image_width>
+				<logo_image_height>150</logo_image_height>
+				<banner_image_width>668</banner_image_width>
+				<banner_image_height>150</banner_image_height>
+				<grid_image_width>135</grid_image_width>
+				<grid_image_height>135</grid_image_height>
+				<list_image_width>135</list_image_width>
+				<list_image_height>135</list_image_height>
+				<vshoppage_about>CEDCOMMERCE is a leading solution provider for web based applications. The Company has been promoted by highly experienced professionals dedicated to provide high quality IT solutions. We provide values to the product with applied quality process. We define, design and deliver IT solutions to our clients which help them to become front runner up in there domain. With CEDCOMMERCE, clients are assured of a transparent business partner, world-class processes, speed of execution and the power to stretch their IT budget by leveraging the global delivery model that CEDCOMMERCE pioneered.
+	Our services includes a range of preliminary to enterprise level solutions. CEDCOMMERCE provides consultancy, design, development, maintenance and customization for your existing business applications. </vshoppage_about>
+				<vshoppage_banner></vshoppage_banner>
+				<vshoppage_title>I am a Vendor</vshoppage_title>
+				<vshoppage_top_title>CsMarketplace</vshoppage_top_title>
+				<vshoppage_banner_image_width>800</vshoppage_banner_image_width>
+				<vshoppage_banner_image_height>200</vshoppage_banner_image_height>
+				
+			</general>
+		</ced_vshops>
+		<ced_loginsignup>
+			<header>
+				<logo></logo>
+			</header>
+		</ced_loginsignup>
+		<ced_vlogs>
+			<general>
+				<process_file>vendor_process.log</process_file>
+				<exception_file>vendor_exception.log</exception_file>
+			</general>
+		</ced_vlogs>	
+		<system>
+            <csmarketplace>
+                <feed_url>cedcommerce.com/licensing/log/post</feed_url>
+                <popup_url>widgets.magentocommerce.com/notificationPopup</popup_url>
+                <severity_icons_url>widgets.magentocommerce.com/%s/%s.gif</severity_icons_url>
+                <frequency>72</frequency>
+                <last_update>0</last_update>
+            </csmarketplace>
+            <license>
+				<use_https>0</use_https>
+				<license_url>csmarketplace/main/license</license_url>
+				<activate_url>cedcommerce.com/licensing/validate/</activate_url>
+				<validate_url>cedcommerce.com/licensing/validate/auto</validate_url>
+			</license>
+        </system>
+		<cedcore>
+			   <feeds_group>
+					<feeds>INFO,PROMO,UPDATE_RELEASE,NEW_RELEASE,INSTALLED_UPDATE</feeds>
+			   </feeds_group>
+		  </cedcore>
+		  <design>
+		     <theme>
+		             <theme_id>2</theme_id>
+		     </theme>
+		  </design>
+		  <ced_vshops>
+		      <general>
+		         <vshoppage_top_title_enable>1</vshoppage_top_title_enable>
+		         <vshoppage_title_enable>1</vshoppage_title_enable>
+		      </general>
+		  </ced_vshops>
+		<cataloginventory>
+			<options>
+				<show_out_of_stock>1</show_out_of_stock>
+			</options>
+		</cataloginventory>
+		
+    </default>
+</config>

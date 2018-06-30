@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$statusArray = $this->getObjectManager()->get('Magento\Sales\Model\Order\Invoice')->getStates(); 
+$helper = $this->getObjectManager()->get('Ced\CsMarketplace\Helper\Data');
+$collection = $this->getVorders();
+$localeCurrency = $this->getObjectManager()->get('Magento\Framework\Locale\Currency');
+?>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<i class="fa fa-shopping-cart fa-fw"></i>
+		<?php echo __('Latest Orders'); ?>
+    </div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th><?php echo __('Order ID').'#'; ?></th>
+						<th><?php echo __('Purchased On') ?></th>
+						<th><?php echo __('Billing Name') ?></th>
+						<th><?php echo __('Net Earned') ?></th>
+						<th><?php echo __('Order Status') ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					 <?php if (count($collection)>0): ?>
+						<?php $_odd = ''; ?>
+						<?php foreach ($collection as $_order): ?>
+						<?php 
+							$status = '';
+							switch($_order->getStatus()) {
+								case 'processing' : $status = 'info'; break;
+								case 'complete' : $status = 'success'; break;
+								case 'canceled' : $status = 'danger'; break;
+								default : $status = 'warning'; break;
+							}
+						?>
+						<tr class="<?php echo $status;?> ced_order_info clickable-row" style="cursor: pointer;"  data-href='<?php echo $this->getViewUrl($_order); ?>'>
+								<td class="number"><a title="Click to view Order Details" href="<?php echo $this->getViewUrl($_order) ?>"><?php echo $_order->getIncrementId() ?></a></td>
+								<td class="date"><?php echo  $block->formatDate( $_order->getCreatedAt() ,\IntlDateFormatter::SHORT);	 ?></td>
+								<td class="ship"><?php echo $_order->getBillingName()?$this->escapeHtml($_order->getBillingName()):'&nbsp;'; ?></td>   							
+								<td class="total">
+									<?php  echo $localeCurrency->getCurrency($_order->getOrderCurrencyCode())->toCurrency($_order->getNetVendorEarn()); ?>
+								</td>
+								<td class="status"><button class="btn btn-outline btn-<?php echo $status;?>" type="button"><?php echo ucfirst($_order->getStatus()); ?></button></td>
+						</tr>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr>
+							<td colspan="6">
+								<div>
+									<p><?php echo __('No Orders Available'); ?></p>
+								</div>
+							</td>
+						</tr>		
+					<?php endif ?>
+				</tbody>
+			</table>
+			<?php if(count($collection)>0){?>
+			<span><a href="<?php echo $this->geturl('csmarketplace/vorders')?>">View All Orders</a></span>
+			<?php }?>
+		</div>
+	</div>
+</div>
+<style>
+	.ced_order_info::before {
+	  content: none !important;
+	}								
+</style>
+<script type="text/javascript">
+require([
+		'jquery'
+		], function($){ 
+	$(document).ready(function($) {
+		$(".clickable-row").click(function() {
+	        window.document.location = $(this).data("href");
+	    });
+	});
+});
+</script>

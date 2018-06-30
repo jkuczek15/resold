@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php  $products = $this->getProducts();
+    ?>
+<table bgcolor="FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #E0E0E0;" summary="<?php echo __('Products') ?>">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA"
+                style="font-size: 13px; padding: 3px 9px"><?php echo __('Product Name') ?></th>
+            <th align="left" bgcolor="#EAEAEA"
+                style="font-size: 13px; padding: 3px 9px"><?php echo __('SKU') ?></th>
+                <!--
+            <th align="left" bgcolor="#EAEAEA"
+                style="font-size: 13px; padding: 3px 9px"><?php echo __('Qty') ?></th>
+            <th align="left" bgcolor="#EAEAEA"
+                style="font-size: 13px; padding: 3px 9px"><?php echo __('Website(s)') ?></th>
+                -->
+        </tr>
+    </thead>
+    <tbody  bgcolor="#F6F6F6">
+    <?php $i=0;?>
+    <?php if(!empty($products[0])):?>
+        <?php foreach ($products[0] as $product): ?>
+            <tr align="left" 
+                style="font-size: 13px; padding: 3px 9px" <?php echo $i%2 ? ' bgcolor="#EAEAEA"' : '#F6F6F6' ?> class="border">
+                <td class="number">
+                <?php if($products[1][$product->getId()]->getCheckStatus()==\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS && $product->getStatus()==\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED){?>
+                <a href="<?php echo $product->getProductUrl() ?>" title="<?php  echo $product->getName()?>" ><?php echo $product->getName();?></a>
+                <?php }else{?>
+                <?php echo $product->getName();?>
+                <?php }?>
+                </td>
+                <td class="number"><?php echo $product->getSku();?></td>
+                <!--
+                <td class="number"><?php // echo $product->getStockItem()->getQty();?></td>
+                <td class="number">
+                <?php 
+                /* $WebsiteName=array();
+                    foreach($product->getWebsiteIds() as $websiteId){
+                        if($websiteId!=0)
+                            $WebsiteName[]=$this->_objectManager->get('Magento\Store\Model\Website')->load($websiteId)->getName();
+                    } 
+                    echo implode(',',$WebsiteName);      */
+                ?>
+                
+                </td>
+                -->
+            </tr>
+            <?php $i++;?>
+        <?php endforeach; ?>
+    <?php endif;?>
+    </tbody>
+</table>
