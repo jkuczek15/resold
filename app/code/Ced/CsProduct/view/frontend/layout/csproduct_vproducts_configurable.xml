@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ced_CsProduct::css/configurable-product.css"/>
+        <!-- catalog_product_new layout of config product -->
+        <css src="Ced_CsProduct::configurable/product/product.css"/>
+        <!-- catalog_product_new layout of config product -->
+    </head>
+    <update handle="csproduct_vproducts_superconfig_config"/>
+    <body>
+        <referenceBlock name="product_tabs">
+            <action method="removeTab">
+                <argument name="name" xsi:type="string">advanced-pricing</argument>
+            </action>
+        </referenceBlock>
+        <!-- catalog_product_new layout of config product -->
+       <!--  <referenceContainer name="js">
+            <block class="Ced\CsProduct\Block\ConfigurableProduct\Product\Configurable\AttributeSelector" template="Magento_ConfigurableProduct::product/configurable/affected-attribute-set-selector/js.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" template="Magento_ConfigurableProduct::product/configurable/stock/disabler.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="vendor.dashboard.wrapper">
+            <block class="Magento\Framework\View\Element\Template" name="affected-attribute-set-selector" template="Magento_ConfigurableProduct::product/configurable/affected-attribute-set-selector/form.phtml">
+                <block class="Magento\ConfigurableProduct\Block\Adminhtml\Product\Edit\AttributeSet\Form" name="affected-attribute-set-form" />
+            </block>
+        </referenceContainer> -->
+        <!-- catalog_product_new layout of config product -->
+    </body>
+</page>

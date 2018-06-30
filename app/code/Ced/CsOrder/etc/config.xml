@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+   	<default>
+		<ced_vorders>
+			<general>
+				<vorders_canshipment>0</vorders_canshipment>
+				<vorders_caninvoice>0</vorders_caninvoice>
+				<vorders_cancreditmemo>0</vorders_cancreditmemo>
+				<vorders_shipment_rule>0</vorders_shipment_rule>
+				<vorders_active>1</vorders_active>
+			</general>
+		</ced_vorders>
+		<ced_vpayments>
+			<general>
+				<shipping_commissionable>0</shipping_commissionable>
+			</general>
+		</ced_vpayments>
+		<rewrite>
+			<ced_vorders_view>
+				<from><![CDATA[/csmarketplace\/vorders\/view\/order_id\/(.*)/]]></from>
+				<to><![CDATA[csorder/vorders/view/order_id/$1/]]></to>
+				<complete>1</complete>
+       		</ced_vorders_view>
+       		<ced_vorders_list  ifconfig="ced_vorders/general/vorders_active" >
+				<from><![CDATA[/csmarketplace\/vorders\/index\/(.*)/]]></from>
+				<to><![CDATA[csorder/vorders/index/$1/]]></to>
+				<complete>1</complete>
+       		</ced_vorders_list>
+        </rewrite>
+        <ced>
+		   	<rewrites>
+		    	<csorder>
+		     		<creditmemo>
+		      			<all>Adminhtml,Widget,Backend,RequireJs</all>
+		     		</creditmemo>
+		     		<index>
+		      			<all>Adminhtml,Widget,Backend,RequireJs</all>
+		     		</index>
+		     		<invoice>
+		     			<all>Adminhtml,Widget,Backend,RequireJs</all>
+		     		</invoice>
+		     		<shipment>
+		     			<all>Adminhtml,Widget,Backend,RequireJs</all>
+		     		</shipment>
+		     		<vorders>
+		     			<all>Adminhtml,Widget,Backend,RequireJs</all>
+		     		</vorders>
+		    	</csorder>
+		   	</rewrites>
+		</ced>
+		<vendor_acl>
+       		<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all> 
+				<vendor>
+					<title>Vendor Panel</title>
+					<path>#</path>
+					<sort_order>1</sort_order>
+					<children>
+						<vendor_orders>
+									<title>Orders</title>
+									<sort_order>60</sort_order>
+									<path>#</path>
+									<ifconfig>ced_vorders/general/vorders_active</ifconfig>
+									<dependsonparent>
+									   <vendor_orders>
+										  <title>Orders</title>
+										  <sort_order>60</sort_order>
+										  <path>csmarketplace/vorders/index</path>
+								    </vendor_orders>
+									
+									</dependsonparent>
+								 <children>
+									<csorder_manage_order>
+										<title>Manage Orders</title>
+										<sort_order>10</sort_order>
+										<path>csorder/vorders/index</path>
+									</csorder_manage_order>
+									<csorder_manage_invoice>
+										<title>Manage Invoice</title>
+										<sort_order>20</sort_order>
+										<path>csorder/invoice/index</path>
+									</csorder_manage_invoice>
+									<csorder_manage_shipment>
+										<title>Manage Shipment</title>
+										<sort_order>30</sort_order>
+										<path>csorder/shipment/index</path>
+									</csorder_manage_shipment>
+									<csorder_manage_creditmemo>
+										<title>Manage Credit Memo</title>
+										<sort_order>40</sort_order>
+										<path>csorder/creditmemo/index</path>
+									</csorder_manage_creditmemo>
+								</children> 
+							</vendor_orders>
+					</children>
+				</vendor>
+			</resources>
+    	</vendor_acl>
+    </default>
+</config>

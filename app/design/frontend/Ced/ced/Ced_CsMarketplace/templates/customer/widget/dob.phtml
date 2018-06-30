@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<div class="input-box customer-dob">
+<?php
+    $this->setDateInput('d',
+        '<div class="input-box dob-day">
+             <input placeholder="'.__('DD').'" type="text" id="' . $this->getFieldId('day') . '" name="' . $this->getFieldName('day') . '" value="' . $this->getDay() . '" title="' . __('Day') . '" class="form-control input-text validate-custom" ' . $this->getFieldParams() . ' />
+             
+         </div>'
+    );
+
+    $this->setDateInput('m',
+        '<div class="input-box dob-month">
+             <input placeholder="' . __('MM')  . '" type="text" id="' . $this->getFieldId('month') . '" name="' . $this->getFieldName('month') . '" value="' . $this->getMonth()  . '" title="' . __('Month')  . '" class="form-control input-text validate-custom" ' . $this->getFieldParams()  . ' />
+            
+         </div>'
+    );
+
+    $this->setDateInput('y',
+        '<div class="input-box dob-year">
+             <input placeholder="' . __('YYYY')  . '" type="text" id="' . $this->getFieldId('year') . '" name="' . $this->getFieldName('year') . '" value="' . $this->getYear()  . '" title="' . __('Year')  . '" class="form-control input-text validate-custom" ' . $this->getFieldParams()  . ' />
+             
+         </div>'
+    );
+?>
+    <?php echo $this->getSortedDateInputs() ?>
+    <div class="dob-full" style="display:none;">
+        <input type="hidden" id="<?php echo $this->getFieldId('dob')?>" name="<?php echo $this->getFieldName('dob')?>" />
+    </div>
+
+    <div class="validation-advice" style="display:none;"></div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var customer_dob = new Varien.DOB('.customer-dob', <?php echo $this->isRequired() ? 'true' : 'false' ?>, '<?php echo $this->getDateFormat() ?>');
+//]]>
+</script>
+<style>
+#advice-validate-custom-month,#advice-validate-custom-day,#advice-validate-custom-year{
+display:none !important;
+}
+</style>

@@ -1,0 +1,64 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php $collection = $block->getBestSellerProducts();?>
+
+<div class="panel panel-default most-sold-product">
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped table-bordered">
+				<thead>
+					<tr>
+						<th class="head"><?php echo __('Product Name') ?></th>
+						<th class="head"><?php echo __('Qty Ordered') ?></th>
+						<th class="head"><?php echo __('Product Price') ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if(count($collection)>0): ?>
+						<?php foreach ($collection as $_product):
+						    $name = $_product->getName();
+						    if(strlen($_product->getName()) > 10)
+						       $name = substr($_product->getName(),0,10).'...';
+					 ?>
+									<td class="date"><?php echo   $name;	 ?></td>
+									<td class="ship"><?php echo $_product->getQtyOrdered() ?></td>   							
+									<td class="total">
+										<?php echo $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_product->getPrice(),true,false) ?>
+									</td>
+								</tr>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr>
+							<td colspan="6">
+								<div>
+									<p><?php echo __('No Record Available'); ?></p>
+								</div>
+							</td>
+						</tr>		
+					<?php endif ?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<style>
+	.ced_order_info::before {
+		content: none !important;
+	}								
+</style>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+   <module name="ADM_QuickDevBar" setup_version="0.1.12"/>
+   <!-- Sequence allow to control load order module -->
+   <sequence>
+   </sequence>
+   <!-- Dependencies must be declared -->
+   <depends>
+   </depends>
+   <default>
+    <dev>
+      <quickdevbar>
+        <enable>2</enable>
+      </quickdevbar>
+    </dev>
+   </default>
+</config>

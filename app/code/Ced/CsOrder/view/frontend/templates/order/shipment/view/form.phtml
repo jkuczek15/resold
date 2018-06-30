@@ -1,0 +1,139 @@
+<?php
+ /**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+?>
+
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$csOrderHelper = $objectManager->get('Ced\CsOrder\Helper\Data');
+ $_order = $block->getShipment()->getOrder();
+$vendorId = $objectManager->get('Magento\Customer\Model\Session')->getVendorId();
+ $vorder = $objectManager->get('Ced\CsOrder\Model\Vorders')->getCollection()->addFieldToFilter('order_id',$_order->getIncrementId())->addFieldToFilter('vendor_id',$vendorId)->getFirstItem(); 
+
+  ?>
+<?php echo $block->getChildHtml('order_info') ?>
+<section class="admin__page-section order-shipment-billing-shipping">
+    <div class="admin__page-section-title">
+        <span class="title"><?php /* @escapeNotVerified */ echo __('Payment &amp; Shipping Method') ?></span>
+    </div>
+    <div class="admin__page-section-content">
+
+        <?php /* Billing Address */ ?>
+        <div class="admin__page-section-item order-payment-method">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */ echo __('Payment Information') ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <div><?php echo $block->getChildHtml('order_payment') ?></div>
+                <div class="order-payment-currency"><?php /* @escapeNotVerified */ echo __('The order was placed using %1.', $_order->getOrderCurrencyCode()) ?></div>
+            </div>
+        </div>
+
+        <?php /* Shipping Address */ ?>
+        <!--<div class="admin__page-section-item order-shipping-address">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */ echo __('Shipping and Tracking Information') ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <div class="shipping-description-wrapper">
+                    <?php if ($block->getShipment()->getTracksCollection()->count()): ?>
+                        <p>
+                            <a href="#" id="linkId" onclick="popWin('<?php /* @escapeNotVerified */ echo $this->helper('Magento\Shipping\Helper\Data')->getTrackingPopupUrlBySalesModel($block->getShipment()) ?>','trackshipment','width=800,height=600,resizable=yes,scrollbars=yes')" title="<?php /* @escapeNotVerified */ echo __('Track this shipment') ?>"><?php /* @escapeNotVerified */ echo __('Track this shipment') ?></a>
+                        </p>
+                    <?php endif; ?>
+                    <div class="shipping-description-title">
+                        <?php echo $block->escapeHtml($_order->getShippingDescription()) ?>
+                    </div>
+
+                    <?php /* @escapeNotVerified */ echo __('Total Shipping Charges'); ?>:
+
+                    <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingPriceIncludingTax()): ?>
+                        <?php $_excl = $block->displayShippingPriceInclTax($_order); ?>
+                    <?php else: ?>
+                        <?php $_excl = $block->displayPriceAttribute('shipping_amount', false, ' '); ?>
+                    <?php endif; ?>
+                    <?php $_incl = $block->displayShippingPriceInclTax($_order); ?>
+
+                    <?php /* @escapeNotVerified */ echo $_excl; ?>
+                    <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                        (<?php /* @escapeNotVerified */ echo __('Incl. Tax'); ?> <?php /* @escapeNotVerified */ echo $_incl; ?>)
+                    <?php endif; ?>
+                </div>
+                <?php if ($block->canCreateShippingLabel()): ?>
+                <p>
+                    <?php /* @escapeNotVerified */ echo $block->getCreateLabelButton()?>
+                    <?php if ($block->getShipment()->getShippingLabel()): ?>
+                        <?php /* @escapeNotVerified */ echo $block->getPrintLabelButton() ?>
+                    <?php endif ?>
+                    <?php if ($block->getShipment()->getPackages()): ?>
+                        <?php /* @escapeNotVerified */ echo $block->getShowPackagesButton() ?>
+                    <?php endif ?>
+                </p>
+                <?php endif ?>
+                <?php echo $block->getChildHtml('shipment_tracking') ?>
+
+                <?php echo $block->getChildHtml('shipment_packaging') ?>
+<script>
+    require([
+        'prototype'
+    ], function () {
+
+        setTimeout(function () {
+            packaging.setConfirmPackagingCallback(function () {
+                packaging.sendCreateLabelRequest();
+            });
+            packaging.setLabelCreatedCallback(function (response) {
+                setLocation("<?php /* @escapeNotVerified */ echo $block->getUrl(
+'adminhtml/order_shipment/view',
+['shipment_id' => $block->getShipment()->getId()]
+); ?>");
+            });
+        }, 500);
+
+    });
+</script>
+            </div>
+        </div>-->
+            <?php 
+        if(is_object($vorder) && $csOrderHelper->canShowShipmentBlock($vorder))       
+            echo $block->getChildHtml('order_shipping_view');
+        ?>
+    </div>
+</section>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?php /* @escapeNotVerified */ echo __('Items Shipped') ?></span>
+    </div>
+    <?php echo $block->getChildHtml('shipment_items') ?>
+</section>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?php /* @escapeNotVerified */ echo __('Order Total') ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <?php echo $block->getChildHtml('shipment_packed') ?>
+
+        <div class="admin__page-section-item order-comments-history">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */ echo __('Shipment History') ?></span>
+            </div>
+            <div class="admin__page-section-item-content"><?php echo $block->getChildHtml('order_comments') ?></div>
+        </div>
+    </div>
+</section>

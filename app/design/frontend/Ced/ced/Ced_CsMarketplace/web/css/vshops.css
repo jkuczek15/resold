@@ -1,0 +1,13 @@
+.category-image > img {
+  max-height: 338px;
+  object-fit: cover;
+  width: 100%;
+}
+.category-products .csmarketplace-vendors-grid:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.category-products .csmarketplace-vendors-grid {
+  padding-left: 0px;
+}

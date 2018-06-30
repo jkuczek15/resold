@@ -1,0 +1,107 @@
+<?php 
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+?>
+<?php 
+$helper = $this->helper('Ced\CsMarketplace\Helper\Tool\Image');
+$logo = $helper->getStoreConfig("ced_loginsignup/header/logo",$this->getCurrentStoreId())?"ced/csmarketplace/".$helper->getStoreConfig("ced_loginsignup/header/logo",$this->getCurrentStoreId()):'';
+$logoImage = $helper->getResizeImage($logo, 'logo', 190, 45);
+$footerContent = $helper->getStoreConfig("ced_csmarketplace/general/footer_content",$this->getCurrentStoreId());
+$isfooterEnable = $helper->getStoreConfig("ced_csmarketplace/general/enable_footer",$this->getCurrentStoreId());
+?>
+
+<div class="ced_vendor_header">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="pull-left">
+					<div class="v_header_logo">
+						<?php if($logo):?>
+							<a href="<?php echo $this->getBaseUrl(); ?>" target="_blank">
+								<img src="<?php echo $logoImage ?>" alt="vendor panel logo">
+							</a>
+						<?php else:?>
+							<img src="<?php echo $block->getViewFileUrl('images/demo.png'); ?>" alt="vendor panel logo">
+						<?php endif;?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="page-title">
+    <h1><?php echo __('Send confirmation link') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="" method="post" id="form-validate">
+    <div class="fieldset">
+        <h2 class="legend"><?php echo __('Retrieve your confirmation link here') ?></h2>
+        <p><?php echo __('Please enter your email below and we\'ll send you confirmation link for it.') ?></p>
+        <ul class="form-list">
+            <li>
+                <label for="email_address" class="required"><em>*</em><?php echo __('Email Address') ?></label>
+                <div class="input-box">
+                    <input type="text" name="email" id="email_address" title="<?php echo __('Email Address') ?>" class="input-text required-entry validate-email" value="<?php echo $this->htmlEscape($this->getEmail()) ?>" />
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="required"><?php echo __('* Required Fields') ?></p>
+        <p class="back-link"><a href="<?php echo $this->helper('customer')->getLoginUrl() ?>"><small>&laquo; </small><?php echo __('Back to Login') ?></a></p>
+        <button type="submit" title="<?php echo __('Submit') ?>" class="button"><span><span><?php echo __('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+   // var dataForm = new VarienForm('form-validate', true);
+//]]>
+</script>
+<?php if($isfooterEnable): ?>
+<div class="ced_vendor_footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="ced_vendor_footer_links">
+					<ul>
+						<li>
+							<a href="<?php echo $this->getBaseUrl(); ?>">
+								<?php echo __('Home') ?>
+							</a>
+							|
+						</li>
+						<li>
+							<a href="<?php echo $this->getBaseUrl().'contact'; ?>">
+								<?php echo __('Contact') ?>
+							</a>
+							|
+						</li>
+						<!--<li>
+							<a href="<?php //echo $this->getBaseUrl().'#'; ?>">
+								<?php //echo __('faq') ?>
+							</a>
+						</li>-->
+					</ul>
+				</div>
+				<p><?php echo $footerContent; ?></p>
+			</div>
+		</div>
+	</div>
+</div>
+<?php endif;?>

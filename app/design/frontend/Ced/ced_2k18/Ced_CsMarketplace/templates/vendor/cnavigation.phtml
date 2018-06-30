@@ -1,0 +1,87 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<script>
+	require([
+		'jquery',
+		'jquery/ui',
+		'Ced_CsMarketplace/bower_components/metisMenu/dist/metisMenu.min',
+		'csbootstrap',
+		'csvendorpanel',
+		'text'
+		], function($){
+			jQuery(function() {
+				checkMetis();
+				function checkMetis(){
+					setTimeout( function(){ 
+						if(typeof jQuery("#side-menu").metisMenu=='undefined')
+						{
+							checkMetis();
+						}
+						else
+						{
+							jQuery("#side-menu").metisMenu();
+						}
+					}  , 1000 );
+				}
+			});
+		});
+	</script>
+	<?php try {  ?>
+	<?php $helper = $block->getObjectManager()->get('Ced\CsMarketplace\Helper\Data'); ?>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar iconbar-one"></span>
+				<span class="icon-bar iconbar-two"></span>
+				<span class="icon-bar iconbar-three"></span>
+			</button>
+		</div>
+		<?php 
+		if ($helper->getIsDashboard()): ?>
+	<?php else: ?>
+	<?php endif ?>
+	<?php echo $this->getChildHtml('vendor_header') ?>
+	<?php echo $this->getChildHtml('sidebar') ?>
+</nav>
+<?php 
+} catch (Exception $e) {
+} 
+?>
+<!--===== JS to animate sidebar -->
+<script type="text/javascript">
+	require(["jquery"], function ($) {
+		$('.navbar-toggle').click(function(){
+			$('.navbar-toggle').toggleClass('slide');
+			$('.mobile-menu-overlay').toggleClass('slide');
+			$('.navbar-default.ced-vendor-sidebar').toggleClass('slide');
+			$('.page-wrapper').toggleClass('slide');
+			$('body').toggleClass('mobileslidemenu-open');
+		});
+		$('.mobile-menu-overlay').click(function(){
+			$('.navbar-toggle').removeClass('slide');
+			$('.mobile-menu-overlay').removeClass('slide');
+			$('.navbar-collapse').removeClass('in');
+			$('.ced-vendor-sidebar').removeClass('slide');
+			$(this).removeClass('slide');
+			$('body').removeClass('mobileslidemenu-open');
+		});
+	});
+</script>
+<!--===== JS to animate sidebar -->

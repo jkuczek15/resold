@@ -1,0 +1,95 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+ 
+?>
+<?php $statusArray = $this->getObjectManager()->get('Ced\CsMarketplace\Model\Vproducts')->getOptionArray(); ?>
+<?php $collection = $block->getVendorProducts();?>
+<?php $helper = $this->getObjectManager()->get('Ced\CsMarketplace\Helper\Data');?>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped table-bordered">
+				<thead>
+					<tr>
+						<th class="head"><?php echo __('Product ID') ?></th>
+						<th class="head"><?php echo __('Product Name') ?></th>
+						<th class="head"><?php echo __('Product Price') ?></th>
+						<th class="head"><?php echo __('Product Qty') ?></th>
+						<th class="head"><?php echo __('Product Status') ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if(count($collection)>0): ?>
+						<?php $_odd = ''; ?>
+						<?php $counter=0;?>
+						<?php foreach ($collection as $_product): ?>
+							<?php if($counter<=5):?>
+								<?php 
+								$status = '';
+								switch($_product->getCheckStatus()) {
+									case '0' : $status = 'danger'; $productStatus =__('Disapproved'); break;
+									case '1' : $status = 'success'; $productStatus =__('Approved');break;
+									case '2' : $status = 'info'; $productStatus =__('Pending');break;
+									default : $status = 'dander'; $productStatus =__('Deleted');break;
+								}
+								?>
+								<tr class="<?php echo $status;?> ced_order_info clickable-row" style="cursor: pointer;"  data-href='<?php echo $this->getUrl('csmarketplace/vproducts/edit',array('id'=>$_product->getProductId(),'type'=>$_product->getType())); ?>'>
+									<td class="number"><a title="Click to view Order Details"><?php echo $_product->getProductId() ?></a></td>
+									<td class="date"><?php echo  $_product->getName();	 ?></td>
+									<td class="ship"><?php echo $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_product->getPrice(),true,false) ?></td>   							
+									<td class="total">
+										<?php echo $_product->getQty() ?>
+									</td>
+									<td class="status"><span class="btn btn-outline btn-<?php echo $status;?>" type="button"><?php echo $productStatus; ?></span></td>
+								</tr>
+								<?php $counter++;?>
+							<?php endif;?>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<tr>
+							<td colspan="6">
+								<div>
+									<p><?php echo __('No Product Available'); ?></p>
+								</div>
+							</td>
+						</tr>		
+					<?php endif ?>
+				</tbody>
+			</table>
+			<?php if(count($collection)>0){?>
+			<span><a href="<?php echo $this->geturl('csmarketplace/vproducts')?>">View All Products</a></span>
+			<?php }?>
+		</div>
+	</div>
+</div>
+<style>
+	.ced_order_info::before {
+		content: none !important;
+	}								
+</style>
+<script type="text/javascript">
+	require([
+		'jquery'
+		], function($){ 
+			$(document).ready(function($) {
+				$(".clickable-row").click(function() {
+					window.document.location = $(this).data("href");
+				});
+			});
+		});
+</script>

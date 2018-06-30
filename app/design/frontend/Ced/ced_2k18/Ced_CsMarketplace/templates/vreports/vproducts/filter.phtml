@@ -1,0 +1,140 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$params = $this->_objectManager->get('Ced\CsMarketplace\Model\Session')->getData('vproducts_reports_filter');
+?>
+<?php $url= $this->getUrl('pub/static/frontend/Magento/luma/en_US/Ced_CsMarketplace/images/calendar.gif', ['_secure' => $this->getRequest()->isSecure()]);
+$url=trim($url, "/");
+?>
+<form action="javascript:void( 0 )" class="product-reports" method="post" id="report-form-validate" width="100%">
+	<div class="col-md-12">
+		<h4 class="legend"><?php echo __('Filter Report') ?></h4>		
+		<div class="form-group col-md-6">
+			<label class="required"><em>*</em><?php echo __('Start date') ?>:</label>
+			<div class="input-box" id="from-container">
+				<input type="text" class="required-entry input-text validate-date form-control" name="from"
+				id="from" value="<?php echo isset($params['from']) && ($params['from']!="")?$params['from']:""; ?>"/>
+			</div>
+		</div>
+		<div class="form-group col-md-6">
+			<label class="required"><em>*</em><?php echo __('End date') ?>:</label>
+			<div class="input-box" id="to-container">
+				<input type="text" class="required-entry input-text validate-date form-control" name="to"
+				id="to" value="<?php echo isset($params['to']) && ($params['to']!="")?$params['to']:""; ?>"/>
+			</div>
+		</div>
+	</div>
+	<script>
+		require([
+			"jquery",
+			"mage/calendar"
+			], function($){
+				$("#from").calendar({
+					buttonText:"<?php echo __('Select Date') ?>",
+				});
+				$("#from_date_cal").calendar({
+					buttonText:"<?php echo __('Select Date') ?>",
+				});
+			});
+		require([
+			"jquery",
+			"mage/calendar"
+			], function($){
+				$("#to").calendar({
+					buttonText:"<?php echo __('Select Date') ?>",
+				});
+				$("#to_date_cal").calendar({
+					buttonText:"<?php echo __('Select Date') ?>",
+				});
+			});
+		</script>
+		<div class="col-md-12">
+			<div class="button-set text-right">
+				<button class="button btn btn-warning uptransform" title="<?php echo __('Export') ?>" onClick="window.location='<?php echo $this->getUrl('*/*/exportVproductsCsv',array('_nosid'=>true))?>'" id="export_btn">
+					<span><span><?php echo __('Export') ?></span></span>
+				</button>
+
+				<button class="button btn btn-info uptransform" title="<?php echo __('Show Report') ?>" onClick="filterVproductsReports(0);" id="filter_butn">
+					<span><span><?php echo __('Show Report') ?></span></span>
+				</button>
+			</div>
+		</div>
+	</form>
+	<script type="text/javascript">
+//<![CDATA[
+require(["jquery"], function ($) {
+	$(document).ready(function ()  { 
+		$('#filter_butn').click(function () {
+			if ($('#report-form-validate').valid()) {
+				return false;
+			}
+		}); 
+	});
+});
+//]]>
+function filterVproductsReports(reset){
+	require(["jquery"], function ($) {
+		if(reset==2){
+			reset=0;
+			jQuery('#activity-loading').show();
+		}
+		else{
+			jQuery('#activity-loading').show();
+		}
+		var params ;
+		var url1 = "<?php echo $this->getUrl('csmarketplace/vreports/filtervproducts/') ?>";
+		params = jQuery("#report-form-validate").serialize();
+		<?php 
+		$urlParams['_nosid'] = true;
+		if($this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(null)->isCurrentlySecure()){
+			$urlParams['_secure'] = true;
+		}
+		$url =  $this->getUrl('csmarketplace/vreports/filtervorders',$urlParams); ?>
+		jQuery.ajax({
+			url: url1,
+			data:{"data":params},
+			type:"POST",
+			success:function(transport){
+				/* alert(transport); */
+				jQuery('#csmarketplace-vreports-vproducts').html(transport);
+				jQuery('#activity-loading').hide();
+			}
+		});
+	});
+}
+require(["jquery"], function ($) {
+	jQuery(document).ready(function(){
+		jQuery("#report-form-validate").submit(function() {
+			return false;
+		});
+	});   
+});
+</script>
+<style>
+	label.required em, span.required em {
+		display: none;
+	}
+	label.required::after, span.required::after {
+		color: red;
+		content: " *";
+		font-family: "Helvetica Neue",Verdana,Arial,sans-serif;
+		font-size: 12px;
+		font-weight: normal;
+	}
+</style>

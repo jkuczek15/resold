@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+
+?>
+
+<div data-bind="scope: 'myownko'">
+	<!-- Total Pending Amount --> 
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="panel panel-red">
+			<div class="panel-heading" data-bind="click: viewAction(getStaticsParam('pendingAmount_action'))">
+				<div class="row">
+					<div class="col-xs-3 panel-icons">
+						<i class="fa fa-credit-card fa-4x"></i>
+					</div>
+					<div class="col-xs-9 text-right">
+						<div class="huge" data-bind="'html': getStaticsParam('pendingAmount_total')"></div>
+						<div class="info-heading"><?php  echo __('Total Pending Amount'); ?>!</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Total Earned Amount -->
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="panel panel-green">
+			<div class="panel-heading" data-bind="click: viewAction(getStaticsParam('earnedAmount_action'))">
+				<div class="row">
+					<div class="col-xs-3 panel-icons">
+						<i class="fa fa-money fa-4x"></i>
+					</div>
+					<div class="col-xs-9 text-right">
+						<div class="huge" data-bind="'html': getStaticsParam('earnedAmount_total')"></div>
+						<div class="info-heading"><?php echo __('Total Earned Amount'); ?>!</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Total Orders Placed -->	
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="panel panel-yellow">
+			<div class="panel-heading" data-bind="click: viewAction(getStaticsParam('ordersPlaced_action'))">
+				<div class="row">
+					<div class="col-xs-3 panel-icons">
+						<i class="fa fa-shopping-cart fa-4x"></i>
+					</div>
+					<div class="col-xs-9 text-right">
+						<div class="huge" data-bind="'text': getStaticsParam('ordersPlaced_total')"></div>
+						<div class="info-heading"><?php echo __('Total Orders Placed'); ?>!</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>   
+
+	<!-- Total Products Sold -->
+	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 rtl-active">
+		<div class="panel panel-primary">
+			<div class="panel-heading" data-bind="click: viewAction(getStaticsParam('productsSold_action'))">
+				<div class="row">
+					<div class="col-xs-3 panel-icons">
+						<i class="fa fa-bar-chart-o fa-4x"></i>
+					</div>
+					<div class="col-xs-9 text-right">
+						<div class="huge" data-bind="'text': getStaticsParam('productsSold_total')"></div>
+						<div class="info-heading"><?php echo __('Total Products Sold') ?>!</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#maincontent": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "myownko": {
+                        "component": "Ced_CsMarketplace/js/myownko",
+                        "url": "<?= $this->getUrl('csmarketplace/vendor/statics') ?>"
+                    }
+                }
+            }
+        }
+    }
+</script>

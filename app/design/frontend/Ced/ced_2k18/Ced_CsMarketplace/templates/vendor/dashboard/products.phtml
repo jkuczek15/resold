@@ -1,0 +1,64 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$vendorProducts = $this->getLayout()->getBlockSingleton('Ced\CsMarketplace\Block\Vendor\Dashboard\Info')->getVendorProductsData();
+$url = $this->getUrl('csmarketplace/vproducts/index',array('_secure'=>true));
+$ob =  \Magento\Framework\App\ObjectManager::getInstance();
+if($ob->get('\Magento\Framework\App\Config\ScopeConfigInterface')->getValue('ced_csmarketplace/general/ced_vproduct_activation'))
+{
+	$url = $this->getUrl('csproduct/vproducts/index/',array('_secure'=>true));
+}
+?>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<i class="fa fa-pie-chart fa-fw"></i> <?php echo __('Products Status'); ?>
+	</div>
+	<div class="panel-body">
+		<div id="morris-donut-chart" style="height: 200px;"></div>
+		<a href="<?php echo $url; ?>" class="btn btn-default btn-block"><?php echo __('View Details'); ?></a>
+	</div>
+</div>
+<script type="text/javascript">
+	require([
+		'jquery',
+		'jquery/ui',
+		'mage/mage',
+		'raphael',
+		'morrisMin',
+		], function($){
+			setTimeout( function(){
+				Morris.Donut({
+					element: 'morris-donut-chart',
+					data: [{
+						label: "<?php echo __('Pending Products') ?>",
+						value: <?php echo isset($vendorProducts['total'][0])?$vendorProducts['total'][0]:0; ?>
+					}, {
+						label: "<?php echo __('Approved Products') ?>",
+						value: <?php echo isset($vendorProducts['total'][1])?$vendorProducts['total'][1]:0; ?>
+					}, {
+						label: "<?php echo __('Disapproved Products') ?>",
+						value: <?php echo isset($vendorProducts['total'][2])?$vendorProducts['total'][2]:0; ?>
+					}],
+					resize: true,
+					colors: ["#348FE2", "#00ACAC", "#D9534F"]
+				});
+			}  , 2000 );
+		});
+	</script> 
+	

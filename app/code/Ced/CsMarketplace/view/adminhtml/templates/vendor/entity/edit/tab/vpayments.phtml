@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+ 
+ $currentStoreCurrency = $block->getObjectManager()->get('Magento\Store\Model\StoreManagerInterface')->getStore(null)->getBaseCurrencyCode();
+?>
+<div>
+	<div class="entry-edit-head">
+		<h4 class="icon-head head-edit-form fieldset-legend"><?php echo __('Transactions Statistics') ?></h4>
+		<div class="form-buttons"></div>
+	</div>
+	<div id="transaction_state" class="fieldset ">
+		<div class="hor-scroll">
+			<table class="form-list trans-design" id="my-orders-table">
+				<tbody>
+					<tr>
+						<td ><label for="earning_amount"><strong><?php echo __('Total Earned Amount') ?></strong></label></td>
+						<td class="value"><div class="input-text" id="earning_amount"><strong><?php 
+						echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getEarningAmount(),false,2,null,$currentStoreCurrency);
+						?></strong></div></td>
+					</tr>
+					<?php  ?>
+					<tr style="display: none;" class="summary-details">
+						<td ><label for="paid_amount"><?php echo __('Total Paid Amount') ?></label></td>
+						<td class="value"><div class="input-text" id="paid_amount"><?php 
+						echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getPaidAmount(),false,2,null,$currentStoreCurrency);
+						?></div></td>
+					</tr>
+					<tr style="display: none;" class="summary-details">
+						<td ><label for="canceled_amount"><?php echo __('Total Canceled Amount') ?></label></td>
+						<td class="value"><div class="input-text" id="canceled_amount"><?php 
+						echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getCanceledAmount(),false,2,null,$currentStoreCurrency);
+						?></div></td>
+					</tr>
+					<tr style="display: none;" class="summary-details">
+						<td ><label for="refunded_amount"><?php echo __('Total Refunded Amount') ?></label></td>
+						<td class="value"><div class="input-text" id="refunded_amount"><?php 
+						echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getRefundedAmount(),false,2,null,$currentStoreCurrency);
+						 ?></div></td>
+					</tr>
+					<tr onclick="expandDetails(this, '.summary-details')" class="summary-total">
+						<td ><label for="received_amount"><div class="summary-collapse" style="float: none; text-align: left;"><?php echo __('Total Received Amount') ?></div></label></td>
+						<td class="value"><div class="input-text" id="received_amount"><?php
+							echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getReceivedAmount(),false,2,null,$currentStoreCurrency);
+							 ?></div></td>
+					</tr> <?php  ?>
+					<tr>
+						<td ><label for="pending_amount"><?php echo __('Total Pending Amount') ?></label></td>
+						<td class="value"><div class="input-text" id="pending_amount"><?php 
+						echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getPendingAmount(),false,2,null,$currentStoreCurrency);
+						 ?></div></td>
+					</tr>
+					<tr>
+						<td ><label for="refundable_amount"><?php echo __('Total Refundable Amount') ?></label></td>
+						<td class="value"><div class="input-text" id="refundable_amount"><?php 
+						echo $block->getObjectManager()->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getRefundableAmount(),false,2,null,$currentStoreCurrency);
+						?></div></td>
+					</tr>
+					<tr>
+						<td ><label for="pending_transfer"><?php echo __('Pending Transfers') ?></label></td>
+						<td class="value"><div class="input-text" id="pending_transfer"><?php  echo $block->getPendingTransfers()?$block->getPendingTransfers():0; ?></div></td>
+					</tr>
+				</tbody>
+			</table>
+	</div>
+</div>
+<br/>
+<?php echo $this->getChildHtml('vpayments.grid'); ?>
+<style type="text/css">
+	.trans-design tr td {
+  padding: 5px 10px;
+}
+</style>

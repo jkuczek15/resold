@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); ?>
+<div class="form-group">
+	<label><?php echo __('Gender') ?></label>
+	<?php $options = $objectManager->create('customer/customer')->getAttribute('gender')->getSource()->getAllOptions();?>
+	<?php $value = $this->getGender();?>
+	<?php foreach ($options as $option):?>
+		<?php if($option['value']) { ?>
+			<label class="radio-inline">
+				<!-- <i class="fa fa-<?php echo strtolower($option['label']); ?>"> </i> --> <input type="radio" <?php if ($option['value'] == $value) echo ' checked="checked"' ?> value="<?php echo $option['value'] ?>" id="optionsRadiosInline1" name="<?php echo $this->getFieldName('gender')?>"><?php echo $option['label'] ?>
+			</label>
+		<?php } ?>
+	<?php endforeach;?>
+</div>

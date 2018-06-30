@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+/**
+ * @see Mage_Checkout_Block_Cart_Shipping
+ */
+ $params=$block->getRequest()->setParams(array('_GET'))->getParams();
+ $addressParam=array('country_id','region','region_id','estimate_postcode','char');
+ foreach( $addressParam as $inputName)
+ {
+	if(isset($params[$inputName]))
+	unset($params[$inputName]);
+ }
+?>
+<div class="shipping">
+  <h2><?php echo __('Search Sellers')?></h2>
+ 	  <form action="<?php echo $block->getUrl('csmarketplace/vshops/index',$params) ?>" method="get" id="shipping-zip-form">
+            <ul class="form-list" style="padding-left:0px">
+                <li>
+                    <label for="country" class=""><?php echo __('Country') ?></label>
+                    <div class="input-box">
+                        <?php echo $block->getLayout()->createBlock('Magento\Directory\Block\Data')->getCountryHtmlSelect($this->getEstimateCountryId()) ?>
+                    </div>
+                </li>
+           		 <?php if($block->getStateActive()): ?>
+                <li>
+                    <label for="region_id" ><?php echo "State/Province" ?></label>
+                    <div class="input-box">
+                        <select id="region_id" name="region_id" title="<?php echo __('State/Province') ?>" style="display:none;" >
+                            <option value=""><?php echo __('Please select region, state or province') ?></option>
+                        </select>
+                     
+                       <input type="text" id="region" name="region" value="<?php echo $block->getRequest()->getParam('region') ?>"  title="<?php echo __('State/Province') ?>" class="input-text" style="display:none;" />
+                   </div>
+                </li>
+           		 <?php endif; ?>
+           		 <?php if($block->getCityActive()): ?>
+                <li>
+                    <label for="city"<?php if ($block->isCityRequired()) echo ' class="required"' ?>><?php if ($block->isCityRequired()) echo '<em>*</em>' ?><?php echo __('City') ?></label>
+                    <div class="input-box">
+                        <input class="input-text<?php if ($block->isCityRequired()):?> required-entry<?php endif;?>" id="city" type="text" name="estimate_city" value="<?php echo $block->getEstimateCity() ?>" />
+                    </div>
+                </li>
+            	<?php endif; ?>
+                <li>
+                    <label for="postcode"><?php echo __('Zip/Postal Code') ?></label>
+                    <div class="input-box">
+                        <input class="input-text validate-postcode" type="text" id="postcode" name="estimate_postcode" value="<?php echo $block->getRequest()->getParam('estimate_postcode') ?>" />
+                    </div>
+                </li>
+				<li>
+                    <label for="postcode"><?php echo __('Search By Seller\'s  Name') ?></label>
+                    <div class="input-box">
+                        <input class="input-text validate-postcode" type="text" id="char" name="char" value="<?php echo $block->getRequest()->getParam('char') ?>" />
+                       
+                    </div>
+                </li>
+            </ul>
+            <div class="buttons-set">
+                <button type="submit" title="<?php echo __('Search') ?>"  class="button"><span><span><?php echo __('Search') ?></span></span></button>
+           
+            <?php 
+            $params = $this->getRequest()->getParams();
+            $Url = $this->getUrl('csmarketplace/vshops/index');
+            if(isset($params['country_id'])){?>
+                 <button type="button" onclick="relaod()" title="<?php echo __('Reset') ?>"  class="button"><span><span><?php echo __('Reset') ?></span></span></button>
+            <?php }
+            ?>
+            </div>
+        </form>
+        <script type="text/javascript">
+        function relaod(){
+             var url = "<?php echo $Url;?>";
+             window.location.href = url;
+            }
+		/* console.log(<?php echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>);
+        //<![CDATA[
+          //  new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>);
+        //]]> */
+        </script>
+        <?php if (($_shippingRateGroups = $block->getEstimateRates())): ?>
+        <form id="co-shipping-method-form" action="<?php echo $block->getUrl('checkout/cart/estimateUpdatePost') ?>">
+            <dl class="sp-methods">
+                <?php foreach ($_shippingRateGroups as $code => $_rates): ?>
+                    <dt><?php echo $block->getCarrierName($code) ?></dt>
+                    <dd>
+                        <ul>
+                        <?php foreach ($_rates as $_rate): ?>
+                            <li<?php if ($_rate->getErrorMessage()) echo ' class="error-msg"';?>>
+                               <?php if ($_rate->getErrorMessage()): ?>
+                                    <?php echo $_rate->getErrorMessage() ?>
+                               <?php else: ?>
+                                    <input name="estimate_method" type="radio" value="<?php echo $block->htmlEscape($_rate->getCode()) ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if($_rate->getCode()===$block->getAddressShippingMethod()) echo ' checked="checked"' ?> class="radio" />
+                                    <label for="s_method_<?php echo $_rate->getCode() ?>"><?php echo $_rate->getMethodTitle() ?>
+                                    <?php $_excl = $block->getShippingPrice($_rate->getPrice(), $this->helper('Magento\Tax\Helper\Data')->displayShippingPriceIncludingTax()); ?>
+                                    <?php $_incl = $block->getShippingPrice($_rate->getPrice(), true); ?>
+                                    <?php echo $_excl; ?>
+                                    <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                        (<?php echo __('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                                    <?php endif; ?>
+                                    </label>
+                               <?php endif ?>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    </dd>
+                <?php endforeach; ?>
+            </dl>
+            <div class="buttons-set">
+                <button type="submit" title="<?php echo __('Update Total') ?>" class="button" name="do" value="<?php echo __('Update Total') ?>"><span><span><?php echo __('Update Total') ?></span></span></button>
+            </div>
+        </form>
+        <?php endif; ?>
+ 
+		<script>
+        require([
+                'mage/url',
+                'jquery'
+            ], function() {
+                jQuery('#country').val('<?php echo $block->getRequest()->getParam('country_id') ?>');
+            });
+
+        
+        
+        
+         require([
+            'jquery',
+            'jquery/ui',
+            'regionUpdater'
+           ], function($){
+                
+           });
+        </script>
+        <script type="text/x-magento-init">
+            {
+                "#shipping-zip-form": {
+                    "validation": {}
+                },
+                "#country_id": {
+                    "regionUpdater": {
+                        "optionalRegionAllowed": "true",
+                        "regionListId": "#region_id",
+                        "regionInputId": "#region",
+                        "postcodeId": "#char",
+                        "form": "#shipping-zip-form",
+                        "regionJson": <?php  echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
+                        "defaultRegion": "<?php  echo $block->getRegionId() ?>",
+                        "countriesWithOptionalZip": <?php echo $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
+                    }
+                }
+            }
+        </script>
+</div>

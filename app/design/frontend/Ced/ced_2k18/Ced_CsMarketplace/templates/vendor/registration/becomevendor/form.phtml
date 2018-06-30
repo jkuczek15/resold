@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<style type="text/css">
+	span.ced-csmarketplace-availability-failed{
+		background : url('<?php //echo Mage::getBaseUrl('skin'); ?>frontend/base/default/images/ced/csmarketplace/error_msg_icon.gif');
+		display: block;
+		height: 17px;
+		width: 16px;
+	}
+	span.ced-csmarketplace-availability-passed {
+		background : url('<?php //echo Mage::getBaseUrl('skin'); ?>frontend/base/default/images/ced/csmarketplace/success_msg_icon.gif');
+		display: block;
+		height: 17px;
+		width: 16px;
+	}
+</style>
+<input type="hidden" name="is_vendor" value="1" id="is_vendor"/>
+<fieldset class="fieldset" id="ced-csmarketplace-registration-fields">
+	<div class="panel panel-default">
+		<div class="panel-heading"><?php echo __('Vendor Information'); ?></div>
+		<div class="panel-body">
+			<?php echo $this->getFormHtml(); ?>
+		</div>
+	</div>
+	</fieldset>
+<script type="text/javascript">
+require([
+'jquery',
+'mage/mage',
+'csvendor'
+], function($){ 
+	var dummy_variable = true;
+});
+</script>

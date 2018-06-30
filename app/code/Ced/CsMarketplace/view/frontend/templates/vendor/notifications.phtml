@@ -1,0 +1,25 @@
+<div id="notification" data-bind="scope:'notifications'">
+		<ul class="notification-page" style="display:none;" data-bind="foreach: notifications,attr:{'style':'display:block;'}">
+			<li data-bind="attr:{'class':$data.status==0?'unread':'read'}">
+				<a data-bind="attr:{'href':$data.action}">
+					<span data-bind="text:$data.title"></span>
+					<span class="created-at" data-bind="text:$data.created_at"></span>
+				</a>
+			</li>
+		</ul>
+        <div class="loader" data-bind="visible:pendingRequest"><div class="loader-inner"></div></div>
+</div>
+<script type="text/x-magento-init">
+{
+    "#notification": {
+        "Magento_Ui/js/core/app": {
+           "components": {
+                "notifications": {
+                    "component": "Ced_CsMarketplace/js/view/notifications",
+                    "url" : "<?= $this->getUrl('csmarketplace/vendor_notifications/json') ?>"
+                }
+            }
+        }
+    }
+}
+</script>

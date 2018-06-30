@@ -1,0 +1,47 @@
+<?php
+?>
+<div id="qdn-profiler-container">
+<?php echo __('Cannot find profiler table or profiler is not enabled.'); ?>
+<br/>
+You have to add a SetEnv MAGE_PROFILER "html" to your .htaccess (do not use "csvfile" nor "firebug" to have profiler displayed in tab).<br/>
+Be careful with .htacces directives an redirection you can have <br/>
+<pre>$_SERVER['REDIRECT_MAGE_PROFILER']</pre>
+setted instead of<br/>
+<pre>$_SERVER['MAGE_PROFILER']</pre>
+prefer apache2.conf.
+<br/><br/>
+You can read the official documentation <a href="http://devdocs.magento.com/guides/v2.1/config-guide/bootstrap/mage-profiler.html">Enable profiling (MAGE_PROFILER)</a>
+</div>
+
+<script type="text/javascript">
+require([
+         'jquery',
+         'domReady!'
+     ], function($){
+    'use strict';
+
+    $('table').each(function(table){
+        var captionProfiler = $(this).find('caption').html();
+
+        if (captionProfiler && captionProfiler.match(/Code Profiler \(Memory usage: real - \d+, emalloc - \d+\)/)) {
+          var header = $(this).find('tr').first();
+          $(this).prepend("<thead><th>#</th>" + header.html() +"</thead>");
+          header.remove();
+          $(this).find('tbody tr').each(function(i, tr) {
+          	$(tr).prepend("<td>"+i+"</td>");
+          });
+
+          $('#qdn-profiler-container').html('');
+          $(this).removeAttr('border')
+                       .removeAttr('cellspacing')
+                       .removeAttr('cellpadding');
+          $(this).addClass('qdn_table')
+                       .addClass('filterable')
+                       .addClass('sortable')
+                       .addClass('striped');
+          $(this).appendTo($('#qdn-profiler-container'));
+          return false;
+        }
+    });
+});
+</script>

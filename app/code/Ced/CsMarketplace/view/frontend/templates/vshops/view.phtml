@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+$helper = $this->helper('Ced\CsMarketplace\Helper\Tool\Image');
+$width = (int)$helper->getStoreConfig('ced_vshops/general/logo_image_width', $this->getCurrentStoreId());
+$height = (int)$helper->getStoreConfig('ced_vshops/general/logo_image_height', $this->getCurrentStoreId());
+$width = $width ? $width : 175;
+$height = $height ? $height : 150;
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
+    ->getStore()
+    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+
+?>
+<?php if ($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
+    <style>
+        .block-content h3:before, .block-content h3:after,
+        .block-content li:before, .block-content li:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <div class="block block-poll">
+        <div class="block-title">
+            <strong><span><?php echo __('Vendor Profile') ?></span></strong>
+        </div>
+        <?php ?>
+        <div class="block-content" style="padding: 10px;">
+            <img src="<?php echo $helper->getResizeImage($this->getVendorLogo(), 'logo', $width, $height); ?>"/>
+            <ul>
+                <?php foreach ($this->getLeftProfileAttributes() as $attribute) {?>
+                    <li>
+                        <?php if ($attribute->getFrontendInput() == 'file' || $attribute->getFrontendInput() == 'image') : ?>
+                            <label>
+                                <i class="<?php echo $attribute->getData('fontawesome_class_for_left_profile'); ?>"></i>
+                                <?php if (strlen($attribute->getStoreLabel()) > 0) {
+                                    echo $attribute->getStoreLabel();
+                                } else {
+                                    echo __($attribute->getFrontendLabel());
+                                } ?></label>:<a
+                                    href="<?php echo $mediaUrl.$this->escapeHtml($block->Method($attribute->getAttributeCode())) ?>"><?php echo basename(__($this->escapeHtml($block->Method($attribute->getAttributeCode())))); ?></a>
+                        <?php else: ?>
+                            <label>
+                                <i class="<?php echo $attribute->getData('fontawesome_class_for_left_profile'); ?>"></i>
+                                <?php if (strlen($attribute->getStoreLabel()) > 0) {
+                                    echo $attribute->getStoreLabel();
+                                } else {
+                                    echo __($attribute->getFrontendLabel());
+                                } ?></label>:<?php echo __($this->escapeHtml($block->Method($attribute->getAttributeCode()))); ?>
+                        <?php endif; ?>
+                    </li>
+                <?php }
+                 ?>
+            </ul>
+        </div>
+    </div>
+    <style>
+        i {
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .block-poll label {
+            color: black;
+            font-weight: bold;
+        }
+
+        .block-poll .block-content li a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .block-poll .block-content li a:hover {
+            color: #1E7EC8;
+        }
+
+        .sidebar .block-content ul {
+            padding: 0px;
+        }
+
+        .sidebar .block-content ul li {
+            list-style: none;
+        }
+    </style>
+<?php } ?>

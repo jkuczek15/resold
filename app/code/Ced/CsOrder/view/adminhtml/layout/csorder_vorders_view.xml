@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="sales_order_item_price"/>
+    <body>
+        
+        <referenceContainer name="content">
+            <block class="Ced\CsOrder\Block\Adminhtml\Vorders\View" name="csorder_order_edit"/>
+            <block class="Ced\CsOrder\Block\Order\View\Tab\Info" name="order_tab_info" template="order/view/tab/info.phtml">
+                    <block class="Ced\CsOrder\Block\Order\View\Info" name="order_info" template="order/view/info.phtml"/>
+                    <block class="Ced\CsOrder\Block\Order\AbstractOrder" name="order_shipping_view" template="order/view/shipping/info.phtml"/>
+                    <block class="Ced\CsOrder\Block\Order\View\Items" name="order_items" template="order/view/items.phtml">
+                        <block class="Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer" as="default" template="order/view/items/renderer/default.phtml"/>
+                        <block class="Magento\Sales\Block\Adminhtml\Items\Column\Qty" name="column_qty" template="items/column/qty.phtml" group="column"/>
+                        <block class="Magento\Sales\Block\Adminhtml\Items\Column\Name" name="column_name" template="items/column/name.phtml" group="column"/>
+                        <block class="Magento\Framework\View\Element\Text\ListText" name="order_item_extra_info"/>
+                    </block>
+
+                    <container name="payment_additional_info" htmlTag="div" htmlClass="order-payment-additional" />
+                    <block class="Magento\Sales\Block\Adminhtml\Order\Payment" name="order_payment"/>
+                    <block class="Magento\Backend\Block\Template" name="gift_options" template="Magento_Sales::order/giftoptions.phtml">
+                        <block class="Magento\Sales\Block\Adminhtml\Order\View\Giftmessage" name="order_giftmessage" template="order/view/giftmessage.phtml"/>
+                    </block>
+                    <block class="Ced\CsOrder\Block\Order\View\History" name="order_history" template="order/view/history.phtml"/>
+                    <block class="Ced\CsOrder\Block\Order\View\Totals" name="order_totals" template="order/view/totals/earn.phtml">
+                        <!--<block class="Magento\Sales\Block\Adminhtml\Order\Totals\Tax" name="tax" template="order/totals/tax.phtml"/>-->
+                    </block>
+                </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,136 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * You can check the licence at this URL: http://cedcommerce.com/license-agreement.txt
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php 
+$vendor = $block->getVendor();
+/* print_r($vendor->getData());die; */
+?>
+<?php $helper = $block->getObjectManager()->get('Ced\CsMarketplace\Helper\Data'); ?>
+<?php /** @var $block \Magento\Customer\Block\Account\Navigation */ ?>
+<div class="navbar-default ced-vendor-sidebar" role="navigation">
+	<div class="userinfosider" id="userinfosider" data-bind="scope:'userinfosider'">
+		<!-- ko template: getTemplate() -->
+		<li class="dropdown" databind="if : customData.contentLoading(),blockLoader: customData.contentLoading()"></li>
+		<!-- /ko -->
+	</div>
+	<div class="ced-vendor-sidebar-nav">
+		<ul id="side-menu" class="nav side-menu in">
+			<?php echo $block->getChildHtml();?>
+			<?php  if($this->getVendorId() && $this->getVendor()->getStatus() == \Ced\CsMarketplace\Model\Vendor::VENDOR_APPROVED_STATUS ) { ?>
+				<li class="nav item">
+					<a href="<?php echo $this->getVendor()->getVendorShopUrl(); ?>" title="<?php echo __('Go to Shop') ?>" target="_blank"><i class="fa fa-external-link fw"></i><span style="margin-left: 3px;"><?php echo __('Go to Shop') ?></span></a>
+				</li>
+				<?php } ?>
+			</ul>
+		</div>
+	</div>
+	<div class="mobile-menu-overlay"></div>
+
+	<script type="text/x-magento-init">
+    {
+        "#userinfosider": {
+            "Magento_Ui/js/core/app": {
+               "components": {
+                    "userinfosider": {
+                        "component": "Ced_CsMarketplace/js/view/header",
+                        "template" : "Ced_CsMarketplace/userinfosider",
+                        "url" : "<?= $this->getUrl('csmarketplace/vendor/navigation') ?>",
+                        "viewall" : "<?= $this->getUrl('csmarketplace/vendor/notifications') ?>"
+                    }
+                }
+            }
+        }
+    }
+    </script>
+
+	<script>
+		require([
+			'jquery'
+			], function($){ 
+				$(".largeview-submenu .nav-second-level").removeClass("collapse");
+				$(".sidebar-nav li").removeClass("active");
+				setTimeout( function(){ 
+					$(".sidebar-nav li").removeClass("active");
+				}  , 1000 );
+				setTimeout( function(){ 
+					$(".sidebar-nav li").removeClass("active");
+				}  , 1000 );
+				var classes = $('body').attr('class').split(' ')[1];
+				$('.'+classes).on('click','.page-main',function(){
+					if($(".sidebar-nav li").hasClass("active")){
+						$(".sidebar-nav li").removeClass("active");
+					}
+				});
+			});
+		</script>
+		<script type="text/javascript">
+			require([
+				'jquery'
+				], function($){
+					// $(window).resize(function () {
+					// 	var viewportWidth = $(window).width();
+					// 	if (viewportWidth < 768) {
+					// 		$(".ced-vendor-sidebar-nav").addClass("navbar-collapse");
+					// 	}
+					// });
+					$('.navbar-toggle').on('click', function(){
+						$('.mobile-menu-overlay.current').removeClass('current');
+						$(this).addClass('current');
+					});
+					
+				});
+			require(['jquery'], function($){
+				/*code to fix sidebar after scroll*/
+				$(document).ready(function(){
+					var viewportHeight = $(window).height();
+					var sidebarheight = $('.ced-vendor-sidebar').height();
+					var belowsidebar = sidebarheight - viewportHeight;
+					var fixedsidebar = $('.ced-vendor-sidebar');
+					$(window).scroll(function(){
+						fixsidebar();
+					});
+					fixsidebar();
+					function fixsidebar(){
+						var scrltop = $(document).scrollTop();
+						if(scrltop <= belowsidebar+50)
+						{
+							fixedsidebar.css('top',-scrltop);
+						}
+						else if(scrltop > belowsidebar+50){
+							fixedsidebar.css('top',-belowsidebar-60);
+						}
+						else{
+							fixedsidebar.css('top',0);
+						}
+						if(viewportHeight >= sidebarheight){
+							fixedsidebar.css('top',-scrltop);
+							var window_top = jQuery(window).scrollTop();
+							var fixside = 50;
+							if (window_top >= fixside) {
+								jQuery('.ced-vendor-sidebar').addClass('stick-side');
+							} 
+							else{
+								jQuery('.ced-vendor-sidebar').removeClass('stick-side');
+							}
+						}
+					}
+				})
+				/*code to fix sidebar after scroll end*/
+			});
+		</script>
+	

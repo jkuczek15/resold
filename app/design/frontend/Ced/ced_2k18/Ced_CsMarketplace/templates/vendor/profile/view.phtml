@@ -1,0 +1,254 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+$groupCollection = $this->getVendorAttributeInfo();
+$vendor_info = $this->_vendor->load($this->getVendorId());
+$percent = 0.00;
+if($this->_totalattr) {
+	$percent = round(($this->_savedattr * 100)/$this->_totalattr);
+}
+$image = $this->_objectManager->create('Ced\CsMarketplace\Helper\Tool\Image');
+?>
+<div class="row">
+	<div class="col-md-12">
+		<div class="vendor-profile">
+			<div class="my-account">
+				<?php
+				$imageAttributes = array('profile_picture');
+				$phtml = '';
+				$cnt = 0;
+				$groupWiseFieldsOdd = [];
+				$groupWiseFieldsEven = [];
+				foreach($groupCollection as $group) {
+					$attributes = $this->_vendor->getAttributes($group->getId(), true);
+					if (count($attributes)==0) {
+						continue;
+					}
+					$att_cnt = 0;
+					$html = $phtml;
+					$phtml = '';
+					$country_id = $vendor_info->getData('country_id');
+					$c_id  = $block->getCountryIdValue($country_id);
+					foreach ($attributes as $attr){
+						$attribute = $this->_objectManager->get('Ced\CsMarketplace\Model\Vendor\Attribute')
+									->setStoreId(0)->load($attr->getid());
+						if(!$attribute->getisVisible()) continue;
+						$att_cnt++;
+						if($vendor_info->getData($attr->getAttributeCode()) && !in_array($attr->getAttributeCode(),\Ced\CsMarketplace\Model\Form::$VENDOR_PROFILE_RESTRICTED_ATTRIBUTES)){
+							if(in_array($attr->getAttributeCode(),$imageAttributes)) { continue; }
+							if ($attr->getAttributeCode() == 'region_id') {
+								if ($c_id == 'false') {
+									continue;
+								}
+							}
+							if ($attr->getAttributeCode() == 'region') {
+								if ($c_id == 'true') {
+									continue;
+								}
+							}
+							$html .= '<tr>';
+							$html .= '<td class="item">'.__($attr->getFrontend()->getLabel()).':</td>';
+							$vShopUrl = $this->getVendor()->getVendorShopUrl();
+							switch($attr->getAttributeCode()) {
+								case 'profile_picture':
+								case 'company_logo': $html .= '';
+								case 'company_banner':
+								$imgUrl = $this->getMediaUrl().'/'.$vendor_info->getData($attr->getAttributeCode());
+								$html .= '<td><span class="attribute-value">'.'<a onclick="imagePreview(\''.$attr->getAttributeCode().'\'); return false;" href="'.$imgUrl.'"><img style="display: inline;" width="90" height="22" class="small-image-preview v-middle" alt="'.__($attr->getFrontend()->getLabel()).'" title="'.$attr->getFrontend()->getLabel().'" id="'.$attr->getAttributeCode().'" src="'.$image->getResizeImage($vendor_info->getData($attr->getAttributeCode()), 'logo', 22, 22).'"></a></span></td>';		
+								break;
+								case 'shop_url' :									
+								$html .= '<td><span class="attribute-value">'.'<a target="_blank" href="'.$vShopUrl.'">'.__($vendor_info->getData($attr->getAttributeCode())).'</a></span></td>';
+								break;
+								case 'email' :
+								$vemail = $vendor_info->getData($attr->getAttributeCode());
+								$html .= '<td><span class="attribute-value">'.'<a href="mailto:'.$vemail.'">'.__($vendor_info->getData($attr->getAttributeCode())).'</a></span></td>';
+								break;
+								case 'created_at' :
+								$vcreatedat = $block->formatDate($vendor_info->getData($attr->getAttributeCode()),\IntlDateFormatter::MEDIUM, true);
+								$html .='<td><span class="attribute-value">'.$block->formatDate($vendor_info->getData($attr->getAttributeCode()),\IntlDateFormatter::MEDIUM, true).'</span></td>';
+								break;
+								case 'region_id' :
+								$html .='<td><span class="attribute-value">'.$block->getRegionFromId($vendor_info->getData($attr->getAttributeCode())).'</span></td>';
+								break;
+								case 'country_id' :
+								$html .='<td><span class="attribute-value">'.$block->getCountryId($vendor_info->getData($attr->getAttributeCode())).'</span></td>';
+								break;
+								case 'group' :
+								$vgroup = $block->getGroup($vendor_info->getData($attr->getAttributeCode()));
+								$html .='<td><span class="attribute-value">'.__($block->getGroup($vendor_info->getData($attr->getAttributeCode()))).'</span></td>';
+								break;
+								default :
+								if(is_array($vendor_info->getData($attr->getAttributeCode()))){
+									$html .='<td><span class="attribute-value">'. __(implode(', ', $vendor_info->getData($attr->getAttributeCode()))).'</span></td>';
+								} else {
+									if($attr->usesSource()){
+										$data = $attr->getSource()->getOptionText($vendor_info->getData($attr->getAttributeCode()));
+										if(is_array($data)){
+											$data = implode(', ',$data);
+										} 
+										$html .='<td><span class="attribute-value">'. __($data).'</span></td>';
+									}else {
+										if ($attr->getFrontendInput() == 'file' || $attr->getFrontendInput() == 'image')
+										{
+										    $html .='<td><span class="attribute-value"><a target="_blank" href="'.$this->getMediaUrl().'/'.__($vendor_info->getData($attr->getAttributeCode())).'">'. basename(__($vendor_info->getData($attr->getAttributeCode()))).'</a></span></td>';
+										} else {
+										    $html .='<td><span class="attribute-value">'. __($vendor_info->getData($attr->getAttributeCode())).'</span></td>';
+										}
+									}	
+								}	  
+							}
+							$html .="</tr>";
+						}
+					}
+					if($att_cnt) {
+						if($cnt % 2 == 1 || $cnt == 2) {
+							$groupWiseFieldsEven[$group->getAttributeGroupName()] = $html;
+						} else {
+							$groupWiseFieldsOdd[$group->getAttributeGroupName()] = $html;
+						}
+						$cnt++;
+					}
+				}
+				?>
+				<div class="vendor_profile_top">
+					<div class="clearfix">
+						<div class="user-display">
+							<div class="user_display_wrapper">
+								<div class="user-display-bottom">
+									<a href="<?php echo $image->getResizeImage($vendor_info->getProfilePicture(),'logo', 107, 107); ?>" target="_blank">
+										<img src="<?php echo $image->getResizeImage($vendor_info->getProfilePicture(),'logo', 107, 107); ?>">
+									</a>
+								</div>
+								<div class="user_display_info">
+									<div class="name"><?php echo __('Hello') ?>,<?php echo ' '.$vendor_info->getName() ?>!</div>
+									<div class="nick"><span class="mdi mdi-account"></span><?php echo __('Approved Vendor!') ?></div>
+									<div class="vendor_edit">
+										<a href="<?php echo $this->getUrl('csmarketplace/vendor/profile',array('_secure'=>true)); ?>">Edit</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="vendor-dedor-details">
+							<ul>
+								<li>
+									<?php echo isset($vcreatedat) ? $vcreatedat : '' ; ?>
+								</li>
+								<li>
+									<?php echo $vgroup; ?>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="bellow-list-wrapper">
+						<ul class="bellow-list">
+							<li>
+								<a href="mailto:<?php echo isset($vemail) ? $vemail : '' ; ?>">Email : <?php echo isset($vemail) ? $vemail : '' ; ?></a>
+							</li>
+							<li>
+								<a href="<?php echo isset($vShopUrl) ? $vShopUrl : '' ; ?>">Shop name : <?php echo $vendor_info->getShopUrl()?></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-1 addresses-primary col-md-6">	
+						<!-- vendor display -->
+						<div class="vendor_information">
+							<div class="vendor-information-inner">
+								<?php foreach($groupWiseFieldsOdd as $groupName=>$html) { ?>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4>
+											<?php  echo __($groupName); ?>
+										</h4>
+									</div>
+									<div class="panel-body">
+										<?php if(strlen($html)){ ?>
+										<div class="table-responsive">
+											<table class="table table-striped">
+												<?Php echo $html; ?>
+											</table>
+										</div>
+										<?php } else { ?>
+										<?php echo __("You have not saved any information in this group."); ?>
+										<?php } ?>
+									</div>
+								</div>
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+					<div class="col-2 addresses-primary col-md-6">		
+						<?php foreach($groupWiseFieldsEven as $groupName=>$html) { ?>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4>
+									<?php echo __($groupName); ?>			
+								</h4>
+							</div>
+							<div class="panel-body">
+								<?php if(strlen($html)){ ?>
+								<div class="table-responsive1">
+									<table class="table table-striped">
+										<?Php echo $html; ?>
+									</table>
+								</div>
+								<?php } else { ?>
+								<?php echo __("You have not saved any information in this group."); ?>
+								<?php } ?>
+							</div>
+						</div>
+						<?php } ?>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	<?php $minicart = [
+	'shoppingCartUrl' => '',
+	'checkoutUrl' => '',
+	'updateItemQtyUrl' => '',
+	'removeItemUrl' => '',
+	'imageTemplate' => '',
+	'baseUrl' => ''
+	]; ?>
+	window.checkout = <?php echo \Zend_Json::encode($minicart); ?>;
+	require([
+		'jquery',
+		'mage/mage',
+		'checkoutbalance',
+		'captcha',
+		'text'
+		], function($){
+			$(document).ready(function(){
+				$("#vendor-login-tab").click(function(){
+					$("#login-form-body").fadeIn(1000);
+					jQuery("#vendor-login-tab").addClass('active');
+					$("#vendor-sign-up-tab").removeClass('active');
+					$("#sign-up-form-body").fadeOut(1);
+				});
+				$("#vendor-sign-up-tab").click(function(){
+					$("#sign-up-form-body").fadeIn(1000);
+					$("#vendor-sign-up-tab").addClass('active');
+					$("#vendor-login-tab").removeClass('active');
+					$("#login-form-body").fadeOut(1);
+				});
+			});
+		});
+</script>

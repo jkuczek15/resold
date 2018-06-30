@@ -1,0 +1,56 @@
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<div class="action-select-wrap" data-bind="
+    css : {
+        '_active' : $parent.actionsListOpened() === $record().index
+    },
+    outerClick: $parent.closeList.bind($parent, $record().index)"
+>
+    <button class="action-select" data-bind="click: function(){ $parent.toggleActionsList($record().index); }">
+        <span data-bind="i18n: 'Select'"></span>
+    </button>
+    <ul class="action-menu _active" data-bind="css: {'_active': $parent.actionsListOpened() === $record().index}">
+        <li>
+            <a class="action-menu-item" data-bind="
+                click: function(){
+                    $parent.openModalWithGrid($record().index);
+                    $parent.closeList($record().index);
+                }
+            ">Choose a different Product</a>
+        </li>
+        <li>
+            <a class="action-menu-item" data-bind="
+                text: $data.value() == 1 ? $t('Disable Product') : $t('Enable Product'),
+                click: function(){
+                    $parent.toggleStatusProduct($record().index);
+                    $parent.closeList($record().index);
+                }
+            "></a>
+        </li>
+        <li>
+            <a class="action-menu-item" data-bind="
+                click: function(){
+                    $parent.closeList($record().index);
+                    $parent.processingDeleteRecord($record().index, $record().recordId);
+                },
+                text: $t('Remove Product')
+            "></a>
+        </li>
+    </ul>
+</div>

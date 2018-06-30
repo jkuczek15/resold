@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+
+<h3 class="legend" style="color:#23527C;"><?php echo __('Payment Method Information') ?></h3>
+<?php echo $this->getFormHtml(); ?>
+<div class="buttons-set">
+	<p class="required"><?php echo __('* Required Fields') ?></p>
+	<p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo __('Back') ?></a></p>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    //var dataForm = new VarienForm('form-validate', true);
+//]]>
+</script>

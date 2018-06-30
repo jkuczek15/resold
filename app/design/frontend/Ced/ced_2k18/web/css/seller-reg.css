@@ -1,0 +1,2493 @@
+/*============================================*/
+/*================ icons fonts =================*/
+/*=============================================*/
+@font-face {
+  font-family: 'simple-line-icons';
+  src: url('fonts/Simple-Line-Icons.eot?v=2.4.0');
+  src: url('fonts/Simple-Line-Icons.eot?v=2.4.0#iefix') format('embedded-opentype'), 
+  url('fonts/Simple-Line-Icons.woff2?v=2.4.0') format('woff2'), 
+  url('fonts/Simple-Line-Icons.ttf?v=2.4.0') format('truetype'), 
+  url('fonts/Simple-Line-Icons.woff?v=2.4.0') format('woff'), 
+  url('fonts/Simple-Line-Icons.svg?v=2.4.0#simple-line-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+ .icon-user,
+ .icon-people,
+ .icon-user-female,
+ .icon-user-follow,
+ .icon-user-following,
+ .icon-user-unfollow,
+ .icon-login,
+ .icon-logout,
+ .icon-emotsmile,
+ .icon-phone,
+ .icon-call-end,
+ .icon-call-in,
+ .icon-call-out,
+ .icon-map,
+ .icon-location-pin,
+ .icon-direction,
+ .icon-directions,
+ .icon-compass,
+ .icon-layers,
+ .icon-menu,
+ .icon-list,
+ .icon-options-vertical,
+ .icon-options,
+ .icon-arrow-down,
+ .icon-arrow-left,
+ .icon-arrow-right,
+ .icon-arrow-up,
+ .icon-arrow-up-circle,
+ .icon-arrow-left-circle,
+ .icon-arrow-right-circle,
+ .icon-arrow-down-circle,
+ .icon-check,
+ .icon-clock,
+ .icon-plus,
+ .icon-minus,
+ .icon-close,
+ .icon-event,
+ .icon-exclamation,
+ .icon-organization,
+ .icon-trophy,
+ .icon-screen-smartphone,
+ .icon-screen-desktop,
+ .icon-plane,
+ .icon-notebook,
+ .icon-mustache,
+ .icon-mouse,
+ .icon-magnet,
+ .icon-energy,
+ .icon-disc,
+ .icon-cursor,
+ .icon-cursor-move,
+ .icon-crop,
+ .icon-chemistry,
+ .icon-speedometer,
+ .icon-shield,
+ .icon-screen-tablet,
+ .icon-magic-wand,
+ .icon-hourglass,
+ .icon-graduation,
+ .icon-ghost,
+ .icon-game-controller,
+ .icon-fire,
+ .icon-eyeglass,
+ .icon-envelope-open,
+ .icon-envelope-letter,
+ .icon-bell,
+ .icon-badge,
+ .icon-anchor,
+ .icon-wallet,
+ .icon-vector,
+ .icon-speech,
+ .icon-puzzle,
+ .icon-printer,
+ .icon-present,
+ .icon-playlist,
+ .icon-pin,
+ .icon-picture,
+ .icon-handbag,
+ .icon-globe-alt,
+ .icon-globe,
+ .icon-folder-alt,
+ .icon-folder,
+ .icon-film,
+ .icon-feed,
+ .icon-drop,
+ .icon-drawer,
+ .icon-docs,
+ .icon-doc,
+ .icon-diamond,
+ .icon-cup,
+ .icon-calculator,
+ .icon-bubbles,
+ .icon-briefcase,
+ .icon-book-open,
+ .icon-basket-loaded,
+ .icon-basket,
+ .icon-bag,
+ .icon-action-undo,
+ .icon-action-redo,
+ .icon-wrench,
+ .icon-umbrella,
+ .icon-trash,
+ .icon-tag,
+ .icon-support,
+ .icon-frame,
+ .icon-size-fullscreen,
+ .icon-size-actual,
+ .icon-shuffle,
+ .icon-share-alt,
+ .icon-share,
+ .icon-rocket,
+ .icon-question,
+ .icon-pie-chart,
+ .icon-pencil,
+ .icon-note,
+ .icon-loop,
+ .icon-home,
+ .icon-grid,
+ .icon-graph,
+ .icon-microphone,
+ .icon-music-tone-alt,
+ .icon-music-tone,
+ .icon-earphones-alt,
+ .icon-earphones,
+ .icon-equalizer,
+ .icon-like,
+ .icon-dislike,
+ .icon-control-start,
+ .icon-control-rewind,
+ .icon-control-play,
+ .icon-control-pause,
+ .icon-control-forward,
+ .icon-control-end,
+ .icon-volume-1,
+ .icon-volume-2,
+ .icon-volume-off,
+ .icon-calendar,
+ .icon-bulb,
+ .icon-chart,
+ .icon-ban,
+ .icon-bubble,
+ .icon-camrecorder,
+ .icon-camera,
+ .icon-cloud-download,
+ .icon-cloud-upload,
+ .icon-envelope,
+ .icon-eye,
+ .icon-flag,
+ .icon-heart,
+ .icon-info,
+ .icon-key,
+ .icon-link,
+ .icon-lock,
+ .icon-lock-open,
+ .icon-magnifier,
+ .icon-magnifier-add,
+ .icon-magnifier-remove,
+ .icon-paper-clip,
+ .icon-paper-plane,
+ .icon-power,
+ .icon-refresh,
+ .icon-reload,
+ .icon-settings,
+ .icon-star,
+ .icon-symbol-female,
+ .icon-symbol-male,
+ .icon-target,
+ .icon-credit-card,
+ .icon-paypal,
+ .icon-social-tumblr,
+ .icon-social-twitter,
+ .icon-social-facebook,
+ .icon-social-instagram,
+ .icon-social-linkedin,
+ .icon-social-pinterest,
+ .icon-social-github,
+ .icon-social-google,
+ .icon-social-reddit,
+ .icon-social-skype,
+ .icon-social-dribbble,
+ .icon-social-behance,
+ .icon-social-foursqare,
+ .icon-social-soundcloud,
+ .icon-social-spotify,
+ .icon-social-stumbleupon,
+ .icon-social-youtube,
+ .icon-social-dropbox,
+ .icon-social-vkontakte,
+ .icon-social-steam {
+  font-family: 'simple-line-icons';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-user:before {
+  content: "\e005";
+}
+.icon-people:before {
+  content: "\e001";
+}
+.icon-user-female:before {
+  content: "\e000";
+}
+.icon-user-follow:before {
+  content: "\e002";
+}
+.icon-user-following:before {
+  content: "\e003";
+}
+.icon-user-unfollow:before {
+  content: "\e004";
+}
+.icon-login:before {
+  content: "\e066";
+}
+.icon-logout:before {
+  content: "\e065";
+}
+.icon-emotsmile:before {
+  content: "\e021";
+}
+.icon-phone:before {
+  content: "\e600";
+}
+.icon-call-end:before {
+  content: "\e048";
+}
+.icon-call-in:before {
+  content: "\e047";
+}
+.icon-call-out:before {
+  content: "\e046";
+}
+.icon-map:before {
+  content: "\e033";
+}
+.icon-location-pin:before {
+  content: "\e096";
+}
+.icon-direction:before {
+  content: "\e042";
+}
+.icon-directions:before {
+  content: "\e041";
+}
+.icon-compass:before {
+  content: "\e045";
+}
+.icon-layers:before {
+  content: "\e034";
+}
+.icon-menu:before {
+  content: "\e601";
+}
+.icon-list:before {
+  content: "\e067";
+}
+.icon-options-vertical:before {
+  content: "\e602";
+}
+.icon-options:before {
+  content: "\e603";
+}
+.icon-arrow-down:before {
+  content: "\e604";
+}
+.icon-arrow-left:before {
+  content: "\e605";
+}
+.icon-arrow-right:before {
+  content: "\e606";
+}
+.icon-arrow-up:before {
+  content: "\e607";
+}
+.icon-arrow-up-circle:before {
+  content: "\e078";
+}
+.icon-arrow-left-circle:before {
+  content: "\e07a";
+}
+.icon-arrow-right-circle:before {
+  content: "\e079";
+}
+.icon-arrow-down-circle:before {
+  content: "\e07b";
+}
+.icon-check:before {
+  content: "\e080";
+}
+.icon-clock:before {
+  content: "\e081";
+}
+.icon-plus:before {
+  content: "\e095";
+}
+.icon-minus:before {
+  content: "\e615";
+}
+.icon-close:before {
+  content: "\e082";
+}
+.icon-event:before {
+  content: "\e619";
+}
+.icon-exclamation:before {
+  content: "\e617";
+}
+.icon-organization:before {
+  content: "\e616";
+}
+.icon-trophy:before {
+  content: "\e006";
+}
+.icon-screen-smartphone:before {
+  content: "\e010";
+}
+.icon-screen-desktop:before {
+  content: "\e011";
+}
+.icon-plane:before {
+  content: "\e012";
+}
+.icon-notebook:before {
+  content: "\e013";
+}
+.icon-mustache:before {
+  content: "\e014";
+}
+.icon-mouse:before {
+  content: "\e015";
+}
+.icon-magnet:before {
+  content: "\e016";
+}
+.icon-energy:before {
+  content: "\e020";
+}
+.icon-disc:before {
+  content: "\e022";
+}
+.icon-cursor:before {
+  content: "\e06e";
+}
+.icon-cursor-move:before {
+  content: "\e023";
+}
+.icon-crop:before {
+  content: "\e024";
+}
+.icon-chemistry:before {
+  content: "\e026";
+}
+.icon-speedometer:before {
+  content: "\e007";
+}
+.icon-shield:before {
+  content: "\e00e";
+}
+.icon-screen-tablet:before {
+  content: "\e00f";
+}
+.icon-magic-wand:before {
+  content: "\e017";
+}
+.icon-hourglass:before {
+  content: "\e018";
+}
+.icon-graduation:before {
+  content: "\e019";
+}
+.icon-ghost:before {
+  content: "\e01a";
+}
+.icon-game-controller:before {
+  content: "\e01b";
+}
+.icon-fire:before {
+  content: "\e01c";
+}
+.icon-eyeglass:before {
+  content: "\e01d";
+}
+.icon-envelope-open:before {
+  content: "\e01e";
+}
+.icon-envelope-letter:before {
+  content: "\e01f";
+}
+.icon-bell:before {
+  content: "\e027";
+}
+.icon-badge:before {
+  content: "\e028";
+}
+.icon-anchor:before {
+  content: "\e029";
+}
+.icon-wallet:before {
+  content: "\e02a";
+}
+.icon-vector:before {
+  content: "\e02b";
+}
+.icon-speech:before {
+  content: "\e02c";
+}
+.icon-puzzle:before {
+  content: "\e02d";
+}
+.icon-printer:before {
+  content: "\e02e";
+}
+.icon-present:before {
+  content: "\e02f";
+}
+.icon-playlist:before {
+  content: "\e030";
+}
+.icon-pin:before {
+  content: "\e031";
+}
+.icon-picture:before {
+  content: "\e032";
+}
+.icon-handbag:before {
+  content: "\e035";
+}
+.icon-globe-alt:before {
+  content: "\e036";
+}
+.icon-globe:before {
+  content: "\e037";
+}
+.icon-folder-alt:before {
+  content: "\e039";
+}
+.icon-folder:before {
+  content: "\e089";
+}
+.icon-film:before {
+  content: "\e03a";
+}
+.icon-feed:before {
+  content: "\e03b";
+}
+.icon-drop:before {
+  content: "\e03e";
+}
+.icon-drawer:before {
+  content: "\e03f";
+}
+.icon-docs:before {
+  content: "\e040";
+}
+.icon-doc:before {
+  content: "\e085";
+}
+.icon-diamond:before {
+  content: "\e043";
+}
+.icon-cup:before {
+  content: "\e044";
+}
+.icon-calculator:before {
+  content: "\e049";
+}
+.icon-bubbles:before {
+  content: "\e04a";
+}
+.icon-briefcase:before {
+  content: "\e04b";
+}
+.icon-book-open:before {
+  content: "\e04c";
+}
+.icon-basket-loaded:before {
+  content: "\e04d";
+}
+.icon-basket:before {
+  content: "\e04e";
+}
+.icon-bag:before {
+  content: "\e04f";
+}
+.icon-action-undo:before {
+  content: "\e050";
+}
+.icon-action-redo:before {
+  content: "\e051";
+}
+.icon-wrench:before {
+  content: "\e052";
+}
+.icon-umbrella:before {
+  content: "\e053";
+}
+.icon-trash:before {
+  content: "\e054";
+}
+.icon-tag:before {
+  content: "\e055";
+}
+.icon-support:before {
+  content: "\e056";
+}
+.icon-frame:before {
+  content: "\e038";
+}
+.icon-size-fullscreen:before {
+  content: "\e057";
+}
+.icon-size-actual:before {
+  content: "\e058";
+}
+.icon-shuffle:before {
+  content: "\e059";
+}
+.icon-share-alt:before {
+  content: "\e05a";
+}
+.icon-share:before {
+  content: "\e05b";
+}
+.icon-rocket:before {
+  content: "\e05c";
+}
+.icon-question:before {
+  content: "\e05d";
+}
+.icon-pie-chart:before {
+  content: "\e05e";
+}
+.icon-pencil:before {
+  content: "\e05f";
+}
+.icon-note:before {
+  content: "\e060";
+}
+.icon-loop:before {
+  content: "\e064";
+}
+.icon-home:before {
+  content: "\e069";
+}
+.icon-grid:before {
+  content: "\e06a";
+}
+.icon-graph:before {
+  content: "\e06b";
+}
+.icon-microphone:before {
+  content: "\e063";
+}
+.icon-music-tone-alt:before {
+  content: "\e061";
+}
+.icon-music-tone:before {
+  content: "\e062";
+}
+.icon-earphones-alt:before {
+  content: "\e03c";
+}
+.icon-earphones:before {
+  content: "\e03d";
+}
+.icon-equalizer:before {
+  content: "\e06c";
+}
+.icon-like:before {
+  content: "\e068";
+}
+.icon-dislike:before {
+  content: "\e06d";
+}
+.icon-control-start:before {
+  content: "\e06f";
+}
+.icon-control-rewind:before {
+  content: "\e070";
+}
+.icon-control-play:before {
+  content: "\e071";
+}
+.icon-control-pause:before {
+  content: "\e072";
+}
+.icon-control-forward:before {
+  content: "\e073";
+}
+.icon-control-end:before {
+  content: "\e074";
+}
+.icon-volume-1:before {
+  content: "\e09f";
+}
+.icon-volume-2:before {
+  content: "\e0a0";
+}
+.icon-volume-off:before {
+  content: "\e0a1";
+}
+.icon-calendar:before {
+  content: "\e075";
+}
+.icon-bulb:before {
+  content: "\e076";
+}
+.icon-chart:before {
+  content: "\e077";
+}
+.icon-ban:before {
+  content: "\e07c";
+}
+.icon-bubble:before {
+  content: "\e07d";
+}
+.icon-camrecorder:before {
+  content: "\e07e";
+}
+.icon-camera:before {
+  content: "\e07f";
+}
+.icon-cloud-download:before {
+  content: "\e083";
+}
+.icon-cloud-upload:before {
+  content: "\e084";
+}
+.icon-envelope:before {
+  content: "\e086";
+}
+.icon-eye:before {
+  content: "\e087";
+}
+.icon-flag:before {
+  content: "\e088";
+}
+.icon-heart:before {
+  content: "\e08a";
+}
+.icon-info:before {
+  content: "\e08b";
+}
+.icon-key:before {
+  content: "\e08c";
+}
+.icon-link:before {
+  content: "\e08d";
+}
+.icon-lock:before {
+  content: "\e08e";
+}
+.icon-lock-open:before {
+  content: "\e08f";
+}
+.icon-magnifier:before {
+  content: "\e090";
+}
+.icon-magnifier-add:before {
+  content: "\e091";
+}
+.icon-magnifier-remove:before {
+  content: "\e092";
+}
+.icon-paper-clip:before {
+  content: "\e093";
+}
+.icon-paper-plane:before {
+  content: "\e094";
+}
+.icon-power:before {
+  content: "\e097";
+}
+.icon-refresh:before {
+  content: "\e098";
+}
+.icon-reload:before {
+  content: "\e099";
+}
+.icon-settings:before {
+  content: "\e09a";
+}
+.icon-star:before {
+  content: "\e09b";
+}
+.icon-symbol-female:before {
+  content: "\e09c";
+}
+.icon-symbol-male:before {
+  content: "\e09d";
+}
+.icon-target:before {
+  content: "\e09e";
+}
+.icon-credit-card:before {
+  content: "\e025";
+}
+.icon-paypal:before {
+  content: "\e608";
+}
+.icon-social-tumblr:before {
+  content: "\e00a";
+}
+.icon-social-twitter:before {
+  content: "\e009";
+}
+.icon-social-facebook:before {
+  content: "\e00b";
+}
+.icon-social-instagram:before {
+  content: "\e609";
+}
+.icon-social-linkedin:before {
+  content: "\e60a";
+}
+.icon-social-pinterest:before {
+  content: "\e60b";
+}
+.icon-social-github:before {
+  content: "\e60c";
+}
+.icon-social-google:before {
+  content: "\e60d";
+}
+.icon-social-reddit:before {
+  content: "\e60e";
+}
+.icon-social-skype:before {
+  content: "\e60f";
+}
+.icon-social-dribbble:before {
+  content: "\e00d";
+}
+.icon-social-behance:before {
+  content: "\e610";
+}
+.icon-social-foursqare:before {
+  content: "\e611";
+}
+.icon-social-soundcloud:before {
+  content: "\e612";
+}
+.icon-social-spotify:before {
+  content: "\e613";
+}
+.icon-social-stumbleupon:before {
+  content: "\e614";
+}
+.icon-social-youtube:before {
+  content: "\e008";
+}
+.icon-social-dropbox:before {
+  content: "\e00c";
+}
+.icon-social-vkontakte:before {
+  content: "\e618";
+}
+.icon-social-steam:before {
+  content: "\e620";
+}
+/*=============================================*/
+/*================ fonts =================*/
+/*=============================================*/
+/*@font-face {
+  font-family: 'Poppins';
+  src: url('fonts/Poppins-Light.eot');
+  src: url('fonts/Poppins-Light.eot?#iefix') format('embedded-opentype'),
+  url('fonts/Poppins-Light.woff2') format('woff2'),
+  url('fonts/Poppins-Light.woff') format('woff'),
+  url('fonts/Poppins-Light.ttf') format('truetype'),
+  url('fonts/Poppins-Light.svg#Poppins-Light') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}*/
+@font-face {
+  font-family: 'Poppins';
+  src: url('fonts/opensans-regular.ttf');
+  src: url('fonts/opensans-regular.eot?#iefix') format('embedded-opentype'),
+  url('fonts/opensans-regular.woff2') format('woff2'),
+  url('fonts/opensans-regular.woff') format('woff'),
+  url('fonts/opensans-regular.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+/*=============================================*/
+/*================ fonts end =================*/
+/*=============================================*/
+/*=============================================*/
+/*================ Common css =================*/
+/*=============================================*/
+*{
+  padding: 0;
+  margin: 0;
+}
+body {
+  font-family: Poppins !important;
+  padding: 0px;
+  margin: 0;
+  background-color: #fff !important;
+}
+body {
+  font-size: 13px;
+}
+a{
+  text-decoration: none!important;
+  font-family: poppins;
+}
+.table-bordered > thead > tr > th {
+  font-family: Poppins;
+}
+label{
+  font-family: Poppins;
+}
+.page-wrapper .panel-default .panel-heading {
+  background-color: #0165d0 !important;
+  color: #fff;
+  border-radius: 0px;
+}
+.page-wrapper .page-main .btn-primary {
+  background-color: #4897f3!important;
+  border-color: #4897f3!important;
+  text-transform: capitalize;
+}
+.page-title-wrapper {
+  background: #fff none repeat scroll 0 0;
+  box-shadow: 0 -3px 2px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  margin-left: -14px;
+  margin-right: -14px;
+  padding-bottom: 8px;
+  padding-left: 17px;
+  padding-right: 15px;
+}
+.page-wrapper .panel-default .panel-heading {
+  text-transform: capitalize !important;
+}
+.navigation, 
+.breadcrumbs, 
+.page-header .header.panel,
+.header.content, 
+.footer.content, 
+.page-wrapper > .widget, 
+.page-wrapper > .page-bottom, 
+.block.category.event, 
+.top-container, .page-main{
+  max-width: 100% !important;
+}
+/*=============================================*/
+/*================ Common end  =================*/
+/*=============================================*/
+/*=============================================*/
+/*======= Top bar    =====*/
+/*=============================================*/
+.navbar-static-top .navbar-top-links > li ul.dropdown-menu {
+  border: medium none;
+  border-radius: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  top: 49px;
+  width: 280px;
+}
+.navbar-static-top .navbar-top-links > li .profile-vendor {
+  background: #f0f0f0 none repeat scroll 0 0;
+  border-bottom: 1px solid #f1f1f1;
+  padding: 10px 10px 13px;
+}
+.navbar-static-top .navbar-top-links > li .profile-vendor img {
+  display: block;
+  margin: 6px auto 0;
+  width: 55px;
+}
+.profile-vendor .vendor-profile-sta {
+  float: left;
+  padding-left: 10px;
+  width: calc(100% - 55px);
+}
+.profile-vendor .vendor-profile-sta .vendor_profile_name {
+  display: block;
+  padding-left: 0;
+  padding-right: 0;
+}
+.profile-vendor .vendor_status_info {
+  display: block;
+  padding-left: 0;
+  padding-right: 0;
+}
+.vendor-profile table.table.table-striped img {
+  width: 30px;
+}
+.profile-vendor .vendor_status_info i {
+  display: inline-block;
+  font-size: 14px !important;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.dropdown-menu .top-lis a {
+  line-height: 34px;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  transition: 0.2s all;
+  -webkit-transition: 0.2s all;
+  -ms-transition: 0.2s all;
+  -moz-transition: 0.2s all;
+  -o-transition: 0.2s all;
+}
+.dropdown-menu .top-lis a i{
+  margin-right: 5px;
+  display: inline-block;
+}
+.dropdown-menu .top-lis a:hover{
+  background-color: #0165D0;
+  color: #fff !important;
+}
+.dropdown-menu .top-lis a:hover i{
+  color: #fff;
+}
+.dropdown-tasks .top-lis {
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-top: 15px;
+}
+.dropdown-tasks .top-lis .progress {
+  height: 9px;
+  margin-bottom: 10px;
+}
+.dropdown-tasks .top-lis .progress .progress-bar {
+  background: #0165d0 none repeat scroll 0 0;
+}
+.dropdown-tasks .top-lis .edit-profile-vendor {
+  margin-bottom: 8px;
+}
+.dropdown-tasks .top-lis .edit-profile-vendor a {
+  color: #000 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.dropdown-tasks .top-lis .edit-profile-vendor a:hover,
+.dropdown-tasks .top-lis .edit-profile-vendor a:hover i{
+  text-decoration: none;
+  background-color: transparent !important;
+  color: #000;
+}
+nav.navbar-default.navbar-static-top {
+  background-color: rgb(1, 101, 208);
+  box-shadow: 0 0 2px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 9999;
+}
+.navbar-static-top .navbar-top-links > li > a {
+  min-height: auto;
+  padding: 10px;
+}
+.navbar-static-top .navbar-top-links > li > a:hover,
+.navbar-static-top .navbar-top-links > li > a:focus,
+.navbar-static-top .navbar-top-links > li.open > a,
+.navbar-static-top .navbar-top-links > li.open > a:hover{
+  background-color: transparent !important;
+  padding: 10px !important;
+}
+.navbar-static-top .navbar-top-links > li.open > a > i.fa-caret-down{
+  margin-right: 0px;
+  color:  #fff;
+} 
+.navbar-static-top .navbar-top-links > li > a > i {
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+.navbar-static-top .navbar-top-links > li > a > i.fa-caret-down {
+  font-size: 12px;
+}
+.navbar-static-top .navbar-top-links > li > a span {
+  background: #fff none repeat scroll 0 0;
+  color: #000;
+  right: 15px !important;
+  top: 5px !important;
+}
+/*=============================================*/
+/*======= Top bar end    =====*/
+/*=============================================*/
+.csorder-invoice-view br,
+.csorder-vorders-view br,
+.order-addresses br ,
+.order-view-account-information br{
+  display: block;
+}
+/*=============================================*/
+/*========== Login / registration page ========*/
+/*=============================================*/
+.page-wrapper .test2 {
+  padding-bottom: 0 !important;
+}
+.csmarketplace-account-login,
+.csmarketplace-account-forgotpassword,
+.csmarketplace-account-approval,
+.csmarketplace-account-logoutsuccess{
+  background: #f5f5f5 none repeat scroll 0 0 !important;
+}
+.csmarketplace-account-login .page-wrapper,
+.csmarketplace-account-forgotpassword .page-wrapper,
+.csmarketplace-account-approval .page-wrapper {
+  background: #f5f5f5 none repeat scroll 0 0 !important;
+}
+.csmarketplace-account-forgotpassword .ced_vendor_before_wrap.clearfix,
+.csmarketplace-account-approval .ced_vendor_before_wrap {
+
+}
+.csmarketplace-account-logoutsuccess .ced_vendor_before_wrap{
+  
+}
+.csmarketplace-account-login .page-wrapper,
+.csmarketplace-account-forgotpassword .page-wrapper {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100%;
+}
+.csmarketplace-account-login .page-wrapper,
+.csmarketplace-account-forgotpassword .page-wrapper,
+.csmarketplace-account-approval .page-wrapper,
+.csmarketplace-account-logoutsuccess .page-wrapper{
+  padding-bottom: 105px;
+  padding-top: 70px;
+}
+
+
+.csmarketplace-account-login .page-wrapper main ,
+.csmarketplace-account-forgotpassword .page-wrapper main{
+  max-width: 100%;
+  width: 100%;
+}
+.ced_vendor_header {
+  background: #fff none repeat scroll 0 0;
+  border-bottom: 1px solid #f0f0f0;
+  left: 0;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+.ced_vendor_header .v_header_logo img {
+  width: 190px;
+}
+.ced_vendor_footer {
+  background: #fff none repeat scroll 0 0;
+  border-top: 1px solid #f0f0f0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 5px;
+  padding-top: 15px;
+  position: fixed;
+  width: 100%;
+}
+.ced_vendor_footer p {
+  font-family: poppins;
+  font-size: 15px;
+  margin: 0 auto 10px;
+  text-align: center;
+}
+.ced_vendor_footer_links {
+  text-align: center;
+}
+.ced_vendor_footer_links li {
+  display: inline-block;
+  list-style: outside none none;
+  margin-bottom: 0;
+}
+.ced_vendor_footer_links li a {
+  color: #0081c9 !important;
+  font-size: 13px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-decoration: underline !important;
+}
+.ced_vendor_before_wrap {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #f0f0f0;
+  margin: 0px auto;
+  max-width: 450px;
+  padding: 10px 0 20px;
+  text-align: left;
+  width: 100%;
+}
+.ced_vendor_before_wrap .field.captcha label.label {
+  color: #333 !important;
+  display: inline-block !important;
+  margin-bottom: 5px !important;
+  padding-left: 0 !important;
+}
+.ced_vendor_before_wrap .field.captcha label.label span {
+  font-size: 12px;
+  font-weight: normal;
+}
+.ced_vendor_before_wrap .field.captcha .control.captcha input {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #d5d5d5;
+  height: 33px;
+  margin-bottom: 7px;
+  width: 100%;
+}
+.ced_vendor_before_login_wrapper {
+  padding-bottom: 10px;
+}
+h3.ced_vendor_from_title {
+  color: #000;
+  font-family: poppins;
+  font-size: 25px;
+  font-weight: normal;
+  margin-bottom: 20px;
+  margin-top: 2px;
+}
+.ced_vendor_before_wrap .left-logo-sec {
+ /* background-color: rgba(255, 255, 255, 0.2);*/
+ padding: 15px;
+}
+.ced_vendor_before_wrap .right {
+  margin-top: 0;
+  padding: 15px 20px;
+}
+.ced_vendor_before_wrap .ced-sociallogin-login {
+  border-top: 1px solid #f0f0f0;
+  margin-top: 20px;
+  padding: 15px 0 0;
+}
+.ced_vendor_login .block.ced-sociallogin-login {
+  /*padding-left: 15px;
+  padding-right: 15px;*/
+  text-align: left;
+}
+.ced_vendor_before_wrap .ced-sociallogin-login h2 {
+  color: #000000;
+  font-family: poppins;
+  font-size: 23px;
+  margin: 0 0 25px;
+}
+.ced_vendor_before_wrap .ced-sociallogin-login .ced-sociallogin-login-lower > div {
+  display: inline-block;
+}
+.ced_vendor_before_wrap .ced-sociallogin-login .ced-sociallogin-login-lower > div .clearer div {
+  background-size: 35px auto !important;
+  height: 46px !important;
+  width: 65px;
+}
+.ced_vendor_before_wrap form {
+  min-width: 100% !important;
+  width: 100% !important;
+}
+.ced_vendor_before_wrap .panel-heading {
+  display: none;
+}
+.ced_vendor_register.clearfix .panel-body {
+  padding: 0!important;
+}
+.ced_vendor_before_wrap .panel.panel-default {
+  border: medium none;
+  box-shadow: none;
+  margin: 0;
+}
+.ced_vendor_before_wrap fieldset {
+  margin: 0;
+}
+.login-container .fieldset::after {
+  content: none !important;
+}
+.ced_vendor_before_wrap .left-logo-table-cell img {
+  width: 200px;
+}
+.ced_vendor_before_wrap .input-box {
+  margin-bottom: 15px;
+}
+.ced_vendor_before_wrap .fieldset #ced-shop-url .input-box {
+  margin-bottom: 0 !important;
+}
+.ced_vendor_before_wrap .wide .input-box{
+  width: 100% !important;
+  padding-left: 0px !important;
+} 
+.ced_vendor_before_wrap .input-box input {
+  border: 1px solid #c4c4c4;
+  border-radius: 0 !important;
+  box-shadow: unset;
+  color: #333;
+  font-family: poppins;
+  font-size: 13px;
+  height: 35px;
+  padding: 6px;
+}
+/*.ced_vendor_before_wrap .input-box input.mage-error {
+  border-color: #a94442;
+}
+.ced_vendor_before_wrap div.mage-error {
+  display: none!important;
+}*/
+.ced_vendor_before_wrap .input-box input:focus{
+  box-shadow: none!important;
+  border-color: #66afe9;
+}
+.ced_vendor_before_wrap .checkbox {
+  float: left;
+  margin: 0;
+  position: relative;
+}
+.ced_vendor_before_wrap .checkbox input {
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  visibility: hidden;
+}
+.ced_vendor_before_wrap .checkbox input:checked + label::before {
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+  content: "";
+  height: 11px;
+  left: 5px;
+  position: absolute;
+  top: 3px;
+  transform: rotate(43deg);
+  width: 7px;
+}
+.ced_vendor_before_wrap .checkbox label::after {
+  border: 2px solid #000000;
+  border-radius: 2px;
+  content: "";
+  height: 17px;
+  left: 0;
+  position: absolute;
+  top: 2px;
+  width: 17px;
+}
+.ced_vendor_before_wrap .checkbox label {
+  color: #000;
+  font-size: 12px;
+  padding-left: 25px;
+}
+.ced_vendor_before_wrap .f-right.forgotpass {
+  color: #0081C9!important;
+  float: right;
+  font-size: 12px;
+}
+.ced_vendor_before_wrap button {
+  border-radius: 0 !important;
+  font-size: 15px !important;
+  margin-bottom: 15px !important;
+  margin-top: 12px !important;
+  text-transform: uppercase !important;
+}
+.vendor_exitance {
+  color: #000;
+  margin-top: 20px;
+}
+.vendor_exitance a {
+  color: #0081C9 !important;
+}
+.ced_vendor_register .wide .note {
+  color: #ff0000;
+  display: block;
+  margin: 10px;
+}
+/*reg*/
+.ced_vendor_register {
+  display: none;
+}
+
+ /* notification page */
+ul.notification-page li {
+  
+  list-style: outside none none;
+  padding: 5px;
+ 
+}
+ul.notification-page li a {
+  background-color: rgba(34, 138, 230, 0.2);
+  border: 1px solid rgba(34, 138, 230, 0.2);
+  border-radius: 4px;
+  color: #155724 !important;
+  display: block;
+  font-size: 14px;
+  padding: 11px 15px;
+  position: relative;
+}
+ul.notification-page li a:focus{
+  outline: none;
+}
+ul.notification-page li a::before {
+  color: #155724;
+  content: "";
+  display: inline-block;
+  font-family: fontawesome;
+  font-size: 11px;
+  margin-right: 11px;
+  vertical-align: middle;
+}
+ul.notification-page li a span {
+  color: #777777;
+  display: block;
+  font-size: 11px;
+  font-style: italic;
+  padding-left: 24px;
+}
+/*=============================================*/
+/*======= Login / registration page end   =====*/
+/*=============================================*/
+
+/*=============================================*/
+/*======= user panel mobile   =====*/
+/*=============================================*/
+.userinfosider {
+  background: #0165d0 none repeat scroll 0 0;
+  color: #fff;
+  padding: 4px;
+  text-align: center;
+  display: none;
+}
+.userinfosider .vendor_profile_name {
+  font-size: 20px;
+}
+.userinfosider .vendor_status_info i {
+  display: none;
+}
+.userinfosider .vendor_status_info {
+  margin-bottom: 9px;
+}
+.userinfosider .vendor-mobile-logout {
+  border-top: 1px solid #bababa;
+  padding-bottom: 11px;
+  padding-top: 15px;
+}
+.userinfosider .vendor-mobile-logout .links {
+  display: inline-block;
+}
+.userinfosider .vendor-mobile-logout .links::after {
+  content: "|";
+}
+.userinfosider .vendor-mobile-logout .links:last-child::after {
+  display: none;
+}
+.userinfosider .vendor-mobile-logout .links a {
+  color: #fff !important;
+  font-size: 14px;
+}
+.userinfosider .vendor-mobile-logout .links i {
+  display: none;
+}
+
+/*=============================================*/
+/*======= Under aproval page   =====*/
+/*=============================================*/
+.csmarketplace-account-approval .page-wrapper{
+  margin-left: 0px !important;
+}
+.review_vendor{
+  float: none;
+}
+/*=============================================*/
+/*======= Under aproval page end   =====*/
+/*=============================================*/
+/* side bar */
+.page-title-wrapper .page-title {
+  margin-bottom: 9px !important;
+  margin-top: 5px;
+}
+.page-title-wrapper .page-title span {
+  color: #000;
+  font-family: poppins;
+  font-size: 24px;
+}
+
+.ced-vendor-sidebar {
+  background-color: #fff;
+  box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.1);
+  height: 100%;
+  margin-top: 51px;
+  overflow-y: scroll;
+  position: fixed;
+  top: 0;
+  width: 235px;
+}
+.ced-vendor-sidebar.slide{
+  overflow-y: visible;
+}
+.ced-vendor-sidebar-nav .side-menu > li.nav > a {
+  color: #000 !important;
+}
+.ced-vendor-sidebar-nav .side-menu > li.nav > a:focus {
+  color: #ffffff!important;
+}
+.ced-vendor-sidebar-nav a {
+  line-height: 26px;
+}
+.side-menu li a {
+  padding: 10px 10px 10px 20px !important;
+  transition: 0.2s all;
+  -webkit-transition: 0.2s all;
+  -o-transition: 0.2s all;
+  -ms-transition: 0.2s all;
+  -moz-transition: 0.2s all;
+}
+.ced-vendor-sidebar li a i {
+  padding-right: 35px;
+  width: 1.28571em;
+}
+.ced-vendor-sidebar .side-menu > li ul li i{
+  padding-right: 22px;
+}
+.ced-vendor-sidebar-nav .side-menu a.active {
+  background: rgb(1,101,208) none repeat scroll 0 0;
+  border: medium none !important;
+}
+.ced-vendor-sidebar-nav .side-menu li .nav-second-level li a.active,
+.nav-second-level > li > a, .nav-third-level > li > a {
+  background: #1674D8 none repeat scroll 0 0;
+  color: #ffffff!important;
+}
+.ced-vendor-sidebar-nav .side-menu li .nav-second-level li a.active:hover,
+.nav.nav-second-level > li > a:hover,
+.nav.nav-third-level > li > a:hover {
+  background: #1E7FE6 none repeat scroll 0 0!important;
+  color: #fff;
+}
+.ced-vendor-sidebar-nav .side-menu a.active span, 
+.ced-vendor-sidebar-nav .side-menu a.active i {
+  color: #fff;
+}
+.side-menu > li > a:focus, 
+.side-menu > li > a:hover {
+  background: #0B69D4 none repeat scroll 0 0;
+  border: medium none !important;
+  padding: 10px 10px 10px 20px!important;
+}
+.side-menu > li > a:focus span,
+.side-menu > li > a:focus i 
+.side-menu > li > a:hover span,
+.side-menu > li > a:hover i,
+.ced-vendor-sidebar-nav .side-menu > li.nav > a:hover span{
+  color: #fff !important;
+}
+.nav > li > a:focus, .nav > li > a:hover {
+  background: #0165d0 none repeat scroll 0 0 !important;
+  color: #fff !important;
+  outline: none!important;
+}
+main.page-main{
+  padding-bottom: 15px;
+}
+main.page-main::after{
+  content: '';
+  clear: both;
+  display: table;
+}
+.page-wrapper {
+  border: medium none !important;
+  margin-left: 235px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  width: calc(100% - 235px);
+}
+.page-wrapper .page-main{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.ced-vendor-sidebar-nav .side-menu .nav .active:focus,
+.ced-vendor-sidebar-nav .side-menu .nav:focus {
+  outline: medium none;
+}
+/* dashboard card */
+.x_panel {
+  border-radius: 0px;
+  color: #fff;
+  margin-bottom: 25px;
+  margin-top: 10px;
+  padding: 10px;
+}
+.panel{
+  border-radius: 0px;
+  box-shadow: none; 
+}
+.x_panel .card-block .text-right::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.x_panel .card-block .text-right i {
+  float: left;
+  font-size: 20px;
+}
+.x_panel .card-block .text-right span {
+  float: right;
+  font-size: 20px;
+}
+.x_panel .card-block h6 {
+  font-size: 13px;
+  font-weight: bold;
+  margin: 0;
+}
+.x_panel .card-block .text-right {
+  margin-top: 15px;
+}
+.x_panel .card-block .m-b-0 {
+  margin-bottom: 0;
+}
+.x_panel .card-block .m-b-0 a {
+  color: #fff !important;
+}
+.x_panel.bg-c-blue {
+  background: #0165D0 none repeat scroll 0 0;
+}
+.x_panel.bg-c-green {
+  background: #218838 none repeat scroll 0 0;
+}
+.x_panel.bg-c-yellow {
+  background: #f9a100 none repeat scroll 0 0;
+}
+.x_panel.bg-c-red {
+  background: #e71d37 none repeat scroll 0 0;
+}
+.vendor-dashboadrd .ui-datepicker {
+  box-shadow: unset;
+}
+.x_panel_tab .btn-info {
+  background-color: #5bc0de!important;
+  border-color: #46b8da!important;
+  color: #fff;
+}
+.x_panel_tab .btn-warning {
+  background-color: #f0ad4e!important;
+  border-color: #eea236!important;
+  color: #ffffff!important;
+}
+.x_panel_tab .btn-success {
+  background-color: #5cb85c!important;
+  border-color: #4cae4c!important;
+  color: #ffffff!important;
+}
+.x_panel_tab .btn-danger {
+  background-color: #d9534f!important;
+  border-color: #d43f3a!important;
+  color: #ffffff!important;
+}
+.most-sold-product .panel-body {
+  padding: 0;
+}
+.most-sold-product .panel-body th {
+  font-size: 12px;
+  font-weight: 600;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-transform: capitalize;
+}
+.most-sold-product .panel-body td {
+  font-size: 12px;
+}
+/* panel heading in dashboard */
+.vendor-dashboadrd .panel-heading {
+  background: #fff none repeat scroll 0 0 !important;
+  border-bottom: 1px solid #e9e9e9;
+  color: #000;
+  font-weight: bold;
+}
+.vendor-dashboadrd .panel .panel-heading{
+    padding: 10px 15px!important;
+} 
+.ced-chart-filter {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #68aeff;
+  border-radius: 3px;
+  margin: 0;
+  padding: 0;
+}
+.ced-chart-filter li {
+  display: inline-block;
+  margin-bottom: 0px;
+}
+.ced-chart-filter li.active a {
+  background: #68aeff none repeat scroll 0 0;
+  color: #fff !important;
+}
+.ced-chart-filter li a {
+  color: #4c92e3 !important;
+  display: block;
+  font-size: 12px;
+  font-weight: normal;
+  padding: 3px 10px;
+  outline:none;
+}
+/*product tab in dashboard */
+.x_panel_tab .nav.nav-tabs.md-tabs {
+  background: #fff none repeat scroll 0 0;
+  border: none;
+}
+.x_panel_tab .nav.nav-tabs .nav-item {
+  margin: 0;
+}
+.x_panel_tab .nav.nav-tabs a, .x_panel_tab .nav.nav-tabs .active a {
+  border-left: medium none;
+  border-right: medium none;
+  border-top: medium none;
+  color: #000 !important;
+  margin: 0 !important;
+}
+.x_panel_tab .nav.nav-tabs a {
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+}
+.x_panel_tab .nav.nav-tabs a:hover,
+.x_panel_tab .nav.nav-tabs a:focus {
+  color: #fff !important;
+}
+.x_panel_tab .nav.nav-tabs a:focus{
+  outline: none;
+}
+.x_panel_tab .nav.nav-tabs a i {
+  margin-right: 7px;
+}
+.x_panel_tab .nav.nav-tabs .active a,
+.x_panel_tab .nav.nav-tabs .active a:hover {
+  border-bottom: 2px solid #333;
+}
+/*=============================================*/
+/*======= Vendor profile page    =====*/
+/*=============================================*/
+.vendor_profile_top {
+  background: #fff none repeat scroll 0 0;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+.vendor_profile_top .user-display {
+  border-right: 1px solid #c9c9c9;
+  float: left;
+  padding: 15px;
+  width: 50%;
+}
+.vendor_profile_top .user-display .user_display_wrapper::after {
+  clear: left;
+  content: "";
+  display: table;
+}
+.user_display_wrapper .user-display-bottom {
+  margin-top: 13px;
+}
+.vendor-profile .panel .panel-heading{
+  padding:10px 15px!important;
+}
+.user_display_wrapper .user-display-bottom img {
+  width: 70px;
+}
+.user_display_wrapper .user_display_info {
+  float: right;
+  padding-top: 0;
+  width: calc(100% - 80px);
+}
+.user-display .user_display_wrapper .user_display_info a {
+  text-decoration: none;
+}
+.profile-view .user_display_wrapper .user_display_info {
+  text-align: left;
+}
+.user_display_wrapper .user_display_info .name {
+  font-size: 17px;
+  line-height: 30px;
+  margin-bottom: 5px;
+}
+.user_display_wrapper .user_display_info .nick {
+  color: #a49c06;
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 14px;
+}
+.user_display_wrapper .user_display_info .vendor_edit a {
+  display: inline-block;
+  font-weight: bold;
+}
+.vendor_profile_top .vendor-dedor-details {
+  float: right;
+  padding: 15px;
+  width: 50%;
+}
+.vendor_profile_top .vendor-dedor-details ul {
+  list-style: outside none none;
+  margin-top: 28px;
+}
+.vendor_profile_top .vendor-dedor-details ul li {
+  color: #000;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 29px;
+}
+.bellow-list-wrapper {
+  margin-top: 10px;
+}
+.bellow-list-wrapper ul {
+  margin: 0;
+}
+.bellow-list-wrapper ul::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.bellow-list-wrapper li {
+  display: inline-block;
+  float: left;
+  list-style: outside none none;
+  padding-left: 1px;
+  padding-right: 1px;
+  text-align: center;
+  width: 50%;
+}
+.bellow-list-wrapper li a {
+  background: #4897f3 none repeat scroll 0 0;
+  border-bottom: 4px solid #3d8cd3;
+  color: #fff !important;
+  display: block;
+  font-weight: bold;
+  padding: 10px;
+  word-break: break-all;
+}
+.vendor-profile .panel-heading {
+  background: #fff none repeat scroll 0 0 !important;
+}
+.vendor-profile .panel-heading h4 {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 4px 0;
+}
+.vendor-profile .addresses-primary td {
+  border: medium none;
+}
+.vendor-profile .panel.panel-default {
+  border: medium none;
+  border-radius: 0;
+  box-shadow: none !important;
+}
+/*edit*/
+.form-list .wide::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.form-list .wide label.label {
+  float: left;
+  font-size: 12px;
+  margin-bottom: 0;
+  margin-top: 13px;
+  text-align: right;
+  white-space: normal;
+  width: 25%;
+  word-wrap: break-word;
+}
+
+.form-list .wide label.label > label {
+  float: none;
+  margin: 0;
+  padding: 0;
+}
+.panel-body.panel-min-height .input-box {
+  min-height: 65px;
+}
+.form-list .wide label.label span {
+  font-size: 12px;
+}
+.panel-body .wide .input-box {
+  float: left;
+  padding-left: 10px;
+  width: calc(100% - 25%);
+}
+.panel-body .wide .input-box select.admin__control-multiselect {
+  height: 160px;
+}
+.panel-body .wide .input-box select
+.panel-body .wide .input-box > a img {
+  border: 1px solid #d1d1d1;
+  height: auto;
+  margin-bottom: 10px;
+  width: 55px;
+}
+.panel-body .wide .input-box .delete-image {
+  display: inline-block;
+  margin-top: 10px;
+}
+.panel-body .wide .input-box .delete-image input {
+  display: inline-block;
+  height: auto;
+  margin: 2px 7px 0 0;
+  vertical-align: middle;
+}
+/*=============================================*/
+/*======= Vendor profile page end   =====*/
+/*=============================================*/
+input[type="text"], select{
+  border-radius: 0px !important;
+}
+.table-bordered > thead > tr > th {
+  color: #000;
+  font-size: 12px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  vertical-align: top !important;
+}
+.btn.button {
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.table-bordered .filter .list_filter img {
+  position: absolute;
+  right: 0;
+  width: 10px;
+  display: none;
+}
+.table-bordered .filter .list_filter{
+  position: relative;
+}
+.table-bordered .filter .list_filter input.form-control {
+  border-radius: 0;
+  height: 25px !important;
+}
+.table-bordered .filter .list_filter ._has-datepicker {
+  background-image: url("../images/callendor-input.png");
+  background-position: calc(100% - 4px) center;
+  background-repeat: no-repeat;
+  background-size: 12px auto;
+}
+.btn-circle:hover i{
+  color: #fff;
+}
+.col-md-12 > .panel-default .panel-body > .col-md-12{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.fieldset > h2.legend {
+  border-bottom: 1px solid #e7e7e7;
+  font-size: 21px;
+  padding-bottom: 11px;
+}
+/* product edit */
+.panel-min-height .form-group {
+  min-height: auto!important; 
+}
+.ced_price_rule .price-imput-box.input-group {
+  display: block;
+}
+.ced_price_rule .price-imput-box.input-group .input-group-addon {
+  display: inline-block;
+  float: left;
+  width: 35px;
+}
+.ced_price_rule .price-imput-box.input-group .validate-zero-or-greater {
+  display: inline-block;
+  float: none;
+  vertical-align: middle;
+  width: calc(100% - 35px) !important;
+}
+/*============================================
+=            notification section            =
+============================================*/
+.card-block .notification_list li {
+  list-style: outside none none;
+  margin-bottom: 6px;
+}
+.card-block .notification_list li a strong {
+  color: #333;
+}
+.card-block .notification_list a {
+  text-decoration: none;
+}
+.card-block .notification_list li a i {
+  margin-right: 7px;
+  vertical-align: middle;
+}
+/*=====  End of notification section  ======*/
+/*new product*/
+table .csbutton.btn-circle {
+  margin: 0 5px;
+}
+/*product list*/
+.product-list .filter_button {
+  padding-left: 0px;
+}
+/*order*/
+.order-info-wrap .order-info-box .form-list td {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.for_print_order_button .box-title,
+.for_print_order_button .order-info {
+  background: #0165d0 none repeat scroll 0 0;
+}
+.for_print_order_button .order-info-wrap h3,
+.for_print_order_button .box-title h4{
+  color: #fff !important;
+  font-size: 15px;
+  font-weight: bold;
+  margin: 4px 0;
+  padding: 10px 15px;
+}
+.for_print_order_button .order-info-wrap .order-info {
+  padding: 0;
+}
+.for_print_order_button .box-title h4 {
+  margin: 0;
+  padding: 0;
+}
+/*transaction*/
+.csmarketplace-vpayments-view .fieldset h2 {
+  background: #0165d0 none repeat scroll 0 0 !important;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 0 !important;
+  border-bottom: none!important;
+}
+.ced-transactions-details h2.legend {
+  float: none;
+}
+.ced-transactions-details .fieldset ul .fields {
+  padding: 0;
+}
+.ced-transactions-details .fieldset {
+  border: 0 none;
+}
+.ced-transactions-details ul.form-list {
+  background: #fff none repeat scroll 0 0;
+  margin-bottom: 0;
+  padding: 10px 0;
+}
+.ced-transactions-details + .back-link {
+  padding: 0 15px;
+}
+/*reports*/
+.order-reports input.validate-date,
+.product-reports  input.validate-date,
+#myvacation_form ._has-datepicker{
+  background: rgba(0, 0, 0, 0) url("../images/callendor-input.png") no-repeat scroll calc(100% - 4px) center / 12px auto !important;
+  padding-left: 25px!important;
+}
+.col-md-12.downloadable-information {
+  padding-left: 0;
+  padding-right: 0;
+}
+ .input-box .image_set .setimage span, 
+ .input-box .image_set .setimage > a, 
+.input-box .image_set .setimage input {
+  display: inline-block !important;
+  float: none !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+ .input-box .image_set .setimage{
+  margin-bottom: 20px;
+}
+  .input-box .image_set .setimage > a img {
+  border: 1px solid #b0b0b0;
+}
+.input-box .image_set > input, .input-box .image_set > span {
+  vertical-align: middle !important;
+  display: inline-block;
+}
+.sku-success-msg {
+  background-color: transparent;
+  background-position: 0 0 !important;
+  padding-left: 20px;
+  padding-top: 1px;
+}
+.tree-wrapper .root-category-wrapper {
+  margin-left: 35px;
+}
+.tree-wrapper .tree-node-el img, 
+.tree-wrapper .tree-node-el input, 
+.tree-wrapper .tree-node-el span {
+  display: inline-block;
+  float: none;
+  margin: 0 3px 0 0;
+  vertical-align: middle;
+}
+.tree-wrapper .tree-node-el {
+  margin-bottom: 7px;
+}
+/*=====================================================
+=            Section comment General css v            =
+=====================================================*/
+select{
+  outline:none;
+}
+.messages .message-error::before {
+  content: "\f00d";
+  font-family: "fontawesome";
+}
+select option {
+  padding: 3px 10px;
+    outline:none;
+}
+/*div.mage-error[generated] {
+  display: none!important;
+}*/
+/*.form-control.validate-select.select.mage-error,
+.input-text.form-control.mage-error {
+  border-color: #a94442;
+}*/
+.pages .action.previous,
+.pages .action.next  {
+  margin-right: 0;
+  margin-left:0;
+}
+br {
+  display: none;
+}
+.toolbar-amount {
+  display: block;
+  line-height: 16px;
+  margin: 0;
+  padding: 8px 5px 0;
+  vertical-align: middle;
+}
+.panel-default .panel-heading > div {
+  text-transform: capitalize!important;
+  font-family: poppins;
+}
+.panel .panel-heading {
+  padding: 4px 15px!important;
+}
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+  background-color: #f0f0f0;
+}
+.pages .action.previous::before,
+.pages .action.next::before {
+  margin: 0 0 0 -15px;
+}
+.navbar-header .navbar-toggle:hover{
+  background: #2185f0 none repeat scroll 0 0!important;
+}
+.navbar-header .navbar-toggle:focus{
+    background: #0165D0 none repeat scroll 0 0!important;
+}
+.navbar-static-top .navbar-header .navbar-toggle .icon-bar {
+  transition: 200ms all;
+}
+.navbar-static-top .navbar-header .navbar-toggle.slide .iconbar-one {
+  height: 3px;
+  position: absolute;
+  top: 12px;
+  transform: rotate(45deg);
+}
+.navbar-static-top .navbar-header .navbar-toggle.slide .iconbar-two {
+  opacity: 0;
+}
+.navbar-static-top .navbar-header .navbar-toggle.slide .iconbar-three {
+  height: 3px;
+  position: absolute;
+  top: 8px;
+  transform: rotate(-45deg);
+}
+/*=====  End of Section comment General css v  ======*/
+/*===================================================
+=            Section comment Dashboard css            =
+===================================================*/
+.ced-profile-detail .panel.panel-default {
+  min-height: 165px;
+}
+/*=====  End of Section comment Dashboard css  ======*/
+/*========================================================
+=            Section comment Account Approval            =
+========================================================*/
+.csmarketplace-account-approval .page .messages,
+.csmarketplace-account-login .page .messages{
+  margin: 60px auto 0;
+  max-width: 450px;
+  width: 90%;
+}
+.csmarketplace-account-approval .page-title-wrapper {
+  display: none;
+}
+.csmarketplace-account-approval .review_vendor {
+  color: #333333;
+  text-shadow: none;
+}
+.csmarketplace-account-approval .ced_vendor_login button.btn-primary {
+  padding: 10px!important;
+  width: 49%;
+}
+.csmarketplace-account-approval .approval-status {
+  color: #ff0000;
+}
+/*=====  End of Section comment Account Approval  ======*/
+/*======================================================
+=            Section comment Vendor profile            =
+======================================================*/
+.vendor-profile .table tr:nth-child(2n+1) {
+  background: #f0f0f0 none repeat scroll 0 0;
+}
+/*=====  End of Section comment Vendor profile  ======*/
+/*=======================================================
+=            Section comment Logout page css            =
+=======================================================*/
+.csmarketplace-account-logoutsuccess .page-title-wrapper {
+  display: none;
+}
+.csmarketplace-account-logoutsuccess .page-wrapper {
+  margin-left: 0!important;
+  width: 100%;
+}
+/*=====  End of Section comment Logout page css  ======*/
+/*======================================================
+=            Section comment Order page css            =
+======================================================*/
+.order-details tbody .a-right{
+  text-align: center !important;
+}
+.order-list .vendor-button-set.buttons-set.filter_button {
+  margin: 0 0 7px;
+}
+.product-list label[for] {
+  margin-top: 15px;
+}
+.order-details .headings {
+  background: #dedede;
+}
+.order-reports > .col-md-12,
+.product-reports > .col-md-12 {
+  padding: 0;
+}
+.order-items.order-details {
+  border: 1px solid #cecece;
+  margin: 10px 0;
+}
+.order-items.order-details table {
+  margin: 0;
+}
+.product-reports div > .form-group.col-md-6 {
+  padding-left: 0;
+}
+.product-reports div > .form-group.col-md-6:nth-child(3) {
+  padding-right: 0;
+}
+/*=====  End of Section comment Order page css  ======*/
+/*=========================================================
+=            Section comment Settings page css            =
+=========================================================*/
+h2.legend.ced_shipping {
+  float: none;
+  font-size: 18px;
+}
+.panel h3.legend {
+  margin-top: 0;
+}
+.csmarketplace-vsettings-index .required {
+  display: none;
+}
+.csmarketplace-vsettings-index h3.legend {
+  display: none;
+}
+/*=====  End of Section comment Settings page css  ======*/
+/*============================================================
+=            Section comment  Product page css            =
+============================================================*/
+.form-group.product-type.col-md-6 {
+  padding-top: 15px;
+}
+.panel-min-height > .col-md-12 {
+  padding-top: 15px;
+}
+.csmarketplace-vproducts-new p.required {
+  display: none!important;
+}
+.input-box .image_set .defaultimage {
+  margin: 1px;
+}
+.downloadable-information table#sample_table {
+  min-width: 650px;
+}
+.downloadable-information table#link_table {
+  min-width: 800px;
+}
+.csmarketplace-vproducts-new label.required::after {
+  position: absolute;
+  text-indent: 5px;
+}
+
+
+#set-prop-form{
+  background-color: #fff;
+  padding: 15px; 
+}
+/*=================================================
+=            Membership plan page                 =
+=================================================*/
+.order-items.order-details1 .panel-body-inside {
+  border: 1px solid #d6d6d6;
+  padding: 15px !important;
+  text-align: center;
+}
+.order-items.order-details1 .panel-body-inside .plan-details {
+  min-height: 105px;
+  padding-top: 5px;
+}
+
+/* mutishipping */
+#csmultishipping_address .hor-scroll label:empty {
+  display: block !important;
+}
+
+/*=====  End of Section comment  Product page css  ======*/
+/*=================================================
+=            Section Sidebar Animation            =
+=================================================*/
+@media screen and (min-width: 768px){
+  .ced-vendor-sidebar.slide li a span {
+    display: none;
+  }
+  .page-wrapper {
+    position: relative!important;
+    transition: all 300ms ease 0s;
+    /*z-index: 999999999;*/
+  }
+
+
+  .ced-vendor-sidebar.slide {
+    width: 60px;
+  }
+  .page-wrapper.slide {
+    margin-left: 60px!important;
+    width: calc(100% - 60px);
+  }
+  .page-wrapper.slide {
+    transition: all 300ms ease-out -100ms;
+  }
+  .slide .side-menu li .nav-second-level {
+    left: 59px;
+    position: absolute;
+    top: 0;
+    width: 220px;
+    /*z-index: 999999;*/
+  }
+  .slide .side-menu li:not(:hover) .nav-second-level {
+    display: none;
+  }
+  .ced-vendor-sidebar.slide li .nav-second-level li a i{
+   padding-right: 5px;
+  }
+  .ced-vendor-sidebar.slide li .nav-second-level li a span {
+    display: inline-block;
+  }
+  .slide .side-menu li .nav-second-level li a {
+    background: #0165d0 none repeat scroll 0 0;
+  }
+  .navbar-default.ced-vendor-sidebar.stick-side {
+    top: -57px!important;
+  }
+}
+/*=====  End of Section Sidebar Animation  ======*/
+/*===================================
+=            media query  Section          =
+===================================*/
+@media(max-width:991px) {
+  /*vendor profile*/
+  .vendor_profile_top .bellow-list-wrapper .bellow-list li {
+    width: 100%;
+  }
+  .vendor_profile_top .bellow-list-wrapper .bellow-list li:nth-child(1) {
+    margin-bottom: 8px;
+  }
+  /*common*/
+  .panel-heading .panel_product_heading, .panel-default .buttons-set {
+    text-align: center !important;
+  }
+}
+@media (min-width:767px) and (max-width: 991px) {
+  /*dashboard*/
+  .profile-view .user-display-bottom, .profile-view .user_display_info {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+@media(min-width:768px) {
+  /*header*/
+  .navbar-static-top .navbar-header .navbar-toggle {
+    display: block !important;
+    left: 11px;
+    position: absolute;
+  }
+}
+@media(max-width:767px) {
+  .ced-vendor-sidebar.slide{
+    overflow-y: scroll;
+  }
+  .userinfosider{
+    display: block;
+  }
+  .ced-vendor-sidebar{
+    overflow-y: scroll !important;
+  }
+  /*sidebar*/
+  /*.ced-vendor-sidebar-nav {
+    background-color: #fff;
+    box-shadow: 0 0 25px #1c2c3a;
+    display: block !important;
+    height: 100% !important;
+    left: -270px;
+    overflow-x: visible !important;
+    overflow-y: scroll;
+    position: fixed;
+    top: 0;
+    transform: translateX(0%);
+    transition: all 0.2s ease 0s;
+    visibility: visible;
+    width: 250px;
+    z-index: 9999999;
+  }*/
+  /*.slide .ced-vendor-sidebar-nav {
+    left: 0;
+  }*/
+  .ced-vendor-sidebar {
+    left: -250px;
+    margin: 0;
+    top: 0 !important;
+    transition: all 0.4s ease 0s;
+    -webkit-transition: all 0.4s ease 0s;
+    -ms-transition: all 0.4s ease 0s;
+    -moz-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    box-shadow: 0 0 25px #1c2c3a;
+  }
+  .slide.ced-vendor-sidebar{
+    left: 0px;
+  }
+  .dropdown-menu.dropdown-alerts {
+    margin-left: -108px;
+  }
+  .dropdown-menu.dropdown-user {
+    left: unset;
+    margin-left: -100px;
+    right: unset;
+  }
+  .panel .panel-body { /*overiden responsive css*/
+    padding: 15px!important;
+  }
+  .ced-vendor-sidebar-nav.collapse.in {
+    left: 0;
+    padding: 0;
+  }
+  .page-wrapper {
+    margin-left: 0px !important;
+  }
+  .ced-vendor-sidebar-nav .side-menu > li.nav > a {
+    border-bottom: 1px solid #ccc;
+    color: #464646 !important;
+    line-height: 30px;
+  }
+  .page-title-wrapper .page-title {
+  margin-top: 15px;
+  }
+  /*vendor profile*/
+  .vendor_profile_top .vendor-dedor-details,
+  .vendor_profile_top .user-display-bottom, 
+  .vendor_profile_top .user_display_info {
+    text-align: center;
+    width: 100%;
+  }
+  .vendor_profile_top .user-display-bottom{
+    margin-bottom: 10px;
+  }
+  .vendor_profile_top .user-display {
+    border-bottom: 1px solid #ccc;
+    border-right: 0 none;
+    width: 100%;
+  }
+  /*order report*/
+  .order-reports .form-group {
+    padding: 0;
+  }
+  .for_print_order_button.panel .panel-body {
+    padding: 0!important;
+  }
+  /*forget password*/
+  .ced_vendor_before_login_wrapper h3 {
+    font-size: 20px;
+  }
+  .login_form_body .password.forget h2 {
+    font-size: 22px;
+  }
+  /*login*/
+  .account-login h2 {
+    color: #000;
+    font-size: 23px;
+  }
+  /*common css*/
+  .panel-default .panel-heading {
+    text-align: left !important;
+  }
+  .panel .panel-min-height {
+    padding: 0;
+  }
+  /*profile edit*/
+   .panel-default .panel-heading {
+    text-align: center;
+  }
+  .panel.panel-default .panel-heading {
+    text-align: center!important;
+  }
+  .form-list .wide label.label {
+    text-align: left;
+  }
+  .panel-body .wide .input-box {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  /*profile edit end*/
+  /*setting pages css*/
+  .fieldset .wide > .label {
+    width: 100%!important;
+  }
+  /*setting pages css end*/
+  .ced-base-product-list {
+    padding-bottom: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .ced-base-product-list > .row {
+    margin: 0 !important;
+  }
+  .ced-base-product-list div {
+    padding: 0;
+  }
+  .ced-transactions-details ul.form-list {
+    padding: 10px 10px 0;
+  }
+  .input-box .image_set .dumimg.imagetype,
+  #addimagefields .imagetype  {
+    float: none!important;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .input-box .add_btn.button.btn.btn-info.btn-circle {
+  margin-top: 10px!important;
+  }
+  .panel.panel-default.most-sold-product {
+    border: 0 none!important;
+  }
+  .most-sold-product.panel .panel-body {
+    padding: 0!important;
+  }
+  .csmarketplace-account-approval .panel-body {
+  padding: 0!important;
+  }
+}
+@media(max-width:500px) {
+  /*forget password*/
+  .ced_vendor_before_wrap {
+    width: 90%;
+  }
+  .csmarketplace-account-approval .ced_vendor_before_wrap {
+  width: 100%;
+}
+  .dash-chart .pull-right {
+  float: none!important;
+   margin-top: 5px;
+}
+.csmarketplace-account-approval .ced_vendor_login button.btn-primary {
+  margin:5px 0!important;
+  height:45px;
+  width: 100%;
+}
+}
+@media(max-width:360px) {
+  .my-account .addresses-primary {
+    padding: 0 15px;
+  }
+}
+/*=====  End of media query  ======*/
+.rtl-is-active .order-details tbody .a-right {
+  text-align: right !important;
+}

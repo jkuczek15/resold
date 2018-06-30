@@ -1,0 +1,104 @@
+<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		<i class="icon-equalizer icons"></i>
+		<span data-bind="text: customData.percent() < 100 ?'1':''" id="dropdown-tasks-label" class="label label-success" >1</span>
+		<i class="fa fa-caret-down"></i>
+	</a>
+	<ul class="dropdown-menu dropdown-tasks">
+		<li class="profile-vendor clearfix">
+			<div class="vendor-profile-sta">
+				<span class="vendor_profile_name">
+					Your Profile is	
+				</span>
+				<span class="vendor_status_info" data-bind="text:customData.percent()+'% completed.'">27 % completed</span>
+			</div>
+		</li>
+
+		<li class="top-lis">
+			<div class="profile-progress">
+				<div class="progress active">
+					<div class="progress-bar progress-bar-success" role="progressbar" data-bind="attr:{'aria-valuenow':customData.percent()},style: {width: customData.percent()+'%'}" aria-valuemax="100">
+						<span class="sr-only" data-bind="text:'Your Profile is '+customData.percent()+'% completed.'"></span>
+					</div>
+				</div>
+			</div>
+			<div class="edit-profile-vendor">
+				<a data-bind="attr: {'href': customData.href() }"><i class="icon-note icons"></i> Edit profile </a>
+			</div>
+		</li>
+	</ul>
+</li>
+
+
+<li class="dropdown">
+	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		<i class="icon-bell icons"></i> 
+		<span id="dropdown-alerts-label" class="label label-warning" data-bind="text:customData.notifications().length>0?customData.notifications().length:''"></span>
+		<i class="fa fa-caret-down"></i>
+	</a>
+	<ul class="dropdown-menu dropdown-alerts" data-bind="foreach: customData.notifications()">
+		<li class="top-lis" data-bind="if: $index()<5 ">
+			<a data-bind="attr:{'href':$data.url,'title':$data.title}">
+				<div>
+					<i data-bind="attr:{'class':$data.itag}" ></i>
+					
+					<span data-bind="text:$data.title" ></span>
+				</div>
+			</a>
+		</li>
+		<!-- ko if: $index()==5 -->
+		<li class="divider"></li>
+		<li>
+			<a data-bind="attr:{'href': $parent.customData.getViewAllUrl()}">View All</a>
+		</li>
+		<!-- /ko -->
+	</ul>
+	<ul class="dropdown-menu dropdown-alerts" data-bind="if : customData.notifications().length==0 ">
+		<li >
+			<a data-bind="attr:{'title':$t('No Alerts')}">
+				<div>
+					<i class="fa fa-angle-right" ></i>
+					
+					<span data-bind="text:$t('No Alerts')" ></span>
+				</div>
+			</a>
+		</li>
+	</ul>
+</li>
+
+<li class="dropdown vendor_profile_image">
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Profile" aria-expanded="false">
+			<i class="icon-user icons"></i>
+			
+		</a>
+		<ul class="dropdown-menu dropdown-user">
+			<li class="profile-vendor clearfix">
+					<div class="pull-left image">
+						<img alt="User Image" class="img-circle" data-bind="attr:{'src':customData.vendor().profile_pic}">
+					</div>
+					<div class="vendor-profile-sta">
+					<span class="vendor_profile_name" data-bind="text:customData.vendor().name"></span>
+					<span class="vendor_status_info">
+						<i class="fa fa-circle text-success"></i> 
+						<span data-bind="text:customData.vendor().status">											</span>
+				</div>
+			</li>
+			
+			
+			<li class="top-lis"><a data-bind="attr:{'href':customData.vendor().profile_url}"><i class="icon-user icons"></i> User Profile</a>
+			</li>
+			<li class="top-lis"><a data-bind="attr:{'href':customData.vendor().settings_url}"><i class="icon-settings icons"></i> Settings</a>
+			</li>
+			
+			<li class="top-lis"><a data-bind="attr:{'href':customData.vendor().logout_url}"><i class="icon-power icons"></i> Logout</a>
+			</li>
+		</ul>
+</li>
+
+
+<li class="divider"></li>
+<li data-bind="if: customData.vendor().is_approved" class="dropdown">
+	<a target="_blank" class="dropdown-toggle" data-bind="attr:{'href':customData.vendor().shop_url}" title="Go to Shop">
+		<i class="fa fa-external-link fw"></i>
+	</a>
+</li>

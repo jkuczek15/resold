@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<script>
+	require([
+				'jquery',
+				'jquery/ui',
+				'Ced_CsMarketplace/bower_components/metisMenu/dist/metisMenu.min',
+				'csbootstrap',
+				'csvendorpanel',
+				'text'
+			], function($){
+				jQuery(function() {
+					
+					 checkMetis();
+
+					function checkMetis(){
+						setTimeout( function(){ 
+						   		if(typeof jQuery("#side-menu").metisMenu=='undefined')
+						   		{
+						   			//console.log('metis not found trying again..');
+						   			checkMetis();
+						   		}
+						   		else
+						   		{
+						   			//console.log('metis patched..');
+						   			jQuery("#side-menu").metisMenu();
+						   		}
+						  }  , 1000 );
+					}
+				});
+			});
+</script>
+<!-- <div id="wrapper" class="wrapper">
+	<div class="page"> -->
+	<?php try {  ?>
+		<?php $helper = $block->getObjectManager()->get('Ced\CsMarketplace\Helper\Data'); ?>
+		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<?php 
+		//	echo $helper->getLogoAlt();die;
+			if ($helper->getIsDashboard()): ?>
+				<a style="padding: 2px 8px 4px;" class="logo navbar-brand panel-title" href="#" title="<?php echo __($helper->getLogoAlt()); ?>" class="logo"><img src="<?php echo $block->getViewFileUrl($helper->getLogoSrc()); ?>" alt="<?php echo __($helper->getLogoAlt()); ?>" width="43px" /></a>
+			<?php else: ?>
+				<a style="padding: 2px 8px 4px;" href="<?php echo $helper->getVendorUrl(); ?>" title="<?php echo __($helper->getLogoAlt()); ?>" class="logo navbar-brand panel-title"><img src="<?php echo $block->getViewFileUrl($helper->getLogoSrc()); ?>" alt="<?php echo __($helper->getLogoAlt()); ?>" width="43px" /></a>
+			<?php endif ?>
+			<a style="font-size:24px; padding: 15px 15px 15px 0;" class="navbar-brand panel-title" href="#"><?php echo __($helper->getLogoAlt()); ?></a>
+			<?php echo $this->getChildHtml('vendor_header') ?>
+			<?php echo $this->getChildHtml('sidebar') ?>
+		</nav>
+	<?php 
+		} catch (Exception $e) {
+
+		} 
+	?>
+	<!-- </div>
+</div> -->
+
+<!--===== mobile menu overlay -->
+<div class="mobile-menu-overlay"></div>
+<script type="text/javascript">
+	require(["jquery"], function ($) {
+
+		$('.navbar-toggle').click(function(){
+			$('.navbar-toggle').toggleClass('clicked');
+			$('.mobile-menu-overlay').toggleClass('clicked');
+		});
+		$('.mobile-menu-overlay').click(function(){
+			$('.navbar-toggle').removeClass('clicked');
+			$('.mobile-menu-overlay').removeClass('clicked');
+			$('.navbar-collapse').removeClass('in');
+		});
+
+
+		//  manage height left side 
+		var pgwrpht = $('#page-wrapper').height();
+		var lftnavht = $('.navbar-default.sidebar').height();
+		if(pgwrpht > lftnavht){
+			$('.navbar-default.sidebar').css('height',pgwrpht);
+		}
+		if(lftnavht > pgwrpht){
+			$('#page-wrapper').css('height',lftnavht);
+		}
+	});
+</script>

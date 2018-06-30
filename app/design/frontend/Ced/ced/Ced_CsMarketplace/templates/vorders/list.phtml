@@ -1,0 +1,239 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * You can check the licence at this URL: http://cedcommerce.com/license-agreement.txt
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+$collection = $this->getVorders(); 
+$statusArray = $this->_objectManager->get('Ced\CsMarketplace\Block\Adminhtml\Vorders\Grid')->getStates();
+$params = $this->_objectManager->get('Ced\CsMarketplace\Model\Session')->getData('order_filter');
+$paymentarray = $this->_objectManager->get('Ced\CsMarketplace\Model\Vorders')->getStates();
+$url = $block->getViewFileUrl('images/calendar.gif');
+?>
+<div class="loading-mask" data-role="loader" style="display: none;"><div class="loader"><img alt="Loading..." src="<?php echo $block->getViewFileUrl('images/loader-1.gif')?>"><p>Please wait...</p></div></div>
+<div class="row">
+	<div class="col-md-12" style="margin-top:10px;">
+		<div class="panel panel-default">
+			<div class="panel-heading col-md-12" style="text-transform: uppercase;font-weight:bold;padding:4px 15px;">
+				<div  style="line-height:31px;font-size:17px;display:inline;text-transform: uppercase;">
+					<?php echo __('Orders List') ?>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="col-md-12 order-list" style="margin-top:10px;">
+					<form action="javascript:void( 0 );" enctype="multipart/form-data" id="payment_form" method="post">
+						<div class="vendor-button-set buttons-set filter_button">
+							<?php if(count($collection)>0){ ?>
+							<div class="col-md-4 export-button" style="padding-left:0;">
+								<button type="button" onClick="window.location='<?php echo $this->getUrl('*/*/ExportOrderCsv',array('_nosid'=>true)); ?>'" class="uptransform btn btn-warning button" title="Export Orders" style="margin:2px; float:left;">
+									<span><span><?php echo __('Export') ?></span></span>
+								</button>
+							</div>
+							<div class="col-md-8 filter-buttons" style="margin-left:0;padding-right:0;text-align:right;">
+								<?php }
+								else{ 
+									?>
+									<div class="col-md-12" style="margin-left:0;margin-bottom:5px;padding-right:0;text-align:right;">
+										<?php }?>
+										<button  style="margin:2px" onClick="filterPayment(0);" class="button btn btn-info uptransform " title="<?php echo __('Filter') ?>" type="submit" id="Filter"	>
+											<span><span><?php echo __('Filter') ?></span></span>
+										</button> 
+										<button  style="margin:2px" onClick="filterPayment(1);" class="button btn btn-info uptransform" title="<?php echo __('Reset Filter') ?>" type="button" id="Filter"	>
+											<span><span><?php echo __('Reset Filter') ?></span></span>
+										</button>
+									</div>
+									<div style="clear:both"></div>
+								</div>	
+								<br/>
+								<?php  echo $this->getPagerHtml(); ?>
+								<div style="clear:both"></div>
+								<div class="order-items order-details table-responsive">
+									<table id="my-products-table" class="table table-bordered table-hover table-striped">
+										<col width="1"/>
+										<col width="1"/>
+										<col width="1"/>
+										<col width="1"/>
+										<col width="1"/>
+										<col width="1"/>
+										<col width="1"/>
+										<col width="1"/>
+										<thead>
+											<tr style="background-color: #f5f5f5;">
+												<th class="head"><?php echo __('Order Id #') ?></th>
+												<th class="head"><?php echo __('Purchased On') ?></th>
+												<th class="head"><?php echo __('Bill To Name') ?></th>
+												<th class="head"><?php echo __('G.T.') ?></th>
+												<th class="head"><?php echo __('Commission')." " ?><?php echo __('Fee') ?></th>
+												<th class="head"><?php echo __('Net Earned') ?></th>
+												<th class="head"><?php echo __('Order')." " ?><?php echo __('Payment')." " ?><?php echo __('Status') ?></th>
+												<th class="head"><?php echo __('Vendor')." " ?><?php echo __('Payment')." " ?><?php echo __('Status') ?>
+												</tr>
+												<tr class="filter">
+													<th class="filter">
+														<div class="list_filter"><input type="text" class="form-control filter" name="order_id"   value="<?php echo (isset($params['order_id']) && urldecode($params['order_id'])!="")?urldecode($params['order_id']):""; ?>" /></div>
+													</th>
+													<th class="filter">
+														<div class="list_filter">
+															<img src="<?php echo $url ?>" class="v-middle " id="date_from_trig" />
+															<input type="text" id="created_at_from" name="created_at[from]" class="form-control" value="<?php echo (isset($params['created_at']['from']) && urldecode($params['created_at']['from'])!="")?urldecode($params['created_at']['from']):""; ?>" /></div>
+															<div class="list_filter">
+																<img src="<?php echo $url ?>" class="v-middle" id="date_to_trig" />
+																<input type="text"  id="created_at_to" name="created_at[to]" class="form-control" value="<?php echo (isset($params['created_at']['to']) && urldecode($params['created_at']['to'])!="")?urldecode($params['created_at']['to']):""; ?>"  /></div>
+															</th>
+															<th class="filter">
+																<div class="list_filter"><input type="text" name="billing_name"  class="filter form-control" value="<?php echo (isset($params['billing_name']) && urldecode($params['billing_name'])!="")?urldecode($params['billing_name']):""; ?>" /></div>
+															</th> 
+															<th class="filter">
+																<div class="list_filter"><input type="text" name="order_total[from]" class="filter form-control"  value="<?php echo (isset($params['order_total']['from']) && urldecode($params['order_total']['from'])!="")?urldecode($params['order_total']['from']):""; ?>" /></div>
+																<div class="list_filter"><input type="text" name="order_total[to]" class="filter form-control" value="<?php echo (isset($params['order_total']['to']) && urldecode($params['order_total']['to'])!="")?urldecode($params['order_total']['to']):""; ?>"  /></div>
+															</th>
+															<th class="filter">
+																<div class="list_filter"><input type="text" name="shop_commission_fee[from]" class="filter form-control"  value="<?php echo (isset($params['shop_commission_fee']['from']) && urldecode($params['shop_commission_fee']['from'])!="")?urldecode($params['shop_commission_fee']['from']):""; ?>" /></div>
+																<div class="list_filter"><input type="text" name="shop_commission_fee[to]" class="filter form-control" value="<?php echo (isset($params['shop_commission_fee']['to']) && urldecode($params['shop_commission_fee']['to'])!="")?urldecode($params['shop_commission_fee']['to']):""; ?>"  /></div>
+															</th>
+															<th class="filter">
+																<div class="list_filter"><input type="text" name="net_vendor_earn[from]" class="filter form-control"  value="<?php echo (isset($params['net_vendor_earn']['from']) && urldecode($params['net_vendor_earn']['from'])!="")?urldecode($params['net_vendor_earn']['from']):""; ?>" /></div>
+																<div class="list_filter"><input type="text" name="net_vendor_earn[to]" class="filter form-control" value="<?php echo (isset($params['net_vendor_earn']['from']) && urldecode($params['net_vendor_earn']['to'])!="")?urldecode($params['net_vendor_earn']['to']):""; ?>"  /></div>
+															</th>
+															<th class="filter">
+																<div class="product-list-filter">
+																	<select style="width:56px" type="text" name="order_payment_state" class="filter input-select-small product-list-checkstatus form-control" value="">
+																		<option value=""></option>
+																		<?php  foreach($statusArray as $val=>$label) { ?>
+																		<option <?php echo (isset($params['order_payment_state']) && urldecode($params['order_payment_state'])==$val)?"selected":"";?> value="<?php echo $val; ?>"><?php echo __($label); ?></option>
+																		<?php } ?>
+																	</select></div>
+																</th>
+																<th class="filter">
+																	<div class="product-list-filter">
+																		<select style="width:56px" type="text" name="payment_state" class="form-control filter input-select-small product-list-checkstatus" value="">
+																			<option value=""></option>
+																			<?php  foreach($paymentarray as $val=>$label) { ?>
+																			<option <?php echo (isset($params['payment_state']) && urldecode($params['payment_state'])==$val)?"selected":"";?> value="<?php echo $val; ?>"><?php echo __($label); ?></option>
+																			<?php } ?>
+																		</select></div>
+																	</th>
+																</tr>
+															</thead>
+															<?php if(count($collection)>0): ?>
+																<tbody>
+																	<?php $_odd = ''; ?>
+																	<?php foreach ($collection as $_order):
+																	?>
+																	<tr>
+																		<td class="number"><a  title="Click to view Order Details" href="<?php echo $this->getViewUrl($_order) ?>"><?php echo $_order->getIncrementId() ?></a></td>
+																		<td class="status"><?php echo  $block->formatDate( $_order->getCreatedAt());	 ?></td>
+																		<td class="status"><?php echo $_order->getBillingName() ?></td>   
+																		<td class="date">
+																			<?php 
+																			echo $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_order->getOrderTotal(),false,2,null,$_order->getCurrency()) ?>
+																		</td>
+																		<td class="date">
+																			<?php 
+																			echo $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_order->getShopCommissionFee(),false,2,null,$_order->getCurrency())  ?>
+																		</td>
+																		<td class="date">
+																			<?php 
+																			echo $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_order->getNetVendorEarn(),false,2,null,$_order->getCurrency()) ?>
+																		</td>
+																		<?php if(!empty($_order->getOrderPaymentState())) {?>
+																		<td class="number"><?php echo $statusArray[$_order->getOrderPaymentState()] ?></td>
+																		<?php } ?>
+																		<?php if(!empty($_order->getPaymentState())){?>
+																		<td class="number"><?php echo $paymentarray[$_order->getPaymentState()] ?></td>
+																		<?php }?>
+																	</tr>
+																<?php endforeach; ?>
+															<?php else: ?>
+																<tr>
+																	<td colspan="8">
+																		<div>
+																			<p><?php echo __('No Orders Available'); ?></p>
+																		</div>
+																	</td>
+																</tr>		
+															<?php endif ?>
+														</tbody>
+													</table>
+												</div>
+												<?php echo $this->getPagerHtml(); ?>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<script>
+							require([
+								"jquery",
+								"mage/calendar"
+								], function($){
+									$("#created_at_from").calendar({
+										buttonText:"<?php echo __('Select Date') ?>",
+									});
+								});
+							require([
+								"jquery",
+								"mage/calendar"
+								], function($){
+									$("#created_at_to").calendar({
+										buttonText:"<?php echo __('Select Date') ?>",
+									});
+								});
+							</script>
+							<script>
+								function filterPayment(reset){
+									require([
+										"jquery",
+										"mage/calendar"
+										], function($){
+											var params;
+											if(reset == 2)
+												reset = 0;
+											$('.loading-mask').show();
+											if(reset == 1)
+												params ='{reset_order_filter:1}';
+											else
+												params = $("#payment_form").serialize();
+											$.ajax({
+												type: "POST",
+												url: "<?php echo $this->getUrl('csmarketplace/vorders/filter')?>",
+												data: params,
+												success : function(transport){
+													$('.columns').html(transport);
+													$('.loading-mask').hide();
+												}
+											});
+										});
+								}
+							</script>
+							<style>
+								.loading-mask{
+									background: #fff none repeat scroll 0 0;
+									bottom: 0;
+									display: block;
+									left: 0;
+									opacity: 0.5;
+									position: fixed;
+									top: 0;
+									width: 100%;
+									z-index: 9999;
+								}
+								.loader {
+									left: 45%;
+									position: absolute;
+									text-align: center;
+									top: 40%;
+								}
+							</style>

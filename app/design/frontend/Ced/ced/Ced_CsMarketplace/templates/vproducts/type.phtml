@@ -1,0 +1,72 @@
+<?php
+
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+?>
+
+<form name="form-validate"
+	action="<?php //echo $this->getProductTypeUrl(); ?>"
+	id="form-validate" method="post">
+	<div class="row">
+		<div class="col-md-12" style="margin-top:10px;">
+			<div class="panel panel-default">
+				<div class="panel-heading col-md-12" style="line-height:31px;font-size:17px;text-transform: uppercase;font-weight:bold;padding:4px 15px;">
+				<?php echo __('Select')." ".__('Product Type') ?>
+				</div>
+				<?php 
+					$types = $block->getTypes();
+				?>
+				<div class="panel-body">
+					<div class="col-md-12 clearfix">	
+						<br/>
+						<div class="form-group product-type col-md-6">
+							<label class="required"><em>*</em><?php echo __('Product Type') ?></label>:
+							<div class="input-box">
+								<select id="type" class="select validate-select form-control" name="type">
+									<?php foreach($types as $type) { echo $type['label'];?>
+										<?php if(!isset($type['value']) || !isset($type['label'])) continue; ?>
+										<option value="<?php echo $type['value']; ?>"><?php echo __($type['label']); ?></option>
+									<?php } ?>
+								</select>
+							</div>
+						</div>	
+						<div class="form-group col-md-12 clearfix">	
+							<script type="text/javascript">
+							var url='<?php echo $block->getProductTypeUrl()?>';
+							</script>
+							<button class="btn btn-primary" onclick="if(dataForm.validator.validate()){setLocation('<?php echo $this->getProductTypeUrl()?>type/'+document.getElementById('type').value); return false;}" class="button" title="Continue" type="submit" id="continue"
+							style="float: none;">
+									<span><span><?php echo __('Continue') ?></span></span>
+							</button>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<p class="back-link col-md-6" style="display:inline;" >
+							<a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo;
+							</small><?php echo __('Back') ?></a>
+						</p>
+						<p style="display:inline;" class="required col-md-6"><?php echo __('* Required Fields') ?></p>
+						<div style="clear:both;"></div>		
+					</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</form>

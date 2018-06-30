@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php 
+$store= $block->getStore();
+$rootId = $store->getRootCategoryId();
+$category = $block->loadCategory($rootId);
+?>
+<style>
+.vshop-left-cat-filter {/*margin-left:18px;*//*padding: 5px;*/}
+</style>
+<div class="block block-layered-nav">
+    <div class="block-title">
+        <strong><span><?php echo __('Browse By') ?></span></strong>
+    </div>
+    <div class="block-content">
+        <dl id="narrow-by-list2">
+            <dt><?php echo __('Category') ?></dt>
+            <dd class="categorycontainer tree-div" id="tree-div">
+                <?php echo $block->getCategoriesHtml($rootId);?>
+            </dd>
+        </dl>
+    </div>
+</div>
+<script>
+	function filterProductsByCategory(element)
+	{
+		if(element.checked == true)
+			window.location = element.value;
+		else if(element.checked == false)
+			window.location = element.getAttribute('data-uncheckurl');		
+	}
+    require([
+        'jquery',
+        'mage/mage'
+    ], function($){
+        $(".categorycontainer ul li ul").css("display", "none");
+        $(".categorycontainer li").click(function (e) {
+        e.stopPropagation();
+        $(this).children('ul').toggle();
+        if($(this).children('img').hasClass('tree-elbow-plus')) {
+            $(this).children('img').addClass('tree-node-loading');
+            $(this).children('img').removeClass('tree-elbow-plus');
+            $(this).children('img').addClass('tree-elbow-minus');   
+        } else if($(this).children('img').hasClass('tree-elbow-minus')) {
+            $(this).children('img').removeClass('tree-node-expanded');
+            $(this).children('img').addClass('tree-node-collapsed');
+            $(this).children('img').removeClass('tree-elbow-minus');
+            $(this).children('img').addClass('tree-elbow-plus');         
+        }   
+     });
+     
+        $('input[class="cat-fil"]').each(function(index,item){
+            if($(this).prop('checked')) {
+                $(this).parents('ul.root-category-wrapper').siblings('img').addClass('tree-elbow-minus');
+                $(this).parents('ul.root-category-wrapper').siblings('img').removeClass('tree-elbow-plus');
+                $(this).parents('ul.root-category-wrapper').toggle(true);
+            }
+        }); 
+    });
+</script>

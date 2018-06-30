@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="csmarketplace_vendor"/>
+	<head>
+    	<meta name="x_ua_compatible" content="IE=edge,chrome=1"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+        <css src="mage/calendar.css"/>
+        <css src="Ced_CsMarketplace::bower_components/bootstrap/dist/css/bootstrap.min.css" />
+        <css src="Ced_CsMarketplace::bower_components/metisMenu/dist/metisMenu.min.css"/>
+        <css src="Ced_CsMarketplace::dist/css/timeline.css"/>
+        <css src="Ced_CsMarketplace::dist/css/sb-admin-2.css"/>
+        <css src="Ced_CsMarketplace::bower_components/morrisjs/morris.css"/>
+        <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel.css"/>  
+    </head>
+    <body>
+		<referenceContainer name="vendor.dashboard.wrapper">
+			<block class ="Ced\CsMarketplace\Block\Vsettings\Payment" name="vsettings.payment" cacheable="false" as="vsettings.payment" template="Ced_CsMarketplace::vsettings/settings.phtml" >
+				<block class ="Ced\CsMarketplace\Block\Vsettings\Payment\Methods" name="vsettings_payment_methods"  template="Ced_CsMarketplace::vsettings/payment/methods.phtml"/>
+			</block>
+		</referenceContainer>
+   </body>
+</page>

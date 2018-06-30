@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+$_element = $this->getElement();
+$_note    = $_element->getNote();
+$_trId    = $_element->getHtmlContainerId();
+$_class   = $_element->getFieldsetHtmlClass();
+?>
+<?php if (!$_element->getNoDisplay()): ?>
+<div<?php if($_trId): ?> id="<?php echo $_trId ?>"<?php endif; ?> class="fields col-md-12" style="list-style:none;">
+    <?php if ($_element->getType()=='hidden'): ?>
+    <div colspan="2" style="display: none;"><?php echo trim($_element->getElementHtml()) ?></div>
+    <?php else: ?>
+    <div class="field col-md-6">
+        <label class="label<?php echo $_class ? " {$_class}-label" : ''?>"><?php echo trim($_element->getLabelHtml()) ?></label>
+    </div>
+	<div class="field col-md-6">
+		<div class="<?php echo $_element->hasValueClass() ? $_element->getValueClass() : 'input-box' ?><?php echo $_class ? " {$_class}-value" : ''?>">
+			<?php echo trim($_element->getElementHtml()) ?>
+			<?php if ($_note): ?>
+				<p class="note<?php echo $_class ? " {$_class}-note" : ''?>" id="note_<?php echo $_element->getId()?>"><span><?php echo $_note ?></span></p>
+			<?php endif ?>
+		</div>
+	</div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>

@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php echo $this->getChildHtml('info') ?>  
+<div class="order-details col-md-12">
+    <?php echo $this->getChildHtml('order_items') ?>  
+</div>
+<script type="text/javascript">window.print();</script>
+<style type="text/css">
+	@media print {
+
+body{
+     transform: scale(0.54);
+    -webkit-transform: scale(0.54);
+    -moz-transform: scale(0.54);
+    -o-transform:  scale(0.54);
+    -ms-transform:  scale(0.54);
+}
+@page {
+    size: A4 portrait;
+}
+}
+</style>

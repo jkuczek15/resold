@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="csproduct_vproducts_edit_action">
+        <observer name="bundle_observer" instance="Ced\CsProduct\Observer\SetAttributeTabBlockObserver" />
+    </event>
+    <event name="csproduct_vproducts_new_action">
+        <observer name="bundle_observer" instance="Ced\CsProduct\Observer\SetAttributeTabBlockObserver" />
+    </event>
+    <event name="csproduct_gallery_prepare_layout">
+        <observer name="video_template_set" instance="Ced\CsProduct\Observer\ChangeTemplate" />
+    </event>
+    <event name="controller_action_predispatch_csmarketplace_vproducts_index">
+        <observer name="csproduct_listing_active_after" instance="Ced\CsProduct\Observer\ChangeListLink" shared="false" />
+	</event>
+</config>

@@ -1,0 +1,606 @@
+
+.hidden-lg.hidden-md.hidden-sm::after {
+	clear: both;
+	content: "";
+	display: block;
+}
+.sidebar .sidebar-nav .hidden-lg.hidden-md.hidden-sm {
+	padding: 3px 6px;
+}
+.sidebar .sidebar-nav:focus{
+	outline: none;
+}
+.navbar-toggle .icon-bar{
+	transition: 0.2s all;
+	-webkit-transition: 0.2s all;
+	-o-transition: 0.2s all;
+	-ms-transition: 0.2s all;
+	-moz-transition: 0.2s all;
+}
+.navbar-toggle {
+	height: 28px;
+	padding: 5px;
+	width: 34px;
+}
+.navbar-toggle.clicked{
+	opacity: 0;
+	visibility: hidden;
+}
+.navbar-toggle.clicked .icon-bar{
+	position: absolute;
+}
+.navbar-toggle.clicked .icon-bar:nth-child(2) {
+	left: 6px;
+	top: 12px;
+	transform: rotate(35deg);
+}
+.navbar-toggle.clicked .icon-bar:nth-child(3){
+	display: none;
+}
+.navbar-toggle.clicked .icon-bar:nth-child(4) {
+	left: 6px;
+	top: 8px;
+	transform: rotate(-35deg);
+}
+.mobile-menu-overlay {
+	background-color: rgba(0, 0, 0, 0.8);
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: -99;
+	opacity: 0;
+	visibility: hidden;
+	transition: 0.2s all;
+	-webkit-transition: 0.2s all;
+	-o-transition: 0.2s all;
+	-ms-transition: 0.2s all;
+	-moz-transition: 0.2s all;
+	cursor: pointer;
+}
+.mobile-menu-overlay.clicked{
+	z-index: 99999;
+	opacity: 1;
+	visibility: visible;
+}
+
+.navbar-static-top {
+	z-index: 999999;
+}
+/***** table head section in grid ****/
+@media (max-width: 1024px){
+	.admin__data-grid-toolbar .admin__data-grid-pager-wrap {
+		float: right;
+		margin-top: 10px;
+		text-align: left;
+		width: 100%;
+	}
+}
+@media (max-width: 767px){
+	.col4-set.ced-sociallogin-login-lower::after {
+		clear: both;
+		content: "";
+		display: table;
+	}
+	.navbar.navbar-default > .navbar-brand{
+		display: none;
+	}
+	.navbar-default .navbar-toggle:focus, 
+	.navbar-default .navbar-toggle:hover {
+		background: transparent none repeat scroll 0 0;
+	}
+	.page-wrapper{
+		width: 100% !important;
+	}
+	.columns {
+		display: block;
+	}
+	.navbar .navbar-header{
+		float: right;
+	}
+	.navbar .navbar-top-links{
+		float: left;
+	}
+	/*** side bar ****/
+	.sidebar .sidebar-nav {
+		display: block !important;
+		height: 100% !important;
+		left: -250px;
+		overflow-x: visible !important;
+		overflow-y: scroll;
+		position: fixed;
+		top: 0;
+		visibility: visible;
+		z-index: 9999999;
+		width: 250px;
+		transition: 0.2s all;
+		-webkit-transition:0.2s all;
+		-moz-transition:0.2s all;
+		-o-transition:0.2s all;
+		-ms-transition:0.2s all;
+		background-color: #20242B;
+	}
+	.sidebar .sidebar-nav.in{
+		left: 0px;
+	}
+	
+	.sidebar-nav .nav.side-menu li a{
+		text-align: left !important;
+	}
+	.sidebar-nav .nav.side-menu li a i {
+		font-size: 22px !important;
+		margin-right: 16px;
+	}
+
+	.sidebar-nav .nav.side-menu li a span{
+		display: inline-block !important;
+	}
+	.sidebar-nav .nav.side-menu li a span.fa {
+		position: absolute;
+		right: 15px;
+		top: 18px;
+	}
+	.page-wrapper .row{
+		margin-right: -15px;
+		margin-left: -15px;
+	}
+	.panel .panel-body, 
+	.panel .panel-body .form-group {
+		padding: 0 !important;
+	}
+	.panel-body .pager .pages {
+		text-align: center;
+		width: 100%;
+	}
+	.pager .limiter {
+		float: left;
+		height: auto;
+		line-height: 30px;
+		width: 100%;
+	}
+	.panel-body .pager .pages ul {
+		display: inline-block;
+		margin-bottom: 0;
+	}
+
+
+	/**** m2 admin content responsive ****/
+	.page-main-actions .page-actions._fixed{
+		left: 0px;
+		width: 100%;
+	}
+	.admin__fieldset > .admin__field {
+		margin: 0;
+	}
+	.admin__fieldset > .admin__field > .admin__field-label {
+		margin-bottom: 15px;
+		margin-left: 0;
+		text-align: left;
+		width: 100%;
+	}
+	.admin__fieldset > .admin__field > .admin__field-control {
+		margin-left: 0;
+		margin-top: 5px;
+		width: 100%;
+	}
+	.admin__field:not(.admin__field-option) > .admin__field-label span[data-config-scope]::before, .accordion .config .label span[data-config-scope]::before{
+		left: 0px;
+	}
+	/*.admin__field-label {
+	  float: none !important;
+	  margin-bottom: 19px;
+	  margin-left: 0 !important;
+	  position: static !important;
+	  text-align: left;
+	  width: 100% !important;
+	  }*/
+	  .admin__field-label {
+	  	margin-bottom: 20px;
+	  	margin-left: 0 !important;
+	  	position: static !important;
+	  	text-align: left;
+	  	width: 100% !important;
+	  }
+
+	  .admin__field-control {
+	  	width: 100% !important;
+	  }
+	  .admin__field.admin__field-small {
+	  	display: block;
+	  	width: 100% !important;
+	  }
+	  [class*="admin__control-grouped"] > .admin__field {
+	  	display: block;
+	  	padding-left: 0 !important;
+	  	width: 100%;
+	  }
+	  .admin__fieldset-wrapper-content.admin__collapsible-content._show {
+	  	overflow-x: scroll;
+	  }
+	}
+	@media (max-width: 500px){
+		.admin__data-grid-pager {
+			display: block;
+			margin-left: 0 !important;
+			margin-top: 10px;
+		}
+		.h1, h1 {
+			font-size: 30px;
+		}
+	}
+	@media (max-width: 450px){
+		.admin__field input[type="text"], 
+		.admin__field select {
+			width: 230px;
+		}
+	}
+	@media (max-width: 380px){
+		.navbar-top-links li a {
+			min-height: 50px;
+			padding: 15px 10px;
+		}
+	}
+	/*** normal rtl */
+	.pull-right.text-muted {
+		float: left !important;
+	}
+
+
+/*=========================================
+		RTL RESPONSIVE
+		==========================================*/
+		@media (max-width: 991px){
+			.rtl-is-active .panel-heading::after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+			.rtl-is-active .my-account::after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+			.rtl-is-active .my-account .addresses-primary {
+				width: 50%;
+			}
+			.rtl-is-active #report-form-validate .start-date,
+			.rtl-is-active #report-form-validate .end-date{
+				width: 50%;
+			}
+			.rtl-is-active #report-form-validate .col-md-12::after{
+				content: '';
+				display: table;
+				clear: both;
+			}
+
+		}
+		@media (max-width: 767px){
+			.rtl-is-active .my-account .addresses-primary {
+				width: 100%;
+			}
+			.rtl-is-active #page-wrapper {
+				margin-right: 0px;
+			}
+			.rtl-is-active .rtl-res {
+				padding-left: 15px;
+				padding-right: 15px;
+			}
+			.rtl-is-active  .sidebar .sidebar-nav{
+				right: -250px;
+				left: auto;
+			}
+			.rtl-is-active .sidebar .sidebar-nav.in{
+				right: 0px;
+				left: auto;
+			}
+			.rtl-is-active .sidebar .sidebar-nav.in a span.fa {
+				left: 18px;
+				right: auto;
+			}
+			.rtl-is-active .sidebar .sidebar-nav.in a {
+				text-align: right !important;
+			}
+			.rtl-is-active .sidebar .sidebar-nav.in a i.fa {
+				margin-left: 15px;
+				margin-right: 5px;
+			}
+
+
+
+			.rtl-is-active .admin__field:not(.admin__field-option) > .admin__field-label span[data-config-scope]::before, 
+			.rtl-is-active .accordion .config .label span[data-config-scope]::before{
+				left: auto;
+				right: 0px;
+			}
+			.rtl-is-active .admin__fieldset > .admin__field > .admin__field-label{
+				text-align: right;
+			}
+			.rtl-is-active [class*="admin__control-grouped"] > .admin__field:first-child > .admin__field-label, 
+			.rtl-is-active .admin__control-fields > .admin__field:first-child > .admin__field-label{
+				text-align: right;
+			}
+			.rtl-is-active .admin__field-label{
+				text-align: right;
+			}
+			.rtl-is-active .form-list{
+				padding-right: 0px;
+			}
+			.rtl-is-active .panel-body{
+				padding-right: 15px !important;
+				padding-left: 15px !important;
+			}
+			.rtl-is-active .admin__control-select:focus, 
+			.rtl-is-active .ui-datepicker .ui-datepicker-title select:focus{
+				background-image: none;
+			}
+			.rtl-is-active .fieldset > .field:not(.choice) > .label {
+				text-align: right !important;
+			}
+			.rtl-is-active  .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-label, 
+			.rtl-is-active  .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-label, 
+			.rtl-is-active  .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-label, 
+			.rtl-is-active  .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-label, 
+			.rtl-is-active  .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-label, 
+			.rtl-is-active  .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-label {
+				float: left;
+				width: 190px !important;
+				padding-left: 0px;
+			}
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-label span, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-label span, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-label span, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-label span, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-label span, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-label span{
+				float: right;
+			}
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-control, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-control, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-control, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-control, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-control, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-control{
+				float: left;
+				padding-left: 15px;
+				margin-left: 0px;
+			}
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-control input, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-control input, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-control input, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-control input, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-control input, 
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-control input{
+				float: left;
+			}
+			.rtl-is-active .modal-content #new_video_form_fieldset .admin__field.field.field-role-label.no-label{
+				margin-left: auto !important;
+			}
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role-label .admin__field-control {
+				margin: 0;
+				width: 100% !important;
+			}
+			.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role-label .admin__field-control .control-value {
+				top: 0;
+			}
+			.rtl-is-active.page-layout-vendor-2columns-left .page-columns .main-col,
+			.rtl-is-active.page-layout-vendor-2columns-left .page-columns .side-col{
+				width: 100%;
+			}
+			.rtl-is-active .abs-field-no-label, 
+			.rtl-is-active .admin__fieldset > .admin__field.admin__field-no-label > .admin__field-control, 
+			.rtl-is-active .admin__field-no-label, 
+			.rtl-is-active .admin__field-group-additional{
+				margin-left: 0px;
+				margin-right: 0px;
+			}
+			.rtl-is-active .admin__fieldset select, 
+			.rtl-is-active  .admin__fieldset .rtl-is-active input[type="text"] ,
+			.rtl-is-active .admin__control-grouped-date > .admin__field-date + .admin__field:last-child{
+				width: 100% !important;
+			}
+			.rtl-is-active #multiple_upload_form {
+				overflow-x: scroll;
+			}
+			.rtl-is-active .admin__data-grid-filters-wrap .admin__form-field,
+			.rtl-is-active ._has-datepicker.admin__control-text {
+				width: 100%;
+			}
+			.rtl-is-active .admin__data-grid-filters-wrap .admin__form-field-legend, 
+			.rtl-is-active .admin__data-grid-filters-wrap .admin__form-field-label{
+				text-align: right;
+			}
+			.rtl-is-active .admin__data-grid-filters-wrap .admin__form-field .admin__form-field .admin__form-field-label{
+				float: right;
+			}
+			.rtl-is-active .admin__data-grid-filters-wrap .admin__form-field .admin__form-field .admin__form-field-control {
+				float: left;
+				margin-left: 0;
+				width: 75%;
+			}
+			.rtl-is-active .admin__data-grid-filters-wrap .admin__form-field .admin__form-field::after{
+				clear: both;
+				content: '';
+				display: table;
+			}
+			.rtl-is-active .add-video-button-container button {
+				margin-right: 28px;
+			}
+			.rtl-is-active.csmarketplace-account-logoutsuccess{
+				background-color: #FFFFFF !important;
+			}
+			.rtl-is-active.csmarketplace-account-forgotpassword{
+				background-color: #C1BDBA !important;
+			}
+		}
+		@media (max-width: 500px){
+			.rtl-is-active .navbar-top-links .dropdown-messages, 
+			.rtl-is-active .navbar-top-links .dropdown-tasks, 
+			.rtl-is-active .navbar-top-links .dropdown-alerts {
+				min-width: 0;
+				width: 240px;
+			}
+			.rtl-is-active .navbar-top-links .dropdown-tasks p,
+			.rtl-is-active .navbar-top-links .dropdown-tasks strong{
+				font-size: 12px;
+			} 
+			.rtl-is-active .navbar-top-links .dropdown-tasks .progress{
+				width: 100%;
+			}
+			.rtl-is-active .page-main-actions{
+				padding-left: 0px;
+				padding-right: 0px;
+			}
+			.rtl-is-active .page-main-actions .page-actions._fixed {
+				left: 0;
+			}
+			.rtl-is-active .admin__action-multiselect-tree .action-menu, 
+			.rtl-is-active .admin__action-multiselect-tree .abs-action-menu .action-submenu, 
+			.rtl-is-active .admin__action-multiselect-tree .action-menu .action-submenu, 
+			.rtl-is-active .admin__action-multiselect-tree .actions-split .dropdown-menu .action-submenu, 
+			.rtl-is-active .admin__action-multiselect-tree .actions-split .action-menu .action-submenu{
+				min-width: 100%;
+			}
+			.rtl-is-active #report-form-validate .start-date,
+			.rtl-is-active #report-form-validate .end-date{
+				width: 100%;
+			}
+			.rtl-is-active .abs-action-l, .ui-dialog .ui-button, 
+			.rtl-is-active .ui-dialog .action-primary, 
+			.rtl-is-active .attribute-popup-actions .page-actions-buttons > button.action-default.primary, 
+			.rtl-is-active .modal-popup .modal-footer .action-primary, 
+			.rtl-is-active .modal-popup .modal-footer .action-secondary, 
+			.rtl-is-active .page-actions button, 
+			.rtl-is-active .page-actions .page-actions-buttons > button, 
+			.rtl-is-active .page-actions > button.action-primary, 
+			.rtl-is-active .page-actions .page-actions-buttons > button.action-primary, 
+			.rtl-is-active .page-actions > button.primary, .page-actions .page-actions-buttons > button.primary, 
+			.rtl-is-active .page-actions > button.action-secondary, 
+			.rtl-is-active .page-actions .page-actions-buttons > button.action-secondary, 
+			.rtl-is-active .page-layout-admin-login .action-primary, 
+			.rtl-is-active .admin__field-complex-attributes [class^="action-"], 
+			.rtl-is-active .steps-wizard .select-attributes-actions .action-default, 
+			.rtl-is-active .order-totals-actions .action-default, 
+			.rtl-is-active .staging-preview-item-content-wrapper > .actions-toolbar .action-primary, 
+			.rtl-is-active .popup-window .magento_buttons .ok_button, 
+			.rtl-is-active .fade .actions .primary, 
+			.rtl-is-active .attribute-popup-actions .page-actions-buttons > .block-footer .action-add.action-default.primary, 
+			.rtl-is-active .page-actions .block-footer .action-add, 
+			.rtl-is-active .page-actions .page-actions-buttons > .block-footer .action-add, 
+			.rtl-is-active .page-actions > .block-footer .action-add.action-primary, 
+			.rtl-is-active .page-actions .page-actions-buttons > .block-footer .action-add.action-primary, 
+			.rtl-is-active .page-actions > .block-footer .action-add.primary, 
+			.rtl-is-active .page-actions .page-actions-buttons > .block-footer .action-add.primary, .page-actions > .block-footer .action-add.action-secondary, 
+			.rtl-is-active .page-actions .page-actions-buttons > .block-footer .action-add.action-secondary{
+				font-size: 1rem;
+				min-width: 6.3rem;
+			}
+		}
+		@media (max-width: 450px){
+			.rtl-is-active .admin__field input[type="text"], 
+			.rtl-is-active .admin__field select {
+				width: 100%;
+			}
+		}
+		@media (max-width: 850px){
+			.rtl-is-active .mage-new-video-dialog .video-player-sidebar,
+			.rtl-is-active .mage-new-video-dialog form.admin__scope-old{
+				float: none !important;
+				width: 100%;
+			}
+		}
+		@media (max-width: 700px){
+			.rtl-is-active .nav-bar {
+				float: none;
+				margin: 0 auto 20px;
+				width: 320px;
+			}
+			.rtl-is-active .nav-bar > li {
+				width: 7.3rem;
+			}
+			.rtl-is-active .nav-bar-outer-actions {
+				float: none;
+				margin: 35px auto 10px;
+			}
+			.rtl-is-active .row-gutter > [class*="col-"] .col-xs-9,
+			.rtl-is-active .row-gutter > [class*="col-"] .col-xs-3 {
+				width: 100%;
+			}
+			.rtl-is-active .admin__data-grid-pager-wrap {
+				float: right;
+				margin-top: 20px;
+			}
+			.rtl-is-active .admin__data-grid-header > .admin__data-grid-header-row:first-child {
+				padding-top: 10px;
+				padding-bottom: 5px;
+			}
+			
+		}
+		@media (max-width: 350px){
+			.rtl-is-active .ui-datepicker{
+				left: 0px !important;
+			}
+		}
+		/**** ltr responsive ******/
+
+		@media (max-width: 400px){
+			.navbar-top-links .dropdown-tasks {
+				margin-left: -55px;
+			}
+			.navbar-top-links .dropdown-alerts {
+				margin-left: -120px;
+			}
+			.h2, h2 {
+				font-size: 25px;
+			}
+
+		}
+
+		.order-details::after{
+			content: '';
+			display: table;
+			clear: both;
+		}
+		.page-main-actions .page-actions._fixed{
+			z-index: 99999 !important;
+		}
+/*.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-label span, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-label span, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-label span, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-label span, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-label span, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-label span {
+  float: right;
+}
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-label, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-label, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-label, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-label,
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-label, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-label {
+  padding-left: 0;
+  padding-right: 32px;
+  background-color: #333;
+}
+
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-control, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-control, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-control, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-control, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-control, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-control {
+  float: right;
+  margin-left: 0;
+
+}
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-role .admin__field-control input, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_image .admin__field-control input, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_small_image .admin__field-control input, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_thumbnail .admin__field-control input, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-video_swatch_image .admin__field-control input, 
+.rtl-is-active .mage-new-video-dialog .admin__scope-old .admin__field.field-new_video_disabled .admin__field-control input {
+  float: left;
+  }*/
+
+
+

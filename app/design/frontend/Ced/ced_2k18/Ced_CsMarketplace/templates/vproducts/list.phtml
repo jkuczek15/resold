@@ -1,0 +1,220 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<script>
+	require([
+		'jquery',
+		'mage/template',
+		'prototype'
+		], function(jQuery, mageTemplate){
+		});
+	</script>
+	<?php $_products = $block->getVproducts();
+	$checkstatusarray=$block->_objectManager->get('Ced\CsMarketplace\Model\Vproducts')->getOptionArray();
+	$types =$block->_objectManager->get('Ced\CsMarketplace\Model\System\Config\Source\Vproducts\Type')->toOptionArray(false,true);
+	$params = $block->_objectManager->get('Ced\CsMarketplace\Model\Session')->getData('product_filter');
+	$imageBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
+	?>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default pro-list">
+				<div class="panel-heading col-md-12 uptransform">
+					<div class="">
+						<div  class="col-md-6 col-xs-12  panel_product_heading" style="line-height:31px;font-size:17px;">
+							<?php echo __('Products List') ?>
+						</div>
+						<div class="buttons-set col-md-6  col-xs-12 buttons_scb">		
+						<button class="btn btn-primary uptransform new-product pull-right"  type="button" onclick="window.location='<?php echo $block->getUrl('*/*/new'); ?>'" title="<?php echo __('New')." ".__('Product') ?>" class="button">
+								<span>
+									<span><?php echo __('New')." ".__('Product') ?></span>
+								</span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="col-md-12">
+						<form action="" enctype="multipart/form-data" method="post" id="product-list-form" class="product-list">
+							<br/>
+							<div class="ced-base-product-list">
+								<label for="store_switcher"><?php echo __('Choose Store View') ?>:</label>
+								<div class="row">
+									<div class="col-md-9 default-values">
+										<?php echo $block->_objectManager->get('Ced\CsMarketplace\Block\Vproducts\Store\Switcher')->setSwitchUrl($block->getUrl('*/*/*', array('_current'=>false, '_query'=>false,'_nosid'=>true)))->toHtml();?>
+									</div>
+									<div class="filter_button col-md-3 text-right">	
+										<button  onclick="setLocation('<?php echo $this->getUrl('*/*/filter',array('reset_product_filter' =>0))?>')" class="button btn btn-info uptransform" title="<?php echo __('Filter') ?>" type="submit" id="Filter" >
+											<span><span><?php echo __('Filter') ?></span></span>
+										</button>
+										<button  onclick="setLocation('<?php echo $this->getUrl('*/*/filter',array('reset_product_filter' =>1))?>')" class="button btn btn-info uptransform" title="<?php echo __('Reset Filter') ?>" type="button" id="Filter"	>
+											<span><span><?php echo __('Reset Filter') ?></span></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							<?php echo $block->getPagerHtml(); ?>
+							<div class="clear"></div>	
+							<div class="order-items order-details table-responsive">
+								<table id="my-products-table" class="table table-bordered table-hover table-striped">
+									<col width="1"/>
+									<col width="1"/>
+									<col width="1"/>
+									<col width="1"/>
+									<col width="1"/>
+									<col width="1"/>
+									<col width="1"/>
+									<col width="1"/>
+									<thead>
+										<tr>
+											<th class="head"><?php echo __('ID') ?></th>
+											<th class="head"><?php echo __('Product') ?></th>
+											<th class="head"><?php echo __('Product Name') ?></th>
+											<th class="head"><?php echo __('Product')." " ?><?php echo __('Type') ?></th>
+											<th class="head"><?php echo __('Status') ?></th>
+											<th class="head"><?php echo __('Price') ?></th>
+											<th class="head"><?php echo __('Qty') ?></th>
+											<th class="head"><?php echo __('Action') ?></th>
+										</tr>
+										<tr class="filter">
+											<th class="filter">
+												<div class="product-list-filter">	
+													<input type="text" name="entity_id[from]" class="input-text-tiny form-control filter" value="<?php echo (isset($params['entity_id']['from']) && urldecode($params['entity_id']['from'])!="")?urldecode($params['entity_id']['from']):""; ?>"/>
+												</div>
+												<div class="product-list-filter">	
+													<input type="text" name="entity_id[to]"  class="input-text-tiny form-control filter" value="<?php echo (isset($params['entity_id']['to']) && urldecode($params['entity_id']['to'])!="")?urldecode($params['entity_id']['to']):""; ?>"/>
+												</div>
+											</th>
+											<th></th>
+											<th class="filter">
+												<div class="product-list-filter"><input type="text" name="name" class="input-text-smallmedium form-control filter" value="<?php echo (isset($params['name']) && urldecode($params['name'])!="")?urldecode($params['name']):""; ?>"/></div>
+											</th> 
+											<th class="filter">
+												<div class="product-list-filter">
+													<select type="text" name="type_id" class="input-select-small form-control filter" value="">
+														<?php foreach($types as $type) { echo $type['label'];?>
+														<?php if(!isset($type['value']) || !isset($type['label'])) continue; ?>
+														<option <?php echo (isset($params['type_id']) && urldecode($params['type_id'])==$type['value'])?"selected":"";?> value="<?php echo $type['value']; ?>"><?php echo __($type['label']); ?></option>
+														<?php } ?>
+													</select>
+												</div>
+											</th>
+											<th class="filter">
+												<div class="product-list-filter">
+													<select type="text" name="check_status" class="filter input-select-small product-list-checkstatus form-control" value="">
+														<option value=""></option>
+														<?php foreach($checkstatusarray as $key=>$val) { ?>
+														<option <?php echo (isset($params['check_status']) && (urldecode($params['check_status'])!='')&&(urldecode($params['check_status'])==$key))?"selected":"";?> value="<?php echo $key; ?>"><?php echo __($val); ?></option>
+														<?php } ?>
+													</select></div>
+													<div <?php if(isset($params['check_status']) && urldecode($params['check_status'])!=\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS) echo "style='display:none'"; else echo ""; ?> class="product-list-filter product-list-status">
+														<select type="text" name="status" class="filter input-select-small form-control" value="">
+															<option value=""></option>
+															<option <?php echo isset($params['status']) && urldecode($params['status'])==\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED?"selected":"";?> value="<?php echo \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED;?>"><?php echo __('Enabled')?></option>
+															<option <?php echo isset($params['status']) && urldecode($params['status'])==\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED?"selected":"";?> value="<?php echo \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED?>"><?php echo __('Disabled')?></option>
+														</select></div>
+													</th>
+													<th class="filter">
+														<div class="product-list-filter">
+															<input type="text" name="price[from]" id="price_from" class="filter input-text-tiny form-control" value="<?php echo (isset($params['price']['from']) && urldecode($params['price']['from'])!="")?urldecode($params['price']['from']):""; ?>"/>
+														</div>
+														<div class="product-list-filter">
+															<input type="text" id="price_to" name="price[to]" class="filter input-text-tiny form-control" value="<?php echo (isset($params['price']['to']) && urldecode($params['price']['to'])!="")?urldecode($params['price']['to']):""; ?>"/>
+														</div>
+													</th>
+													<th class="filter">
+														<div class="product-list-filter">
+															<input type="text" name="qty[from]" class="input-text-tiny form-control filter" value="<?php echo (isset($params['qty']['from']) && urldecode($params['qty']['from'])!="")?urldecode($params['qty']['from']):""; ?>"/>
+														</div>
+														<div class="product-list-filter">
+															<input type="text"  name="qty[to]" class="input-text-tiny form-control filter" value="<?php echo (isset($params['qty']['to']) && urldecode($params['qty']['to'])!="")?urldecode($params['qty']['to']):""; ?>"/>
+														</div>
+													</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php $imageBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
+												$imageTool = $this->_objectManager->create('Magento\Catalog\Helper\Image');
+												?>							
+												<?php if(count($_products)>0): ?>
+													<?php $_odd = ''; ?>
+													<?php foreach ($_products as $_product): ?>
+														<?php
+														if($_products->getStoreId()==0 && $block->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->isSingleStoreMode())
+															$productUrl=$_product->getProductUrl();
+														else if($_products->getStoreId()!=0)
+															$productUrl=$_product->getUrlInStore(array('_store'=>$_products->getStoreId()));
+														?>
+														<tr>
+															<td class="date"><?php echo $_product->getId() ?></td>
+															<td class="status">
+																<?php 
+																$image = $imageTool->init($_product,'category_page_grid',array('type'=>'small_image'))->getUrl();
+																if(($_product->getCheckStatus()==\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS) && (($_product->getStatus()==\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED && $_products->getStoreId()!=0)||($_products->getStoreId()==0 && $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->isSingleStoreMode()))){?>
+																<a target="_blank" href="<?php echo $productUrl ?>" target="_blank" title="<?php echo $block->stripTags($block->getImageLabel($_product, 'thumbnail'), null, true) ?>" class="product-image">
+																	<img  width="50" height="35" src="<?php echo $image; ?>"/>
+																</a>
+																<?php }else {?>
+																<img  width="50" height="35" src="<?php echo $image  ?>"/>
+																<?php }?>
+															</td>
+															<td class="status">
+																<?php if(($_product->getCheckStatus()==\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS) && (($_product->getStatus()==\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED && $_products->getStoreId()!=0)||($_products->getStoreId()==0 && $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->isSingleStoreMode()))){?>
+																	<a target="_blank" href="<?php echo $productUrl?>" target="_blank" title="<?php  echo $_product->getName()?>"><?php echo $_product->getName() ?></a>
+																	<?php }else{?>
+																	<?php echo $_product->getName(); 
+																}
+																?>
+															</td>    
+															<td class="status"><?php echo $_product->getTypeId() ?></td>
+															<td class="status"><?php echo $_product->getCheckStatus()?(($_product->getCheckStatus()==\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS)? "Approved":"Pending") : "Not Approved" ?>
+																<br/><?php if($_product->getCheckStatus()==\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS) echo $_product->getStatus()==\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED?"(Enabled)":"(Disabled)"?>
+															</td>
+															<td class="status"><?php 
+																$currencyCode=$this->_objectManager->get('Magento\Store\Model\Store')->load($_products->getStoreId())->getBaseCurrencyCode();
+																echo  $this->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($_product->getPrice(),false,2,null,$currencyCode) ?></td>
+																<td class="status"><?php echo round($_product->getQty());?></td>
+																<td class="a-center view number">
+																	<span class="nobr number"><a title="<?php echo __('Edit') ?>" class="btn btn-info  btn-outline btn-circle" href="<?php echo $this->getEditUrl($_product) ?>"><i class="fa fa-pencil"></i></a>
+																		<a class="btn btn-danger  btn-outline btn-circle" title="<?php echo __('Delete') ?>" id="delete_product" href="#" onCLick="if(confirm('<?php echo __('Are you sure?') ?>'))window.location='<?php echo $this->getDeleteUrl($_product)?>'" class="link-reorder"><i class="fa fa-times"></i></a>
+																	</span>
+																</td>
+															</tr>
+														<?php endforeach; ?>
+													<?php else: ?>
+														<tr>
+															<td colspan="8">
+																<div>
+																	<p><?php echo __('No product records found'); ?></p>
+																</div>
+															</td>
+														</tr>		
+													<?php endif ?>
+												</tbody>
+											</table>
+										</div>
+										<?php //echo $this->getPagerHtml(); ?>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>

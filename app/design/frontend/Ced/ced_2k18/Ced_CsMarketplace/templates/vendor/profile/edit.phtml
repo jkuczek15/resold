@@ -1,0 +1,193 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php  // $helper = $this->_objectManager->get('Ced\CsMarketplace\Helper\Data');?>
+<?php // echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default vendor-profile-edit">
+			<div class="panel-heading col-md-12 uptransform">
+				<div style="line-height:31px;font-size:17px;" class="col-md-6 col-xs-12  panel_product_heading">
+					<?php echo __('Edit')." ".__('Profile Information') ?>	
+				</div>
+				<div style="text-align:right;" class="buttons-set col-md-6  col-xs-12 buttons_scb">		<button class="button btn btn-primary uptransform pull-right" onClick="profileEdit();" title="Edit" type="submit">
+						<span>
+							<span><?php echo __('Save') ?></span>
+						</span>
+					</button>
+				</div>
+			</div>
+			<div class="clear_both"></div>
+			<div class="panel-body">
+				<div class="col-md-12">
+					<div class="fieldset">
+						<ul class="form-list">
+							<?php echo $this->getFormHtml(); ?>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<p class="back-link col-md-6"><a href="<?php echo $this->getUrl('csmarketplace/vendor/profileview') ?>"><small>&laquo; </small><?php echo __('Back') ?></a></p>
+					<p class="required col-md-6" ><?php echo __('* Required Fields') ?></p>
+				</div>
+			</div>
+		</div>		
+	</div>
+</div>
+</div>
+<script>
+   require(["jquery","mage/mage"],function($){	
+   	$('#edit_form').mage('validation', {
+   	});
+   });
+   function profileEdit(){
+   	require(["jquery"],function($){	
+   		var ret = $('#edit_form').valid();		
+   		if(ret==true){
+   			$('#edit_form').submit();
+   		}
+   	});
+   }
+</script>
+<script>
+	require([
+		'jquery',
+		'jquery/ui',
+		], function($){
+			window.onload = function() {
+				var country_id = document.getElementById('country_id').value;
+				var rurl ='<?php echo $this->getUrl("*/*/country",array("_nosid"=>true))?>';
+				
+				
+				 $.ajax({
+					url: rurl,
+					type: "POST",
+					data: {cid:country_id},
+					dataType: 'html',
+					success: function(stateform) {
+						
+						stateform = JSON.parse(stateform);
+						
+						if(!country_id.length){
+							document.getElementById('region').parentNode.parentNode.style.display='none';
+							document.getElementById('region_id').parentNode.parentNode.style.display='none';
+							return;
+						}
+						if(stateform=='true'){
+							document.getElementById('region').parentNode.parentNode.style.display='none';
+							document.getElementById('region_id').parentNode.parentNode.style.display='block';
+						}else{
+							document.getElementById('region_id').parentNode.parentNode.style.display='none'; 
+							document.getElementById('region').parentNode.parentNode.style.display='block'; 
+						}
+					}
+				});
+			 
+			}; 
+			
+			country_id.onchange = function() {
+				var country_id = document.getElementById('country_id').value;
+				var rurl ='<?php echo $this->getUrl("*/*/country",array("_nosid"=>true))?>';
+				$.ajax({
+					url: rurl,
+					type: "POST",
+					data: {cid:country_id},
+					dataType: 'html',
+					success: function(stateform) {
+						stateform = JSON.parse(stateform);
+						if(!country_id.length){
+							document.getElementById('region').parentNode.parentNode.style.display='none';
+							document.getElementById('region_id').parentNode.parentNode.style.display='none';
+							return;
+						 }
+						if(stateform=='true'){
+							document.getElementById('region').parentNode.parentNode.style.display='none';
+							document.getElementById('region_id').parentNode.parentNode.style.display='block';
+						}else{
+							document.getElementById('region_id').parentNode.parentNode.style.display='none'; 
+							document.getElementById('region').parentNode.parentNode.style.display='block'; 
+						}
+					}
+				});
+			}; 
+		});
+	</script>
+	<script type="text/x-magento-init">
+		{
+		"#country_id": {
+		"regionUpdater": {
+		"optionalRegionAllowed": "true",
+		"regionListId": "#region_id",
+		"regionInputId": "#region",
+		"postcodeId": "#zip_code",
+		"form": "#edit_form",
+		"regionJson": <?php  echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
+		"defaultRegion": "<?php  echo $block->getRegionId() ?>",
+		"countriesWithOptionalZip": <?php echo $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
+	}
+}
+}
+</script>
+<script>
+    require([
+        'jquery',
+        'jquery/ui',
+    ], function($){
+        $(document).ready(function() {
+            if((".change_password").length){
+                $(".change_password").parent().parent().hide();
+                $(".change_password").prop('disabled', true);
+            }
+            else {
+                setTimeout(changePassword, 50);
+            }
+        });
+
+        function changePassword() {
+            if((".change_password").length){
+                $(".change_password").prop('disabled', true);
+                $(".change_password").parent().parent().hide();
+            }
+            else {
+                setTimeout(changePassword, 50);
+            }
+        }
+
+        if($('#password-check').length){
+            $('#password-check').change(function() {
+                if(this.checked) {
+                    $(".change_password").parent().parent().show();
+                    $(".change_password").prop('disabled', false);
+                    $('.change_password').addClass('required-entry');
+                }else{
+                    $(".change_password").parent().parent().hide();
+                    $(".change_password").prop('disabled', true);
+                    $('.change_password').removeClass('required-entry');  
+                }
+            });
+        }
+    });
+</script>
+<style>
+    #password-check{
+        width: 2% !important;
+    }
+    .mage-error{
+        color: red;
+    }
+</style>

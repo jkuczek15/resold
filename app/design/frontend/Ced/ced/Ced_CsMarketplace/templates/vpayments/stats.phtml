@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+$currencyCode=$this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(null)->getBaseCurrencyCode();
+?>
+ <div class="row">
+<div class="col-md-12" style="margin-top:10px;">
+	<div class="panel panel-default">
+		<div class="panel-heading col-md-12" style="text-transform: uppercase;font-weight:bold;padding:4px 15px;">
+			<div  style="line-height:31px;font-size:17px;display:inline;text-transform: uppercase;">
+			<?php echo __('Transactions Statistics') ?>
+			</div>
+         </div>
+ 	<div class="panel-body">
+ 	<div class="col-md-12" style="margin-top:10px;">
+<div class="order-items order-details table-responsive">
+<table id="my-products-table" class="table table-bordered table-hover table-striped">
+	<col width="1"/>
+    <col width="1"/>
+    <col width="1"/>
+    <thead>	
+		<tr style="background-color: #f5f5f5; color: #23527c;">
+			<th class="head"><?php echo __('Total Earned Amount') ?></th>
+			<th class="head"><?php echo __('Total Pending Amount') ?></th>
+			<th class="head"><?php echo __('Pending Transfers') ?></th>
+		</tr>
+	<thead>
+	<tbody>
+		<tr >
+			<td class="number"><span class="nobr"><?php  echo $block->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getEarningAmount(),false,2,null,$currencyCode); ?></span></td>
+			<td class="number"><span class="nobr"><?php echo  $block->_objectManager->get('Magento\Framework\Pricing\PriceCurrencyInterface')->format($block->getPendingAmount(),false,2,null,$currencyCode); ?></span></td>
+			<td  class="status"><span class="nobr"><?php echo $block->getPendingTransfers()?$this->getPendingTransfers():0; ?></span></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

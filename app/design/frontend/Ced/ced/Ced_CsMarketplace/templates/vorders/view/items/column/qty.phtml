@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php if ($_item = $this->getItem()): ?>
+        <span class="nobr">
+        <?php if ($_item->getQtyOrdered() > 0): ?>
+            <?php echo __('Ordered'); ?>: <strong><?php echo $_item->getQtyOrdered()*1 ?></strong><br />
+        <?php endif; ?>
+        <?php if ($_item->getQtyInvoiced() > 0): ?>
+            <?php echo __('Invoiced'); ?>: <strong><?php echo $_item->getQtyInvoiced()*1 ?></strong><br />
+        <?php endif; ?>
+        <?php if ($_item->getQtyShipped() > 0): ?>
+            <?php echo __('Shipped'); ?>: <strong><?php echo $_item->getQtyShipped()*1 ?></strong><br />
+        <?php endif; ?>
+        <?php if ($_item->getQtyCanceled() > 0): ?>
+            <?php echo __('Canceled'); ?>: <strong><?php echo $_item->getQtyCanceled()*1 ?></strong><br />
+        <?php endif; ?>
+        <?php if ($_item->getQtyRefunded() > 0): ?>
+            <?php echo __('Refunded'); ?>: <strong><?php echo $_item->getQtyRefunded()*1 ?></strong><br />
+        <?php endif; ?>
+        </span>
+<?php endif; ?>

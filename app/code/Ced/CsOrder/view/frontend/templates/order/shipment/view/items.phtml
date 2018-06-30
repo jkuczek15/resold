@@ -1,0 +1,51 @@
+<?php
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+?>
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$vendorId = $objectManager->get('Magento\Customer\Model\Session')->getVendorId();
+
+?>
+<div class="admin__table-wrapper">
+    <table class="data-table admin__table-primary order-shipment-table">
+        <thead>
+            <tr class="headings">
+                <th class="col-product"><span><?php /* @escapeNotVerified */ echo __('Product') ?></span></th>
+                <th class="col-qty last"><span><?php /* @escapeNotVerified */ echo __('Qty Shipped') ?></span></th>
+            </tr>
+        </thead>
+           <?php $_items = $block->getShipment()->getAllItems() ?>
+        <?php $_i = 0; foreach ($_items as $_item): ?>
+        <?php
+         $vProducts = $objectManager->create('Ced\CsMarketplace\Model\Vproducts');
+        if ($vProducts->getVendorIdByProduct($_item->getProductId())!= $vendorId) {
+               continue;
+        } ?>
+                
+            <?php if ($_item->getOrderItem()->getParentItem()) {
+            continue;
+        } else {
+            $_i++;
+        } ?>
+            <tbody class="<?php /* @escapeNotVerified */ echo $_i%2 ? 'odd' : 'even' ?>">
+                <?php echo $block->getItemHtml($_item) ?>
+                <?php echo $block->getItemExtraInfoHtml($_item->getOrderItem()) ?>
+            </tbody>
+        <?php endforeach; ?>
+    </table>
+</div>

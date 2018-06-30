@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+ /**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
+    <container name="root" label="Root">
+      <!--  <block name="require.js" class="Ced\CsMarketplace\Block\Page\RequireJs" template="Magento_Backend::page/js/require_js.phtml"/> -->
+        <block class="Ced\CsProduct\Block\Product\Edit\Tab\Upsell" name="catalog.product.edit.tab.upsell"/>
+        <block class="Magento\Backend\Block\Widget\Grid\Serializer" name="upsell_grid_serializer">
+            <arguments>
+                <argument name="input_names" xsi:type="string">position</argument>
+                <argument name="grid_block" xsi:type="string">catalog.product.edit.tab.upsell</argument>
+                <argument name="callback" xsi:type="string">getSelectedUpsellProducts</argument>
+                <argument name="input_element_name" xsi:type="string">links[upsell]</argument>
+                <argument name="reload_param_name" xsi:type="string">products_upsell</argument>
+            </arguments>
+        </block>
+    </container>
+</layout>

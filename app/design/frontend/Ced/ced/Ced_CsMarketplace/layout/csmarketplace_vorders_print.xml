@@ -1,0 +1,61 @@
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  layout="vendor-empty" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+	<head>
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vproducts.css" />
+		<meta name="x_ua_compatible" content="IE=edge,chrome=1"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+        <css src="mage/calendar.css"/>
+        <script src="Ced_CsMarketplace::requirejs/require.js"/>
+        <script src="Ced_CsMarketplace::dist/js/jquery.min.js"/>
+        <script src="Ced_CsMarketplace::js/ced/csmarketplace/noconflict.js"/>
+        <css src="Ced_CsMarketplace::bower_components/bootstrap/dist/css/bootstrap.min.css" />
+        <css src="Ced_CsMarketplace::dist/css/timeline.css"/>
+        <css src="Ced_CsMarketplace::dist/css/sb-admin-2.css"/>
+        <css src="Ced_CsMarketplace::bower_components/morrisjs/morris.css"/>
+        <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel.css"/>  
+        
+        <script src="Ced_CsMarketplace::bower_components/bootstrap/dist/js/bootstrap.js"/>   
+        <script src="Ced_CsMarketplace::bower_components/raphael/raphael-min.js"/>
+        <script src="Ced_CsMarketplace::bower_components/morrisjs/morris.min.js"/>
+        <script src="Ced_CsMarketplace::js/ced/csmarketplace/morris-data.js"/>
+        <script src="Ced_CsMarketplace::dist/js/sb-admin-2.js"/>
+    </head>
+	
+    <body>
+    	<referenceContainer name="content">   	
+			<block class="Ced\CsMarketplace\Block\Vorders\View" name="sales.order.print" template="Ced_CsMarketplace::vorders/print.phtml">
+	            		<block class="Ced\CsMarketplace\Block\Vorders\View\Info" as="info" name="vorders.view.info">
+	                		<block class="Ced\CsMarketplace\Block\Vorders\View\Info\Buttons" as="buttons" name="vorders.view.info.buttons" />
+	            		</block>
+						<block class="Ced\CsMarketplace\Block\Vorders\View\Items" name="order_items" template="Ced_CsMarketplace::vorders/view/items.phtml">
+							<block class="Magento\Sales\Block\Adminhtml\Order\View\Items\Renderer\DefaultRenderer" as="default" template="Ced_CsMarketplace::vorders/view/items/renderer/default.phtml"/>
+							<block class="Magento\Sales\Block\Adminhtml\Items\Column\Qty" name="column_qty" template="Ced_CsMarketplace::vorders/view/items/column/qty.phtml" group="column"/>
+							<block class="Magento\Sales\Block\Adminhtml\Items\Column\Name" name="column_name" template="Ced_CsMarketplace::vorders/view/items/column/name.phtml" group="column"/>
+							<block class="Magento\Framework\View\Element\Text\ListText" name="additional.product.info"/>
+							<block class="Ced\CsMarketplace\Block\Vorders\View\Totals" name="order_totals" template="vorders/view/totals.phtml">
+								<block class="Ced\CsMarketplace\Block\Vorders\View\Totals\Tax" name="tax" template="vorders/view/totals/tax.phtml" />
+							</block>
+						</block>
+	        	</block>
+        </referenceContainer>
+    </body>
+</page>

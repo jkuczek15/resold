@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+?>
+
+
+<?php if($block->getVendorId()) {  ?>
+
+	<div class="row">
+
+		<div class="col-lg-12">
+
+			<p class="hello"><strong><?php  echo __('Hello,'); echo ' '; echo __($block->escapeHtml($block->getVendor()->getName())); ?>!</strong></p>
+
+			<p><?php echo __('From your Dashboard you have the ability to view a snapshot of your total orders , total sales , total sales country wise, sales statistics (week, month or year wise) and recent activity on your associated products.') ?></p>
+
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<?php  echo $block->getChildHtml('info') ?>
+
+	</div>
+
+	<div class="row">
+
+			<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 rtl-active">
+
+				<?php  echo $block->getChildHtml('chart') ?>
+
+			</div>
+
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 rtl-active">
+
+				<?php  echo $block->getChildHtml('products') ?>
+
+			</div>
+
+			<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+
+				<?php  echo $block->getChildHtml('map') ?>
+
+			</div>
+
+			<?php if(1 || !$block->getObjectManager()->isEnabled('Ced_CsVendorChat')){ ?>
+
+				<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+
+					<?php echo $this->getChildHtml('extrainfo') ?>
+
+				</div>	
+
+			<?php }else{ ?>
+
+				<div class="col-lg-8">
+
+				<?php echo $this->getChildHtml('extrainfo') ?>
+
+				</div>
+
+				<div class="col-lg-4">
+
+				<?php echo $this->getChildHtml('chat') ?>
+
+				</div>
+
+			<?php } ?>
+
+		</div>
+
+<?php } ?>

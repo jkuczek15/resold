@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<div class="form-group col-md-6" ><label><?php echo __('Websites') ?>:</label>
+	<div class="input-box category">
+            <?php foreach ($this->getWebsiteCollection() as $_website): ?>
+            <div class="website-name">
+                <input name="product[website_ids][]"  style="float:left;" value="<?php echo $_website->getId() ?>" <?php if ($this->isReadonly()):?> disabled="disabled"<?php endif;?> class="checkbox website-checkbox" id="product_website_<?php echo $_website->getId() ?>" type="checkbox"<?php if($this->hasWebsite($_website->getId())): ?> checked="checked"<?php endif; ?> />
+                <strong><label  style="float:left;margin-left:2px;font-weight:bold;font-size: 14px;" for="product_website_<?php echo $_website->getId() ?>"><?php echo $this->escapeHtml($_website->getName()) ?></label></strong>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="padding-left:25px" class="webiste-groups" id="product_website_<?php echo $_website->getId() ?>_data">
+            <?php foreach ($this->getGroupCollection($_website) as $_group): ?>
+                <label><?php echo $this->escapeHtml($_group->getName()) ?></label>
+                <div style="clear:both"></div>
+                <div style="padding-left:15px" class="group-stores">
+                <table>
+                <?php foreach ($this->getStoreCollection($_group) as $_store): ?>
+                    <tr>
+                        <td><?php echo $this->escapeHtml($_store->getName()) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </table>
+                </div>
+            <?php endforeach; ?>
+            </div>
+            <?php endforeach; ?>
+        </div>
+</div>

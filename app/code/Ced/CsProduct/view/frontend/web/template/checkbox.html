@@ -1,0 +1,28 @@
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsProduct
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */-->
+<div class="admin__field admin__field-option">
+    <input type="checkbox" class="admin__control-checkbox" data-bind="checked: checked,
+    attr: { id: uid, disabled: disabled, name: inputName }, hasFocus: focused">
+
+    <label class="admin__field-label" data-bind="text: description || label, attr: { for: uid }">
+    </label>
+
+    <!-- ko if: notice -->
+    <div class="admin__field-note" data-bind="attr: {id: noticeId}"><span data-bind="text: notice"></span></div>
+    <!-- /ko -->
+</div>

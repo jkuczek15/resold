@@ -1,0 +1,116 @@
+/*==================================
+=            vshop page            =
+==================================*/
+.csmarketplace-vshops-index .page-title-wrapper .page-title {
+	display: none!important;
+}
+.csmarketplace-vshops-index .columns {
+	display: block;
+}
+.products-grid.csmarketplace-vendors-grid,
+.category-products .products-list {
+	padding-left: 0;
+}
+.products-grid.csmarketplace-vendors-grid .item {
+	float: left;
+	list-style: outside none none;
+	margin-bottom: 0;
+	min-height: 250px;
+	text-align: center;
+	width: 20%;
+}
+.products-grid.csmarketplace-vendors-grid::after,
+.products-list.csmarketplace-vendors-list .item::after {
+	clear: both;
+	content: "";
+	display: table;
+}
+.products-grid.csmarketplace-vendors-grid .csmarketplace-vendor-name {
+	margin: 5px 0px;
+}
+.products-grid.csmarketplace-vendors-grid .csmarketplace-vendor-name a,
+.products-list.csmarketplace-vendors-list .product-shop .product-name a {
+	color: #333;
+	font-size: 15px;
+	font-weight: 400;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+.csmarketplace-vendors-grid .vendor-logo-image img,
+.csmarketplace-vendors-list .vendor-logo-image img {
+	height: auto;
+	width: 135px;
+}
+.shipping .form-list li {
+	list-style: outside none none;
+}
+.products-list.csmarketplace-vendors-list {
+	list-style: outside none none;
+	padding-left: 0;
+}
+.products-list.csmarketplace-vendors-list .vendor-logo-image {
+	float: left;
+	width: 25%;
+}
+.products-list.csmarketplace-vendors-list .product-shop {
+	float: right;
+	width: 70%;
+}
+.products-list.csmarketplace-vendors-list .product-shop .product-name {
+	margin: 0;
+}
+.products-list.csmarketplace-vendors-list .product-shop .rating-summary {
+	margin: 7px 0;
+}
+.products-list.csmarketplace-vendors-list .item {
+	margin-bottom: 30px;
+}
+/*=====  End of vshop page  ======*/
+/*===================================
+=            media query            =
+===================================*/
+@media only screen and (max-width: 1024px) {
+	.products-grid.csmarketplace-vendors-grid .item {
+		width: 33.33%;
+		min-height: 330px;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.category-products .toolbar-amount,
+	.toolbar-products .toolbar-amount {
+		float: left;
+	}
+	.category-products .limiter,
+	.toolbar-products .limiter{
+		display: inline-block;
+	}
+}
+@media only screen and (max-width: 639px) {
+	.category-products .toolbar-products {
+		margin-bottom: 20px;
+	}
+}
+@media only screen and (max-width: 500px) {
+	.products-grid.csmarketplace-vendors-grid .item {
+		width: 50%;
+		min-height: 300px;
+	}
+	.category-products .toolbar-amount,
+	.toolbar-products .toolbar-amount {
+		float: left;
+		width: 50%;
+	}
+	.category-products .limiter,
+	.toolbar-products .limiter {
+		float: right;
+		text-align: right;
+		width: 50%;
+	}
+	.category-products .toolbar-sorter.sorter,
+	.toolbar-products .toolbar-sorter.sorter {
+		float: left;
+		margin-top: 10px;
+		text-align: left;
+	}
+}
+/*=====  End of media query  ======*/

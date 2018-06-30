@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+
+<script>
+	require([
+		"jquery",
+		"jquery/jquery.cookie",
+		"mage/mage",
+		"mage/cookies"
+	], function($){
+
+	    $.extend($.mage.cookies.defaults, {
+	        expires: null,
+	        path: '<?php echo $block->getPath()?>',
+	        domain: '<?php echo $block->getDomain()?>',
+	        secure: false
+	    });
+
+	    $.extend($.cookie.defaults, $.mage.cookies.defaults);
+	});
+</script>

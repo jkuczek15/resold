@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsOrder
+  * @author   	 CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license     http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+ 	<event name="sales_order_invoice_save_after">
+        <observer name="vendor_sales_order_invoice_save_after" instance="Ced\CsOrder\Observer\CreateVendorInvoice" shared="false" />
+	</event>
+	<event name="sales_order_creditmemo_save_after">
+        <observer name="vendor_sales_order_creditmemo_save_after" instance="Ced\CsOrder\Observer\CreateVendorCreditMemo" shared="false" />
+	</event>
+	<event name="sales_order_shipment_save_after">
+        <observer name="vendor_sales_order_shipment_save_after" instance="Ced\CsOrder\Observer\CreateVendorShipment" shared="false" />
+	</event>
+	<event name="sales_convert_quote_item_to_order_item">
+        <observer name="add_vendor_shopname" instance="Ced\CsOrder\Observer\SetQuoteToOrder" shared="false" />
+	</event>
+</config>

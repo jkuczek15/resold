@@ -1,0 +1,64 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<form class="form"
+      action="<?php /* @escapeNotVerified */ echo $block->getFormAction(); ?>"
+      id="sell-form"
+      method="post"
+      data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+    <fieldset class="fieldset">
+        <div class="field name required">
+            <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Name') ?></span></label>
+            <div class="control">
+                <input name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true}"/>
+            </div>
+        </div>
+        <div class="field category required">
+            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('Category') ?></span></label>
+            <div class="control">
+                <input name="category" id="category" title="<?php /* @escapeNotVerified */ echo __('Category') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('category')) ?>" class="input-text" type="text" data-validate="{required:true}"/>
+            </div>
+        </div>
+        <div class="field price required ">
+            <label class="label" for="email"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
+            <div class="control">
+                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true}" data-msg-number="Please enter a valid number" />
+            </div>
+        </div>
+        <div class="field description required">
+            <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Description') ?></span></label>
+            <div class="control">
+                <textarea name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="3" data-validate="{required:true}"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
+            </div>
+        </div>
+        <?php echo $block->getChildHtml('form.additional.info'); ?>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <input type="hidden" name="hideit" id="hideit" value="" />
+            <button type="submit" title="<?php /* @escapeNotVerified */ echo __('Submit') ?>" class="action submit primary">
+                <span><?php /* @escapeNotVerified */ echo __('Submit') ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+<script>
+require([
+    "jquery",
+    "mage/mage",
+    "mage/validation"
+], function($){
+    $('#sell-form').mage('validation', {
+        messages: {
+          'price': {'validate-value-less-than-20': 'Please enter a price greater than $20.', 'number': 'Please enter a valid number'},
+        }
+    });
+});
+</script>
+

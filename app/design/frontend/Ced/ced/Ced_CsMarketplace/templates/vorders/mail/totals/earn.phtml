@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+$vorder = $this->_objectManager->get('Magento\Framework\Registry')->registry('current_vorder');
+$_order  = $this->getOrder();
+$_source = $this->getSource();
+$_fullInfo  = $this->getFullTaxInfo();
+?>
+
+<tr class="0">
+    <td style="padding-bottom:3px; padding-left: 9px; padding-right: 9px; padding-top: 3px" align="right" class="a-right" colspan="3">
+        <div class="summary-collapse">
+        <strong>
+            <?php echo  $this->helper('csmarketplace')->__('Grand Total (Earned)')?>
+        </strong>
+        </div>
+    </td>
+    <td style="padding-bottom:3px; padding-left: 9px; padding-right: 9px; padding-top: 3px" align="right" class="a-right" colspan="3">
+    	<strong>
+        <?php echo  Mage::app()->getLocale()->currency($vorder->getCurrency())->toCurrency($vorder->getOrderTotal()); ?>
+         </strong>
+    </td>
+</tr>
+<tr class="0">
+    <td style="padding-bottom:3px; padding-left: 9px; padding-right: 9px; padding-top: 3px" align="right" class="a-right" colspan="3">
+        <div class="summary-collapse">
+        	<strong>
+            <?php echo  $this->helper('csmarketplace')->__('Commission Fee')?>
+        </div>
+    </td>
+    <td style="padding-bottom:3px; padding-left: 9px; padding-right: 9px; padding-top: 3px" align="right" class="a-right" colspan="3">
+    	<strong>
+        <?php echo Mage::app()->getLocale()->currency($vorder->getCurrency())->toCurrency($vorder->getShopCommissionFee()); ?>
+         </strong>
+    </td>
+</tr>
+<tr class="0">
+    <td style="padding-bottom:3px; padding-left: 9px; padding-right: 9px; padding-top: 3px" align="right" class="a-right" colspan="3">
+        <div class="summary-collapse">
+        	<strong>
+            <?php echo  $this->helper('csmarketplace')->__('Net Earned')?>
+             </strong>
+        </div> 
+    </td>
+    <td style="padding-bottom:3px; padding-left: 9px; padding-right: 9px; padding-top: 3px" align="right" class="a-right" colspan="3">
+    	<strong>
+        <?php echo Mage::app()->getLocale()->currency($vorder->getCurrency())->toCurrency($vorder->getOrderTotal()-$vorder->getShopCommissionFee()); ?>
+         </strong>
+    </td>
+</tr>

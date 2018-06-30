@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$_remainder ='';
+?>
+<?php if ($_item = $this->getItem()): ?>
+    <h5 class="title"><span id="order_item_<?php echo $_item->getId() ?>_title"><?php echo $block->escapeHtml($_item->getName()) ?></span></h5>
+    <div><strong><?php echo __('SKU') ?>:</strong> <?php echo implode('<br />', $this->helper('Magento\Catalog\Helper\Data')->splitSku($block->escapeHtml($block->getSku()))); ?></div>
+    <?php if ($this->getOrderOptions()): ?>
+        <dl class="item-options">
+        <?php foreach ($this->getOrderOptions() as $_option): ?>
+            <dt><?php echo $_option['label'] ?></dt>
+            <dd>
+            <?php if (isset($_option['custom_view']) && $_option['custom_view']): ?>
+                <?php echo $this->getCustomizedOptionValue($_option); ?>
+            <?php else: ?>
+                <?php echo nl2br($this->escapeHtml($_option['value'])); ?>
+                <?php $objectManager->create('Magento\Framework\Filter\FilterManager')->truncate($_option['value'], 55, '', $_remainder);?>
+                <?php if ($_remainder):?>
+                    ... <span id="<?php echo $_id = 'id' . uniqid()?>"><?php echo $_remainder ?></span>
+                    <script type="text/javascript">
+                    $('<?php echo $_id ?>').hide();
+                    $('<?php echo $_id ?>').up().observe('mouseover', function(){$('<?php echo $_id ?>').show();});
+                    $('<?php echo $_id ?>').up().observe('mouseout',  function(){$('<?php echo $_id ?>').hide();});
+                    </script>
+                <?php endif;?>
+            <?php endif;?>
+            </dd>
+        <?php endforeach; ?>
+        </dl>
+    <?php endif; ?>
+    <?php echo $block->escapeHtml($_item->getDescription()) ?>
+<?php endif; ?>

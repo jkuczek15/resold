@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMarketplace
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ced_CsMarketplace::csmarketplace" title="Marketplace" module="Ced_CsMarketplace" sortOrder="15" resource="Ced_CsMarketplace::csmarketplace"/>
+        
+        <add id="Ced_CsMarketplace::manage_vendor" title="Manage Vendors" module="Ced_CsMarketplace" sortOrder="10" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMarketplace::manage_vendor" />
+        <add id="Ced_CsMarketplace::managevendor" title="Manage Vendors" module="Ced_CsMarketplace" sortOrder="10" parent="Ced_CsMarketplace::manage_vendor" action="csmarketplace/vendor/" resource="Ced_CsMarketplace::managevendor"/>
+        
+        <add id="Ced_CsMarketplace::vendor_product" title="Vendor Products" module="Ced_CsMarketplace" sortOrder="40" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMarketplace::vendor_product" />
+        <add id="Ced_CsMarketplace::vendorpending_product" title="Pending Products" module="Ced_CsMarketplace" sortOrder="10" parent="Ced_CsMarketplace::vendor_product" action="csmarketplace/vproducts/pending/" resource="Ced_CsMarketplace::vendorpending_product"/>
+        <add id="Ced_CsMarketplace::vendorapproved_product" title="Approved Products" module="Ced_CsMarketplace" sortOrder="20" parent="Ced_CsMarketplace::vendor_product" action="csmarketplace/vproducts/approved/" resource="Ced_CsMarketplace::vendorapproved_product"/>
+        <add id="Ced_CsMarketplace::vendorall_product" title="All Products" module="Ced_CsMarketplace" sortOrder="30" parent="Ced_CsMarketplace::vendor_product" action="csmarketplace/vproducts/index/" resource="Ced_CsMarketplace::vendorall_product"/>
+        
+        <add id="Ced_CsMarketplace::managevendor_order" title="Vendor Orders" module="Ced_CsMarketplace" sortOrder="50" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMarketplace::managevendor_order" />
+        <add id="Ced_CsMarketplace::vendor_order" title="Vendor Orders" module="Ced_CsMarketplace" sortOrder="10" parent="Ced_CsMarketplace::managevendor_order" action="csmarketplace/vendororder/" resource="Ced_CsMarketplace::vendor_order"/>
+        
+        <add id="Ced_CsMarketplace::managevendor_transaction" title="Vendor Transactions" module="Ced_CsMarketplace" sortOrder="60" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMarketplace::managevendor_transaction" />
+        <add id="Ced_CsMarketplace::vendor_transaction" title="Vendor Transactions" module="Ced_CsMarketplace" sortOrder="10" parent="Ced_CsMarketplace::managevendor_transaction" action="csmarketplace/vpayments/index/" resource="Ced_CsMarketplace::vendor_transaction"/>
+        
+        <add id="Ced_CsMarketplace::managevendor_configuration" title="Vendor Configuration" module="Ced_CsMarketplace" sortOrder="80" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMarketplace::managevendor_configuration" />
+        <add id="Ced_CsMarketplace::vendor_configuration" title="Vendor Configuration" module="Ced_CsMarketplace" sortOrder="10" parent="Ced_CsMarketplace::managevendor_configuration" action="adminhtml/system_config/edit/section/ced_csmarketplace" resource="Ced_CsMarketplace::vendor_configuration"/>
+    </menu>
+</config>
