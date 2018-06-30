@@ -27,6 +27,6 @@ files:
 # or AfterAllowTraffic. 
 hooks:
     BeforeInstall:
-    - location: /bin/remove_files.sh
+    - location: /scripts/remove_files.sh
       timeout: 300
       runas: root
