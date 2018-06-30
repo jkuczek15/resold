@@ -21,19 +21,11 @@ files:
   - source: /
     destination: /var/www/html
 
-# In the Resources section specify the name, alias, 
-# target version, and (optional) the current version of your AWS Lambda function. 
-Resources:
-  - MyFunction: # Replace "MyFunction" with the name of your Lambda function 
-      Type: AWS::Lambda::Function
-      Properties:
-        Name: "" # Specify the name of your Lambda function
-        Alias: "" # Specify the alias for your Lambda function
-        CurrentVersion: "" # Specify the current version of your Lambda function
-        TargetVersion: "" # Specify the version of your Lambda function to deploy
-
 # (Optional) In the Hooks section, specify a validation Lambda function to run during 
 # a lifecycle event. Replace "LifeCycleEvent" with BeforeAllowTraffic
 # or AfterAllowTraffic. 
 Hooks:
-    - LifeCycleEvent: "" # Specify a Lambda validation function between double-quotes.
+    BeforeInstall:
+    - location: scripts/remove_files.sh
+      timeout: 300
+      runas: root
