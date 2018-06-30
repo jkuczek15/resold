@@ -6,6 +6,7 @@
 #   "AWS CodeDeploy User Guide" at
 #   http://docs.aws.amazon.com/codedeploy/latest/userguide/app-spec-ref.html
 version: 0.0
+os: linux
 # In the Resources section specify the name, alias, 
 # target version, and (optional) the current version of your AWS Lambda function. 
 Resources:
