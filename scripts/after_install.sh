@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# Install base Magento dependencies
+# Install base Magento dependencies using composer
 php /bin/composer.phar install -d /var/www/html
 
 # Grant read/write/execute permissions to all web files
 chmod -R 777 /var/www/html
-chmod +x /var/www/html/bin/magento
 
 # Install Magento and apply configuration for AWS cloud server
 /var/www/html/bin/magento setup:install \
@@ -19,7 +18,7 @@ chmod +x /var/www/html/bin/magento
 --admin-lastname="Kuczek" \
 --admin-email="joe.kuczek@gmail.com" \
 --admin-user="joe" \
---admin-password="Rootroot$" \
+--admin-password="Bigjoe3092$" \
 --base-url="https://resold.us" \
 --base-url-secure="https://resold.us" \
 --use-secure="1" \
