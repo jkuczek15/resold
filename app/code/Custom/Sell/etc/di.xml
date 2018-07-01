@@ -21,8 +21,6 @@
   <preference for="Magento\Config\Model\Config" type="Ced\CsMarketplace\Model\Adminhtml\Config\Data" />
   <preference for="Magento\Store\Model\Store" type="Ced\CsMarketplace\Model\Core\Store" />
   <preference for="Magento\Config\Model\Config\SchemaLocator" type="Ced\CsMarketplace\Model\Config\SchemaLocator" /> 
-  <preference for="Magento\Catalog\Helper\Category" type="\Magento\Catalog\Helper\Category" />
-  
   <type name="Magento\Theme\Model\View\Design">
     <arguments>
       <argument name="themes" xsi:type="array">
