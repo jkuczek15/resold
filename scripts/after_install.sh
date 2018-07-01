@@ -26,3 +26,16 @@ chmod -R 777 /var/www/html
 --language="en_US" \
 --currency="USD" \
 --timezone="America/Chicago"
+
+# Grant additonal permissions
+chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/app/etc
+
+# Upgrade Magento module schema
+/var/www/html/bin/magento setup:upgrade
+
+# Compile Magento class files and inject dependencies
+/var/www/html/bin/magento setup:di:compile
+
+# Deploy Magento static content
+/var/www/html/bin/magento setup:static-content:deploy
