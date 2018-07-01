@@ -40,6 +40,12 @@ mkdir /var/www/html/pub/media
 # Grant read/write/execute permissions to all web files
 chmod -R 777 /var/www/html
 
+# Enable all modules
+/var/www/html/bin/magento module:enable --all --clear-static-content
+
+# Grant read/write/execute permissions to all web files
+chmod -R 777 /var/www/html
+
 # Upgrade Magento module schema
 /var/www/html/bin/magento setup:upgrade || true
 
