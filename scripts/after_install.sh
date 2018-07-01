@@ -32,10 +32,10 @@ chmod -R 777 /var/www/html/var
 chmod -R 777 /var/www/html/app/etc
 
 # Upgrade Magento module schema
-/var/www/html/bin/magento setup:upgrade
+/var/www/html/bin/magento setup:upgrade || true
 
 # Compile Magento class files and inject dependencies
-/var/www/html/bin/magento setup:di:compile
+/var/www/html/bin/magento setup:di:compile || true
 
 # Deploy Magento static content
-/var/www/html/bin/magento setup:static-content:deploy
+/var/www/html/bin/magento setup:static-content:deploy || true
