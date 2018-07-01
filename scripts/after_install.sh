@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
 # Update Magento dependencies using composer
+php /bin/composer.phar update -d /var/www/html/setup
+
+# Install base Magento dependencies using composer
+php /bin/composer.phar install -d /var/www/html/setup
+
+# Update Magento dependencies using composer
 php /bin/composer.phar update -d /var/www/html
 
 # Install base Magento dependencies using composer
