@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-composer install
+php /bin/composer.phar install
