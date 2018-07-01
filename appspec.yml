@@ -18,8 +18,12 @@ os: linux
 #   "files" section altogether. A blank or incomplete "files" section
 #   may cause associated deployments to fail.
 files:
-  - source: /
-    destination: /var/www/html
+  - source: app
+    destination: /var/www/html/app
+  - source: pub
+    destination: /var/www/html/pub
+  - source: var
+    destination: /var/www/html/var
 
 # (Optional) In the Hooks section, specify a validation Lambda function to run during 
 # a lifecycle event. Replace "LifeCycleEvent" with BeforeAllowTraffic
