@@ -6,6 +6,11 @@
  * See COPYING.txt for license details.
  */
 
+ // enable error reporting
+error_reporting(E_ALL);
+$_SERVER['MAGE_IS_DEVELOPER_MODE'] = true;
+ini_set('display_errors', 1);
+
 use Magento\Framework\App\Bootstrap;
 use Magento\Framework\App\Filesystem\DirectoryList;
 
