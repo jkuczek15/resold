@@ -14,9 +14,9 @@ chmod +x /var/www/html/bin/magento
 --db-host="mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com" \
 --db-name="MagentoQuickstartDB" \
 --db-user="admin" \
---db-password="Rootroot$" \ 
---admin-firstname="Joe" \ 
---admin-lastname="Kuczek" \ 
+--db-password="Rootroot$" \
+--admin-firstname="Joe" \
+--admin-lastname="Kuczek" \
 --admin-email="joe.kuczek@gmail.com" \
 --admin-user="joe" \
 --admin-password="Rootroot$" \
