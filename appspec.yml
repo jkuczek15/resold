@@ -18,14 +18,8 @@ os: linux
 #   "files" section altogether. A blank or incomplete "files" section
 #   may cause associated deployments to fail.
 files:
-  # - source: /
-  #   destination: /var/www/html/
-  - source: app
-    destination: /var/www/html/app
-  - source: pub
-    destination: /var/www/html/pub
-  - source: var
-    destination: /var/www/html/var
+  - source: /
+    destination: /var/www/html/
 
 # (Optional) In the Hooks section, specify a validation Lambda function to run during 
 # a lifecycle event. Replace "LifeCycleEvent" with BeforeAllowTraffic
@@ -38,4 +32,4 @@ hooks:
     AfterInstall:
     - location: /scripts/after_install.sh
       timeout: 300
-      runas: root
+      runas: ec2-user

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Install base Magento dependencies
+php /bin/composer.phar install
+
 # Apply Magento configuration for AWS cloud server
 /var/www/html/bin/magento setup:config:set \
 --backend-frontname="stm"  \
@@ -14,3 +17,4 @@
 
 # Compile Magento class files and inject dependencies
 /var/www/html/bin/magento setup:di:compile
+
