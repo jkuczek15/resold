@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Grant read/write/execute permissions to all web files
-chmod -R 777 /var/www/html
-chmod +x /var/www/html/bin/magento
+sudo chmod -R 777 /var/www/html
+sudo chmod +x /var/www/html/bin/magento
 
 # Install base Magento dependencies
 php /bin/composer.phar install -d /var/www/html
