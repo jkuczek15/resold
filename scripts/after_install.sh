@@ -28,15 +28,6 @@ chmod -R 777 /var/www/html
 --currency="USD" \
 --timezone="America/Chicago"
 
-# Remove cache folders
-rm -rf /var/www/html/pub/static
-rm -rf /var/www/html/pub/media
-rm -rf /var/www/html/var
-
-# Create new folders for static resources
-mkdir /var/www/html/pub/static
-mkdir /var/www/html/pub/media
-
 # Grant read/write/execute permissions to all web files
 chmod -R 777 /var/www/html
 
