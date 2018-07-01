@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install base Magento dependencies
-sudo php /bin/composer.phar install -d /var/www/html
+php /bin/composer.phar install -d /var/www/html
 
 # Apply Magento configuration for AWS cloud server
 /var/www/html/bin/magento setup:config:set \
