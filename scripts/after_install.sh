@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# Grant read/write/execute permissions to all web files
-sudo chmod -R 777 /var/www/html
-sudo chmod +x /var/www/html/bin/magento
-
 # Install base Magento dependencies
 php /bin/composer.phar install -d /var/www/html
+
+# Grant read/write/execute permissions to all web files
+chmod -R 777 /var/www/html
+chmod +x /var/www/html/bin/magento
 
 # Apply Magento configuration for AWS cloud server
 /var/www/html/bin/magento setup:config:set \
