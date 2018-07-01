@@ -21,9 +21,9 @@ chmod +x /var/www/html/bin/magento
 --admin-user="joe" \
 --admin-password="Rootroot$" \
 --base-url="https://resold.us" \
+--base-url-secure="https://resold.us" \
 --use-secure="1" \
 --use-secure-admin="1" \
---base-url-secure="1" \
 --language="en_US" \
 --currency="USD" \
 --timezone="America/Chicago"
