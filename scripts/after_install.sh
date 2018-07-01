@@ -27,18 +27,10 @@ chmod -R 777 /var/www/html
 --currency="USD" \
 --timezone="America/Chicago"
 
-# Grant additonal permissions
-chmod -R 777 /var/www/html/var
-chmod -R 777 /var/www/html/var/cache
-chmod -R 777 /var/www/html/app/etc
-
-# Upgrade Magento module schema
-/var/www/html/bin/magento setup:upgrade || true
-
 # Remove cache folders
 rm -rf /var/www/html/pub/static
 rm -rf /var/www/html/pub/media
-rm -rf /var/www/html/var/
+rm -rf /var/www/html/var
 
 # Create new folders for static resources
 mkdir /var/www/html/pub/static
@@ -50,18 +42,11 @@ chmod -R 777 /var/www/html/var
 chmod -R 777 /var/www/html/var/cache
 chmod -R 777 /var/www/html/app/etc
 
+# Upgrade Magento module schema
+/var/www/html/bin/magento setup:upgrade || true
+
 # Compile Magento class files and inject dependencies
 /var/www/html/bin/magento setup:di:compile || true
 
-# Grant additonal permissions
-chmod -R 777 /var/www/html/var
-chmod -R 777 /var/www/html/var/cache
-chmod -R 777 /var/www/html/app/etc
-
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy || true
-
-# Grant additonal permissions
-chmod -R 777 /var/www/html/var
-chmod -R 777 /var/www/html/var/cache
-chmod -R 777 /var/www/html/app/etc
