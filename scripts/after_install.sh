@@ -59,4 +59,4 @@ chmod -R 777 /var/www/html
 rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/
 
 # Enable developer mode
-magento deploy:mode:set developer
+/var/www/html/bin/magento deploy:mode:set developer
