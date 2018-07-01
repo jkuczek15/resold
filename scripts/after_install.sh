@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Update Magento dependencies using composer
+php /bin/composer.phar update -d /var/www/html
+
 # Install base Magento dependencies using composer
 php /bin/composer.phar install -d /var/www/html
 
@@ -51,3 +54,6 @@ chmod -R 777 /var/www/html
 
 # Grant read/write/execute permissions to all web files
 chmod -R 777 /var/www/html
+
+# Overwrite default vendor files
+rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/
