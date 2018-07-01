@@ -23,6 +23,7 @@ chmod -R 777 /var/www/html
 --base-url-secure="https://resold.us" \
 --use-secure="1" \
 --use-secure-admin="1" \
+--use-rewrites="1" \
 --language="en_US" \
 --currency="USD" \
 --timezone="America/Chicago"
@@ -37,7 +38,7 @@ mkdir /var/www/html/pub/static
 mkdir /var/www/html/pub/media
 
 # Grant read/write/execute permissions to all web files
-chmod -R 777 /var/www/htmls
+chmod -R 777 /var/www/html
 
 # Upgrade Magento module schema
 /var/www/html/bin/magento setup:upgrade || true
