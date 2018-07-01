@@ -23,6 +23,7 @@ chmod -R 777 /var/www/html
 --base-url-secure="https://resold.us" \
 --use-secure="1" \
 --use-secure-admin="1" \
+--use-rewrites="0" \
 --language="en_US" \
 --currency="USD" \
 --timezone="America/Chicago"
@@ -50,3 +51,8 @@ chmod -R 777 /var/www/html/app/etc
 
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy || true
+
+# Grant additonal permissions
+chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/var/cache
+chmod -R 777 /var/www/html/app/etc
