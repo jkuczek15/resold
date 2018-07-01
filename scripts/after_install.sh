@@ -36,17 +36,20 @@ rm -rf /var/www/html/var
 mkdir /var/www/html/pub/static
 mkdir /var/www/html/pub/media
 
-# Grant additonal permissions
-chmod -R 777 /var/www/html/pub
-chmod -R 777 /var/www/html/var
-chmod -R 777 /var/www/html/var/cache
-chmod -R 777 /var/www/html/app/etc
+# Grant read/write/execute permissions to all web files
+chmod -R 777 /var/www/htmls
 
 # Upgrade Magento module schema
 /var/www/html/bin/magento setup:upgrade || true
+
+# Grant read/write/execute permissions to all web files
+chmod -R 777 /var/www/html
 
 # Compile Magento class files and inject dependencies
 /var/www/html/bin/magento setup:di:compile || true
 
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy || true
+
+# Grant read/write/execute permissions to all web files
+chmod -R 777 /var/www/html
