@@ -29,6 +29,7 @@ chmod -R 777 /var/www/html
 
 # Grant additonal permissions
 chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/var/cache
 chmod -R 777 /var/www/html/app/etc
 
 # Upgrade Magento module schema
@@ -36,6 +37,7 @@ chmod -R 777 /var/www/html/app/etc
 
 # Grant additonal permissions
 chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/var/cache
 chmod -R 777 /var/www/html/app/etc
 
 # Compile Magento class files and inject dependencies
@@ -43,6 +45,7 @@ chmod -R 777 /var/www/html/app/etc
 
 # Grant additonal permissions
 chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/var/cache
 chmod -R 777 /var/www/html/app/etc
 
 # Deploy Magento static content
