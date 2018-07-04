@@ -4,7 +4,7 @@
 chmod -R 777 /var/www/html
 
 # Update Magento dependencies using composer
-php /bin/composer.phar update -d /var/www/html
+composer update -d /var/www/html
 
 # Make the Magento cli tool executable
 chmod +x /var/www/html/bin/magento
