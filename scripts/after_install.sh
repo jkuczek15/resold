@@ -13,7 +13,7 @@ composer install -d /var/www/html
 chmod +x /var/www/html/bin/magento
 
 # Install Magento and apply configuration for AWS cloud server
-/var/www/html/bin/magento setup:install \
+magento setup:install \
 --backend-frontname="stm"  \
 --session-save="files" \
 --db-host="mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com" \
@@ -44,4 +44,4 @@ magento setup:di:compile
 magento setup:static-content:deploy
 
 # Overwrite default vendor files
-rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/ || true
+rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/
