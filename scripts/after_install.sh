@@ -40,5 +40,11 @@ chmod +x /var/www/html/bin/magento
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy
 
+# Grant read/write/execute permissions to all web files
+chmod -R 777 /var/www/html
+
 # Overwrite default vendor files
 rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/
+
+# Grant read/write/execute permissions
+chmod -R 777 /var/www/html/var/generation
