@@ -19,7 +19,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route id="csmarketplace">
+        <route id="csmarketplace" frontName="csproductmarket">
             <module name="Ced_CsProduct" before="Ced_CsMarketplace" />
         </route>
         <route id="csproduct" frontName="csproduct">
