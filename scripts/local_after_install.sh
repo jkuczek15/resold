@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 # Grant read/write/execute permissions to all web files
-chmod -R 777 /var/www/html
+sudo chmod -R 777 /var/www/html
 
 # Update and Install Magento dependencies using composer
-php /bin/composer.phar update -d /var/www/html
+composer update -d /var/www/html
 
 # Make the Magento cli tool executable
-chmod +x /var/www/html/bin/magento
+sudo chmod +x /var/www/html/bin/magento
 
 # Install Magento and apply configuration for AWS cloud server
-/var/www/html/bin/magento setup:install \
+magento setup:install \
 --backend-frontname="stm"  \
 --session-save="files" \
 --db-host="mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com" \
@@ -22,8 +22,8 @@ chmod +x /var/www/html/bin/magento
 --admin-email="joe.kuczek@gmail.com" \
 --admin-user="joe" \
 --admin-password="Bigjoe3092$" \
---base-url="https://resold.us" \
---base-url-secure="https://resold.us" \
+--base-url="https://localhost" \
+--base-url-secure="https://localhost" \
 --use-secure="1" \
 --use-secure-admin="1" \
 --use-rewrites="1" \
@@ -32,19 +32,19 @@ chmod +x /var/www/html/bin/magento
 --timezone="America/Chicago"
 
 # Upgrade Magento module schema
-/var/www/html/bin/magento setup:upgrade
+magento setup:upgrade
 
 # Compile Magento class files and inject dependencies
-/var/www/html/bin/magento setup:di:compile
+magento setup:di:compile
 
 # Deploy Magento static content
-/var/www/html/bin/magento setup:static-content:deploy
+magento setup:static-content:deploy
 
 # Grant read/write/execute permissions to all web files
-chmod -R 777 /var/www/html
+sudo chmod -R 777 /var/www/html
 
 # Overwrite default vendor files
 rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/
 
 # Grant read/write/execute permissions
-chmod -R 777 /var/www/html/var/generation
+sudo chmod -R 777 /var/www/html/var/generation
