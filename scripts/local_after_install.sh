@@ -48,3 +48,9 @@ rsync -a /var/www/html/vendor_override/ /var/www/html/vendor/
 
 # Grant read/write/execute permissions
 sudo chmod -R 777 /var/www/html/var/generation
+
+# Clean the cache
+magento cache:clean
+
+# Flush the cache
+magento cache:flush

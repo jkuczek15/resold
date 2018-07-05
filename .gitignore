@@ -25,7 +25,6 @@ atlassian*
 /.grunt
 /Gruntfile.js
 /package.json
-/composer.lock
 
 /pub/media/*.*
 !/pub/media/.htaccess
