@@ -25,6 +25,7 @@ atlassian*
 /.grunt
 /Gruntfile.js
 /package.json
+/composer.lock
 
 /pub/media/*.*
 !/pub/media/.htaccess
@@ -39,7 +40,6 @@ atlassian*
 /pub/media/theme/*
 /pub/media/theme_customization/*
 !/pub/media/theme_customization/.htaccess
-/pub/media/wysiwyg/*
 !/pub/media/wysiwyg/.htaccess
 /pub/media/tmp/*
 !/pub/media/tmp/.htaccess
