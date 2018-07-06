@@ -158,6 +158,9 @@ class AbstractBlock extends Template
 	public function getBrand($product)
 	{
 		$attr = $product->getResource()->getAttribute($this->getBrandAttributeId()); //Attr. object
+        if(!$attr){
+            return null;
+        }
 		return trim($attr->getFrontend()->getValue($product)); //Attr. value
 	}
 
