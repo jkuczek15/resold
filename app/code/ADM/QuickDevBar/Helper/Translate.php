@@ -179,6 +179,6 @@ class Translate extends \Magento\Framework\Translate
             $this->loadData(null, true);
             $this->_hasLoaded = true;
         }
-        return $this->_data[$type] ?? [];
+        return $this->_data[$type] == null ? [] : $this->_data[$type];
     }
 }
