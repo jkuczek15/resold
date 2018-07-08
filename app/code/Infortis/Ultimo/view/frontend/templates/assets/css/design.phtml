@@ -310,7 +310,7 @@ p.product-name a:hover
 }
 
 .swatch-option.selected,
-.swatch-attribute.size .swatch-option.selected, 
+.swatch-attribute.size .swatch-option.selected,
 .swatch-attribute.manufacturer .swatch-option.selected,
 
 .swatch-option:not(.disabled):hover,
@@ -334,7 +334,7 @@ p.product-name a:hover
 <?php //Color for price-excluding-tax when displayed together with price-including-tax ?>
 <?php /*
 .product-info-main .price-box .price-including-tax + .price-excluding-tax,
-.product-options-bottom .price-box .price-including-tax + .price-excluding-tax, 
+.product-options-bottom .price-box .price-including-tax + .price-excluding-tax,
 */ ?>
 
 .price-box .price
@@ -673,7 +673,7 @@ p.product-name a:hover
 <?php // Effect 2a ?>
 
 .ib-ef-2a:hover,
-.feature-icon-hover:hover .ib-ef-2a 
+.feature-icon-hover:hover .ib-ef-2a
 {
     color: <?php echo $iconboxColor; ?>;
 }
@@ -681,7 +681,7 @@ p.product-name a:hover
 <?php // Effect 2b ?>
 
 .ib-ef-2b:hover,
-.feature-icon-hover:hover .ib-ef-2b 
+.feature-icon-hover:hover .ib-ef-2b
 {
     color: <?php echo $iconboxBgColor; ?>;
 }
@@ -777,7 +777,7 @@ p.product-name a:hover
 <?php endif; ?>
 <?php if ($d['page']['tex']): ?>
     .page-wrapper
-    {   
+    {
         background-image: url(<?php echo $helperDesign->getPatternUrl( $d['page']['tex'] ); ?>);
     }
 <?php endif; ?>
@@ -1125,13 +1125,13 @@ p.product-name a:hover
     <?php if (trim($d['search']['width']) !== '' ): ?>
         .header-regular .block-search.expanding._active, <?php // Expanding search box ?>
 
-        .header-regular .block-search 
+        .header-regular .block-search
         {
             width: <?php echo $d['search']['width']; ?>;
         }
     <?php else: ?>
-        <?php 
-        // Important: if no width specified by user, set default width 
+        <?php
+        // Important: if no width specified by user, set default width
         // but only for the special mode of the search box.
         ?>
         .header-regular .block-search.expanding._active <?php // Expanding search box ?>
@@ -1179,7 +1179,7 @@ p.product-name a:hover
         <?php endif; ?>
     }
 
-    <?php 
+    <?php
     // For now the button is transparent, only the icon is visible.
     // IMPORTANT: apply for all types of header.
     ?>
@@ -1189,7 +1189,7 @@ p.product-name a:hover
 
         <?php
         // Icon needs to have the same color as text.
-        // Otherwise in mobile header it will be white (default text color of iconbox) on white background. 
+        // Otherwise in mobile header it will be white (default text color of iconbox) on white background.
         ?>
         <?php if ($b->isColor($d['search']['color'])): ?>
             color: <?php echo $d['search']['color']; ?>;
@@ -1243,7 +1243,7 @@ p.product-name a:hover
     <?php /*
     <?php // If no border color, then remove border. Important: not only for regular header. ?>
     <?php if ($b->isColor($d['search']['border_color']) == false && $b->isColor($d['search']['border_hover_color']) == false): ?>
-        .block-search .input-text 
+        .block-search .input-text
         {
             border: none;
         }
@@ -1262,7 +1262,7 @@ p.product-name a:hover
 
 <?php // Additional border: ?>
 
-    <?php /* // FEATURE: add these options to the admin and uncomment the code: 
+    <?php /* // FEATURE: add these options to the admin and uncomment the code:
     <?php if ($d['search']['outline_color'] && $d['search']['outline_width']): ?>
         .header-regular .block-search form
         {
@@ -1369,7 +1369,7 @@ p.product-name a:hover
         <?php else: ?>
             background-color:#fff;
         <?php endif; ?>
-        
+
         <?php if ($b->isColor($d['dropdowns']['color'])): ?>
             color: <?php echo $d['dropdowns']['color']; ?>; <?php //It will be inherited by child elements ?>
         <?php endif; ?>
@@ -1477,7 +1477,7 @@ p.product-name a:hover
     <?php if ($d['header_top']['inner_bg_color']): ?>
         background-color: <?php echo $d['header_top']['inner_bg_color']; ?>;
     <?php endif; ?>
-    
+
     <?php if ($b->isColor($d['header_top']['color'])): ?>
         color: <?php echo $d['header_top']['color']; ?>;
     <?php endif; ?>
@@ -1515,7 +1515,7 @@ p.product-name a:hover
 ?>
 .header-top .local-font,
 .header-top .dropdown-block .dropdown-heading,
-.header-top .links > li > * 
+.header-top .links > li > *
 {
     <?php if ($topHeaderFontFamily): ?>
         font-family: <?php echo $topHeaderFontFamily; ?>;
@@ -1537,7 +1537,7 @@ p.product-name a:hover
 
 .header-top .local-height,
 .header-top .dropdown-block .dropdown-heading,
-.header-top .links > li > * 
+.header-top .links > li > *
 {
     <?php if ($topHeaderLineHeight): ?>
         line-height: <?php echo $topHeaderLineHeight; ?>px;
@@ -1728,7 +1728,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
     <?php else: ?>
         background-color:#fff;
     <?php endif; ?>
-    
+
     <?php if ($b->isColor($d['nav']['dropdown_color'])): ?>
         color: <?php echo $d['nav']['dropdown_color']; ?>;
     <?php endif; ?>
@@ -1780,7 +1780,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
 
         <?php //If border should be displayed on dropdowns of all levels ?>
         <?php if ($d['nav']['dropdown_border_all_levels']): ?>
-        , 
+        ,
         <?php //Important: note the comma above which is required after the first rule ?>
         .nav-regular .mega > .nav-panel--dropdown,
         .nav-regular .classic > .nav-panel--dropdown
@@ -1846,7 +1846,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
 ?>
 
 <?php //Menu outer container ?>
-.nav-container 
+.nav-container
 {
     <?php if ($d['nav']['outer_bg_color']): ?>
         background-color: <?php echo $d['nav']['outer_bg_color']; ?>;
@@ -1943,7 +1943,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
             $makeNavStretched = TRUE;
         }
     }
-    
+
 ?>
 <?php if ($makeNavStretched): ?>
 
@@ -2278,7 +2278,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
         top: <?php echo $d['nav']['line_height']; ?>px;
     }
 
-    <?php 
+    <?php
     /* Other elements inisde menu bar need to have the same height as height of the menu bar.
        Also, set max height to avoid issues with excessive height of the elements. */
     ?>
@@ -2516,7 +2516,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
             }
 
             <?php //All levels (for level 2+)
-                  //It has to be on top, settings for upper levels will override it ?>            
+                  //It has to be on top, settings for upper levels will override it ?>
             .nav-regular .nav-item > a
             {
                 <?php if ($navFontFamilyDropdowns): ?>
@@ -2574,7 +2574,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
                     text-transform: none;
                 <?php endif; ?>
             }
-            
+
 
     <?php //Mobile menu ?>
 
@@ -2950,7 +2950,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
 
 <?php /*
 
-<?php 
+<?php
     $d['product_page']['tab_inner_bg_color'] = 'pink';
 
     $d['product_page']['tab_bg_color'] = '#f0f0f0';
@@ -3021,7 +3021,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
 */ ?>
 
 <?php /*
-<?php //Accordion: 
+<?php //Accordion:
       //TODO: we need to add special class indicating that tabs are in accordion mode
 ?>
 
@@ -3070,7 +3070,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
 /* For pagination2 default color overrides color of active state and hover state */
 .slideshow-wrapper.slider-pagination2 .owl-controls .owl-page span,
 .slideshow-wrapper.slider-pagination2 .owl-controls .owl-page.active span,
-.slideshow-wrapper.slider-pagination2 .owl-controls.clickable .owl-page.active:hover span 
+.slideshow-wrapper.slider-pagination2 .owl-controls.clickable .owl-page.active:hover span
 {
     background-color: <?php echo $d['slideshow']['tool_icon_bg_color']; ?>;
     color: <?php echo $d['slideshow']['tool_icon_color']; ?>;
@@ -3117,7 +3117,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
     <?php if ($d['footer']['inner_bg_color']): ?>
         background-color: <?php echo $d['footer']['inner_bg_color']; ?>;
     <?php endif; ?>
-    
+
     <?php if ($b->isColor($d['footer']['color'])): ?>
         color: <?php echo $d['footer']['color']; ?>;
     <?php endif; ?>
@@ -3242,7 +3242,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
     <?php if ($d['footer_top']['inner_bg_color']): ?>
         background-color: <?php echo $d['footer_top']['inner_bg_color']; ?>;
     <?php endif; ?>
-    
+
     <?php if ($b->isColor($d['footer_top']['color'])): ?>
         color: <?php echo $d['footer_top']['color']; ?>;
     <?php endif; ?>
@@ -3277,7 +3277,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
     <?php if ($d['footer_primary']['bg_color']): ?>
         background-color: <?php echo $d['footer_primary']['bg_color']; ?>;
     <?php endif; ?>
-    
+
     <?php if ($d['footer_primary']['padding_top']): ?>
         padding-top: <?php echo intval($d['footer_primary']['padding_top']); ?>px;
     <?php endif; ?>
@@ -3290,7 +3290,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
     <?php if ($d['footer_primary']['inner_bg_color']): ?>
         background-color: <?php echo $d['footer_primary']['inner_bg_color']; ?>;
     <?php endif; ?>
-    
+
     <?php if ($b->isColor($d['footer_primary']['color'])): ?>
         color: <?php echo $d['footer_primary']['color']; ?>;
     <?php endif; ?>
@@ -3331,7 +3331,7 @@ li.level0 > a:hover > span > .pin-bottom:before,
     <?php if ($d['footer_bottom']['inner_bg_color']): ?>
         background-color: <?php echo $d['footer_bottom']['inner_bg_color']; ?>;
     <?php endif; ?>
-    
+
     <?php if ($b->isColor($d['footer_bottom']['color'])): ?>
         color: <?php echo $d['footer_bottom']['color']; ?>;
     <?php endif; ?>
