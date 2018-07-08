@@ -17,6 +17,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+ // enable error reporting
+error_reporting(E_ALL);
+$_SERVER['MAGE_IS_DEVELOPER_MODE'] = true;
+ini_set('display_errors', 1);
 
 try {
     require __DIR__ . '/app/bootstrap.php';
