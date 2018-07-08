@@ -13,8 +13,5 @@ var config = {
             baseImage:          'Magento_Catalog/catalog/base-image-uploader',
             productAttributes:  'Magento_Catalog/catalog/product-attributes'
         }
-    },
-    deps: [
-        'Magento_Catalog/catalog/product'
-    ]
+    }
 };
