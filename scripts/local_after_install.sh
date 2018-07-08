@@ -22,8 +22,8 @@ sudo chmod +x /var/www/html/bin/magento
 --admin-email="joe.kuczek@gmail.com" \
 --admin-user="joe" \
 --admin-password="Bigjoe3092$" \
---base-url="https://127.0.0.1" \
---base-url-secure="https://127.0.0.1" \
+--base-url="https://localhost" \
+--base-url-secure="https://localhost" \
 --use-secure="1" \
 --use-secure-admin="1" \
 --use-rewrites="1" \
