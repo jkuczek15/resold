@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Grant read/write/execute permissions to all web files
+# Grant permissions to all web files
 sudo chmod -R 777 /var/www/html
 
 # Update and Install Magento dependencies using composer
@@ -40,7 +40,7 @@ sudo chmod +x /var/www/html/bin/magento
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy
 
-# Grant read/write/execute permissions to all web files
+# Grant permissions to all web files
 sudo chmod -R 777 /var/www/html
 
 # Overwrite default vendor files
