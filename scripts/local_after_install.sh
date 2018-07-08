@@ -10,20 +10,20 @@ composer update -d /var/www/html
 sudo chmod +x /var/www/html/bin/magento
 
 # Install Magento and apply configuration for AWS cloud server
-magento setup:install \
+/var/www/html/bin/magento setup:install \
 --backend-frontname="stm"  \
 --session-save="files" \
---db-host="mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com" \
+--db-host="localhost" \
 --db-name="MagentoQuickstartDB" \
---db-user="admin" \
+--db-user="root" \
 --db-password="Rootroot$" \
 --admin-firstname="Joe" \
 --admin-lastname="Kuczek" \
 --admin-email="joe.kuczek@gmail.com" \
 --admin-user="joe" \
 --admin-password="Bigjoe3092$" \
---base-url="https://localhost" \
---base-url-secure="https://localhost" \
+--base-url="https://127.0.0.1" \
+--base-url-secure="https://127.0.0.1" \
 --use-secure="1" \
 --use-secure-admin="1" \
 --use-rewrites="1" \
@@ -32,13 +32,13 @@ magento setup:install \
 --timezone="America/Chicago"
 
 # Upgrade Magento module schema
-magento setup:upgrade
+/var/www/html/bin/magento setup:upgrade
 
 # Compile Magento class files and inject dependencies
-magento setup:di:compile
+/var/www/html/bin/magento setup:di:compile
 
 # Deploy Magento static content
-magento setup:static-content:deploy
+/var/www/html/bin/magento setup:static-content:deploy
 
 # Grant read/write/execute permissions to all web files
 sudo chmod -R 777 /var/www/html
