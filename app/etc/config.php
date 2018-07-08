@@ -6,7 +6,7 @@ return array (
     'Magento_Store' => 1,
     'Magento_Directory' => 1,
     'Ced_CsProduct' => 1,
-    'Custom_Sell' => 0,
+    'Custom_Sell' => 1,
     'Infortis_Infortis' => 1,
     'Infortis_Brands' => 1,
     'Infortis_Cgen' => 1,
