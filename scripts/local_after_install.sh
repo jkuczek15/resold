@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Grant permissions to all web files
+# Grant  permissions to all web files
 sudo chmod -R 777 /var/www/html
 
 # Update and Install Magento dependencies using composer
