@@ -6,7 +6,7 @@ sudo chmod -R 777 /var/www/html
 # Update and Install Magento dependencies using composer
 composer update -d /var/www/html
 
-# Make the Magento cli tool executable
+# Make the Magento command line tool executable
 sudo chmod +x /var/www/html/bin/magento
 
 # Install Magento and apply configuration for AWS cloud server
