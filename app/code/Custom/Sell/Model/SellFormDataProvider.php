@@ -10,7 +10,7 @@ namespace Custom\Sell\Ui\DataProvider;
  */
 class SellFormDataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
 {
-    
+
     /**
      * Get data
      *
@@ -19,7 +19,6 @@ class SellFormDataProvider extends \Magento\Framework\View\Element\UiComponent\D
     public function getData()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
 
         return [];
     }
