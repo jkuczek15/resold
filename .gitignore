@@ -24,6 +24,8 @@ atlassian*
 /.grunt
 /Gruntfile.js
 /package.json
+/dumps/*
+!/dumps/.*
 
 /pub/media/*.*
 !/pub/media/.htaccess
