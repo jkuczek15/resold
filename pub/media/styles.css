@@ -1,3 +1,17 @@
 /*
 * Add custom styles here
 */
+
+.home-page-image:hover {
+    margin-left: -1%;
+    margin-right: -1%;
+    padding-left: 2%;
+    padding-right: 2%;
+    z-index: 2;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+    transition: box-shadow 400ms ease-out;
+    -moz-transition: box-shadow 400ms ease-out;
+    -webkit-transition: box-shadow 400ms ease-out;
+    -o-transition: box-shadow 400ms ease-out;
+}
