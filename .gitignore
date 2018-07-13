@@ -26,6 +26,7 @@ atlassian*
 /package.json
 /dumps/*
 !/dumps/.*
+/Ultimo-Guide.pdf
 
 /pub/media/*.*
 !/pub/media/.htaccess
