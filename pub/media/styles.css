@@ -19,3 +19,7 @@
 .catalog-category-view .action.tocart {
     display: none;
  }
+
+.icon.ib.ib-hover.ic.ic-compare {
+  display: none;
+}
