@@ -4,7 +4,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <uiComponent name="sell_form"/>
+          <block class="Custom\Sell\Block\Sell" name="sell_form" template="Custom_Sell::sell.phtml" before="-" />
         </referenceContainer>
     </body>
 </page>

@@ -39,7 +39,7 @@ class Index extends \Magento\Framework\App\Action\Action
     /**
      * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Page|void
      */
-    public $helper;    
+    public $helper;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -52,7 +52,7 @@ class Index extends \Magento\Framework\App\Action\Action
         UrlFactory $urlFactory,
         Manager $moduleManager,
         Data $datahelper
-    ) 
+    )
     {
         $this->session = $customerSession;
         $this->resultPageFactory = $resultPageFactory;
