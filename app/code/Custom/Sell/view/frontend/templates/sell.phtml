@@ -4,8 +4,6 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
-
 ?>
 <form class="form"
       action="<?php /* @escapeNotVerified */ echo $block->getFormAction(); ?>"
@@ -59,6 +57,13 @@ require([
           'price': {'validate-value-less-than-20': 'Please enter a price greater than $20.', 'number': 'Please enter a valid number'},
         }
     });
+    $(document).ready(() => {
+      $.get('https://localhost/sell/categories', (data) => {
+        console.log(data);
+      });
+    });
 });
-</script>
 
+
+
+</script>
