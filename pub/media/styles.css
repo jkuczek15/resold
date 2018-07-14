@@ -15,3 +15,7 @@
     -webkit-transition: box-shadow 400ms ease-out;
     -o-transition: box-shadow 400ms ease-out;
 }
+
+.catalog-category-view .action.tocart {
+    display: none;
+ }
