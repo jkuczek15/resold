@@ -13,7 +13,7 @@
  * @copyright   Copyright Resold (https://resold.us/)
  * @license     https://resold.us/license-agreement
  */
-namespace Custom\Sell\Controller\Categories;
+namespace Custom\Api\Controller\Categories;
 
 use \Magento\Framework\App\Action\Context;
 use \Magento\Catalog\Helper\Category;
