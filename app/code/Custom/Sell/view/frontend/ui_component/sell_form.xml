@@ -19,7 +19,7 @@
 
     <dataSource name="sell_form_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
-            <argument name="class" xsi:type="string">Custom\Sell\Ui\DataProvider\SellFormDataProvider</argument>
+            <argument name="class" xsi:type="string">Custom\Sell\Model\DataProvider</argument>
             <argument name="name" xsi:type="string">sell_form_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
@@ -40,21 +40,20 @@
             <item name="sortOrder" xsi:type="number">20</item>
             </item>
         </argument>
-        
-        <filterSelect name="uiSelect">
-            <argument name="optionsProvider" xsi:type="configurableObject">
-                <argument name="class" xsi:type="string">Magento\Cms\Model\Page\Source\PageLayout</argument>
-            </argument>
+
+        <!-- This field has data type 'text' and standard 'input' form element and looks like input -->
+        <field name="title">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
-                    <item name="template" xsi:type="string">ui/grid/filters/elements/ui-select</item>
-                    <item name="dataScope" xsi:type="string">uiSelect</item>
-                    <item name="label" xsi:type="string" translate="true">uiSelect</item>
+                    <item name="label" xsi:type="string">Some text</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sampleform</item>
                 </item>
             </argument>
-        </filterSelect>
+        </field>
+
      </fieldset>
-    
 
 </form>
