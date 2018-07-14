@@ -15,12 +15,18 @@
  */
 namespace Custom\Api\Controller\Categories;
 
+use Magento\Customer\Model\Session;
 use \Magento\Framework\App\Action\Context;
 use \Magento\Catalog\Helper\Category;
 use \Magento\Framework\Controller\Result\JsonFactory;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var Session
+     */
+    protected $session;
+
     /**
      * @var categoryHelper
      */
@@ -36,11 +42,13 @@ class Index extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\View\Result\categoryHelper categoryHelper
      */
      public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Catalog\Helper\Category $categoryHelper,
-        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+        Context $context,
+        Session $customerSession,
+        Category $categoryHelper,
+        JsonFactory $resultJsonFactory
     )
     {
+        $this->session = $customerSession;
         $this->categoryHelper = $categoryHelper;
         $this->resultJsonFactory = $resultJsonFactory;
         parent::__construct($context);
@@ -53,6 +61,11 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      if (!$this->session->isLoggedIn()) {
+        $resultRedirect = $this->resultRedirectFactory->create();
+        return $resultRedirect->setPath('market/account/login');
+      }
+
       $result = [];
       $categories = $this->getStoreCategories();
       foreach($categories as $category){
