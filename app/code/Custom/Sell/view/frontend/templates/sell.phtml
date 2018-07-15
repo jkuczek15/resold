@@ -10,7 +10,7 @@
       id="sell-form"
       method="post"
       data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
-    <fieldset class="fieldset">
+    <fieldset class="fieldset" id="app">
         <div class="field name required">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Name') ?></span></label>
             <div class="control">
@@ -18,9 +18,36 @@
             </div>
         </div>
         <div class="field category required">
-            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('Category') ?></span></label>
+            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
             <div class="control">
-                <input name="category" id="category" title="<?php /* @escapeNotVerified */ echo __('Category') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('category')) ?>" class="input-text" type="text" data-validate="{required:true}"/>
+                <select name="category" id="category_select">
+                  <option value=""></option>
+                  <option v-for="(data, category) in categories" v-bind:value="category">
+                  {{ category }}
+                  </option>
+                </select>
+            </div>
+        </div>
+        <div class="field subcategory required">
+            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
+            <div class="control">
+                <select name="subcategory" id="subcategory_select">
+                  <option value=""></option>
+                  <option v-for="(data, subcategory) in subcategories" v-bind:value="subcategory">
+                  {{ subcategory }}
+                  </option>
+                </select>
+            </div>
+        </div>
+        <div class="field lowestcategory required">
+            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
+            <div class="control">
+                <select name="lowestcategory" id="lowestcategory_select">
+                  <option value=""></option>
+                  <option v-for="lowestcategory in lowestcategories" v-bind:value="lowestcategory.id">
+                  {{ lowestcategory.name }}
+                  </option>
+                </select>
             </div>
         </div>
         <div class="field price required ">
@@ -46,24 +73,64 @@
         </div>
     </div>
 </form>
+
+<style>
+.subcategory {
+  display: none;
+}
+.lowestcategory {
+  display: none;
+}
+</style>
+
 <script>
 require([
     "jquery",
     "mage/mage",
-    "mage/validation"
-], function($){
+    "mage/validation",
+    "vue"
+], ($, mage, validation, Vue) => {
     $('#sell-form').mage('validation', {
         messages: {
           'price': {'validate-value-less-than-20': 'Please enter a price greater than $20.', 'number': 'Please enter a valid number'},
         }
     });
-    $(document).ready(() => {
-      $.get('https://localhost/api/categories', (data) => {
-        console.log(data);
-      });
+
+    $.get('/api/categories', (data) => app.categories = data);
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        categories: [],
+        subcategories: [],
+        lowestcategories: []
+      }
+    });
+
+    $('#category_select').change(function(){
+      let category = this.value;
+      if(category == ''){
+        app.subcategories = [];
+        $('.subcategory').hide();
+        $('.lowestcategory').hide();
+      }else{
+        app.subcategories = app.categories[category];
+        $('#subcategory_select').val('');
+        $('#lowestcategory_select').val('');
+        $('.subcategory').show();
+      }
+    });
+
+    $('#subcategory_select').change(function(){
+      let subcategory = this.value;
+      if(subcategory == ''){
+        app.lowestcategories = [];
+        $('.lowestcategory').hide();
+      }else{
+        app.lowestcategories = app.subcategories[subcategory];
+        $('#lowestcategory_select').val('');
+        $('.lowestcategory').show();
+      }
     });
 });
-
-
-
 </script>

@@ -61,10 +61,11 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-      if (!$this->session->isLoggedIn()) {
-        $resultRedirect = $this->resultRedirectFactory->create();
-        return $resultRedirect->setPath('market/account/login');
-      }
+      // FIXME: Before launch lockdown API using the code below
+      // if (!$this->session->isLoggedIn()) {
+      //   $resultRedirect = $this->resultRedirectFactory->create();
+      //   return $resultRedirect->setPath('market/account/login');
+      // }
 
       $result = [];
       $categories = $this->getStoreCategories();
@@ -79,7 +80,7 @@ class Index extends \Magento\Framework\App\Action\Action
           $lowest_categories = $subcategory->getChildren();
 
           foreach($lowest_categories as $lowest_category){
-            $result[$category_name][$subcategory_name][] = $lowest_category->getName();
+            $result[$category_name][$subcategory_name][] = ['id' => $lowest_category->getId(), 'name' => $lowest_category->getName()];
           }// end foreach lowest category
 
         }// end foreach subcategory
