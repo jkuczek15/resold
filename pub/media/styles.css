@@ -23,3 +23,7 @@
 .icon.ib.ib-hover.ic.ic-compare {
   display: none;
 }
+
+.product-info-main .box-tocart .field.qty {
+  display:none;
+}
