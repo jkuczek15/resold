@@ -17,8 +17,14 @@
                 <input name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true}"/>
             </div>
         </div>
+        <div class="field price required ">
+            <label class="label" for="price"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
+            <div class="control">
+                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true}" data-msg-number="Please enter a valid number" />
+            </div>
+        </div>
         <div class="field category required">
-            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
+            <label class="label" for="category_select"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
             <div class="control">
                 <select name="category" id="category_select">
                   <option value=""></option>
@@ -29,7 +35,7 @@
             </div>
         </div>
         <div class="field subcategory required">
-            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
+            <label class="label" for="subcategory_select"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
             <div class="control">
                 <select name="subcategory" id="subcategory_select">
                   <option value=""></option>
@@ -40,7 +46,7 @@
             </div>
         </div>
         <div class="field lowestcategory required">
-            <label class="label" for="category"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
+            <label class="label" for="lowestcategory_select"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
             <div class="control">
                 <select name="lowestcategory" id="lowestcategory_select">
                   <option value=""></option>
@@ -50,10 +56,29 @@
                 </select>
             </div>
         </div>
-        <div class="field price required ">
-            <label class="label" for="email"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
+        <div class="field condition required">
+            <label class="label" for="condition"><span><?php /* @escapeNotVerified */ echo __('Condition') ?></span></label>
             <div class="control">
-                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true}" data-msg-number="Please enter a valid number" />
+                <select name="condition" id="conditon">
+                  <option value=""></option>
+                  <option value="new">New</option>
+                  <option value="like_new">Like New</option>
+                  <option value="good">Good</option>
+                  <option value="fair">Fair</option>
+                </select>
+            </div>
+        </div>
+        <div class="field condition required">
+            <label class="label" for="local_global"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
+            <div class="control">
+                <input type="checkbox" value="local" /> Local <span style="margin-right: 1.5em"></span>
+                <input type="checkbox" value="global" /> Global
+            </div>
+        </div>
+        <div class="field images required">
+            <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
+            <div class="control">
+              <input type="file" />
             </div>
         </div>
         <div class="field description required">
