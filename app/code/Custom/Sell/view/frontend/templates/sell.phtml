@@ -15,11 +15,18 @@
 .image_input {
   display: none;
 }
+[v-cloak] {
+  display: none;
+}
+div.custom-error {
+  color: #e02b27;
+  font-size: 1.2rem;
+}
 </style>
 
 <form class="form"
       action="<?php /* @escapeNotVerified */ echo $block->getFormAction(); ?>"
-      id="sell-form"
+      id="sell_form"
       method="post"
       data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <fieldset class="fieldset" id="app">
@@ -32,13 +39,13 @@
         <div class="field price required ">
             <label class="label" for="price"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
             <div class="control">
-                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true}" data-msg-number="Please enter a valid number" />
+                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="text" data-validate="{required:true, number: true, min: 20}" />
             </div>
         </div>
         <div class="field category required">
             <label class="label" for="category_select"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
             <div class="control">
-                <select name="category" id="category_select">
+                <select name="category" id="category_select" data-validate="{required:true}">
                   <option value=""></option>
                   <option v-for="(data, category) in categories" v-bind:value="category">
                   {{ category }}
@@ -49,7 +56,7 @@
         <div class="field subcategory required">
             <label class="label" for="subcategory_select"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
             <div class="control">
-                <select name="subcategory" id="subcategory_select">
+                <select name="subcategory" id="subcategory_select" data-validate="{required:true}">
                   <option value=""></option>
                   <option v-for="(data, subcategory) in subcategories" v-bind:value="subcategory">
                   {{ subcategory }}
@@ -60,7 +67,7 @@
         <div class="field lowestcategory required">
             <label class="label" for="lowestcategory_select"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
             <div class="control">
-                <select name="lowestcategory" id="lowestcategory_select">
+                <select name="lowestcategory" id="lowestcategory_select" data-validate="{required:true}">
                   <option value=""></option>
                   <option v-for="lowestcategory in lowestcategories" v-bind:value="lowestcategory.id">
                   {{ lowestcategory.name }}
@@ -71,7 +78,7 @@
         <div class="field condition required">
             <label class="label" for="condition"><span><?php /* @escapeNotVerified */ echo __('Condition') ?></span></label>
             <div class="control">
-                <select name="condition" id="conditon">
+                <select name="condition" id="conditon" data-validate="{required:true}">
                   <option value=""></option>
                   <option value="new">New</option>
                   <option value="like_new">Like New</option>
@@ -80,20 +87,22 @@
                 </select>
             </div>
         </div>
-        <div class="field condition required">
-            <label class="label" for="local_global"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
+        <div class="field local required">
+            <label class="label" for="local"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
             <div class="control">
-                <input type="checkbox" value="local" /> Local <span style="margin-right: 1.5em"></span>
-                <input type="checkbox" value="global" /> Global
+                <input type="checkbox" value="true" name="local" id="local" data-validate="{'validate-local-global': true}" /> Local <span style="margin-right: 1.5em"></span>
+                <input type="checkbox" value="true" name="global" id="global" /> Global
+                <div class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select either Local or Global.</div>
             </div>
         </div>
         <div class="field images required">
             <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
             <div class="control">
-              <input type="file" id="image_0" />
+              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." />
               <span v-for="index in num_images-1" :key="index">
                 <input type="file" v-bind:id="'image_'+index" class="image_input" />
               </span>
+              <div class="custom-error" id="image_error" v-if="image_error" v-cloak>Please select at least one image.</div>
             </div>
         </div>
         <div class="field description required">
@@ -107,7 +116,7 @@
     <div class="actions-toolbar">
         <div class="primary">
             <input type="hidden" name="hideit" id="hideit" value="" />
-            <button type="submit" title="<?php /* @escapeNotVerified */ echo __('Submit') ?>" class="action submit primary">
+            <button type="submit" id="submit" title="<?php /* @escapeNotVerified */ echo __('Submit') ?>" class="action submit primary">
                 <span><?php /* @escapeNotVerified */ echo __('Submit') ?></span>
             </button>
         </div>
@@ -128,19 +137,20 @@ require([
         categories: [],
         subcategories: [],
         lowestcategories: [],
-        num_images: 10
+        num_images: 10,
+        local_global_error: false,
+        image_error: false
       }
     });
 
-    // api requests
+    // add custom validation to our form
+    addCustomValidation();
+
+    // initial api requests
     $.get('/api/categories', (data) => app.categories = data);
 
-    // validation
-    $('#sell-form').mage('validation', {
-        messages: {
-          'price': {'validate-value-less-than-20': 'Please enter a price greater than $20.', 'number': 'Please enter a valid number'},
-        }
-    });
+    // initialize validation
+    $('#sell_form').mage('validation', {});
 
     // category change function
     $('#category_select').change(function(){
@@ -173,8 +183,38 @@ require([
 
     // image change function
     $('.image_input, #image_0').change(function(){
+      app.image_error = false;
       let id = Number.parseInt((this.id.split('_'))[1]);
       $(`#image_${id+1}`).show();
     });
+
+   // initially, prevent clicks on the submit button
+   $('#submit').on('click', function () {
+      return false;
+   });
+
+   // after everything loads, remove our click handler
+   $(window).load(function(){
+      $('#submit').off('click');
+   });
+
+   /**************************************************
+   ******************* FUNCTIONS *********************
+   **************************************************/
+   function addCustomValidation() {
+     $.validator.addMethod(
+         'validate-local-global',
+         function (value) {
+             // custom validation
+             if(!document.getElementById('local').checked && !document.getElementById('global').checked){
+               app.local_global_error = true;
+               return false;
+             }
+             app.local_global_error = false;
+             return true;
+         }
+     );
+   };
 });
+
 </script>
