@@ -102,7 +102,6 @@ div.custom-error {
               <span v-for="index in num_images-1" :key="index">
                 <input type="file" v-bind:id="'image_'+index" class="image_input" />
               </span>
-              <div class="custom-error" id="image_error" v-if="image_error" v-cloak>Please select at least one image.</div>
             </div>
         </div>
         <div class="field description required">
@@ -182,8 +181,8 @@ require([
     });
 
     // image change function
-    $('.image_input, #image_0').change(function(){
-      app.image_error = false;
+    $('.image_input, #image_0').change(function(event){
+      $('#submit').click();
       let id = Number.parseInt((this.id.split('_'))[1]);
       $(`#image_${id+1}`).show();
     });
