@@ -17,8 +17,8 @@
  * @license      http://cedcommerce.com/license-agreement.txt
  */
  -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">	
-	<body>      
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
 			<referenceBlock name="top.links">
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
 					<arguments>
@@ -32,7 +32,13 @@
 						<argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getIamaVendorLink"/>
 						<argument name="path" xsi:type="string">sell</argument>
 					</arguments>
-				</block>			
+				</block>
+				<block class="Magento\Framework\View\Element\Html\Link\Current" name="help-link-header">
+					<arguments>
+						<argument name="label" xsi:type="string">Help</argument>
+						<argument name="path" xsi:type="string">help</argument>
+					</arguments>
+				</block>
 			</referenceBlock>
 				<referenceBlock name="header.links">
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link-header" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
@@ -47,7 +53,7 @@
 						<argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getIamaVendorLink"/>
 						<argument name="path" xsi:type="string">sell</argument>
 					</arguments>
-				</block>			
+				</block>
 			</referenceBlock>
     </body>
 </page>
