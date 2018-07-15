@@ -147,6 +147,7 @@ require([
       let category = this.value;
       if(category == ''){
         app.subcategories = [];
+        $('.subcategory').hide();
         $('.lowestcategory').hide();
       }else{
         app.subcategories = app.categories[category];
