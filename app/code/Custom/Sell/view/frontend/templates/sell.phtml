@@ -5,6 +5,18 @@
  */
 
 ?>
+<style>
+.subcategory {
+  display: none;
+}
+.lowestcategory {
+  display: none;
+}
+.image_input {
+  display: none;
+}
+</style>
+
 <form class="form"
       action="<?php /* @escapeNotVerified */ echo $block->getFormAction(); ?>"
       id="sell-form"
@@ -78,7 +90,10 @@
         <div class="field images required">
             <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
             <div class="control">
-              <input type="file" />
+              <input type="file" id="image_0" />
+              <span v-for="index in num_images-1" :key="index">
+                <input type="file" v-bind:id="'image_'+index" class="image_input" />
+              </span>
             </div>
         </div>
         <div class="field description required">
@@ -99,15 +114,6 @@
     </div>
 </form>
 
-<style>
-.subcategory {
-  display: none;
-}
-.lowestcategory {
-  display: none;
-}
-</style>
-
 <script>
 require([
     "jquery",
@@ -115,23 +121,28 @@ require([
     "mage/validation",
     "vue"
 ], ($, mage, validation, Vue) => {
+    // initialize a new Vue app
+    var app = new Vue({
+      el: '#app',
+      data: {
+        categories: [],
+        subcategories: [],
+        lowestcategories: [],
+        num_images: 10
+      }
+    });
+
+    // api requests
+    $.get('/api/categories', (data) => app.categories = data);
+
+    // validation
     $('#sell-form').mage('validation', {
         messages: {
           'price': {'validate-value-less-than-20': 'Please enter a price greater than $20.', 'number': 'Please enter a valid number'},
         }
     });
 
-    $.get('/api/categories', (data) => app.categories = data);
-
-    var app = new Vue({
-      el: '#app',
-      data: {
-        categories: [],
-        subcategories: [],
-        lowestcategories: []
-      }
-    });
-
+    // category change function
     $('#category_select').change(function(){
       let category = this.value;
       if(category == ''){
@@ -146,6 +157,7 @@ require([
       }
     });
 
+    // subcategory change function
     $('#subcategory_select').change(function(){
       let subcategory = this.value;
       if(subcategory == ''){
@@ -156,6 +168,12 @@ require([
         $('#lowestcategory_select').val('');
         $('.lowestcategory').show();
       }
+    });
+
+    // image change function
+    $('.image_input, #image_0').change(function(){
+      let id = Number.parseInt((this.id.split('_'))[1]);
+      $(`#image_${id+1}`).show();
     });
 });
 </script>
