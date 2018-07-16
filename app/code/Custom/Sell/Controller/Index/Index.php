@@ -22,6 +22,7 @@ use Magento\Framework\UrlFactory;
 use Ced\CsMarketplace\Helper\Data;
 use Magento\Framework\Module\Manager;
 
+
 class Index extends \Magento\Framework\App\Action\Action
 {
     /**
@@ -69,9 +70,21 @@ class Index extends \Magento\Framework\App\Action\Action
         if (!$this->session->isLoggedIn()) {
             return $resultRedirect->setPath('market/account/login');
         }
-        if ($this->session->isLoggedIn() && !$this->helper->authenticate($this->session->getCustomerId())) {
-            return $resultRedirect->setPath('market/account/approval');
+
+        // retreive the POST data
+        $post = $this->getRequest()->getPostValue();
+
+        if(!empty($post)){
+          // POST request
+          $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+          $product = $objectManager->create('\Magento\Catalog\Model\Product');
+
+          // set product attributes
+
+          var_dump($post);
+        }else{
+          // GET request
+          return $this->resultPageFactory->create();
         }
-        return $this->resultPageFactory->create();
     }
 }

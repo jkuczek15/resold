@@ -69,6 +69,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
       $result = [];
       $categories = $this->getStoreCategories();
+
       foreach($categories as $category){
         // grab the root level name and subcategories
         $category_name = $category->getName();
@@ -79,15 +80,19 @@ class Index extends \Magento\Framework\App\Action\Action
           $subcategory_name = $subcategory->getName();
           $lowest_categories = $subcategory->getChildren();
 
-          foreach($lowest_categories as $lowest_category){
-            $result[$category_name][$subcategory_name][] = ['id' => $lowest_category->getId(), 'name' => $lowest_category->getName()];
-          }// end foreach lowest category
+          if(!$subcategory->hasChildren()){
+            $result[$category_name][$subcategory_name] = $subcategory->getId();
+          }else{
+            foreach($lowest_categories as $lowest_category){
+              $result[$category_name][$subcategory_name][] = ['id' => $lowest_category->getId(), 'name' => $lowest_category->getName()];
+            }// end foreach lowest category
+          }// end if subcategory has no sub-sub categories
 
         }// end foreach subcategory
 
       }// end foreach root category
 
-      return  $this->resultJsonFactory->create()->setData($result);
+      return $this->resultJsonFactory->create()->setData($result);
     }// end function execute
 
     /**
