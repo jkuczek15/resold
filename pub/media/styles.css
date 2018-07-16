@@ -27,3 +27,7 @@
 .product-info-main .box-tocart .field.qty {
   display:none;
 }
+
+.items-grid.centered .item .actions-primary {
+  display:none;
+}
