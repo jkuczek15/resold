@@ -175,8 +175,11 @@ require([
         $('.lowestcategory').hide();
       }else{
         app.lowestcategories = app.subcategories[subcategory];
-        $('#lowestcategory_select').val('');
-        $('.lowestcategory').show();
+
+        if(isNaN(app.lowestcategories)){
+          $('#lowestcategory_select').val('');
+          $('.lowestcategory').show();
+        }
       }
     });
 
