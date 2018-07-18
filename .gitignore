@@ -27,6 +27,7 @@ atlassian*
 /dumps/*
 !/dumps/.*
 /Ultimo-Guide.pdf
+/pub/media/wysiwyg/*
 
 /pub/media/*.*
 !/pub/media/.htaccess
