@@ -3,12 +3,9 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
 
-
-
         <referenceBlock name="head.additional">
             <block class="Magento\Framework\View\Element\Template" name="head.additional.fonts" template="Infortis_Base::html/header/fonts.phtml" after="head.additional.asset-wrapper" />
         </referenceBlock>
-
 
 
         <referenceContainer name="page.wrapper">
@@ -174,7 +171,7 @@
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 
         <!-- Note: "header-wrapper" is a default container for default blocks: logo, top links, search, minicart.
-             All these blocks were moved to the new base header container. 
+             All these blocks were moved to the new base header container.
              But we may still need to display "header-wrapper" in case custom code adds there some blocks. -->
         <move element="header-wrapper"          destination="base-header-container" />
         <move element="skip_to_content"         destination="base-header-container" />
@@ -209,7 +206,7 @@
 
 
 
-        <!-- Footer 
+        <!-- Footer
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 
         <move element="footer"                      destination="base-footer-container" />
@@ -230,7 +227,7 @@
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
 
         <referenceBlock name="catalog.topnav.menu">
-            <block class="Infortis\Base\Block\Html\Header\Logo" name="catalog.topnav.stickylogo" as="stickylogo" template="html/header/logo_sticky.phtml" 
+            <block class="Infortis\Base\Block\Html\Header\Logo" name="catalog.topnav.stickylogo" as="stickylogo" template="html/header/logo_sticky.phtml"
                 ifconfig="theme_settings/header/sticky_logo">
                 <arguments>
                     <!-- Required the same image path as for the default site logo (see inside "site-logo" block) -->

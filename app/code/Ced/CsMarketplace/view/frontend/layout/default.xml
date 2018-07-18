@@ -20,17 +20,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 	<body>
 			<referenceBlock name="top.links">
-				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
+				<referenceBlock name="authorization-link" remove="true" />
+				<block class="Magento\Framework\View\Element\Html\Link\Current" name="about-us-header">
 					<arguments>
-					    <argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getCsMarketplaceLink"/>
-						<!-- <argument name="label" xsi:type="string">CsMarketplace</argument> -->
-						<argument name="path" xsi:type="string">market</argument>
-					</arguments>
-				</block>
-				<block class="Magento\Framework\View\Element\Html\Link\Current" name="i-am-a-vendor-link" ifconfig="ced_vshops/general/vshoppage_title_enable">
-					<arguments>
-						<argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getIamaVendorLink"/>
-						<argument name="path" xsi:type="string">sell</argument>
+						<argument name="label" xsi:type="string">About Us</argument>
+						<argument name="path" xsi:type="string">about-us-resold</argument>
 					</arguments>
 				</block>
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="help-link-header">
@@ -39,13 +33,26 @@
 						<argument name="path" xsi:type="string">help</argument>
 					</arguments>
 				</block>
+				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
+					<arguments>
+					    <argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getCsMarketplaceLink"/>
+							<argument name="path" xsi:type="string">market</argument>
+					</arguments>
+				</block>
+				<block class="Magento\Framework\View\Element\Html\Link\Current" name="i-am-a-vendor-link" ifconfig="ced_vshops/general/vshoppage_title_enable">
+					<arguments>
+						<argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getIamaVendorLink"/>
+						<argument name="path" xsi:type="string">sell</argument>
+					</arguments>
+				</block>
+				<block class="Magento\Customer\Block\Account\AuthorizationLink" name="authorization-link-new"
+                   template="Magento_Customer::account/link/authorization.phtml"/>
 			</referenceBlock>
 				<referenceBlock name="header.links">
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link-header" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
 					<arguments>
 					    <argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getCsMarketplaceLink"/>
-						<!-- <argument name="label" xsi:type="string">CsMarketplace</argument> -->
-						<argument name="path" xsi:type="string">csmarketplace/vshops/index</argument>
+							<argument name="path" xsi:type="string">csmarketplace/vshops/index</argument>
 					</arguments>
 				</block>
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="i-am-a-vendor-link-header" ifconfig="ced_vshops/general/vshoppage_title_enable">
