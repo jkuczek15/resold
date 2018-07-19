@@ -21,7 +21,7 @@
 	<body>
 			<referenceBlock name="top.links">
 				<referenceBlock name="authorization-link" remove="true" />
-				<block class="Magento\Framework\View\Element\Html\Link\Current" name="about-us-header">
+				<block class="Magento\Customer\Block\Account\AuthorizationLink" name="about-us-header" template="Magento_Customer::about_us/link/authorization.phtml">
 					<arguments>
 						<argument name="label" xsi:type="string">About Us</argument>
 						<argument name="path" xsi:type="string">about-us-resold</argument>
