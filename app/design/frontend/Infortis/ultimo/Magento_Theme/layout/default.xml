@@ -12,5 +12,8 @@
             </block>
         </referenceContainer>
         <referenceBlock name="footer_links" remove="true"/>
+        <referenceBlock name="customer-account-navigation-newsletter-subscriptions-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-downloadable-products-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-billing-agreements-link" remove="true"/>
     </body>
 </page>
