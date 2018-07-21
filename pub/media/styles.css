@@ -34,3 +34,12 @@
 .page-wrapper {
   min-height: 100%;
 }
+
+.font-size-px {
+  font-size: 2.9393rem;
+  text-align: center;
+}
+
+.blue-link {
+  color: #41B8EA
+}
