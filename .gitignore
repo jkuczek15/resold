@@ -24,8 +24,6 @@ atlassian*
 /.grunt
 /Gruntfile.js
 /package.json
-/dumps/*
-!/dumps/.*
 /Ultimo-Guide.pdf
 !/pub/media/wysiwyg/*
 
@@ -53,4 +51,5 @@ atlassian*
 /var/*
 !/var/.htaccess
 /vendor/*
+!/vendor/override
 !/vendor/.htaccess
