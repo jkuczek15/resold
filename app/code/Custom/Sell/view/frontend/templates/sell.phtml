@@ -39,7 +39,7 @@ div.custom-error {
         <div class="field price required ">
             <label class="label" for="price"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
             <div class="control">
-                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="text" data-validate="{required:true, number: true, min: 20}" />
+                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" />
             </div>
         </div>
         <div class="field category required">
@@ -92,7 +92,7 @@ div.custom-error {
             <div class="control">
                 <input type="checkbox" value="true" name="local" id="local" data-validate="{'validate-local-global': true}" /> Local <span style="margin-right: 1.5em"></span>
                 <input type="checkbox" value="true" name="global" id="global" /> Global
-                <div class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select either Local or Global.</div>
+                <div class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
             </div>
         </div>
         <div class="field images required">

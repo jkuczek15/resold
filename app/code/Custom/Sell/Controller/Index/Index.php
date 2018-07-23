@@ -77,9 +77,36 @@ class Index extends \Magento\Framework\App\Action\Action
         if(!empty($post)){
           // POST request
           $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-          $product = $objectManager->create('\Magento\Catalog\Model\Product');
+          $_product = $objectManager->create('\Magento\Catalog\Model\Product');
 
           // set product attributes
+          $_product = $objectManager->create('Magento\Catalog\Model\Product');
+          $_product->setName($post['name']);
+          $_product->setSku($post['name']);
+          $_product->setTypeId('simple');
+          $_product->setAttributeSetId(4);
+          $_product->setVisibility(4);
+          $_product->setPrice(array($post['price']));
+          $_product->setCategoryIds([
+            $post['lowestcategory']
+        ]); // here you are
+
+          // set the product image
+          // $_product->setImage('/testimg/test.jpg');
+          // $_product->setSmallImage('/testimg/test.jpg');
+          // $_product->setThumbnail('/testimg/test.jpg');
+
+          $_product->setStockData(array(
+            'use_config_manage_stock' => 0, // Use config settings' checkbox
+            'manage_stock' => 1, // manage stock
+            'min_sale_qty' => 1, // Minimum Qty Allowed in Shopping Cart
+            'max_sale_qty' => 1, // Maximum Qty Allowed in Shopping Cart
+            'is_in_stock' => 1, // Stock Availability
+            'qty' => 1 //qty
+            )
+          );
+
+          $_product->save();
 
           var_dump($post);
         }else{
