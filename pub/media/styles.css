@@ -48,3 +48,40 @@
   text-align: center;
   margin-bottom: 1.5rem;
 }
+
+.help-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0rem;
+}
+
+.help-block-items {
+  margin: 0 15px 30px;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  color: #000000
+  display: flex;
+  flex: 470px;
+  max-width: 100%;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.help-block-item-link {
+  color: #000000
+  padding: 20px 30px
+  text-decoration: none;
+}
+
+.help-block-item-title {
+  margin-bottom: 0;
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.help-block-item-description {
+  margin-top: 10px;
+  margin: 0;
+}
