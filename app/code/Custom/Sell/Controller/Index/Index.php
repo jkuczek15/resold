@@ -22,7 +22,6 @@ use Magento\Framework\UrlFactory;
 use Ced\CsMarketplace\Helper\Data;
 use Magento\Framework\Module\Manager;
 
-
 class Index extends \Magento\Framework\App\Action\Action
 {
     /**
@@ -71,42 +70,7 @@ class Index extends \Magento\Framework\App\Action\Action
             return $resultRedirect->setPath('market/account/login');
         }
 
-        // retreive the POST data
-        $post = $this->getRequest()->getPostValue();
-
-        if(!empty($post)){
-          // POST request
-          $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-          $_product = $objectManager->create('\Magento\Catalog\Model\Product');
-
-          // set product attributes
-          $_product = $objectManager->create('Magento\Catalog\Model\Product');
-          $_product->setName($post['name']);
-          $_product->setSku(md5($post['name'] . date("l jS \of F Y h:i:s A")));
-          $_product->setTypeId('simple');
-          $_product->setAttributeSetId(4);
-          $_product->setVisibility(4);
-          $_product->setPrice($post['price']);
-          $_product->setDescription($post['description']);
-          $_product->setCategoryIds([$post['lowestcategory']]);
-          $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-          $_product->setWebsiteIds(array(1));
-
-          // TODO: set the product image
-          // $_product->setImage('/testimg/test.jpg');
-          // $_product->setSmallImage('/testimg/test.jpg');
-          // $_product->setThumbnail('/testimg/test.jpg');
-
-          $_product->setCustomAttribute('condition', $post['condition']);
-
-          // save the product to the database
-          $_product->save();
-
-          // redirect to the product page
-          return $resultRedirect->setPath($_product->getProductUrl());
-        }else{
-          // GET request
-          return $this->resultPageFactory->create();
-        }
+        // GET request
+        return $this->resultPageFactory->create();
     }
 }
