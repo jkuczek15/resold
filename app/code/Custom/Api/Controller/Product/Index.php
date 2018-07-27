@@ -68,8 +68,9 @@ class Index extends \Magento\Framework\App\Action\Action
       $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       $_product = $objectManager->create('\Magento\Catalog\Model\Product');
 
+      // TODO: Add server side validation
       // Create a unique product ID and save product to database
-      $sku = sha1($post['name'] . date("l jS \of F Y h:i:s A") . microtime());
+      $sku = uniqid ("product-", true);
       $_product = $objectManager->create('Magento\Catalog\Model\Product');
       $_product->setName($post['name']);
       $_product->setSku($sku);
