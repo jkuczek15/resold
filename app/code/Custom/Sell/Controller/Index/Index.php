@@ -67,7 +67,8 @@ class Index extends \Magento\Framework\App\Action\Action
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->session->isLoggedIn()) {
-            return $resultRedirect->setPath('market/account/login');
+            $_SESSION['from_sell_form'] = true;
+            return $resultRedirect->setPath('customer/account/login');
         }
 
         // GET request
