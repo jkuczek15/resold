@@ -61,7 +61,6 @@ require([
 
     // image change function
     $('.image_input, #image_-1').change(function(event){
-      //$('.images > .control > .mage-error').hide();
       let id = Number.parseInt((this.id.split('_'))[0]);
       $(`#image_${id}-error`).hide();
       $(`#image_${id+0}`).show();
