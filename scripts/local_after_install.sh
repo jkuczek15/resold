@@ -45,6 +45,3 @@ sudo chmod -R 777 /var/www/html
 
 # Copy merge vendor override Filesystem
 rsync -a /var/www/html/vendor/override/* /var/www/html/vendor/
-
-# Enable S3 storage
-/var/www/html/bin/magento s3:storage:enable
