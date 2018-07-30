@@ -3,7 +3,7 @@
 * Sell Form
 */
 ?>
-<form class="form" id="sell_form" method="post" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+<form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <fieldset class="fieldset" id="app">
         <div class="field name required">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Name') ?></span></label>
@@ -73,9 +73,9 @@
         <div class="field images required">
             <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
             <div class="control">
-              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." v-model="form_data.image_0"/>
+              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." name="images[]"/>
               <span v-for="index in num_images-1" :key="index">
-                <input type="file" v-bind:id="'image_'+(index+1)" class="image_input" />
+                <input type="file" v-bind:id="'image_'+index" name="images[]" class="image_input" />
               </span>
             </div>
         </div>
@@ -116,23 +116,6 @@ require([
         image_error: false,
         form_data: {}
       }
-    });
-
-    // Configure AWS S3 for image uploads
-    let albumBucketName = 'resold-photos';
-    let bucketRegion = 'us-west-2';
-    let IdentityPoolId = 'us-west-2:6e621a3e-bb5b-419f-a9b0-8d0fde8590c7';
-
-    AWS.config.update({
-      region: bucketRegion,
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IdentityPoolId
-      })
-    });
-
-    var s3 = new AWS.S3({
-      apiVersion: '2006-03-01',
-      params: {Bucket: albumBucketName}
     });
 
     // add custom validation to our form
@@ -178,31 +161,13 @@ require([
 
     // image change function
     $('.image_input, #image_0').change(function(event){
-      let id = Number.parseInt((this.id.split('_'))[0]);
+      let id = Number.parseInt((this.id.split('_'))[1]);
       $(`#image_${id}-error`).hide();
-      $(`#image_${id+0}`).show();
+      $(`#image_${id+1}`).show();
     });
 
    // after everything loads, add our click handler
-   $(window).load(() => {
-       $('#sell_form').submit((event) => {
-          let is_valid = $('#sell_form').validation('isValid');
-
-          if(is_valid){
-            // we have valid form data
-            // make a request to upload our product
-            $.post('/api/product', app.form_data, (response) => {
-              // add the photo to an album
-              let album = response.id;
-              createAlbum(album);
-              addPhoto(album);
-            });
-          }// end if form valid
-
-          event.preventDefault();
-      });
-      $('#submit').prop('disabled', false);
-   });
+   $(window).load(() => $('#submit').prop('disabled', false));
 
    /**************************************************
    ******************* FUNCTIONS *********************
@@ -221,54 +186,5 @@ require([
          }
      );
    };
-
-   function createAlbum(albumName) {
-      albumName = albumName.trim();
-      if (!albumName) {
-        return alert('Album names must contain at least one non-space character.');
-      }
-      if (albumName.indexOf('/') !== -1) {
-        return alert('Album names cannot contain slashes.');
-      }
-      var albumKey = encodeURIComponent(albumName) + '/';
-      s3.headObject({Key: albumKey}, function(err, data) {
-        if (!err) {
-          return alert('Album already exists.');
-        }
-        if (err.code !== 'NotFound') {
-          return alert('There was an error creating your album: ' + err.message);
-        }
-        s3.putObject({Key: albumKey}, function(err, data) {
-          if (err) {
-            return alert('There was an error creating your album: ' + err.message);
-          }
-          alert('Successfully created album.');
-          viewAlbum(albumName);
-        });
-      });
-    };
-
-    function addPhoto(albumName) {
-      var files = document.getElementById('image_0').files;
-      if (!files.length) {
-        return alert('Please choose a file to upload first.');
-      }
-      var file = files[0];
-      var fileName = file.name;
-      var albumPhotosKey = encodeURIComponent(albumName) + '//';
-
-      var photoKey = albumPhotosKey + fileName;
-      s3.upload({
-        Key: photoKey,
-        Body: file,
-        ACL: 'public-read'
-      }, function(err, data) {
-        if (err) {
-          return alert('There was an error uploading your photo: ', err.message);
-        }
-        alert('Successfully uploaded photo.');
-        viewAlbum(albumName);
-      });
-    }
 });
 </script>
