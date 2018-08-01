@@ -24,9 +24,9 @@
     </head>
     <body>
         <referenceContainer name="sidebar.additional" >
-    		<referenceBlock name="wishlist_sidebar" remove="true"/>
-    		<referenceBlock name="catalog.compare.sidebar" remove="true"/>
-           	<block class="Magento\Framework\View\Element\Template" name="country_filter" as="country_filter" before="-" template="Ced_CsMarketplace::vshops/country_filter.phtml" />
+      		<referenceBlock name="wishlist_sidebar" remove="true"/>
+      		<referenceBlock name="catalog.compare.sidebar" remove="true"/>
+           	<block class="Magento\Framework\View\Element\Template" name="country_filter" as="country_filter" before="-" template="Ced_CsMarketplace::vshops/country_filter.phtml" remove="true" />
         </referenceContainer>
         <referenceContainer name="content">
             <block class="Ced\CsMarketplace\Block\Vshops\ListBlock" name="vendors.homepage.list" template="Ced_CsMarketplace::vshops/list.phtml"/>

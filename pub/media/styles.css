@@ -89,3 +89,7 @@
 .help-section-nug {
   font-size: 16px;
 }
+
+#product-collection-image-1 {
+  display: none;  
+}
