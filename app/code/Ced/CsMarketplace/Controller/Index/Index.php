@@ -28,14 +28,14 @@ class Index extends \Magento\Framework\App\Action\Action
      * @var PageFactory
      */
     protected $resultPageFactory;
-    
+
     /**
      * Core registry
      *
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
-    
+
     /**
      * @param Context     $context
      * @param PageFactory $resultPageFactory
@@ -59,7 +59,7 @@ class Index extends \Magento\Framework\App\Action\Action
     		return $this->_redirect('customer/account');
     	}
         $data = $this->getRequest()->getParams();
-        
+
         if (isset($data['product_list_mode'])) {
             $this->_coreRegistry->register('product_list_mode', $data['product_list_mode']);
         } else {
@@ -67,15 +67,13 @@ class Index extends \Magento\Framework\App\Action\Action
                 $this->_coreRegistry->register('vendor_name', $data['char']);
                 $this->_coreRegistry->register('country', $data['country_id']);
                 $this->_coreRegistry->register('zip_code', $data['estimate_postcode']);
-        
+
             }
-            if (isset($data['product_list_dir'])) { 
+            if (isset($data['product_list_dir'])) {
                  $this->_coreRegistry->register('name_filter', $data['product_list_dir']);
             }
         }
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('CsMarketplace'));
         return $resultPage;
     }
 }
-

@@ -78,7 +78,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setVisibility(4);
       $_product->setPrice($post['price']);
       $_product->setDescription($post['description']);
-      $_product->setCategoryIds([$post['lowestcategory']]);
+      $_product->setCategoryIds([$post['lowestcategory'], 105]);
       $_product->setCreatedAt(strtotime('now'));
       $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
       $_product->setWebsiteIds(array(1));
