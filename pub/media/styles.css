@@ -91,5 +91,9 @@
 }
 
 #product-collection-image-1 {
-  display: none;  
+  display: none;
+}
+
+.product-reviews-summary .reviews-actions  {
+  display:none;
 }
