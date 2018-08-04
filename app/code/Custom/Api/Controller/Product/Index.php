@@ -82,14 +82,30 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setCreatedAt(strtotime('now'));
       $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
       $_product->setWebsiteIds(array(1));
-      $_product->setCustomAttribute('condition', $post['condition']);
       $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
+      $_product->setCustomAttribute('title_description', $post['title_description']);
+      $_product->setCustomAttribute('condition', $post['condition']);
+
+      // set the local/global attribute
+      $local = isset($post['local']) ? $post['local'] : null;
+      $global = isset($post['global']) ? $post['global'] : null;
+
+      if($local == 'true' && $global == 'true'){
+        $local_global = 'Both';
+      }else if($local == 'true'){
+        $local_global = 'Local Only';
+      }else{
+        $local_global = 'Global Only';
+      }
+
+      $_product->setCustomAttribute('local_global', $local_global);
 
       // TODO: Add service side validation for images
       // tempory location for product images
       $mediaDir = '/var/www/html/pub/media';
       $images = $_FILES['images']['name'];
 
+      // save uploaded images to the product gallery
       foreach($images as $key => $image)
       {
           // get temporary location of image and image extension
