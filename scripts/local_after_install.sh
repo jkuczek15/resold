@@ -37,11 +37,11 @@ sudo chmod +x /var/www/html/bin/magento
 # Compile Magento class files and inject dependencies
 /var/www/html/bin/magento setup:di:compile
 
+# Copy merge vendor override Filesystem
+rsync -a /var/www/html/vendor/override/* /var/www/html/vendor/
+
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy
 
 # Grant permissions to all web files
 sudo chmod -R 777 /var/www/html
-
-# Copy merge vendor override Filesystem
-rsync -a /var/www/html/vendor/override/* /var/www/html/vendor/
