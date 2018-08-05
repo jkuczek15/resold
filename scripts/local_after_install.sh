@@ -9,9 +9,6 @@ composer update -d /var/www/html
 # Make the Magento command line tool executable
 sudo chmod +x /var/www/html/bin/magento
 
-# Copy merge vendor override Filesystem
-rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
-
 # Install Magento and apply configuration for AWS cloud server
 /var/www/html/bin/magento setup:install \
 --backend-frontname="stm"  \
@@ -39,6 +36,9 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 
 # Compile Magento class files and inject dependencies
 /var/www/html/bin/magento setup:di:compile
+
+# Copy merge vendor override Filesystem
+rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy
