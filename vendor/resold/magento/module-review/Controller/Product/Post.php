@@ -39,6 +39,7 @@ class Post extends ProductController
         }
         if (($product = $this->initProduct()) && !empty($data)) {
             /** @var \Magento\Review\Model\Review $review */
+            $data['title'] = '';
             $review = $this->reviewFactory->create()->setData($data);
             $review->unsetData('review_id');
 
@@ -62,10 +63,10 @@ class Post extends ProductController
                     }
 
                     $review->aggregate();
-                    $this->messageManager->addSuccess(__('You submitted your review for moderation.'));
+                    $this->messageManager->addSuccess(__('Successfully added a comment.'));
                 } catch (\Exception $e) {
                     $this->reviewSession->setFormData($data);
-                    $this->messageManager->addError(__('We can\'t post your review right now.'));
+                    $this->messageManager->addError(__('We can\'t post your comment right now.'));
                 }
             } else {
                 $this->reviewSession->setFormData($data);
