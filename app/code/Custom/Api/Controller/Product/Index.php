@@ -91,7 +91,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $global = isset($post['global']) ? $post['global'] : null;
 
       if($local == 'true' && $global == 'true'){
-        $local_global = 'Both';
+        $local_global = 'Local & Global';
       }else if($local == 'true'){
         $local_global = 'Local Only';
       }else{
