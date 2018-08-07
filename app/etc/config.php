@@ -6,6 +6,7 @@ return array (
     'Magento_Store' => 1,
     'Magento_Directory' => 1,
     'Ced_CsProduct' => 1,
+    'Ced_CsStripePayment' => 1,
     'Custom_Api' => 1,
     'Custom_Sell' => 1,
     'Infortis_Infortis' => 1,

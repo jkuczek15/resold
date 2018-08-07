@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category  Ced
+ * @package   Ced_CsStripePayment
+ * @author    CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+    	<section id="payment">
+			<group id="ced_csstripe_method_one" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+		    	<label>CedCommerce Stripe Payment</label>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                   	<config_path>payment/ced_csstripe_method_one/active</config_path>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                    <comment>This appears at the checkout page during payment</comment>
+              		<config_path>payment/ced_csstripe_method_one/title</config_path>
+                </field>
+                 <field id="gateway_mode" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Gateway Mode</label>
+                    <comment>Set this to live when you are ready to accept payments</comment>
+                    <source_model>Ced\CsStripePayment\Model\System\Config\Source\Mode</source_model>
+                    <config_path>payment/ced_csstripe_method_one/gateway_mode</config_path>
+                </field>
+                
+                   <field id="api_test_secret_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>API Test Secret Key</label>
+                    <comment>
+						<![CDATA[<a target="_blank" href="https://manage.stripe.com/account">stripe.com/account</a>Test Secret Key]]>
+      				</comment>	
+      				<depends><field id="gateway_mode">test</field></depends>
+      				<config_path>payment/ced_csstripe_method_one/api_test_secret_key</config_path>
+                </field>
+				<field id="api_test_publishable_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+					<label>API Test Publishable Key</label>
+					<comment>
+						<![CDATA[<a target="_blank" href="https://manage.stripe.com/account">stripe.com/account</a>Test Publishable Key]]>
+					</comment>
+					<depends><field id="gateway_mode">test</field></depends>
+					<config_path>payment/ced_csstripe_method_one/api_test_publishable_key</config_path>
+				</field>
+				<field id="api_live_secret_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>API Live Secret Key</label>
+					<comment>
+						<![CDATA[<a target="_blank" href="https://manage.stripe.com/account">stripe.com/account</a>Live Secret Key]]>
+					</comment>
+					<depends><field id="gateway_mode">live</field></depends>
+					<config_path>payment/ced_csstripe_method_one/api_live_secret_key</config_path>
+                </field>
+				<field id="api_live_publishable_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>API Live Publishable Key</label>
+					<comment>
+						<![CDATA[<a target="_blank" href="https://manage.stripe.com/account">stripe.com/account</a>Live Publishable Key]]>
+					</comment>		
+					<depends><field id="gateway_mode">live</field></depends>
+					<config_path>payment/ced_csstripe_method_one/api_live_publishable_key</config_path>
+                </field>
+                
+                
+                
+                
+                 <field id="account_type" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Account Type</label>
+                    <source_model>Ced\CsStripePayment\Model\System\Config\Source\Account</source_model>
+                    <config_path>payment/ced_csstripe_method_one/account_type</config_path>
+                </field>
+                 <field id="client_id_mode" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="0">
+                   <depends><field id="account_type">standalone</field></depends>
+                    <label>Stripe client Id Mode</label>
+                     <source_model>Ced\CsStripePayment\Model\System\Config\Source\ClientMode</source_model>
+                    <config_path>payment/ced_csstripe_method_one/client_id_mode</config_path>
+                </field>
+                 <field id="client_pid" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">
+                   
+                   <depends><field id="client_id_mode">Production</field></depends> 
+                   
+                    <label>Stripe Proudction Client Id</label>
+                    <config_path>payment/ced_csstripe_method_one/client_pid</config_path>
+                    <comment>
+              		<![CDATA[the vendor will click a link that takes them to Stripe, passing along your platform’s client_id.]]>
+             	</comment>
+                </field>
+                 <field id="client_did" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">
+                    
+                   
+                       <depends><field id="client_id_mode">Development</field></depends>
+                        
+                    <label>Stripe Development Client Id</label>
+                    <config_path>payment/ced_csstripe_method_one/client_did</config_path>
+                    <comment>
+              		<![CDATA[the vendor will click a link that takes them to Stripe, passing along your platform’s client_id.]]>
+             		</comment>
+                </field>
+                
+                
+                
+             
+				<field id="payment_action" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment Action</label>
+                    <source_model>Magento\Braintree\Model\Adminhtml\Source\PaymentAction</source_model>
+                    <config_path>payment/ced_csstripe_method_one/payment_action</config_path>
+                </field>
+                <field id="new_order_status" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>New Order Status</label>
+                    <config_path>payment/ced_csstripe_method_one/new_order_status</config_path>
+                </field>
+				<field id="cctypes" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label> Credit Card Types</label>
+                    <source_model>Magento\Payment\Model\Config\Source\Cctype</source_model>
+               		<config_path>payment/ced_csstripe_method_one/credit_card_type</config_path>
+                </field>
+                <!-- <field id="save_customer_card" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Save Customer Card</label>
+                    <source_model>Ced\CsStripePayment\Model\System\Config\Source\CcSave</source_model>
+               		<config_path>payment/ced_csstripe_method_one/save_customer_card</config_path>
+                </field> -->
+                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment from Applicable Countries</label>
+                    <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+               		<config_path>payment/ced_csstripe_method_one/allowspecific</config_path>
+                </field>
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment from Specific Countries</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+                <field id="instructions" translate="label" type="textarea" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instructions</label>
+                    <config_path>payment/ced_csstripe_method_one/instructions</config_path>
+                </field>
+                 <field id="associated_email" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Email Associated With Stripe Account</label>
+                    <config_path>payment/ced_csstripe_method_one/associated_email</config_path>
+                </field>
+                <field id="app_fee" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Application fee for Stripe</label>
+                    <config_path>payment/ced_csstripe_method_one/app_fee</config_path>
+                </field>
+               <!--  <field id="export" translate="label" type="Ced\CsStripe\Block\Adminhtml\Form\Field\Export" sortOrder="16" showInDefault="0" showInWebsite="1" showInStore="0">
+                   	<label>Export</label>
+                </field>
+                <field id="import" translate="label" type="Ced\CsStripe\Block\Adminhtml\Form\Field\Import" sortOrder="17" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Import</label>
+                    <backend_model>Magento\OfflineShipping\Model\Config\Backend\Tablerate</backend_model>
+                </field> -->
+         	</group>
+		</section>
+	</system>
+</config>
