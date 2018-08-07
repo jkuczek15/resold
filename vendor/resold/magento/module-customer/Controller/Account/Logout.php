@@ -83,11 +83,11 @@ class Logout extends \Magento\Customer\Controller\AbstractAccount
      */
     public function execute()
     {
+        $this->cart->truncate()->save();
         $lastCustomerId = $this->session->getId();
         $this->session->logout()->setBeforeAuthUrl($this->_redirect->getRefererUrl())
             ->setLastCustomerId($lastCustomerId);
 
-        $this->cart->truncate();
         if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
             $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
             $metadata->setPath('/');
