@@ -99,10 +99,8 @@ class Add extends \Magento\Checkout\Controller\Cart
             if (!$product) {
                 return $this->goBack();
             }
-            $itemsCount = $this->cart->getItemsCount();
-            if($itemsCount > 0){
-              $this->cart->truncate();
-            }
+
+            $this->cart->truncate();
             $this->cart->addProduct($product, $params);
             if (!empty($related)) {
                 $this->cart->addProductsByIds(explode(',', $related));
