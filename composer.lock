@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "037b68924b0f81c6673c6af9fa148908",
+    "content-hash": "26fbb1d33ce6ecb1e51628d461354382",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -6311,6 +6311,47 @@
             ],
             "description": "Mageplaza Core for Magento 2",
             "time": "2018-07-17T07:59:48+00:00"
+        },
+        {
+            "name": "mageplaza/module-delete-orders",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mageplaza/magento-2-delete-orders.git",
+                "reference": "e1be9360cef20c6caa68e0616afff02265679519"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mageplaza/magento-2-delete-orders/zipball/e1be9360cef20c6caa68e0616afff02265679519",
+                "reference": "e1be9360cef20c6caa68e0616afff02265679519",
+                "shasum": ""
+            },
+            "require": {
+                "mageplaza/module-core": "^1.3.12"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Mageplaza\\DeleteOrders\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mageplaza",
+                    "email": "support@mageplaza.com",
+                    "homepage": "https://www.mageplaza.com",
+                    "role": "Technical Support"
+                }
+            ],
+            "description": "Magento 2 Delete Orders extension",
+            "time": "2018-06-07T08:32:53+00:00"
         },
         {
             "name": "mageplaza/module-smtp",
