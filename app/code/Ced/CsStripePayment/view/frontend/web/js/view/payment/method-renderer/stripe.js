@@ -29,11 +29,11 @@ define(
 
         return Component.extend({
            defaults: {
-                template:'Ced_CsStripePayment/payment/paymentmethodname'
+                template:'Ced_CsStripePayment/payment/stripe'
             },
 
            getCode: function() {
-                return 'ced_csstripe_method_one';
+                return 'stripe';
             },
 
             isActive: function() {
