@@ -109,6 +109,7 @@ return array (
     'Magento_ConfigurableSampleData' => 1,
     'Magento_ProductLinksSampleData' => 1,
     'Magento_ReviewSampleData' => 1,
+    'Magento_SamplePaymentGateway' => 1,
     'Magento_GroupedProductSampleData' => 1,
     'Magento_Ups' => 1,
     'Magento_SendFriend' => 1,

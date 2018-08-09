@@ -23,7 +23,7 @@ use Braintree\Exception;
  * Pay In Store payment method model
  */
 class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
-	const METHOD_CODE = 'ced_csstripe_method_one';
+	const METHOD_CODE = 'stripe';
 	const PAYMENT_TYPE_MODE_TEST = 'test';
 	const PAYMENT_TYPE_MODE_LIVE = 'live';
 	const PRODUCTION = 'production';
@@ -37,7 +37,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 	 *
 	 * @var string
 	 */
-	protected $_code = 'ced_csstripe_method_one';
+	protected $_code = 'stripe';
 	protected $_objectManager;
 	/**
 	 *
@@ -86,7 +86,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 	 * @see \Magento\Payment\Model\Method\AbstractMethod::capture()
 	 */
 	public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount) {
-		if ($this->_scopeConfig->getValue ( 'payment/ced_csstripe_method_one/payment_action', \Magento\Store\Model\ScopeInterface::SCOPE_STORE ) != 'authorize') {
+		if ($this->_scopeConfig->getValue ( 'payment/stripe/payment_action', \Magento\Store\Model\ScopeInterface::SCOPE_STORE ) != 'authorize') {
 			$order = $payment->getOrder ();
 			$response = $this->callStripeApi ( $payment, $amount );
 			if ($response === false) {
@@ -195,7 +195,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 
 				// ** stripe code starts
 				$store = $this->_objectManager->get ( 'Magento\Framework\App\Config\ScopeConfigInterface' );
-				if ($payment->getMethod () == 'ced_csstripe_method_one') {
+				if ($payment->getMethod () == 'stripe') {
 
 
 					// echo $paytovendor; echo "<br>"; echo $paytoadmin; die("fl");
@@ -203,13 +203,13 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 					// echo $amount; echo "<br>";echo $fee; echo "<br>"; die("lg");
 					try {
 
-						$mode = $store->getValue ('payment/ced_csstripe_method_one/gateway_mode' );
-						$appFee = $store->getValue ('payment/ced_csstripe_method_one/app_fee' );
+						$mode = $store->getValue ('payment/stripe/gateway_mode' );
+						$appFee = $store->getValue ('payment/stripe/app_fee' );
 						$skey = "api_{$mode}_secret_key";
 
-						\Stripe\Stripe::setApiKey ( $store->getValue ( 'payment/ced_csstripe_method_one/' . $skey ) );
+						\Stripe\Stripe::setApiKey ( $store->getValue ( 'payment/stripe/' . $skey ) );
 
-						if ($payment->getMethod () == 'ced_csstripe_method_one') {
+						if ($payment->getMethod () == 'stripe') {
 
 							$vendorSetting = $this->_objectManager->create ( 'Ced\CsMarketplace\Model\Vsettings' )->getCollection ()->addFieldToFilter ( 'vendor_id', $vendorId )->addFieldToFilter ( 'group', "payment" )->getData ();
 							$vactive = 0;
@@ -233,7 +233,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 
 							if ($vactive){
 
-								if ($store->getValue ('payment/ced_csstripe_method_one/account_type' ) == 'managed') {
+								if ($store->getValue ('payment/stripe/account_type' ) == 'managed') {
 									$check_acc = $this->_objectManager->create ( 'Ced\CsStripePayment\Model\Managed' )->getCollection ()->addFieldToFilter ( 'vendor_id', $vendorId )->addFieldToFilter ( 'email_id', $vemail )->getData ();
 
 									if ($check_acc != null) {
@@ -246,7 +246,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 									 */
 									else {
 
-										if ($store->getValue ( 'payment/ced_csstripe_method_one/account_type' ) == 'managed') {
+										if ($store->getValue ( 'payment/stripe/account_type' ) == 'managed') {
 											try {
 												$account = \Stripe\Account::create ( array (
 														"managed" => true,
@@ -447,7 +447,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
     		$data ['amount_desc'] = '{"' . $eventdata ['order_id'] . '":"' . $eventdata ['amount'] . '"}';
 
     		$data ['base_currency'] = $currencyCode;
-    		$data ['payment_code'] = 'ced_csstripe_method_one';
+    		$data ['payment_code'] = 'stripe';
     		$data ['amount'] = $eventdata ['amount'];
     		$data ['base_net_amount'] = $eventdata ['amount'];
     		$data ['net_amount'] = $eventdata ['amount'];

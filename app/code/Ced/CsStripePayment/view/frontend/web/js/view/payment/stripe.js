@@ -26,8 +26,8 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'ced_csstripe_method_one',
-                component: 'Ced_CsStripePayment/js/view/payment/method-renderer/paymentmethodname-method'
+                type: 'stripe',
+                component: 'Ced_CsStripePayment/js/view/payment/method-renderer/stripe'
             }
         );
         /** Add view logic here if needed */
