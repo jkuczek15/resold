@@ -19,6 +19,7 @@
 <?php echo $block->getChildHtml('customer.form.register.extra')?>
 <form class="form create account form-create-account" action="<?php echo $block->escapeUrl($block->getPostActionUrl()) ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off">
     <?php /* @noEscape */ echo $block->getBlockHtml('formkey'); ?>
+    <input type="hidden" name="referer" value="<?php echo isset($_GET['referer']) ? $_GET['referer'] : '' ?>" />
     <fieldset class="fieldset create info">
         <legend class="legend"><span><?php echo $block->escapeHtml(__('Personal Information')) ?></span></legend><br>
         <input type="hidden" name="success_url" value="<?php echo $block->escapeUrl($block->getSuccessUrl()) ?>">

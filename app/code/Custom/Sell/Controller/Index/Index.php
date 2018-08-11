@@ -69,7 +69,8 @@ class Index extends \Magento\Framework\App\Action\Action
 
         if (!$this->session->isLoggedIn()) {
             $_SESSION['from_sell_form'] = true;
-            return $resultRedirect->setPath('customer/account/login');
+            $sell_url = 'https://'.$_SERVER['HTTP_HOST'].'/sell';
+            return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($sell_url));
         }
 
         // check to make sure the user has authenticated with stripe
@@ -175,7 +176,7 @@ class Index extends \Magento\Framework\App\Action\Action
         }
         catch(\Exception $e){
           $this->_objectManager->create('Magento\Customer\Model\Session')->addError($e->getMessage());
-          $this->_redirect('csmarketplace/vsettings/index');
+          $this->_redirect('index');
           return;
         }
       } else if (isset($_GET['error'])) { // Error

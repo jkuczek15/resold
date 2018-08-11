@@ -13,6 +13,13 @@
  *
  * @var \Magento\Customer\Block\Form\Login\Info $block
  */
+
+$referer = $_SERVER['HTTP_REFERER'];
+
+if(isset($_SESSION['from_sell_form']) && $_SESSION['from_sell_form']){
+  $referer = 'https://'.$_SERVER['HTTP_HOST'].'/sell';
+  $_SESSION['from_sell_form'] = false;
+}
 ?>
 <?php if ($block->getRegistration()->isAllowed()): ?>
 <div class="block block-new-customer">
@@ -23,7 +30,7 @@
         <p><?php echo $block->escapeHtml(__('Creating an account has many benefits: check out faster, keep more than one address, track orders and more.')) ?></p>
         <div class="actions-toolbar">
             <div class="primary">
-                <a href="<?php echo $block->escapeUrl($block->getCreateAccountUrl()) ?>" class="action create primary"><span><?php echo $block->escapeHtml(__('Create an Account')) ?></span></a>
+                <a href="<?php echo rtrim($block->escapeUrl($block->getCreateAccountUrl()), '/') ?>?referer=<?php echo urlencode($referer) ?>" class="action create primary"><span><?php echo $block->escapeHtml(__('Create an Account')) ?></span></a>
             </div>
         </div>
     </div>
