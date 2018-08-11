@@ -28,16 +28,16 @@
         <css src="Ced_CsMarketplace::bower_components/morrisjs/morris.css"/>
         <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
         <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel.css"/>
-        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vendor_responsive.css"/>  
+        <css src="Ced_CsMarketplace::css/ced/csmarketplace/vendor_responsive.css"/>
     </head>
     <body>
-		<referenceContainer name="after.body.start">			
+		<referenceContainer name="after.body.start">
             <block class="Magento\Framework\View\Element\Js\Components" name="head.components" as="components" template="Ced_CsMarketplace::js/components.phtml"/>
 			<block name="customer.section.config" class="Magento\Customer\Block\SectionConfig"
                    template="Magento_Customer::js/section-config.phtml"/>
             <block name="customer.customer.data" class="Magento\Customer\Block\CustomerData"
                    template="Magento_Customer::js/customer-data.phtml"/>
-        </referenceContainer> 
+        </referenceContainer>
         <referenceBlock name="nav.bar">
 			<block class="Ced\CsMarketplace\Block\Vendor\Navigation" as="cnavigation" name="csmarketplace_vendor_cnavigation" before="-" template="Ced_CsMarketplace::vendor/cnavigation.phtml">
 				<block class="Ced\CsMarketplace\Block\Vendor\Html\Header" as="vendor_header" name="csmarketplace_vendor_header" before="-" template="Magento_Theme::html/header.phtml"/>
@@ -46,7 +46,7 @@
 						<arguments>
 							<argument name="name" xsi:type="string">vendor_dashboard</argument>
 							<argument name="label" xsi:type="string" translate="true">Dashboard</argument>
-							<argument name="path" xsi:type="string">csmarketplace/vendor/index</argument>
+							<argument name="path" xsi:type="string">market/vendor/index</argument>
 							<argument name="font_awesome" xsi:type="string">fa fa-dashboard fa-fw</argument>
 							<argument name="sort_order" xsi:type="string">10</argument>
 							<argument name="level" xsi:type="string">1</argument>
@@ -56,7 +56,7 @@
 						<arguments>
 							<argument name="name" xsi:type="string">vendor_profile</argument>
 							<argument name="label" xsi:type="string" translate="true">Vendor Profile</argument>
-							<argument name="path" xsi:type="string">csmarketplace/vendor/profileview</argument>
+							<argument name="path" xsi:type="string">market/vendor/profileview</argument>
 							<argument name="font_awesome" xsi:type="string">fa fa-user fa-fw</argument>
 							<argument name="sort_order" xsi:type="string">100</argument>
 							<argument name="level" xsi:type="string">1</argument>
@@ -66,7 +66,7 @@
 						<arguments>
 							<argument name="name" xsi:type="string">vendor_new_product</argument>
 							<argument name="label" xsi:type="string" translate="true">New Product</argument>
-							<argument name="path" xsi:type="string">csmarketplace/vproducts/new</argument>
+							<argument name="path" xsi:type="string">market/vproducts/new</argument>
 							<argument name="font_awesome" xsi:type="string">fa fa-plus-square fa-fw</argument>
 							<argument name="sort_order" xsi:type="string">30</argument>
 							<argument name="level" xsi:type="string">1</argument>
@@ -76,7 +76,7 @@
 						<arguments>
 							<argument name="name" xsi:type="string">vendor_products</argument>
 							<argument name="label" xsi:type="string" translate="true">Manage Products</argument>
-							<argument name="path" xsi:type="string">csmarketplace/vproducts/index</argument>
+							<argument name="path" xsi:type="string">market/vproducts/index</argument>
 							<argument name="font_awesome" xsi:type="string">fa fa-folder fa-fw</argument>
 							<argument name="sort_order" xsi:type="string">40</argument>
 							<argument name="level" xsi:type="string">1</argument>
@@ -86,7 +86,7 @@
 						<arguments>
 							<argument name="name" xsi:type="string">vendor_orders</argument>
 							<argument name="label" xsi:type="string" translate="true">Orders</argument>
-							<argument name="path" xsi:type="string">csmarketplace/vorders</argument>
+							<argument name="path" xsi:type="string">market/vorders</argument>
 							<argument name="font_awesome" xsi:type="string">fa fa-shopping-cart fa-fw</argument>
 							<argument name="sort_order" xsi:type="string">50</argument>
 							<argument name="level" xsi:type="string">1</argument>
@@ -96,7 +96,7 @@
 						<arguments>
 							<argument name="name" xsi:type="string">vendor_payments</argument>
 							<argument name="label" xsi:type="string" translate="true">Transactions</argument>
-							<argument name="path" xsi:type="string">csmarketplace/vpayments/index</argument>
+							<argument name="path" xsi:type="string">market/vpayments/index</argument>
 							<argument name="font_awesome" xsi:type="string">fa fa-money fa-fw</argument>
 							<argument name="sort_order" xsi:type="string">60</argument>
 							<argument name="level" xsi:type="string">1</argument>
@@ -119,7 +119,7 @@
 								<arguments>
 									<argument name="name" xsi:type="string">order_reports</argument>
 									<argument name="label" xsi:type="string" translate="true">Order Reports</argument>
-									<argument name="path" xsi:type="string">csmarketplace/vreports/vorders</argument>
+									<argument name="path" xsi:type="string">market/vreports/vorders</argument>
 									<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
 									<argument name="sort_order" xsi:type="string">30</argument>
 									<argument name="level" xsi:type="string">2</argument>
@@ -129,7 +129,7 @@
 								<arguments>
 									<argument name="name" xsi:type="string">product_reports</argument>
 									<argument name="label" xsi:type="string" translate="true">Product Reports</argument>
-									<argument name="path" xsi:type="string">csmarketplace/vreports/vproducts</argument>
+									<argument name="path" xsi:type="string">market/vreports/vproducts</argument>
 									<argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
 									<argument name="sort_order" xsi:type="string">20</argument>
 									<argument name="level" xsi:type="string">2</argument>
@@ -154,7 +154,7 @@
 								<arguments>
 									<argument name="name" xsi:type="string">vendor_payment_settings</argument>
 									<argument name="label" xsi:type="string" translate="true">Transaction Settings</argument>
-									<argument name="path" xsi:type="string">csmarketplace/vsettings</argument>
+									<argument name="path" xsi:type="string">market/vsettings</argument>
 									<argument name="font_awesome" xsi:type="string">fa fa-credit-card</argument>
 									<argument name="sort_order" xsi:type="string">10</argument>
 									<argument name="level" xsi:type="string">2</argument>
