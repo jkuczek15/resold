@@ -8,5 +8,39 @@
             <block class="Infortis\Base\Block\Html\Header" name="micro-header-container" before="-" template="html/header_micro.phtml" />
         </referenceContainer>
         <move element="site-logo" destination="micro-header-container" />
+        <referenceBlock name="checkout.root">
+             <arguments>
+                 <argument name="jsLayout" xsi:type="array">
+                     <item name="components" xsi:type="array">
+                         <item name="checkout" xsi:type="array">
+                             <item name="children" xsi:type="array">
+                                 <item name="steps" xsi:type="array">
+                                     <item name="children" xsi:type="array">
+                                         <item name="shipping-step" xsi:type="array">
+                                             <item name="children" xsi:type="array">
+                                                 <item name="shippingAddress" xsi:type="array">
+                                                     <item name="children" xsi:type="array">
+                                                         <item name="shipping-address-fieldset" xsi:type="array">
+                                                             <item name="children" xsi:type="array">
+                                                                 <item name="telephone" xsi:type="array">
+                                                                     <item name="visible" xsi:type="boolean">false</item>
+                                                                 </item>
+                                                                 <item name="company" xsi:type="array">
+                                                                     <item name="visible" xsi:type="boolean">false</item>
+                                                                 </item>
+                                                             </item>
+                                                         </item>
+                                                     </item>
+                                                 </item>
+                                             </item>
+                                         </item>
+                                     </item>
+                                 </item>
+                             </item>
+                         </item>
+                     </item>
+                 </argument>
+             </arguments>
+         </referenceBlock>
     </body>
 </page>
