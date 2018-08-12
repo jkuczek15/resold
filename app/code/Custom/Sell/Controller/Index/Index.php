@@ -150,12 +150,13 @@ class Index extends \Magento\Framework\App\Action\Action
             $vendor->setGroup('general');
             if (!$vendor->getErrors()) {
                 $vendor->save();
+                $this->session->setVendorId($vendor->getId());
                 $this->messageManager->addSuccessMessage(__('You have successfully signed up as a seller on Resold.'));
-            } elseif ($vendordata->getErrors()) {
-                foreach ($vendordata->getErrors() as $error) {
+            } elseif ($vendor->getErrors()) {
+                foreach ($vendor->getErrors() as $error) {
                     $this->session->addError($error);
                 }
-                $this->session->setFormData($venderData);
+                $this->session->setFormData($vendor);
             } else {
                 $this->session->addError(__('Your application has been denied'));
             }
@@ -165,7 +166,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
           $vendorId = $this->session->getVendorId();
           $model = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone');
-          $model1 = $model->load($vendorId,'vendor_id')->getData();
+          $model1 = $model->load($vendorId, 'vendor_id')->getData();
 
           if(count($model1) > 0){
             $data = array('access_token'=>$resp['access_token'],'refresh_token'=>$resp['refresh_token'],'token_type'=>$resp['token_type'],
@@ -181,10 +182,9 @@ class Index extends \Magento\Framework\App\Action\Action
               ->setData('stripe_publishable_key',$resp['stripe_publishable_key'])
               ->setData('stripe_user_id',$resp['stripe_user_id'])
               ->setData('scope',$resp['scope'])
-              ->setData('vendor_id',$customer->getId())
+              ->setData('vendor_id',$vendorId)
               ->save();
 
-              $this->session->setVendorId($customer->getId());
               return;
             } catch (\Exception $e){
               echo $e->getMessage();
@@ -198,10 +198,9 @@ class Index extends \Magento\Framework\App\Action\Action
                 ->setData('stripe_publishable_key',$resp['stripe_publishable_key'])
                 ->setData('stripe_user_id',$resp['stripe_user_id'])
                 ->setData('scope',$resp['scope'])
-                ->setData('vendor_id',$customer->getId())
+                ->setData('vendor_id', $vendorId)
                 ->save();
 
-            $this->session->setVendorId($customer->getId());
             return;
           }
         }

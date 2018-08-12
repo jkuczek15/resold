@@ -132,6 +132,14 @@ class Index extends \Magento\Framework\App\Action\Action
       // save the product to the database
       $_product->save();
 
+      // save a vendor product with the seller
+      $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);
+      $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE);
+      $this->_eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
+        'product' => $_product,
+        'vendor_id' => $this->session->getVendorId()
+      ]);
+
       return $resultRedirect->setPath('customer/account');
     }// end function execute
 }
