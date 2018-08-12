@@ -33,7 +33,7 @@ class NewAction extends \Ced\CsMarketplace\Controller\Vproducts\NewAction
      * @var \Magento\Framework\View\Result\PageFactory
      */
     protected $resultPageFactory;
-	
+
 	/**
      * @var \Magento\Backend\Model\Session
      */
@@ -75,7 +75,7 @@ class NewAction extends \Ced\CsMarketplace\Controller\Vproducts\NewAction
 		$this->productBuilder = $productBuilder;
         $this->resultPageFactory = $resultPageFactory;
         $this->resultForwardFactory = $resultForwardFactory;
-		$this->_session = $context->getSession();	
+		$this->_session = $context->getSession();
 		$this->clean();
     }
 
@@ -84,8 +84,8 @@ class NewAction extends \Ced\CsMarketplace\Controller\Vproducts\NewAction
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
-    
-	
+
+
 	public function execute()
 	{
 		$this->_scopeConfig = $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
@@ -104,13 +104,13 @@ class NewAction extends \Ced\CsMarketplace\Controller\Vproducts\NewAction
 		 {
 		 	return parent::execute();
 		 }
-		
+
 		if (!$this->getRequest()->getParam('set')) {
 			 $this->_redirect('csmarketplace/vendor/index');
 		}
-		
+
 		$this->_scopeConfig = $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
-	
+
 		$attributesetIds = $this->_scopeConfig->getValue('ced_vproducts/general/set', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 		if(!$attributesetIds)
 		{
@@ -120,17 +120,11 @@ class NewAction extends \Ced\CsMarketplace\Controller\Vproducts\NewAction
 		}
 		$storeManager = $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface');
 		$allowedType = $this->_objectManager->get('Ced\CsMarketplace\Model\System\Config\Source\Vproducts\Type')->getAllowedType($storeManager->getStore()->getId());
-	    if(!in_array($this->getRequest()->getParam('type'),$allowedType))
-	    {
-	    	$this->messageManager->addError(__('You are not allowed to create '.ucfirst(($this->getRequest()->getParam('type')).' Product')));
-	    	return $this->_redirect('csmarketplace/vendor/index');
 
-	    }	
-	
 		$product = $this->productBuilder->build($this->getRequest());
 		$this->_eventManager->dispatch('catalog_product_new_action', ['product' => $product]);
 		$this->_eventManager->dispatch('csproduct_vproducts_new_action', ['product' => $product]);
-	
+
 		/** @var \Magento\Backend\Model\View\Result\Page $resultPage */
 		$resultPage = $this->resultPageFactory->create();
 		if ($this->getRequest()->getParam('popup')) {
@@ -140,19 +134,17 @@ class NewAction extends \Ced\CsMarketplace\Controller\Vproducts\NewAction
 			$resultPage->getConfig()->getTitle()->prepend(__('Products'));
 			$resultPage->getConfig()->getTitle()->prepend(__('New Product'));
 		}
-	
+
 		$block = $resultPage->getLayout()->getBlock('catalog.wysiwyg.js');
 		if ($block) {
 			$block->setStoreId($product->getStoreId());
 		}
-	
+
 		return $resultPage;
 	}
 	public function clean(){
        $this->helper->cleanCache();
        return $this;
-        
+
     }
 }
-
-
