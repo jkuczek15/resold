@@ -144,5 +144,6 @@ return array (
     'Mageplaza_DeleteOrders' => 1,
     'Mageplaza_Smtp' => 1,
     'Thai_S3' => 1,
+    'Zorn_OptionalTelephone' => 1,
   ),
 );

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "26fbb1d33ce6ecb1e51628d461354382",
+    "content-hash": "f75754a8092d3650220e507370f479e4",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -9003,6 +9003,51 @@
                 "zf2"
             ],
             "time": "2015-06-16T15:22:37+00:00"
+        },
+        {
+            "name": "zsoerenm/magento2-optionaltelephone",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zsoerenm/magento2-optionaltelephone.git",
+                "reference": "02fe4bc64357a7b4675ed00ed7f6bec53295b7c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zsoerenm/magento2-optionaltelephone/zipball/02fe4bc64357a7b4675ed00ed7f6bec53295b7c0",
+                "reference": "02fe4bc64357a7b4675ed00ed7f6bec53295b7c0",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": "*",
+                "magento/module-backend": "*",
+                "magento/module-store": "*",
+                "php": "~5.5.0|~5.6.0|~7.0.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Zorn\\OptionalTelephone\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sören Zorn",
+                    "email": "zorn@rwth-aachen.de"
+                }
+            ],
+            "description": "Remove telephone requirement in Magento 2",
+            "support": {
+                "source": "https://github.com/zsoerenm/magento2-optionaltelephone/tree/v1.4.0",
+                "issues": "https://github.com/zsoerenm/magento2-optionaltelephone/issues"
+            },
+            "time": "2017-03-13T20:06:12+00:00"
         }
     ],
     "packages-dev": [
