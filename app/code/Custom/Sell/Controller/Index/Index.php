@@ -21,6 +21,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\UrlFactory;
 use Ced\CsMarketplace\Helper\Data;
 use Magento\Framework\Module\Manager;
+use Ced\CsMarketplace\Model\VendorFactory;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -49,11 +50,13 @@ class Index extends \Magento\Framework\App\Action\Action
         PageFactory $resultPageFactory,
         UrlFactory $urlFactory,
         Manager $moduleManager,
+        VendorFactory $Vendor,
         Data $datahelper
     )
     {
         $this->session = $customerSession;
         $this->resultPageFactory = $resultPageFactory;
+        $this->vendor = $Vendor;
         $this->helper = $datahelper;
         parent::__construct($context);
     }
@@ -113,7 +116,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $skey = "api_{$mode}_secret_key";
 
         try {
-          $key=$store->getValue('payment/ced_csstripe_method_one/'.$skey);
+          $key = $store->getValue('payment/ced_csstripe_method_one/'.$skey);
 
           $token_request_body = array(
             'grant_type' => 'authorization_code',
@@ -125,6 +128,7 @@ class Index extends \Magento\Framework\App\Action\Action
           /*
            Array ( [access_token] => sk_test_6eJ53weZmD6wdefcJDnfP4Dg [livemode] => [refresh_token] => rt_8VOzR1nDhrSpfBM8LPYrFRjiM2Wmeseyg49ZwP04xsjtmdjb [token_type] => bearer [stripe_publishable_key] => pk_test_yCEEPiKjXyOtIuHRnbE8lz6F [stripe_user_id] => acct_188F18Iw2Ylw9dxv [scope] => read_write ) sk_test_6eJ53weZmD6wdefcJDnfP4Dgdfsf
            */
+          // authorization request to stripe
           $req = curl_init('https://connect.stripe.com/oauth/token');
           curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
           curl_setopt($req, CURLOPT_POST, true );
@@ -134,6 +138,30 @@ class Index extends \Magento\Framework\App\Action\Action
           $respCode = curl_getinfo($req, CURLINFO_HTTP_CODE);
           $resp = json_decode(curl_exec($req), true);
           curl_close($req);
+
+          // create a mew vendor account
+          $vendorModel = $this->vendor->create();
+          $customer = $this->session->getCustomer();
+          try {
+            $vendor = $vendorModel->setCustomer($customer)->register([
+              'public_name' => $customer->getFirstname().' '.$customer->getLastname(),
+              'shop_url' => uniqid()
+            ]);
+            $vendor->setGroup('general');
+            if (!$vendor->getErrors()) {
+                $vendor->save();
+                $this->messageManager->addSuccessMessage(__('You have successfully signed up as a seller on Resold.'));
+            } elseif ($vendordata->getErrors()) {
+                foreach ($vendordata->getErrors() as $error) {
+                    $this->session->addError($error);
+                }
+                $this->session->setFormData($venderData);
+            } else {
+                $this->session->addError(__('Your application has been denied'));
+            }
+          } catch (\Exception $e) {
+              $this->helper->logException($e);
+          }
 
           $vendorId = $this->session->getVendorId();
           $model = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone');
@@ -153,24 +181,27 @@ class Index extends \Magento\Framework\App\Action\Action
               ->setData('stripe_publishable_key',$resp['stripe_publishable_key'])
               ->setData('stripe_user_id',$resp['stripe_user_id'])
               ->setData('scope',$resp['scope'])
-              ->setData('vendor_id',$resp['stripe_user_id'])
+              ->setData('vendor_id',$customer->getId())
               ->save();
 
+              $this->session->setVendorId($customer->getId());
+              return;
             } catch (\Exception $e){
               echo $e->getMessage();
             }
 
           }else{
+            // save the stripe standalone API data
             $model->setData('access_token',$resp['access_token'])
                 ->setData('refresh_token',$resp['refresh_token'])
                 ->setData('token_type',$resp['token_type'])
                 ->setData('stripe_publishable_key',$resp['stripe_publishable_key'])
                 ->setData('stripe_user_id',$resp['stripe_user_id'])
                 ->setData('scope',$resp['scope'])
-                ->setData('vendor_id',$vendorId)
+                ->setData('vendor_id',$customer->getId())
                 ->save();
 
-            $this->session->setVendorId($resp['stripe_user_id']);
+            $this->session->setVendorId($customer->getId());
             return;
           }
         }
