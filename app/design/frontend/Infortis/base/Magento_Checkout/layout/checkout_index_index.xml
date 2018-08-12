@@ -23,7 +23,7 @@
                                                          <item name="shipping-address-fieldset" xsi:type="array">
                                                              <item name="children" xsi:type="array">
                                                                  <item name="telephone" xsi:type="array">
-                                                                     <item name="visible" xsi:type="boolean">true</item>
+                                                                     <item name="visible" xsi:type="boolean">false</item>
                                                                  </item>
                                                                  <item name="company" xsi:type="array">
                                                                      <item name="visible" xsi:type="boolean">false</item>
