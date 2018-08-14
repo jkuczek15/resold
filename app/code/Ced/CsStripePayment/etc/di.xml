@@ -19,4 +19,5 @@
     <preference for="Ced\CsMarketplace\Model\Vendor" type="Ced\CsStripePayment\Model\Payment" />
     <preference for="Ced\CsMarketplace\Observer\SetVendorSalesOrder" type="Ced\CsStripePayment\Observer\Savepayment" />
     <preference for="Magento\Checkout\Model\PaymentDetails" type="Ced\CsStripePayment\Model\Method\PaymentDetails" />
+    <preference for="Psr\Log\LoggerInterface" type="Magento\Framework\Logger\Monolog" />
 </config>
