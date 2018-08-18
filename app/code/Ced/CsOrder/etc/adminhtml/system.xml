@@ -19,9 +19,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-   
+
         <section id="ced_csmarketplace">
-          
+
            <group id="general">
                 <label>General</label>
               <field id="vorders_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -29,7 +29,7 @@
                     <config_path>ced_vorders/general/vorders_active</config_path>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If you select <b>Yes</b> then updated order view and advance feature will show on the vendor panel.]]></comment>
-                </field>                
+                </field>
             </group>
             <!-- Vendor Orders Configuration -->
             <group id="vorders">
@@ -40,20 +40,20 @@
                   <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>-->
                 <field id="vorders_canshipment" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-        					<label>Can Vendor Create Shipment?</label>
+        					<label>Can Seller Create Shipment?</label>
                   <config_path>ced_vorders/general/vorders_canshipment</config_path>
                   <comment><![CDATA[Enable this if vendor can create Shipment.]]></comment>
                   <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
                 <field id="vorders_caninvoice" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                	<label>Can Vendor Create Invoice?</label>
+                	<label>Can Seller Create Invoice?</label>
                   <config_path>ced_vorders/general/vorders_caninvoice</config_path>
                   <comment><![CDATA[Enable this if vendor can create invoice]]></comment>
                   <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="vorders_cancreditmemo" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
-                	<label>Can Vendor Create Credit Memo?</label>
+                	<label>Can Seller Create Credit Memo?</label>
                   <config_path>ced_vorders/general/vorders_cancreditmemo</config_path>
                   <comment><![CDATA[Enable this if vendor can create credit memo.]]></comment>
                   <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

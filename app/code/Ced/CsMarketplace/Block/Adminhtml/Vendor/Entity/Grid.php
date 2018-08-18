@@ -25,20 +25,20 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
      * @var \Magento\Framework\Module\Manager
      */
     protected $moduleManager;
- 
+
     /**
      * @var \\Ced\CsMarketplace\Model\VendorFactory
      */
     protected $_vendorFactory;
-	
+
 	protected $_websiteFactory;
     /**
      * @var \SR\Weblog\Model\Status
      */
     protected $_group;
-	
+
 	protected $_status;
- 
+
     /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
@@ -67,7 +67,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->moduleManager = $moduleManager;
         parent::__construct($context, $backendHelper, $data);
     }
- 
+
     /**
      * @return void
      */
@@ -81,7 +81,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->setUseAjax(true);
         $this->setVarNameFilter('vendor_filter');
     }
- 
+
     /**
      * @return $this
      */
@@ -92,11 +92,11 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 							->addAttributeToSelect('email')
 							->addAttributeToSelect('group')
 							->addAttributeToSelect('status');
-		
+
 		$this->setCollection($collection);
         return  parent::_prepareCollection();
     }
- 
+
 	protected function _addColumnFilterToCollection($column)
     {
         return parent::_addColumnFilterToCollection($column);
@@ -116,9 +116,9 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				'type'	  => 'date'
 			]
 		);
-		
+
 		$this->addColumn('name', [
-				'header'        => __('Vendor Name'),
+				'header'        => __('Name'),
 				'align'         => 'left',
 				'type'          => 'text',
 				'index'         => 'name',
@@ -126,18 +126,18 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                 'column_css_class' => 'col-name'
 			]
 		);
-		
+
         $this->addColumn('email', [
-				'header'    => __('Vendor Email'),
+				'header'    => __('Email'),
 				'align'     =>'left',
 				'index'     => 'email',
 				'header_css_class' => 'col-email',
                 'column_css_class' => 'col-email'
 			]
 		);
-		
+
        $this->addColumn('group', [
-				'header'        => __('Vendor Group'),
+				'header'        => __('Group'),
 				'align'     	=> 'left',
 				'index'         => 'group',
 				'type'          => 'options',
@@ -145,8 +145,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				'header_css_class' => 'col-group',
                 'column_css_class' => 'col-group'
 			]
-        ); 
-		
+        );
+
 		if (!$this->_storeManager->isSingleStoreMode()) {
             $this->addColumn(
                 'website_id',[
@@ -159,9 +159,9 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                 ]
             );
         }
-				
+
 		$this->addColumn('status', [
-				'header'        => __('Vendor Status'),
+				'header'        => __('Status'),
 				'align'     	=> 'left',
 				'index'         => 'status',
 				'type'          => 'options',
@@ -170,7 +170,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                 'column_css_class' => 'col-status'
 			]
         );
-		
+
 		$this->addColumn('approve', [
 				'header'        => __('Approve'),
 				'align'     	=> 'left',
@@ -180,9 +180,9 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				'renderer' => 'Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Grid\Renderer\Approve'
 			]
 		);
-		
+
 		$this->addColumn('shop_disable', [
-				'header'        => __('Vendor Shop Status'),
+				'header'        => __('Shop Status'),
 				'align'     	=> 'left',
 				'index'         => 'shop_disable',
 				'filter'   	 	=> false,
@@ -190,7 +190,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				'renderer' => 'Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Grid\Renderer\Disableshop'
 			]
 		);
-		
+
         $this->addColumn('edit', [
                 'header' => __('Edit'),
                 'type' => 'action',
@@ -209,15 +209,15 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                 'column_css_class' => 'col-action'
             ]
         );
- 
+
         $block = $this->getLayout()->getBlock('grid.bottom.links');
         if ($block) {
             $this->setChild('grid.bottom.links', $block);
         }
- 
+
         return parent::_prepareColumns();
     }
- 
+
     /**
      * After load collection
      *
@@ -227,7 +227,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     {
         $this->getCollection()->walk('afterLoad');
         parent::_afterLoadCollection();
-    } */  
+    } */
 	// commented by ankur to avoid the error on the vendor grid afterload error
 
     /**
@@ -253,21 +253,21 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->setMassactionIdField('entity_id');
         $this->getMassactionBlock()->setTemplate('Magento_Catalog::product/grid/massaction_extended.phtml');
         $this->getMassactionBlock()->setFormFieldName('vendor_id');
- 
+
         $this->getMassactionBlock()->addItem(
             'delete',
             [
-                'label' => __('Delete Vendor(s)'),
+                'label' => __('Delete Seller(s)'),
                 'url' => $this->getUrl('*/*/massDelete'),
                 'confirm' => __('Are you sure?')
             ]
         );
- 
+
         $statuses = $this->_status->toOptionArray();
-		
+
 		$this->getMassactionBlock()->addItem('status',
 				[
-				'label'=> __('Change Vendor(s) Status'),
+				'label'=> __('Change Seller(s) Status'),
 				'url'  => $this->getUrl('*/*/massStatus/', ['_current'=>true]),
 				'additional' => [
 						'visibility' => [
@@ -281,17 +281,17 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				]
 				]
 		);
-		
+
 		$this->getMassactionBlock()->addItem('shop_disable',
 			[
-  			'label'=>__('Change Vendor Shops'),
+  			'label'=>__('Change Seller Shops'),
   			'url'  => $this->getUrl('*/*/massDisable/', ['_current'=>true]),
   			'additional' => [
   					'visibility' => [
   							'name' => 'shop_disable',
   							'type' => 'select',
   							'class' => 'required-entry',
-  							'label' => __('Vendor Shop Status'),
+  							'label' => __('Seller Shop Status'),
   							'default'=>'-1',
   							'values' =>[
 										['value' => \Ced\CsMarketplace\Model\Vshop::ENABLED, 'label'=>__('Enabled')],
@@ -301,10 +301,10 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				]
 			]
 		);
-				
+
         return $this;
     }
- 
+
     /**
      * @return string
      */
@@ -312,7 +312,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     {
         return $this->getUrl('*/*/grid', ['_current' => true]);
     }
- 
+
     /**
      * @param \SR\Weblog\Model\BlogPosts|\Magento\Framework\Object $row
      * @return string

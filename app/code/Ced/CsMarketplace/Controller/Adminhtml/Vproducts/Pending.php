@@ -20,14 +20,14 @@
 namespace Ced\CsMarketplace\Controller\Adminhtml\Vproducts;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
- 
+
 class Pending extends \Ced\CsMarketplace\Controller\Adminhtml\Vendor
 {
     /**
      * @var PageFactory
      */
     protected $resultPageFactory;
- 
+
     /**
      * @param Context     $context
      * @param PageFactory $resultPageFactory
@@ -49,9 +49,9 @@ class Pending extends \Ced\CsMarketplace\Controller\Adminhtml\Vendor
         $resultPage = $this->resultPageFactory->create();
         $this->_objectManager->get('Magento\Framework\Registry')->register('usePendingProductFilter', true);
         $resultPage->setActiveMenu('Ced_CsMarketplace::csmarketplace');
-        $resultPage->addBreadcrumb(__('CsMarketplace'), __('CsMarketplace'));
-        $resultPage->addBreadcrumb(__('Vendor Pending Products'), __('Vendor Pending Products'));
-        $resultPage->getConfig()->getTitle()->prepend(__('Vendor Pending Products'));
+        $resultPage->addBreadcrumb(__('Marketplace'), __('Marketplace'));
+        $resultPage->addBreadcrumb(__('Seller Pending Products'), __('Seller Pending Products'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Seller Pending Products'));
         return $resultPage;
     }
 }

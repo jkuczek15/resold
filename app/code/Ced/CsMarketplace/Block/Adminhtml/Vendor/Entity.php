@@ -16,7 +16,7 @@
  * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
  * @license      http://cedcommerce.com/license-agreement.txt
  */
- 
+
 namespace Ced\CsMarketplace\Block\Adminhtml\Vendor;
 
 class Entity extends \Magento\Backend\Block\Widget\Container
@@ -25,7 +25,7 @@ class Entity extends \Magento\Backend\Block\Widget\Container
      * @var string
      */
     protected $_template = 'vendor/vendor.phtml';
- 
+
     /**
      * @param \Magento\Backend\Block\Widget\Context $context
      * @param array $data
@@ -37,7 +37,7 @@ class Entity extends \Magento\Backend\Block\Widget\Container
         parent::__construct($context, $data);
 		$this->getAddButtonOptions();
     }
- 
+
 
 
     /**
@@ -53,8 +53,8 @@ class Entity extends \Magento\Backend\Block\Widget\Container
         );
         return parent::_prepareLayout();
     }
- 
- 
+
+
     /**
      *
      *
@@ -63,14 +63,14 @@ class Entity extends \Magento\Backend\Block\Widget\Container
     protected function getAddButtonOptions()
     {
 		$splitButtonOptions = [
-            'label' => __('Add New Vendor'),
+            'label' => __('Add New Seller'),
 			'class' => 'primary',
             'onclick' => "setLocation('" . $this->_getCreateUrl() . "')"
         ];
 		$this->buttonList->add('add', $splitButtonOptions);
 		return $this;
     }
- 
+
     /**
      *
      *
@@ -81,7 +81,7 @@ class Entity extends \Magento\Backend\Block\Widget\Container
     {
         return $this->getUrl('*/*/new' );
     }
- 
+
     /**
      * Render grid
      *
