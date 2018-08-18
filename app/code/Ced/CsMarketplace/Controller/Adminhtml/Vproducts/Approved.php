@@ -20,14 +20,14 @@
 namespace Ced\CsMarketplace\Controller\Adminhtml\Vproducts;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
- 
+
 class Approved extends \Ced\CsMarketplace\Controller\Adminhtml\Vendor
 {
     /**
      * @var PageFactory
      */
     protected $resultPageFactory;
- 
+
     /**
      * @param Context     $context
      * @param PageFactory $resultPageFactory
@@ -49,9 +49,9 @@ class Approved extends \Ced\CsMarketplace\Controller\Adminhtml\Vendor
         $resultPage = $this->resultPageFactory->create();
         $this->_objectManager->get('Magento\Framework\Registry')->register('useApprovedProductFilter', true);
         $resultPage->setActiveMenu('Ced_CsMarketplace::csmarketplace');
-        $resultPage->addBreadcrumb(__('CsMarketplace'), __('CsMarketplace'));
-        $resultPage->addBreadcrumb(__('Vendor Approved Products'), __('Vendor Approved Products'));
-        $resultPage->getConfig()->getTitle()->prepend(__('Vendor Approved Products'));
+        $resultPage->addBreadcrumb(__('Marketplace'), __('Marketplace'));
+        $resultPage->addBreadcrumb(__('Seller Approved Products'), __('Seller Approved Products'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Seller Approved Products'));
         return $resultPage;
     }
 }

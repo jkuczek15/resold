@@ -25,7 +25,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
      * @var \Magento\Framework\Module\Manager
      */
     protected $moduleManager;
- 
+
     /**
      * @var \Ced\CsMarketplace\Model\Vorders
      */
@@ -34,19 +34,19 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     protected $_invoice;
     protected $_vorders;
     protected $_objectManager;
-    
+
     const STATE_OPEN       = 1;
     const STATE_PAID       = 2;
     const STATE_CANCELED   = 3;
     const ORDER_NEW_STATUS = 1;
     const STATE_PARTIALLY_PAID = 6;
-    
+
     protected static $_states;
-    
+
     /**
      * @var \Ced\CsMarketplace\Model\Status
      */
- 
+
     /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
@@ -80,7 +80,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->_csMarketplaceHelper = $helperData;
         parent::__construct($context, $backendHelper, $data);
     }
- 
+
     /**
      * @return void
      */
@@ -94,7 +94,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->setUseAjax(true);
         $this->setVarNameFilter('post_filter');
     }
- 
+
     /**
      * @return $this
      */
@@ -102,7 +102,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     {
 	    $vendor_id = $this->getRequest()->getParam('vendor_id',0);
         $collection = $this->_vordersFactory->create()->getCollection();
-        
+
         if($vendor_id) {
             $collection->addFieldToFilter('vendor_id', $vendor_id);
         }
@@ -110,13 +110,13 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $order_total = $this->_csMarketplaceHelper->getTableKey('base_order_total');
         $shop_commission_fee = $this->_csMarketplaceHelper->getTableKey('shop_commission_base_fee');
         $collection->getSelect()->columns(array('net_vendor_earn' => new \Zend_Db_Expr("({$main_table}.{$order_total} - {$main_table}.{$shop_commission_fee})")));
-        
+
         $this->setCollection($collection);
-       
+
         parent::_prepareCollection();
         return $this;
     }
- 
+
 
     /**
      * @return $this
@@ -150,7 +150,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->addColumn(
             'vendor_id',
             [
-                'header' => __('Vendor Name'),
+                'header' => __('Seller'),
                 'type' => 'text',
                 'index' => 'vendor_id',
                 'header_css_class' => 'col-id',
@@ -181,7 +181,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                 'index' => 'base_order_total',
                 'header_css_class' => 'col-id',
         		'currency'  => 'currency'
-               
+
             ]
         );
         $this->addColumn(
@@ -198,7 +198,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->addColumn(
             'net_vendor_earn',
             [
-                'header' => __('Vendor Payment'),
+                'header' => __('Payment'),
                 'type' => 'currency',
                 'index' => 'net_vendor_earn',
                 'header_css_class' => 'col-id',
@@ -232,8 +232,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         );
         return parent::_prepareColumns();
     }
-   
- 
+
+
     /**
      * After load collection
      *
@@ -260,7 +260,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         }
         $this->getCollection()->addStoreFilter($value);
     }
-    
+
     /**
      * @return string
      */
@@ -268,12 +268,12 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     {
         return $this->getUrl('*/*/grid', ['_current' => true]);
     }
- 
+
     /**
      * @param \SR\Weblog\Model\BlogPosts|\Magento\Framework\Object $row
      * @return string
      */
-    
+
 
      protected function _vendornameFilter($collection, $column)
      {
@@ -283,12 +283,12 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $vendorIds = $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->getCollection()
                     ->addAttributeToFilter('name', array('like' => '%'.$column->getFilter()->getValue().'%'))
                     ->getAllIds();
- 
+
         if (count($vendorIds)>0) {
             $collection->addFieldToFilter('vendor_id', array('in', $vendorIds));
         } else {
             $collection->addFieldToFilter('vendor_id');
-        }   
+        }
         return $collection;
     }
 
@@ -297,7 +297,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         if (!$value = $column->getFilter()->getValue()) {
             return $this;
         }
-          
+
         $main_table = $this->_csMarketplaceHelper->getTableKey('main_table');
         $order_total = $this->_csMarketplaceHelper->getTableKey('order_total');
         $shop_commission_fee = $this->_csMarketplaceHelper->getTableKey('shop_commission_fee');
@@ -306,10 +306,10 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         }
         if (isset($value['to'])) {
             $collection->getSelect()->where("({$main_table}.{$order_total}- {$main_table}.{$shop_commission_fee}) <='".$value['to']."'");
-        } 
+        }
         return $collection;
     }
-    
+
     public static function getStates()
     {
     	if (is_null(self::$_states)) {
@@ -322,5 +322,5 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     	}
     	return self::$_states;
     }
-  
+
 }

@@ -20,14 +20,14 @@
 namespace Ced\CsMarketplace\Controller\Adminhtml\Vproducts;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
- 
+
 class Index extends \Ced\CsMarketplace\Controller\Adminhtml\Vendor
 {
     /**
      * @var PageFactory
      */
     protected $resultPageFactory;
- 
+
     /**
      * @param Context     $context
      * @param PageFactory $resultPageFactory
@@ -48,9 +48,9 @@ class Index extends \Ced\CsMarketplace\Controller\Adminhtml\Vendor
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('Ced_CsMarketplace::csmarketplace');
-        $resultPage->addBreadcrumb(__('CsMarketplace'), __('CsMarketplace'));
-        $resultPage->addBreadcrumb(__('Manage Vendor Products'), __('Manage Vendor Products'));
-        $resultPage->getConfig()->getTitle()->prepend(__('Manage Vendor Products'));
+        $resultPage->addBreadcrumb(__('Marketplace'), __('Marketplace'));
+        $resultPage->addBreadcrumb(__('Manage Seller Products'), __('Manage Seller Products'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Manage Seller Products'));
         return $resultPage;
     }
 }

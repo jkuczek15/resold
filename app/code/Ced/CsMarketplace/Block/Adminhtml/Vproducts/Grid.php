@@ -93,7 +93,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
      */
  protected function _prepareCollection()
     {
-	
+
 		$vendor_id = $this->getRequest()->getParam('vendor_id',0);
 		$allowedIds = array();
     	if($this->_objectManager->get('Magento\Framework\Registry')->registry('usePendingProductFilter')){
@@ -109,8 +109,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 		}
 		foreach($vproducts as $vproduct) {
 			$allowedIds[] = $vproduct->getProductId();
-		}		
-    	   
+		}
+
         $store = $this->_getStore();
         $collection = $this->_objectManager->get('Magento\Catalog\Model\Product')->getCollection()
             ->addAttributeToSelect('sku')
@@ -161,17 +161,17 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $collection->joinField('check_status','ced_csmarketplace_vendor_products', 'check_status','product_id=entity_id',null,'left');
         $collection->joinField('vendor_id','ced_csmarketplace_vendor_products', 'vendor_id','product_id=entity_id',null,'left');
         $collection->joinField('website_id','ced_csmarketplace_vendor_products', 'website_id','product_id=entity_id',null,'left');
-        
+
 		if($vendor_id) {
 			$collection->addFieldToFilter('vendor_id',array('eq'=>$vendor_id));
 		}
         $this->setCollection($collection);
-		
+
         parent::_prepareCollection();
-        
-        
+
+
         $this->getCollection()->addWebsiteNamesToResult();
-        
+
         return $this;
     }
 
@@ -206,7 +206,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         );
         $this->addColumn('vendor_id',
             array(
-                'header' => __('Vendor Name'),
+                'header' => __('Seller'),
                 'align' => 'left',
                 'width' => '100px',
                 'index' => 'vendor_id',

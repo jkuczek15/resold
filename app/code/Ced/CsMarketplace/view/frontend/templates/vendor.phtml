@@ -26,8 +26,8 @@ if (!empty($VendorId)) {
 	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
 	$vendorModel = current($vendorModel);
 	$public_name = $vendorModel['public_name'];?>
-	<div class="vendor-info"><?php echo __('Vendor').' : ';?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></div>
-<?php 
+	<div class="vendor-info"><?php echo __('Seller').' : ';?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></div>
+<?php
 }
 ?>
 <style>
@@ -36,4 +36,3 @@ if (!empty($VendorId)) {
     margin-top: 4px;
 }
 </style>
-
