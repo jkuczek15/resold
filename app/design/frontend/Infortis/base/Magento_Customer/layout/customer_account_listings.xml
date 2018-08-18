@@ -15,7 +15,6 @@
         </referenceBlock>
         <referenceContainer name="content">
             <block class="Magento\Framework\View\Element\Template" name="customer_account_dashboard_top" as="top"/>
-
             <block class="Ced\CsMarketplace\Block\Vshops\Catalog\Product\ListProduct" name="vendors.homepage.list" template="Ced_CsMarketplace::vshops/catalog/product/list.phtml" after="csmarketplace_vshops_about">
                 <block class="Magento\Catalog\Block\Product\ProductList\Toolbar" name="product_list_toolbar" template="Magento_Catalog::product/list/toolbar.phtml">
                     <block class="Magento\Theme\Block\Html\Pager" name="product_list_toolbar_pager"/>
@@ -24,7 +23,6 @@
                     <argument name="name" xsi:type="string">product_list_toolbar</argument>
                 </action>
             </block>
-            <!-- <block class="Magento\Framework\View\Element\Template" name="customer_account_listings" template="Magento_Customer::listings.phtml" /> -->
         </referenceContainer>
     </body>
 </page>

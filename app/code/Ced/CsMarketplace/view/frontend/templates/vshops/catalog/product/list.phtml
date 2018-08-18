@@ -28,9 +28,9 @@ $helper_data = $this->helper('Ced\CsMarketplace\Helper\Data');
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
 ?>
 <?php if($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
-    <div class="page-title category-title">
+    <!-- <div class="page-title category-title">
         <h1><?php echo __('Vendor Products') ?></h1>
-    </div>
+    </div> -->
 <?php if (!$_productCollection->count()): ?>
     <div class="message info empty">
         <div><?php /* @escapeNotVerified */ echo __('There are no products from this Vendor.') ?></div>
@@ -56,8 +56,8 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
     $pos = $block->getPositioned();
     ?>
     <div class="products wrapper <?php /* @escapeNotVerified */ echo $viewMode; ?> products-<?php /* @escapeNotVerified */ echo $viewMode; ?>">
-        <?php 
-            $iterator = 1;  // Vendor Logo 
+        <?php
+            $iterator = 1;  // Vendor Logo
             $width = (int)$helper_data->getStoreConfig('ced_vshops/general/list_image_width', $this->getCurrentStoreId());
             $height = (int)$helper_data->getStoreConfig('ced_vshops/general/list_image_height', $this->getCurrentStoreId());
             $width = $width ? $width : 135;
@@ -148,7 +148,7 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
         </ol>
     </div>
      <p>
-        <?php echo $block->getToolbarHtml() ?>  
+        <?php echo $block->getToolbarHtml() ?>
     </p>
     <?php if (!$block->isRedirectToCartEnabled()) : ?>
         <script type="text/x-magento-init">

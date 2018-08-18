@@ -140,6 +140,6 @@ class Index extends \Magento\Framework\App\Action\Action
         'vendor_id' => $this->session->getVendorId()
       ]);
 
-      return $resultRedirect->setPath('customer/account');
+      return $resultRedirect->setPath('customer/account/listings');
     }// end function execute
 }
