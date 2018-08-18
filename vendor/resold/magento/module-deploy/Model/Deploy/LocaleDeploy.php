@@ -220,7 +220,7 @@ class LocaleDeploy implements DeployInterface
      */
     public function deploy($area, $themePath, $locale)
     {
-        $this->output->write("\033[0;32m");
+        $this->output->write("\033[0;96m");
         $this->output->writeln("=== {$area} -> {$themePath} -> {$locale} ===");
 
         // emulate application locale needed for correct file path resolving
