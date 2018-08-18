@@ -240,7 +240,6 @@ class LocaleDeploy implements DeployInterface
             $this->bundleManager->flush();
         }
         $this->output->writeln("\nSuccessful: {$this->count} files; errors: {$this->errorCount}\n---\n");
-        $this->output->write("\033[0;39m");
         return $this->errorCount ? Cli::RETURN_FAILURE : Cli::RETURN_SUCCESS;
     }
 
