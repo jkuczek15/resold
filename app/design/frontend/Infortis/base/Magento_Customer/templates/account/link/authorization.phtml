@@ -21,7 +21,7 @@ $label = str_replace('Sign In', 'Login / Signup', $label);
 $label = str_replace('Sign Out', '<img style="margin-top: 0.25em" width="30em" src="/pub/media/icons/profile-button.png" /></span>', $label);
 
 // redirect to the account page
-$dataPostParam = str_replace('\/logout', '', $dataPostParam);
+$dataPostParam = str_replace('\/logout', '/listings', $dataPostParam);
 $href = str_replace('/logout', '', $block->getLinkAttributes());
 ?>
 <li class="authorization-link" data-label="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('or')); ?>">
