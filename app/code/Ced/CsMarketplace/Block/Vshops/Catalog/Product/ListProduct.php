@@ -19,17 +19,37 @@
 
 namespace Ced\CsMarketplace\Block\Vshops\Catalog\Product;
 
+use Magento\Customer\Model\Session;
+use Magento\Catalog\Api\CategoryRepositoryInterface;
+
 class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
 {
 
+    /**
+     * @var Session
+     */
+    protected $session;
+
+    public function __construct(
+        \Magento\Catalog\Block\Product\Context $context,
+        \Magento\Framework\Data\Helper\PostHelper $postDataHelper,
+        \Magento\Catalog\Model\Layer\Resolver $layerResolver,
+        CategoryRepositoryInterface $categoryRepository,
+        \Magento\Framework\Url\Helper\Data $urlHelper,
+        array $data = [],
+        Session $customerSession
+    ){
+        $this->session = $customerSession;
+        parent::__construct($context, $postDataHelper, $layerResolver, $categoryRepository, $urlHelper, $data);
+    }
     /**
      * Retrieve loaded category collection
      * @return \Magento\Eav\Model\Entity\Collection\AbstractCollection
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    
+
     protected function _getProductCollection()
-    {   
+    {
         $name_filter = $this->_coreRegistry->registry('name_filter');
         if ($this->_productCollection === null) {
            $cedLayer = $this->getLayer();
@@ -57,7 +77,8 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                     $cedLayer->setCurrentCategory($cedCategory);
                 }
             }
-            $vendorId = $this->_coreRegistry->registry('current_vendor')->getId();
+            $vendorId = $this->session->getVendorId();
+            //$vendorId = $this->_coreRegistry->registry('current_vendor')->getId();
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')
                         ->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId);
@@ -71,11 +92,11 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                     ->addStoreFilter($this->getCurrentStoreId())
                     ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
                     ->addAttributeToFilter('visibility', 4);
-            
+
             if (isset($name_filter)) {
                 $cedProductcollection->addAttributeToSelect('*')->setOrder('entity_id', $name_filter);
             }
-            
+
             $cat_id = $this->getRequest()->getParam('cat-fil');
             if(isset($cat_id)) {
               $cedProductcollection->joinField(
@@ -87,14 +108,14 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                   array('finset', array('in'=>explode(',', $cat_id)))
               ));
             }
-              
+
             $this->_productCollection = $cedProductcollection;
             $this->prepareSortableFieldsByCategory($cedLayer->getCurrentCategory());
 
             if ($origCategory) {
               $cedLayer->setCurrentCategory($origCategory);
             }
-        } 
+        }
         /* $pageSize=($this->getRequest()->getParam('product_list_limit'))? $this->getRequest()->getParam('product_list_limit') : 9;
         $this->_productCollection->setPageSize($pageSize);;
         $this->_productCollection->getSelect()->group('e.entity_id'); */
