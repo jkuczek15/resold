@@ -16,6 +16,7 @@ use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Ced\CsMarketplace\Model\Vendor;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -53,6 +54,9 @@ class LoginPost extends \Magento\Customer\Controller\AbstractAccount
      */
     private $cookieMetadataManager;
 
+    public $vendor;
+
+
     /**
      * @param Context $context
      * @param Session $customerSession
@@ -67,13 +71,15 @@ class LoginPost extends \Magento\Customer\Controller\AbstractAccount
         AccountManagementInterface $customerAccountManagement,
         CustomerUrl $customerHelperData,
         Validator $formKeyValidator,
-        AccountRedirect $accountRedirect
+        AccountRedirect $accountRedirect,
+        Vendor $Vendor
     ) {
         $this->session = $customerSession;
         $this->customerAccountManagement = $customerAccountManagement;
         $this->customerUrl = $customerHelperData;
         $this->formKeyValidator = $formKeyValidator;
         $this->accountRedirect = $accountRedirect;
+        $this->vendor = $Vendor;
         parent::__construct($context);
     }
 
@@ -134,6 +140,7 @@ class LoginPost extends \Magento\Customer\Controller\AbstractAccount
      */
     public function execute()
     {
+
         if ($this->session->isLoggedIn() || !$this->formKeyValidator->validate($this->getRequest())) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
@@ -150,9 +157,11 @@ class LoginPost extends \Magento\Customer\Controller\AbstractAccount
                     $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
                     $this->session->setCustomerDataAsLoggedIn($customer);
                     $this->session->regenerateId();
+                    $vendor =  $this->vendor->loadByCustomerId($customer->getId());
 
                     // set the vendor id
-                    $this->session->setVendorId($customer->getId());
+                    $this->session->setVendorId($vendor->getId());
+
 
                     if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
                         $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
