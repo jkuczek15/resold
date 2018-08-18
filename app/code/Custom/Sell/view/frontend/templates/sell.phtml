@@ -79,9 +79,9 @@
         <div class="field images">
             <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
             <div class="control">
-              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." name="images[]"/>
+              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." name="images[]" accept="image/*;capture=camera" />
               <span v-for="index in num_images-1" :key="index">
-                <input type="file" v-bind:id="'image_'+index" name="images[]" class="image_input" />
+                <input type="file" v-bind:id="'image_'+index" name="images[]" class="image_input" accept="image/*;capture=camera" />
               </span>
             </div>
         </div>
