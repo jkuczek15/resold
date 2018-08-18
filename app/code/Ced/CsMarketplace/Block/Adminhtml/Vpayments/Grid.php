@@ -24,12 +24,12 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
      * @var \Magento\Framework\Module\Manager
      */
     protected $moduleManager;
- 
+
     /**
      * @var \Ced\CsMarketplace\Model\VPaymentsFactory
      */
     protected $_vpaymentFactory;
- 
+
     /**
      * @var \Ced\CsMarketplace\Model\Status
      */
@@ -54,7 +54,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         \Magento\Framework\View\Model\PageLayout\Config\BuilderInterface $pageLayoutBuilder,
         array $data = []
     ) {
-		
+
         $this->_vpaymentFactory = $vpaymentFactory;
         //$this->_status = $status;
         $this->_objectManager = $objectManager;
@@ -62,7 +62,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->moduleManager = $moduleManager;
         parent::__construct($context, $backendHelper, $data);
     }
- 
+
     /**
      * @return void
      */
@@ -76,7 +76,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->setUseAjax(true);
         $this->setVarNameFilter('post_filter');
     }
- 
+
     /**
      * @return $this
      */
@@ -88,11 +88,11 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
             $collection->addFieldToFilter('vendor_id',array('eq'=>$vendor_id));
         }
         $this->setCollection($collection);
-    
+
         parent::_prepareCollection();
         return $this;
     }
- 
+
 
     /**
      * @return $this
@@ -100,14 +100,14 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
      */
     protected function _prepareColumns()
     {
-            
+
 		$this->addColumn('created_at', array(
             'header' => __('Transaction Date'),
             'index' => 'created_at',
             'type' => 'datetime',
             'width' => '100px',
         ));
-		
+
 	$this->addColumn('transaction_id', array(
   			'header'    => __('Transaction ID#'),
   			'align'     => 'left',
@@ -115,15 +115,15 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
   			'filter_index'  => 'transaction_id',
 
   	));
-	
+
 	$this->addColumn('vendor_id', array(
-  			'header'    => __('Vendor Name'),
+  			'header'    => __('Seller'),
   			'align'     => 'left',
    			'index'     => 'vendor_id',
 			'renderer' => 'Ced\CsMarketplace\Block\Adminhtml\Vorders\Grid\Renderer\Vendorname',
 			'filter_condition_callback' => array($this, '_vendornameFilter'),
 		));
-		
+
 	$this->addColumn('payment_method', array(
   			'header'    => __('Payment Mode'),
   			'align'     => 'left',
@@ -134,7 +134,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 			/* 'renderer' => 'Ced_CsMarketplace_Block_Adminhtml_Vpayments_Grid_Renderer_PaymentMode',
 			'filter_condition_callback' => array($this, '_paymentModeFilter'), */
   	));
-	
+
 	$this->addColumn('transaction_type',
         array(
             'header'=> __('Transaction Type'),
@@ -142,7 +142,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 			'type'  => 'options',
 			'options' => \Ced\CsMarketplace\Model\Vpayment::getStates(),
     ));
-	
+
 	$this->addColumn('base_amount',
         array(
             'header'=> __('Amount'),
@@ -150,8 +150,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 			'type'          => 'currency',
             'currency' => 'base_currency'
     ));
-	
-	
+
+
 	$this->addColumn('base_fee',
         array(
             'header'=> __('Adjustment Amount'),
@@ -159,8 +159,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 			'type'          => 'currency',
            'currency' => 'base_currency'
     ));
-	
-	
+
+
 	$this->addColumn('base_net_amount',
         array(
             'header'=> __('Net Amount'),
@@ -168,7 +168,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 			'type'          => 'currency',
             'currency' => 'base_currency'
     ));
-	
+
 	$this->addColumn('amount_desc',
 		array(
 				'header'=> __('Amount Description'),
@@ -176,7 +176,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 				'type'          => 'text',
 				'renderer'=> 'Ced\CsMarketplace\Block\Adminhtml\Vpayments\Grid\Renderer\Orderdesc',
 		));
-			
+
 	$this->addColumn('action',
 			array(
 					'header'    =>  __('Action'),
@@ -197,7 +197,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 			));
         return parent::_prepareCollection();
     }
- 
+
     /**
      * After load collection
      *
@@ -219,7 +219,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $vendor_id = array();
         foreach ($vendors as $_vendor) {
                 $vendor_id[] = $_vendor->getId();
-            }        
+            }
         $this->getCollection()->addFieldToFilter('vendor_id',array('eq'=>$vendor_id));
     }
     /**
@@ -238,7 +238,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 
         $this->getCollection()->addStoreFilter($value);
     }
-    
+
     /**
      * @return string
      */
@@ -246,7 +246,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     {
         return $this->getUrl('*/*/vpaymentsgrid', ['_current' => true]);
     }
- 
+
     /**
      * @param \Ced\CsMarketplace\Model\Vpayments|\Magento\Framework\Object $row
      * @return string

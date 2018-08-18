@@ -16,9 +16,9 @@
  * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
  * @license      http://cedcommerce.com/license-agreement.txt
  */
- 
+
 namespace Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity;
- 
+
 class Edit extends \Magento\Backend\Block\Widget\Form\Container
 {
 
@@ -28,7 +28,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry = null;
-	
+
 	/**
      * @param \Magento\Backend\Block\Widget\Context $context
      * @param \Magento\Framework\Registry $registry
@@ -46,13 +46,13 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
     }
 
     public function _construct()
-    {                        
+    {
         $this->_objectId = 'vendor_id';
         $this->_blockGroup = 'Ced\CsMarketplace';
         $this->_controller = 'adminhtml_vendor_entity';
-        		
+
 		parent::_construct();
-		
+
 		$this->buttonList->add(
             'save_and_continue_edit',
             [
@@ -62,34 +62,34 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
             ],
             10
         );
-		
-		
-        $this->buttonList->update('save', 'label', __('Save Vendor'));
-		$this->buttonList->update('delete', 'label', __('Delete Vendor'));
-        
+
+
+        $this->buttonList->update('save', 'label', __('Save Seller'));
+		    $this->buttonList->update('delete', 'label', __('Delete Seller'));
+
         if( $this->_coreRegistry->registry('vendor_data') && $this->_coreRegistry->registry('vendor_data')->getId() ) {
 	        $vendorId = $this->_coreRegistry->registry('vendor_data')->getId();
 	        $url = '';
 	        $button = '';
 	        $class = '';
 	        $model = $this->_objectManager->get('Ced\CsMarketplace\Model\Vshop')->loadByField(array('vendor_id'),array($vendorId));
-	        
+
 	        if($model->getId()!='' && $model->getShopDisable() == \Ced\CsMarketplace\Model\Vshop::ENABLED){
 	        	$url =  $this->getUrl('*/*/massDisable', array('vendor_id' => $vendorId, 'shop_disable'=> \Ced\CsMarketplace\Model\Vshop::DISABLED, 'inline'=>1));
 	        	$url = "deleteConfirm('".__('Are you sure you want to Disable?')."','".$url."')";
-	        	$button = __('Disable Vendor Shop');
+	        	$button = __('Disable Seller');
 	        	$class = 'delete';
 	        }
 	        else if($model->getId()!='' && $model->getShopDisable() == \Ced\CsMarketplace\Model\Vshop::DISABLED) {
 	        	$url =  $this->getUrl('*/*/massDisable', array('vendor_id' => $vendorId, 'shop_disable'=> \Ced\CsMarketplace\Model\Vshop::ENABLED, 'inline'=>1));
 	        	$url = "deleteConfirm('".__('Are you sure you want to Enable?')."','".$url."')";
-	        	$button = __('Enable Vendor Shop');
+	        	$button = __('Enable Seller');
 	        	$class = 'save';
 	        }
 	        else{
 	        	$url =  $this->getUrl('*/*/massDisable', array('vendor_id' => $vendorId, 'shop_disable'=> \Ced\CsMarketplace\Model\Vshop::DISABLED, 'inline'=>1));
 	        	$url = "deleteConfirm('".__('Are you sure you want to Disable?')."','".$url."')";
-	        	$button = __('Disable Vendor Shop');
+	        	$button = __('Disable Seller');
 	        	$class = 'delete';
 	        }
 	        $this->buttonList->add('shop_disable', [
@@ -100,8 +100,8 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
         }
     }
 
-	
-	
+
+
 	 /**
      * Getter for form header text
      *
@@ -113,7 +113,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
         if ($rule->getVendorId()) {
             return __("Edit '%1'", $this->escapeHtml($vendor->getName()));
         } else {
-            return __('Add Vendor');
+            return __('Add Seller');
         }
     }
 
@@ -126,7 +126,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
     {
         return '{}';
     }
-	
+
     public function getValidationUrl()
     {
         return $this->getUrl('*/*/CheckAvailability', ['_current' => true]);
