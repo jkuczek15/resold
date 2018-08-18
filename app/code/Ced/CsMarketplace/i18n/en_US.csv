@@ -204,7 +204,7 @@ Vendor Since,Vendor Since
 Vendor Profile,Vendor Profile
 There are no vendor available,There are no vendor available
 Go to Shop,Go to Shop
-There are no products from this Vendor,There are no products from this Vendor
+There are no products from this Vendor,You currently have no items for sale
 CsMarketplace Vendor Shops,CsMarketplace Vendor Shops
 CsMarketplace Vendor Shop,CsMarketplace Vendor Shop
 Vendor Products,Vendor Products
@@ -295,7 +295,7 @@ CsMarketplace Page,CsMarketplace Page
 Banner,Banner
 For Top Link and Heading,For Top Link and Heading
 Country Wise Orders,Country Wise Orders
-Add Profile Picture,Add Profile Picture 
+Add Profile Picture,Add Profile Picture
 Add Company Logo,Add Company Logo
 Add Company Banner,Add Company Banner
 Total Commission,Total Commission

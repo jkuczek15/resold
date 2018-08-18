@@ -159,9 +159,10 @@ class LoginPost extends \Magento\Customer\Controller\AbstractAccount
                     $this->session->regenerateId();
                     $vendor =  $this->vendor->loadByCustomerId($customer->getId());
 
-                    // set the vendor id
-                    $this->session->setVendorId($vendor->getId());
-
+                    if($vendor){
+                      // set the vendor id
+                      $this->session->setVendorId($vendor->getId());
+                    }
 
                     if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
                         $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();

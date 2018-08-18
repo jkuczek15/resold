@@ -33,7 +33,7 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
     </div> -->
 <?php if (!$_productCollection->count()): ?>
     <div class="message info empty">
-        <div><?php /* @escapeNotVerified */ echo __('There are no products from this Vendor.') ?></div>
+        <div>You currently have no items for sale. Please visit our <a href="/sell">sell</a> page to begin listing items.</div>
     </div>
 <?php else: ?>
     <?php echo $block->getToolbarHtml() ?>
