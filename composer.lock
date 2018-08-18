@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.64.11",
+            "version": "3.64.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "4f34eafb0da35ecc6ab0dddd4946a233aa03a280"
+                "reference": "22ad993c1ed7a85d660768d30d773babbc7d38bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4f34eafb0da35ecc6ab0dddd4946a233aa03a280",
-                "reference": "4f34eafb0da35ecc6ab0dddd4946a233aa03a280",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/22ad993c1ed7a85d660768d30d773babbc7d38bd",
+                "reference": "22ad993c1ed7a85d660768d30d773babbc7d38bd",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-08-13T21:42:40+00:00"
+            "time": "2018-08-17T20:48:05+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -6355,16 +6355,16 @@
         },
         {
             "name": "mageplaza/module-smtp",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mageplaza/magento-2-smtp.git",
-                "reference": "1f0fcb26cd066d9ca651d58bb18a3aca748f8728"
+                "reference": "299be933764f5da31a54dc1ec2b55ae060f883c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mageplaza/magento-2-smtp/zipball/1f0fcb26cd066d9ca651d58bb18a3aca748f8728",
-                "reference": "1f0fcb26cd066d9ca651d58bb18a3aca748f8728",
+                "url": "https://api.github.com/repos/mageplaza/magento-2-smtp/zipball/299be933764f5da31a54dc1ec2b55ae060f883c6",
+                "reference": "299be933764f5da31a54dc1ec2b55ae060f883c6",
                 "shasum": ""
             },
             "require": {
@@ -6401,7 +6401,7 @@
                 "mageplaza",
                 "smtp"
             ],
-            "time": "2018-07-05T03:38:37+00:00"
+            "time": "2018-08-15T14:46:47+00:00"
         },
         {
             "name": "monolog/monolog",

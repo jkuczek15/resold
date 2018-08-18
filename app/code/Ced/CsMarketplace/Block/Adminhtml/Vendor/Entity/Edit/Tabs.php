@@ -16,7 +16,7 @@
  * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
  * @license      http://cedcommerce.com/license-agreement.txt
  */
- 
+
 namespace Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Edit;
 
 use Magento\Backend\Block\Template\Context;
@@ -26,7 +26,7 @@ use Magento\Framework\Json\EncoderInterface;
 class Tabs extends \Magento\Backend\Block\Widget\Tabs
 {
 	protected $_objectManager;
-	
+
 	public function __construct(
 	    Context $context,
         EncoderInterface $jsonEncoder,
@@ -41,7 +41,7 @@ class Tabs extends \Magento\Backend\Block\Widget\Tabs
 		$this->setDestElementId('edit_form');
 		$this->setTitle(__('Vendor Information'));
 	}
-  
+
 	protected function _beforeToHtml()
 	{
 		$vendor = $this->_objectManager->get('Ced\CsMarketplace\Model\Vendor');
@@ -67,41 +67,41 @@ class Tabs extends \Magento\Backend\Block\Widget\Tabs
 						->toHtml(),
 			));
 		}
-	
+
 		if($vendor_id = $this->getRequest()->getParam('vendor_id',0)) {
 			$this->addTab('payment_details', array(
 					'label'     => __('Payment Details'),
 					'content'   => $this->getLayout()->createBlock('Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Edit\Tab\Payment\Methods')->toHtml(),
 				));
 			$this->addTab('vproducts', array(
-				  'label'     => __('Vendor Products'),
-				  'title'     => __('Vendor Products'),
+				  'label'     => __('Seller Products'),
+				  'title'     => __('Seller Products'),
 				  'content'   => $this->getLayout()->createBlock('Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Edit\Tab\Vproducts')->toHtml(),
 			  ));
 			$this->addTab('vorders', array(
-				  'label'     => __('Vendor Orders'),
+				  'label'     => __('Seller Orders'),
 				  'title'     => __('Vendor Orders'),
 				  'content'   => $this->getLayout()->createBlock('Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Edit\Tab\Vorders')->toHtml(),
 			  ));
 			$this->addTab('vpayments', array(
-				  'label'     => __('Vendor Transactions'),
-				  'title'     => __('Vendor Transactions'),
+				  'label'     => __('Seller Transactions'),
+				  'title'     => __('Seller Transactions'),
 				  'content'   => $this->getLayout()->createBlock('Ced\CsMarketplace\Block\Adminhtml\Vendor\Entity\Edit\Tab\Vpayments')->toHtml(),
-			  )); 
+			  ));
 		}
-	
+
 
 		/**
 		 * Dispatch Event for CsAssign to Assign Product Tab
-		 **/  
+		 **/
 		  /** @var \Magento\Framework\ObjectManagerInterface $om */
-		  $om = \Magento\Framework\App\ObjectManager::getInstance(); 
+		  $om = \Magento\Framework\App\ObjectManager::getInstance();
 		  /** @var \Magento\Framework\Event\ManagerInterface $manager */
 		  $manager = $om->get('Magento\Framework\Event\ManagerInterface');
 		  $manager->dispatch('csmarketplace_adminhtml_vendor_entity_edit_tabs', array('tabs'  => $this));
 		return parent::_beforeToHtml();
 	}
-  
+
   /**
      * Getting attribute block name for tabs
      *

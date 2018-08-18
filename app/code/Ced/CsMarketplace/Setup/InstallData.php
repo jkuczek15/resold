@@ -121,7 +121,7 @@ class InstallData implements InstallDataInterface
                 'visible' => true,
                 'position' => 4,
                 'type' => 'varchar',
-                'label' => 'Vendor Group',
+                'label' => 'Seller Group',
                 'input' => 'select',
                 'source' => 'Ced\CsMarketplace\Model\System\Config\Source\Group',
                 'default_value' => 'general',
