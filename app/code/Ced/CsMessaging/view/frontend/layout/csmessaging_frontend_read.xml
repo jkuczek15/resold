@@ -22,8 +22,13 @@
    <css src="Ced_CsMessaging::dist/css/read.css" />
    <css src="Ced_CsMessaging::dist/css/custom.css" />
    </head>
-  	<update handle="customer_account"/>     
+  	<update handle="customer_account"/>
     <body>
+      <referenceBlock name="page.main.title">
+          <action method="setPageTitle">
+              <argument translate="true" name="title" xsi:type="string">Messages</argument>
+          </action>
+      </referenceBlock>
         <referenceContainer name="content">
             <block class="Ced\CsMessaging\Block\Customer\Queryform" name="csmessaging_compose" template="Ced_CsMessaging::csmessaging/user/read.phtml" cacheable="false"/>
         </referenceContainer>
