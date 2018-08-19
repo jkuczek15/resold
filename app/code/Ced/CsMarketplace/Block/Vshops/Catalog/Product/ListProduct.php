@@ -78,16 +78,18 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                 }
             }
 
-            $vendor = $vendorId = $this->_coreRegistry->registry('current_vendor');
+            $vendor = $this->_coreRegistry->registry('current_vendor');
             if($vendor != null){
-                $vendorId = $vendor->getId();
+              $vendorId = $vendor->getId();
             }else{
               $vendorId = $this->session->getVendorId();
             }
+            if($vendorId == null){
+              return [];
+            }
 
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')
-                        ->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId);
+            $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId);
             $products = [];
             foreach ($collection as $productData) {
                 array_push($products, $productData->getProductId());
