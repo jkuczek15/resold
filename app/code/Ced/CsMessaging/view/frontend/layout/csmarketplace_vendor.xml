@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsMessaging
+  * @author       CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendorpanel"
+      xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="csmarketplace_vendor_navigation">
+
+            <block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_messaging_addon" after="vendor_orders"
+                   ifconfig="ced_csmarketplace/csmessaging/active">
+                <arguments>
+                    <argument name="name" xsi:type="string">vendor_messaging</argument>
+                    <argument name="label" xsi:type="string">Messaging</argument>
+                    <argument name="path" xsi:type="string">#</argument>
+                    <argument name="font_awesome" xsi:type="string">fa fa-envelope-o</argument>
+                </arguments>
+
+                <block class="Ced\CsMarketplace\Block\Links" name="vendor_messaging_addon_container"
+                       as="vendor_messaging_addon_container">
+                    <arguments>
+                        <argument name="css_class" xsi:type="string">nav nav-second-level collapse</argument>
+                    </arguments>
+                    <block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_admin_chat">
+                        <arguments>
+                            <argument name="name" xsi:type="string">vendor_admin_chat</argument>
+                            <argument name="label" xsi:type="string" translate="true">Vendor Admin</argument>
+                            <argument name="path" xsi:type="string">csmessaging/index/admin/</argument>
+                            <argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+                            <argument name="sort_order" xsi:type="string">10</argument>
+                        </arguments>
+                    </block>
+                    <block class="Ced\CsMarketplace\Block\Link\Current" name="vendor_customer_chat">
+                        <arguments>
+                            <argument name="name" xsi:type="string">vendor_customer_chat</argument>
+                            <argument name="label" xsi:type="string" translate="true">Vendor Customer</argument>
+                            <argument name="path" xsi:type="string">csmessaging/customer/customer/</argument>
+                            <argument name="font_awesome" xsi:type="string">fa fa-angle-double-right</argument>
+                            <argument name="sort_order" xsi:type="string">20</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+        </referenceBlock>
+
+    </body>
+</page>
+   

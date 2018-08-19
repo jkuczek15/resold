@@ -1,0 +1,119 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author       CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+$inboxCollection = $this->getCollection();
+$inboxCount = $this->_messagingHelper->getVendorInboxCountForAdmin();
+
+?>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h3>
+            <?php echo __('Vendor Admin Conversation Area'); ?>
+        </h3>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3 mail-box-left">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Folders'); ?></h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>
+                                <a href="<?php echo $this->geturl('csmessaging/index/admin'); ?>"
+                                   class=""><?php echo __('Compose'); ?></a>
+                            </li>
+                            <li class="active"><a
+                                        href="<?php echo $this->geturl('csmessaging/index/inbox'); ?>"><i
+                                            class="fa fa-inbox"></i><?php echo __('Inbox'); ?><span
+                                            class="label label-primary pull-right"><?php if ($inboxCount > 0) {
+                                            echo $inboxCount;
+                                        } ?></span></a></li>
+                            <li>
+                                <a href="<?php echo $this->geturl('csmessaging/index/sent') ?>"><i
+                                            class="fa fa-envelope-o"></i><?php echo __('Sent'); ?></a></li>
+
+                        </ul>
+                    </div><!-- /.box-body -->
+                </div>
+            </div><!-- /.col -->
+            <div class="col-md-9 mail-box-right mail-box-inbox mail-box-sent">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Inbox'); ?></h3>
+
+
+                        <div class="clear"></div>
+                    </div><!-- /.box-tools -->
+
+                </div><!-- /.box-header -->
+                <div class="box-body no-padding">
+                    <div class="mailbox-controls">
+
+                    </div>
+                    <?php if (!count($inboxCollection)): ?>
+                        <p class="note-msg"><?php echo __('There are no messages for you by the admin.') ?></p>
+                    <?php else: ?>
+                        <div class="table-responsive mailbox-messages">
+                            <table class="table table-hover table-striped">
+                                <tbody>
+                                <?php if (!empty($inboxCollection)): ?>
+                                    <?php foreach ($inboxCollection as $msg => $value): ?>
+
+                                        <tr>
+
+                                            <!--                           <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
+                                             -->
+                                            <td class="mailbox-name"><a
+                                                        href="<?php echo $this->getUrl()//Mage::getBaseUrl()?>csmessaging/index/read?id=<?php echo $value['chat_id'] ?>"><?php echo $value['sender_email'] ?></a>
+                                            </td>
+                                            <td class="mailbox-subject"><b><?php echo $value['subject'] ?></td>
+                                            <td class="mailbox-subject">
+                                                <b><?php echo substr($value['message'], 0, 16); ?>
+                                                    ...
+                                            </td>
+                                            <td class="mailbox-attachment"></td>
+                                            <td class="mailbox-date"><?php echo date("d-F-Y H:m:s", strtotime($value['time'])) ?></td>
+                                        </tr>
+                                        <?php
+                                    endforeach; ?>
+                                <?php endif; ?>
+                                </tbody>
+                            </table><!-- /.table -->
+                        </div><!-- /.mail-box-messages -->
+                    <?php endif; ?>
+                </div><!-- /.box-body -->
+                <div class="box-footer no-padding">
+                    <div class="mailbox-controls">
+
+                    </div><!-- /.pull-right -->
+                </div>
+            </div>
+        </div><!-- /. box -->
+    </section>
+</div><!-- /.col -->
+<div>
+    <?php echo $block->getPagerHtml(); ?> <!-- this is render next prev link -->
+</div>
+<!-- Page Script -->

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsMessaging
+  * @author       CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+ -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <menu>
+        <add id="Ced_CsMessaging::view" title = "Vendor Messaging" module="Ced_CsMessaging" sortOrder="10" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMessaging::view" dependsOnModule="Ced_CsMarketplace" dependsOnConfig="ced_csmarketplace/csmessaging/active" />
+        <add id="Ced_CsMessaging::sentbox" title="Messaging" module="Ced_CsMessaging" sortOrder="20" parent="Ced_CsMessaging::view" action="csmessaging/vendor/sent" resource="Ced_CsMessaging::sent" dependsOnModule="Ced_CsMarketplace" dependsOnConfig="ced_csmarketplace/csmessaging/active" />
+    </menu>
+</config>

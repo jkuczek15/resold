@@ -7,6 +7,7 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Customer My Account (All Pages)" design_abstraction="custom">
     <body>
+        <move element="customer-account-navigation-messaging-link" destination="customer_account_navigation" after="customer-account-navigation-address-link" />
         <attribute name="class" value="account"/>
         <referenceContainer name="sidebar.main">
             <block class="Magento\Framework\View\Element\Html\Links" name="customer_account_navigation" before="-" template="Magento_Customer::account/navigation.phtml">
@@ -27,6 +28,12 @@
                         <argument name="label" xsi:type="string" translate="true">Settings</argument>
                         <argument name="path" xsi:type="string">customer/account/edit</argument>
                     </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-messaging-link">
+                  <arguments>
+                      <argument name="label" xsi:type="string" translate="true">Messaging</argument>
+                      <argument name="path" xsi:type="string">csmessaging/frontend/inbox</argument>
+                  </arguments>
                 </block>
             </block>
         </referenceContainer>

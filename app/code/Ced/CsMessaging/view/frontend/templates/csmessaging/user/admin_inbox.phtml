@@ -1,0 +1,141 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<style>
+
+    .page-title-wrapper {
+        display: none;
+    }
+
+
+</style>
+<?php
+$collection = $block->getCollection();
+$messages = $block->getinboxcollection();
+$newCount = $block->getCountCollection();
+
+$adminInboxCount = $this->_messagingHelper->getCustomerInboxCountForAdmin();
+$vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
+
+?>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header content-header-wrap">
+        <h3>
+            <?php echo __('Customer Vendor & Admin Conversation Area') ?>
+        </h3>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="left-sidebar-wrap">
+                <div class="box-header with-border box-folder">
+                    <h3 class="box-title">Folders</h3>
+                </div>
+
+                <div class="box box-solid">
+                    <div class="box-body no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/frontend/customercompose'); ?>"
+                                   class="btn btn-block margin-bottom compose-tab"><?php echo __('Compose') ?></a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/frontend/inbox'); ?>"><?php echo __('Vendor Inbox'); ?>
+                                    <span class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
+                                            echo '(';
+                                            echo $vendorInboxCount;
+                                            echo ')';
+                                        } ?></span></a></li>
+                            <li class="active">
+                                <a href="<?php echo $this->getUrl('csmessaging/frontend/admininbox'); ?>"> <?php echo __('Admin Inbox'); ?>
+                                    <span class="label label-primary pull-right"><?php if ($adminInboxCount > 0) {
+                                            echo '(';
+                                            echo $adminInboxCount;
+                                            echo ')';
+                                        } ?></span></a></li>
+                            <li><a href="<?php echo $this->getUrl('csmessaging/frontend/sent'); ?>"
+                                   class="sent-mail-tab"> Sent</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- /.col -->
+            <div class="right-sidebar-wrap mail-inbox">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Inbox</h3>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="box-body no-padding">
+                    <div class="mailbox-controls">
+
+                    </div><!-- /.pull-right -->
+                </div>
+                <?php if (!$collection->count()): ?>
+                    <p class="note-msg"><?php echo __('There are no messages in your Inbox from Admin.') ?></p>
+                <?php else: ?>
+                    <div class="table-responsive mailbox-messages">
+                        <table class="table table-hover table-striped">
+                            <tbody>
+                            <?php if (!empty($collection)): ?>
+                                <?php foreach ($collection as $msg => $value): ?>
+                                    <?php
+                                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                                    //$vendor_name = $objectManager->get('Ced\CsMarketplace\Model\Vendor')->loadByEmail($value['sender_email'])->getPublicName();
+                                    $admin_name = $this->_scopeConfig->getValue('trans_email/ident_general/name', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
+                                    ?>
+                                    <tr>
+                                        <td class="mailbox-check><input class=" chat_id
+                                        " type="checkbox" value="<?php echo $value['chat_id'] ?>"/></td>
+                                        <!--                           <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
+                                         -->
+                                        <td class="mailbox-name"><a
+                                                    href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo ucwords($admin_name) ?></a>
+                                        </td>
+                                        <td class="mailbox-subject">
+                                            <b><?php echo $value['subject'] ?></b><?php echo substr($value['message'], 0, 16); ?>
+                                            ...
+                                        </td>
+                                        <td class="mailbox-attachment"></td>
+                                        <td class="mailbox-date"><?php echo date("d-F-Y H:m:s", strtotime($value['time']))
+                                            ?></td>
+                                    </tr>
+                                    <?php
+                                endforeach; ?>
+                            <?php endif; ?>
+                            </tbody>
+                        </table><!-- /.table -->
+                    </div><!-- /.mail-box-messages -->
+                <?php endif; ?>
+            </div><!-- /.box-body -->
+            <div class="clear"></div>
+            <div class="box-footer no-padding">
+                <div class="mailbox-controls">
+
+                </div><!-- /.pull-right -->
+            </div>
+        </div>
+        <center>
+            <?php echo $block->getPagerHtml(); ?> <!-- this is render next prev link -->
+        </center>
+</div>

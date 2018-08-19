@@ -1,0 +1,46 @@
+.content-wrapper .content-header > h3 {
+  font-size: 19px;
+}
+.mail-box-right .box-header .box-title {
+  color: #23527c;
+  font-size: 17px;
+  font-weight: 700;
+}
+.mail-box-right .box-primary::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.mail-box-right .box-primary .box-header {
+    float: left;
+    padding: 0 15px;
+    width: 25%;
+}
+.mail-box-right .box-primary .box-body {
+  float: right;
+  padding: 0 15px;
+  width: 75%;
+}
+.mail-box-right .box-primary .form-group select {
+  height: 34px;
+  width: 100%;
+}
+.mail-box-right .box-body .form-group .form-control {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  height: 34px;
+  width: 100%;
+}
+.mail-box-right .box-body .box-footer {
+  float: right;
+}
+.mail-box-right .box-body .box-footer button {
+  background: #007668 none repeat scroll 0 0 !important;
+  border: 1px solid #007668 !important;
+  color: #fff;
+}
+.mail-box-right .vendor_customer_email > label {
+  font-weight: 700;
+}

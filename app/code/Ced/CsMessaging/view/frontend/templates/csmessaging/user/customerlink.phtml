@@ -1,0 +1,43 @@
+<?php 
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+?>
+<?php
+
+$enable=1;//Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
+if($enable=='1'){	?>
+
+<div class="block block-layered-nav block-layered-nav-1">
+    <div class="block-title">
+        <strong><span><?php echo __('Message To Vendor');?></span></strong>
+    </div>
+    <div class="block-content">
+        <dl id="narrow-by-list2">
+            <dd class="last odd">
+                <dl>
+                    <dt>
+                        <?php $vendor_id=$this->getVendorId();  ?>
+								<a href="<?php echo $this->getUrl();//Mage::getBaseUrl() ?>csmessaging/frontend/customercompose?id=<?php echo $vendor_id?>" class="customer_vendor_contact"><?php echo __('Submit your query');?></a>
+                    </dt>
+                </dl>
+            </dd>
+        </dl>
+    </div>
+</div>
+<?php 
+		 }
+?>
