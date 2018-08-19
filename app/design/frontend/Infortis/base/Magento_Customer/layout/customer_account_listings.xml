@@ -7,6 +7,11 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="customer_account"/>
+    <head>
+        <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
+    		<css src="Ced_CsMarketplace::css/category.css" />
+        <css src="Ced_CsMarketplace::css/shoppage.css" />
+    </head>
     <body>
         <referenceBlock name="page.main.title">
             <action method="setPageTitle">

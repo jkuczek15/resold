@@ -22,10 +22,10 @@ $label = str_replace('Sign Out', '<img style="margin-top: 0.25em" width="30em" s
 
 // redirect to the account page
 $dataPostParam = str_replace('\/logout', '/listings', $dataPostParam);
-$href = str_replace('/logout', '', $block->getLinkAttributes());
+$href = str_replace('/logout', '/listings', $block->getLinkAttributes());
 ?>
 <li class="authorization-link" data-label="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('or')); ?>">
-    <a <?php /* @noEscape */ echo $href; ?><?php /* @noEscape */ echo $dataPostParam; ?>>
+    <a <?php /* @noEscape */ echo $href; ?>>
         <?php echo $label; ?>
     </a>
 </li>
