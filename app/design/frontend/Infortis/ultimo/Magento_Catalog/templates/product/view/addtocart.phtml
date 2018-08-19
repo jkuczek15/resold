@@ -57,6 +57,20 @@ if($userProduct){
         <?php endif; ?>
         <div class="actions">
             <?php echo $buttonHtml ?>
+<?php if (!$userProduct): ?>
+              <a href="#"
+                    title=""
+                    class="action primary custom-button"
+                    id="product-offer-button">
+                    <span>Send Offer</span>
+              </a>
+              <a href="#"
+                    title=""
+                    class="action primary custom-button"
+                    id="product-message-button">
+                    <span>Contact Seller</span>
+              </a>
+<?php endif; ?>
             <?php echo $block->getChildHtml('', true) ?>
         </div>
     </div>
@@ -81,3 +95,14 @@ if($userProduct){
     }
 </script>
 <?php endif; ?>
+<style>
+.product-info-main .box-tocart .action.tocart, .product-options-bottom .box-tocart .action.tocart, .bundle-options-container .box-tocart .action.tocart, .product-info-main .box-tocart .action.instant-purchase, .product-options-bottom .box-tocart .action.instant-purchase, .bundle-options-container .box-tocart .action.instant-purchase {
+  min-width: 179px;
+}
+.custom-button {
+  line-height: 2.2rem !important;
+  padding: 15px 17px !important;
+  font-size: 1.8rem !important;
+  min-width: 179px;
+}
+</style>
