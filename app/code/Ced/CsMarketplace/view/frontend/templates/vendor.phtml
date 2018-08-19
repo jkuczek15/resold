@@ -17,10 +17,11 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $_product = $block->getProduct();
 $model =  \Magento\Framework\App\ObjectManager::getInstance();
 $productSku = $block->getProduct()->getSku();
-$VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()
-				->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+$VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+$sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
-if (!empty($VendorId)) {
+
+if (!empty($VendorId) && $sessionId != $VendorId) {
 	$array = array('name');
 	$vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
 	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
