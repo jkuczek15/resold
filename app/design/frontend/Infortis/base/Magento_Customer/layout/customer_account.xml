@@ -31,7 +31,7 @@
                 </block>
                 <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-messaging-link">
                   <arguments>
-                      <argument name="label" xsi:type="string" translate="true">Messaging</argument>
+                      <argument name="label" xsi:type="string" translate="true">Messages</argument>
                       <argument name="path" xsi:type="string">csmessaging/frontend/inbox</argument>
                   </arguments>
                 </block>
