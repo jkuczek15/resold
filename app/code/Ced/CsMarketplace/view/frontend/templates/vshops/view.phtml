@@ -40,13 +40,12 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
         }
     </style>
     <div class="block block-poll">
-        <div class="block-title">
-            <strong><span><?php echo __('Vendor Profile') ?></span></strong>
-        </div>
+        <!-- <div class="block-title">
+        </div> -->
         <?php ?>
         <div class="block-content" style="padding: 10px;">
             <img src="<?php echo $helper->getResizeImage($this->getVendorLogo(), 'logo', $width, $height); ?>"/>
-            <ul>
+            <!-- <ul>
                 <?php foreach ($this->getLeftProfileAttributes() as $attribute) {?>
                     <li>
                         <?php if ($attribute->getFrontendInput() == 'file' || $attribute->getFrontendInput() == 'image') : ?>
@@ -70,7 +69,7 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
                     </li>
                 <?php }
                  ?>
-            </ul>
+            </ul> -->
         </div>
     </div>
     <style>

@@ -16,25 +16,5 @@
  * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
  * @license     http://cedcommerce.com/license-agreement.txt
  */
- 
+
 ?>
-<?php 
-	$helper = $this->helper('Ced\CsMarketplace\Helper\Tool\Image');
-	// Vendor Logo 
-	$width = (int)$helper->getStoreConfig('ced_vshops/general/banner_image_width', $this->getCurrentStoreId());
-	$height = (int)$helper->getStoreConfig('ced_vshops/general/banner_image_height', $this->getCurrentStoreId());
-	$width = $width ? $width : 668;
-	$height = $height ? $height : 150;
-?>
-<?php if ($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
-	<div class="category-products">
-    <ul class="products-list" id="products-list" style="list-style: none">
-        <li>
-            <a>
-             	<img id="product-collection-image-1" alt="Company Banner" height="100%" width="100%" 
-		          src="<?php echo $helper->getResizeImage($this->getVendorBanner(), 'banner', $width, $height); ?>" />
-            </a>
-        </li>
-     </ul>
-   </div>
-<?php } ?>

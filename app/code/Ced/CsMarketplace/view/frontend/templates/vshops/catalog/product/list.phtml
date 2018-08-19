@@ -60,8 +60,8 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
             $iterator = 1;  // Vendor Logo
             $width = (int)$helper_data->getStoreConfig('ced_vshops/general/list_image_width', $this->getCurrentStoreId());
             $height = (int)$helper_data->getStoreConfig('ced_vshops/general/list_image_height', $this->getCurrentStoreId());
-            $width = $width ? $width : 135;
-            $height = $height ? $height : 135;
+            $width = $width ? $width : 200;
+            $height = $height ? $height : 200;
         ?>
         <ol class="products list items product-items">
             <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
@@ -89,8 +89,7 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
                         <?php echo $block->getReviewsSummaryHtml($_product, $templateType); ?>
                         <?php /* @escapeNotVerified */ echo $block->getProductPrice($_product) ?>
                         <?php echo $block->getProductDetailsHtml($_product); ?>
-
-                        <div class="product-item-inner">
+                        <!-- <div class="product-item-inner">
                             <div class="product actions product-item-actions"<?php echo strpos($pos, $viewMode . '-actions') ? $position : ''; ?>>
                                 <div class="actions-primary"<?php echo strpos($pos, $viewMode . '-primary') ? $position : ''; ?>>
                                     <?php if ($_product->isSaleable()): ?>
@@ -140,7 +139,7 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
                                        class="action more"><?php /* @escapeNotVerified */ echo __('Learn More') ?></a>
                                 </div>
                             <?php endif; ?>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
               <?php echo($iterator == count($_productCollection)+1) ? '</li>' : '' ?>
@@ -161,3 +160,9 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
     <?php endif; ?>
 <?php endif; ?>
 <?php } ?>
+
+<style>
+.products.products-grid .products .product-item {
+  margin-right: 2em;
+}
+</style>
