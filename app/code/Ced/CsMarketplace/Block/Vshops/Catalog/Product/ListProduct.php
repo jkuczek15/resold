@@ -77,8 +77,14 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                     $cedLayer->setCurrentCategory($cedCategory);
                 }
             }
-            $vendorId = $this->session->getVendorId();
-            //$vendorId = $this->_coreRegistry->registry('current_vendor')->getId();
+
+            $vendor = $vendorId = $this->_coreRegistry->registry('current_vendor');
+            if($vendor != null){
+                $vendorId = $vendor->getId();
+            }else{
+              $vendorId = $this->session->getVendorId();
+            }
+
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')
                         ->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId);
