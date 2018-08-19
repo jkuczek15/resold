@@ -84,9 +84,6 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
             }else{
               $vendorId = $this->session->getVendorId();
             }
-            if($vendorId == null){
-              return [];
-            }
 
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId);
