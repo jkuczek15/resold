@@ -9,7 +9,34 @@
 /** @var $block \Magento\Catalog\Block\Product\View */
 ?>
 <?php $_product = $block->getProduct(); ?>
-<?php $buttonTitle = __('Purchase'); ?>
+<?php
+
+$model =  \Magento\Framework\App\ObjectManager::getInstance();
+$productSku = $_product->getSku();
+$VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+$sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
+$VendorId = $VendorProduct->getVendorId();
+
+// whether this is the current seller's product
+$userProduct = $sessionId == $VendorId;
+if($userProduct){
+  $buttonTitle = __('Edit');
+  $buttonHtml = '<a href="/sell"
+                    title="'.$buttonTitle.'"
+                    class="action primary tocart"
+                    id="product-addtocart-button">
+                    <span>'.$buttonTitle.'</span>
+                </a>';
+}else{
+  $buttonTitle = __('Purchase');
+  $buttonHtml = '<button type="submit"
+                    title="'.$buttonTitle.'"
+                    class="action primary tocart"
+                    id="product-addtocart-button">
+                    <span>'.$buttonTitle.'</span>
+                </button>';
+}
+?>
 <?php if ($_product->isSaleable()): ?>
 <div class="box-tocart">
     <div class="fieldset">
@@ -29,12 +56,7 @@
         </div>
         <?php endif; ?>
         <div class="actions">
-            <button type="submit"
-                    title="<?php /* @escapeNotVerified */ echo $buttonTitle ?>"
-                    class="action primary tocart"
-                    id="product-addtocart-button">
-                <span><?php /* @escapeNotVerified */ echo $buttonTitle ?></span>
-            </button>
+            <?php echo $buttonHtml ?>
             <?php echo $block->getChildHtml('', true) ?>
         </div>
     </div>
