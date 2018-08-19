@@ -1,0 +1,116 @@
+/**
+ * CedCommerce
+ *  
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsVendorChat
+ * @author         CedCommerce Core Team <coreteam@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+.chat {
+    height: 465px;
+    margin: 0 auto;
+    overflow-y: scroll;
+    padding: 10px;
+    width: 60%;
+}
+.chat-img.pull-left {
+    float: left;
+}
+.chat-img .img-circle {
+    border-radius: 100%;
+}
+
+.vendor_chat .chat-body .header {
+    background: transparent none repeat scroll 0 0;
+}
+.vendor_chat .vendor_name {
+    float: left;
+    font-size: 15px;
+    line-height: 50px;
+    margin-left: 10px;
+}
+.vendor_chat .vendor_name {
+    float: left;
+    font-size: 15px;
+    line-height: 50px;
+    margin-left: 10px;
+}
+.vendor_chat .chat-body.clearfix > p {
+    background: #eaeaea none repeat scroll 0 0 !important;
+    border: 1px solid #eaeaea !important;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+    color: #252525 !important;
+}
+.admin_chat .chat-body.clearfix > p {
+    background: #07b3b3 none repeat scroll 0 0;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    color: #fff;
+    margin: 10px 0;
+    padding: 8px;
+    width: 98%;
+}
+.admin_chat .img-circle {
+    float: right;
+}
+#adminchatform .comment-box {
+    margin: 0 auto;
+    width: 60%;
+}
+#adminchatform .chatmsg {
+    border: 1px solid #a6a6a6;
+    height: 50px;
+    margin: 15px 2px;
+    padding: 5px;
+    width: 98%;
+}
+#adminchatform .btn {
+    background: #000 none repeat scroll 0 0;
+    border: 1px solid #000;
+    margin: 0 2px;
+    padding: 5px 15px;
+}
+.admin_chat .header {
+    background: transparent none repeat scroll 0 0;
+}
+.admin_chat .primary-font {
+    line-height: 50px;
+    margin-right: 10px;
+}
+.admin_chat .chat-body.clearfix {
+    border-bottom: 1px dashed #7d7d7d;
+    margin: 0 0 15px;
+}
+.admin_chat > p {
+    border-bottom: 1px solid #000;
+    font-size: 35px;
+    margin: 22px auto;
+    padding: 10px 0;
+    text-align: center;
+    width: 31%;
+}
+.even .statusmsg {
+  /*background-image: url("images/Default_New1.png");*/
+  background-position: 5px 0;
+  background-repeat: no-repeat;
+  background-size: 51px auto;
+  color:red;
+  }
+  .admin_vendor_email {
+  float: left;
+}
+.input-group-btn {
+  float: right;
+}
+

@@ -1,0 +1,94 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author       CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+$chat_id = $this->getRequest()->getParam('id');
+$chat = $this->_messagingFactory->create()->load($chat_id);
+$originalDate = $chat->getTime();
+$newDate = date("d-F-Y H:m:s", strtotime($originalDate));
+$inboxCount = $this->_messagingHelper->getVendorInboxCountForAdmin();
+$backurl = $this->getUrl('csmessaging/index/inbox');
+?>
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h3>
+            <?php echo __('Read Mail'); ?>
+        </h3>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3 mail-box-left">
+
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Folders</h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/index/admin') ?>" class=""><?php echo __('Compose'); ?></a>
+                            </li>
+                            <li><a href="<?php echo $this->getUrl('csmessaging/index/inbox') ?>"><i
+                                            class="fa fa-inbox"></i><?php echo __('Inbox'); ?><span
+                                            class="label label-primary pull-right"><?php if ($inboxCount > 0) {
+                                            echo $inboxCount;
+                                        } ?></span></a></li>
+                            <li><a href="<?php echo $this->getUrl('csmessaging/index/sent') ?>"><i
+                                            class="fa fa-envelope-o"></i><?php echo __('Sent'); ?></a></li>
+                        </ul>
+                    </div><!-- /.box-body -->
+                </div>
+            </div><!-- /.col -->
+            <div class="col-md-9 mail-box-right">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Read Mail'); ?></h3>
+                        <div class="box-tools pull-right back-btn-tool">
+                            <input value="Reply" class="btn btn-box-tool"
+                                   onclick="window.location.href = ' <?php echo $this->getUrl('csmessaging/index/admin'); ?>'"
+                                   type="button">
+                            <INPUT Type="button" VALUE="Back" class="btn btn-box-tool"
+                                   onclick="window.location.href='<?php echo $this->getUrl('csmessaging/index/sent'); ?>'">
+                        </div>
+                        <div class="clear"></div>
+
+                    </div><!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <div class="mailbox-read-info">
+                            <h3><?php echo $chat->getSubject(); ?></h3>
+                            <h5><?php //echo $chat->getSenderEmail(); ?> <span
+                                        class="mailbox-read-time pull-right"><?php echo $newDate; ?></span></h5>
+                        </div><!-- /.mailbox-read-info -->
+                        <!-- /.mailbox-controls -->
+                        <div class="mailbox-read-message">
+                            <?php echo $chat->getMessage() ?>
+                        </div><!-- /.mailbox-read-message -->
+                    </div><!-- /.box-body -->
+                    <!-- /.box-footer -->
+                    <div class="box-footer">
+                        <div class="pull-right">
+                        </div>
+                    </div><!-- /.box-footer -->
+                </div><!-- /. box -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </section><!-- /.content -->
+</div><!-- /.content-wrapper -->

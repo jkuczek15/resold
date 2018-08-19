@@ -1,0 +1,26 @@
+    .mail-box-right .box-header.with-border {
+        float: right;
+    }
+    .mail-box-right .btn-box-tool {
+        background: #eb5202;
+        border: 1px solid #eb5202;
+        color: #fff;
+        padding: 6px 19px;
+    }
+    .mailbox-read-info h5::after {
+        clear: both;
+        content: "";
+        display: table;
+    }
+    .mailbox-read-info .mailbox-read-time {
+        font-size: 15px;
+        margin-top: 10px;
+        color: #333;
+        font-weight: 700;
+    }
+    .mailbox-read-info h3 {
+        color: #333;
+        font-size: 18px;
+        font-weight: 700;
+        text-transform: capitalize;
+    }

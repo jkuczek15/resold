@@ -1,0 +1,156 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author       CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+$collection = $this->getCollection();
+$newCount = $this->_messagingHelper->getVendorInboxCountForAdmin();
+?>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h3>
+            <?php echo __('Vendor Admin Conversation Area'); ?>
+        </h3>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3 mail-box-left">
+
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Folders'); ?></h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/index/admin');?>"
+                                   class=""><?php echo __('Compose'); ?></a>
+                            </li>
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/index/inbox');?>"><i
+                                            class="fa fa-inbox"></i><?php echo __('Inbox'); ?><span
+                                            class="label label-primary pull-right"><?php if ($newCount > 0) {
+                                            echo $newCount;
+                                        } ?></span></a></li>
+                            <li class="active"><a href="<?php echo $this->getUrl('csmessaging/index/sent'); ?>"><i
+                                            class="fa fa-envelope-o"></i><?php echo __('Sent'); ?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- /.col -->
+            <div class="col-md-9 mail-box-right mail-box-sent">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Sent Box'); ?></h3>
+
+                        <div class="clear"></div>
+                        <div class="box-tools pull-right">
+
+                        </div><!-- /.box-tools -->
+                    </div><!-- /.box-header -->
+                    <div class="box-body no-padding">
+
+                        <?php if (!count($collection))://if(!$collection->count()): ?>
+                            <p class="note-msg"><?php echo __('There are no messages sent to you by the admin.') ?></p>
+                        <?php else: ?>
+                            <div class="table-responsive mailbox-messages">
+                                <table class="table table-hover table-striped">
+                                    <tbody>
+                                    <?php if (!empty($collection)): ?>
+                                        <?php foreach ($collection as $msg => $value): ?>
+                                            <tr>
+
+                                                <!--                           <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
+                                                 -->
+                                                <td class="mailbox-name"><a
+                                                            href="<?php echo $this->getUrl()//Mage::getBaseUrl()?>csmessaging/index/read?id=<?php echo $value['chat_id'] ?>"><?php echo $value['receiver_name'] ?></a>
+                                                </td>
+                                                <td class="mailbox-subject"><b><?php echo $value['subject'] ?></td>
+                                                <td class="mailbox-subject"><b><?php echo substr($value['message'], 0, 16); ?>
+                                                    ...
+                                                </td>
+                                                <td class="mailbox-attachment"></td>
+                                                <td class="mailbox-date"><?php echo date("d-F-Y H:m:s", strtotime($value['time'])) ?></td>
+                                            </tr>
+                                        <?php endforeach ?>
+                                    <?php endif; ?>
+                                    </tbody>
+                                </table><!-- /.table -->
+                            </div><!-- /.mail-box-messages -->
+                        <?php endif; ?>
+                    </div><!-- /.box-body -->
+                    <div class="box-footer no-padding">
+
+                    </div>
+                </div><!-- /. box -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
+<div>
+    <?php echo $this->getPagerHtml(); ?>
+</div>
+
+<!-- Page Script -->
+<script>
+    require([
+        "jquery",
+        "jquery/ui"
+    ], function ($) {
+        jQuery(function () {
+            //Enable iCheck plugin for checkboxes
+            //iCheck for checkbox and radio inputs
+
+            //Enable check and uncheck all functionality
+            jQuery(".checkbox-toggle").click(function () {
+                var clicks = $(this).data('clicks');
+                if (clicks) {
+                    //Uncheck all checkboxes
+                    jQuery("input[type='checkbox']", ".mailbox-messages").iCheck("uncheck");
+                } else {
+                    //Check all checkboxes
+                    jQuery("input[type='checkbox']", ".mailbox-messages").iCheck("check");
+                }
+                jQuery(this).data("clicks", !clicks);
+            });
+
+            //Handle starring for glyphicon and font awesome
+            jQuery(".mailbox-star").click(function (e) {
+                e.preventDefault();
+                //detect type
+                var $this = jQuery(this).find("a > i");
+                var glyph = $this.hasClass("glyphicon");
+                var fa = $this.hasClass("fa");
+
+                //Switch states
+                if (glyph) {
+                    $this.toggleClass("glyphicon-star");
+                    $this.toggleClass("glyphicon-star-empty");
+                }
+
+                if (fa) {
+                    $this.toggleClass("fa-star");
+                    $this.toggleClass("fa-star-o");
+                }
+            });
+        });
+    });
+</script>

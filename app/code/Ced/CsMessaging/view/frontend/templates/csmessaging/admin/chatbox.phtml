@@ -1,0 +1,134 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author       CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+$receiver_name = $this->_messagingHelper->getAdminStoreName();
+$inboxCount = $this->_messagingHelper->getVendorInboxCountForAdmin();
+?>
+<div class="top_msg"></div>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h3><?php echo __('Vendor Admin Conversation Area') ?></h3>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3 mail-box-left">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Folders'); ?></h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a
+                                        href="<?php echo $this->getUrl('csmessaging/index/inbox'); ?>"><i
+                                            class="fa fa-inbox"></i><?php echo __('Inbox'); ?><span
+                                            class="label label-primary pull-right"><?php if ($inboxCount > 0) {
+                                            echo $inboxCount;
+                                        } ?></span></a></li>
+                            <li><a href="<?php echo $this->getUrl('csmessaging/index/sent'); ?>"><i
+                                            class="fa fa-envelope-o"></i><?php echo __('Sent') ?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 mail-box-right">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Compose New Message') ?></h3>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="<?php echo __('TO') ?>::"
+                                   value="<?php echo $receiver_name; ?>"/>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="<?php echo __('Subject') ?>:"
+                                   id="vendor_subject"/>
+                        </div>
+                        <div class="admin__form-loading-mask loading_send" data-component="product_form.product_form"
+                             data-role="spinner" style="display:none;">
+                            <div class="spinner">
+                                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+							<textarea id="compose-textarea" class="form-control"
+                                      style="height: 300px"></textarea>
+                        </div>
+                        <div class="box-footer">
+                            <?php if ($this->_scopeConfig->getValue('ced_csmarketplace/csmessaging/vendor_send_mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) { ?>
+                                <div class="vendor_admin_email">
+                                    <input type="checkbox" name="sent_admin_mail" value="1" id="sent_admin_mail"/>
+                                    <label><?php echo __('Email this message to Admin') ?></label>
+                                </div>
+                            <?php } ?>
+                            <div class="pull-right">
+                                <button class="btn btn-primary" id="btn-chat" onclick="send()">
+                                    <i class="fa fa-envelope-o"></i><?php echo __('Send') ?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</div>
+<script>
+
+
+    function send() {
+        require([
+            "jquery"
+        ], function ($) {
+            var text = jQuery("#compose-textarea").val();
+            var vendor_subject = jQuery("#vendor_subject").val();
+            var isMailsent = '';
+
+
+            if ($('#sent_admin_mail').is(":checked")) {
+                isMailsent = $('#sent_admin_mail').val();
+            }
+
+            if (!text) {
+                alert('Message cannot be Empty');
+                return false;
+            }
+            if (!vendor_subject) {
+                alert('Subject cannot be Empty');
+                return false;
+            }
+            jQuery(".loading_send").css("display", "block");
+            jQuery("#btn-chat").css("background-color", "#DBD0D0");
+
+
+            jQuery.ajax({
+                url: "<?php echo $this->getUrl('csmessaging/index/submit')?>",
+                type: "POST",
+                data: {msg: text, subject: vendor_subject, isMailsent: isMailsent},
+                success: function () {
+                    jQuery(".loading_send").css("display", "none");
+                    jQuery("#btn-chat").css("background-color", "#337ab7");
+                    jQuery(".top_msg").html('<ul class="messages"><li class="success-msg"><ul><li><span>Your Query Has Been Sent To Admin.</span></li></ul></li></ul>');
+                    jQuery("#compose-textarea").val('');
+                    jQuery("#vendor_subject").val('');
+                }
+
+            });
+
+        });
+    }
+</script>

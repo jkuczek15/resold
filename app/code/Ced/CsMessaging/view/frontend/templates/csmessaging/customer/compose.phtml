@@ -1,0 +1,154 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author       CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+$customer_id = $this->getRequest()->getParam('id');
+$customer_email = $this->_objectManager->get('Magento\Customer\Model\Customer')->setWebisteId(1)->load($customer_id)->getEmail();
+$receiver_email = $this->_scopeConfig->getValue('trans_email/ident_general/email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$receiver_name = $this->_scopeConfig->getValue('trans_email/ident_general/name', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+$inboxCount = $this->_messagingHelper->getVendorInboxCountForCustomer();
+$customers = $this->getCustomerCollection();
+?>
+<div class="top_msg"></div>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h3>
+            <?php echo __('Vendor Customer Conversation Area') ?>
+        </h3>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3 mail-box-left">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Folders</h3>
+
+                    </div>
+                    <div class="box-body no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/customer/inbox');//echo Mage::getUrl('csvendorchat/customer/inbox')?>"><i
+                                            class="fa fa-inbox"></i><?php echo __('Inbox'); ?><span
+                                            class="label label-primary pull-right"><?php if ($inboxCount > 0) {
+                                            echo $inboxCount;
+                                        } ?></span></a></li>
+                            <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/customer/sent');//echo Mage::getUrl('csvendorchat/customer/sent')?>"><i
+                                            class="fa fa-envelope-o"></i><?php echo __('Sent'); ?></a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 mail-box-right">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><?php echo __('Compose New Message') ?></h3>
+                        <div class="clear"></div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="form-group required-entry">
+                            <select name="receiver_email" class="form-control required-entry" id="receiver_email">
+                                <?php
+                                foreach ($customers as $customer) {
+                                    if ($block->getVedndorEmail()['email'] == $customer->getEmail())
+                                        continue;
+                                    ?>
+                                    <option value="<?php echo $customer->getEmail() ?>" <?php if ($customer_email == $customer->getEmail()) { ?> selected="selected"<?php } ?>><?php echo $customer->getFirstname() . ' ' . $customer->getlastname() ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control required-entry" name="email_subject" placeholder="Subject:"
+                                   id="vendor_subject" value=""/>
+                        </div>
+                        <div class="loading_send" style="display:none">
+                            <img src="<?php //echo $this->getUrl(); //echo Mage::getBaseUrl('skin')?>frontend/ced/default/css/ced/csvendorchat/images/loadingchat.gif"
+                                 alt="sending..." class="sending"/>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="compose-textarea" name="text_email" class="form-control" style="height: 300px"
+                                      value=""></textarea>
+                        </div>
+                        <?php
+                        //Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/enable_chat_for_vendor');
+                        if ($this->_scopeConfig->getValue('ced_csmarketplace/csmessaging/vendor_send_mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) {
+                            ?>
+                            <div class="vendor_customer_email">
+                                <input type="checkbox" name="sent_cust_mail" value="1" id="sent_cust_mail"/>
+                                <label><?php echo __('Email this message to Vendor') ?></label>
+
+                            </div>
+                        <?php } ?>
+                        <div class="box-footer">
+                            <div class="pull-right">
+
+                                <button class="btn btn-primary" id="btn-chat" onclick="send()"><i
+                                            class="fa fa-envelope-o"></i><?php echo __('Send'); ?>
+                                </button>
+                            </div>
+                            <div class="admin__form-loading-mask loading_send"
+                                 data-component="product_form.product_form" data-role="spinner" style="display:none;">
+                                <div class="spinner">
+                                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</div>
+<script>
+    function send() {
+        require([
+            "jquery"
+        ], function ($) {
+            var text = jQuery("#compose-textarea").val();
+            var vendor_subject = jQuery("#vendor_subject").val();
+            var customeremail = jQuery("#receiver_email").val();
+            var isMailsent = '';
+
+            if ($('#sent_cust_mail').is(":checked")) {
+                isMailsent = $('#sent_cust_mail').val();
+            }
+            if (!text) {
+                alert('Message cannot be Empty');
+                return false;
+            }
+            if (!vendor_subject) {
+                alert('Subject cannot be Empty');
+                return false;
+            }
+            jQuery(".loading_send").css("display", "block");
+            jQuery("#btn-chat").css("background-color", "#DBD0D0");
+
+            jQuery.ajax({
+                url: "<?php echo $this->getUrl('csmessaging/customer/submit')?>",
+                type: "POST",
+                data: {msg: text, subject: vendor_subject, receiver: customeremail, isMailsent: isMailsent},
+                success: function (response) {
+                    jQuery(".loading_send").css("display", "none");
+                    jQuery("#btn-chat").css("background-color", "#337ab7");
+                    jQuery(".top_msg").html('<ul class="messages"><li class="success-msg"><ul><li><span>Message Has Been Sent To Customer.</span></li></ul></li></ul>');
+                    jQuery("#compose-textarea").val('');
+                    jQuery("#vendor_subject").val('');
+                }
+            });
+        });
+    }
+</script>

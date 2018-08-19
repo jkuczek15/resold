@@ -1,0 +1,60 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_CsMessaging
+ * @author       CedCommerce Core Team <connect@cedcommerce.com >
+ * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+$chat_id=$this->getRequest()->getParam('chat_id');
+$chat=$this->_messagingFactory->create()->load($chat_id);
+$originalDate =$chat->getTime();
+$newDate = date("d-F-Y H:m:s", strtotime($originalDate));
+$messages=$this->getinboxcollection();
+$backurl=$this->getUrl('csmessaging/vendor/sent');
+?>
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12 mail-box-right">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <div class="box-tools pull-right back-btn-tool">
+                            <input value="Reply" class="btn btn-box-tool" onclick="window.location.href = ' <?php echo $this->getUrl('csmessaging/vendor/sent',['vendor_id'=>$chat->getVendorId()]);?>'" type="button">
+                            <input type="button" value="Back" class="btn btn-box-tool" onclick="window.location.href='<?php echo $this->getUrl('csmessaging/vendor/sent');?>'">
+                        </div>
+                        <div class="clear"></div>
+                    </div><!-- /.box-header -->
+                    <div class="box-body no-padding">
+                        <div class="mailbox-read-info">
+                            <h3><?php echo $chat->getSubject(); ?></h3>
+                            <h5><?php //echo $chat->getSenderEmail(); ?> <span class="mailbox-read-time pull-right"><?php echo $newDate; ?></span></h5>
+                        </div><!-- /.mailbox-read-info -->
+                        <!-- /.mailbox-controls -->
+                        <div class="mailbox-read-message">
+                            <?php echo $chat->getMessage()?>
+                        </div><!-- /.mailbox-read-message -->
+                    </div><!-- /.box-body -->
+                    <!-- /.box-footer -->
+                    <div class="box-footer">
+                        <div class="pull-right">
+                        </div>
+                    </div><!-- /.box-footer -->
+                </div><!-- /. box -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </section><!-- /.content -->
+</div><!-- /.content-wrapper -->

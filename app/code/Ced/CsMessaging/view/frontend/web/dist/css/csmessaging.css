@@ -1,0 +1,84 @@
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category    Ced
+  * @package     Ced_CsMessaging
+  * @author       CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+-->
+@CHARSET "UTF-8";
+.left-sidebar-wrap {
+  float: left;
+  width: 20%;
+  padding-right: 3px;
+}
+.left-sidebar-wrap ul.nav {
+  padding-left: 0;
+}
+.left-sidebar-wrap ul.nav li {
+  list-style: outside none none;
+  margin-bottom: 2px;
+  position: relative;
+}
+.right-sidebar-wrap {
+  float: right;
+  width: 77%;
+  padding-left: 3px;
+}
+.mailbox-read-time.pull-right {
+    margin-bottom: 15px;
+}
+.right-sidebar-wrap .chhosevendors select,
+.right-sidebar-wrap .form-group textarea,
+.right-sidebar-wrap .form-group input{
+ margin-bottom:16px;
+}
+.right-sidebar-wrap .form-group input {
+  border: 1px solid rgb(179, 179, 179);
+  height: 35px;
+ padding: 3px 10px;
+  width: 97%;
+}
+.left-sidebar-wrap ul.nav li a {
+  background: #e9e9e9 none repeat scroll 0 0;
+  color: rgb(51, 51, 51);
+  display: block;
+  padding: 8px;
+}
+.left-sidebar-wrap .box-title,.right-sidebar-wrap .box-title {
+  background: rgb(51, 51, 51) none repeat scroll 0 0;
+  color: rgb(255, 255, 255);
+  padding: 7px 5px;
+}
+@media (max-width: 400px){
+    .left-sidebar-wrap {
+    float: left;
+    padding: 0px;
+    width: 23%;
+  }
+  .box-title{
+  	font-size: 14px;
+  }
+}
+@media (max-width: 650px){
+  table.table.table-hover.table-striped {
+    max-width: 650px;
+    width: 650px;
+} 
+  .table-responsive.mailbox-messages {
+    overflow-x: scroll;
+}
+}
+.left-sidebar-wrap ul.nav li.active a {
+    background-color: #d8d8d8;
+}

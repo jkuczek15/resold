@@ -1,0 +1,17 @@
+.nav-stacked .label-primary {
+  float: none;
+  line-height: 13px;
+  position: absolute;
+  top: 7px;
+  padding: 3px 5px;
+}
+.admin_chat .comment-box .chatmsg {
+  width: 100%;
+  height: 62px!important;
+}
+.admin_chat .comment-box .msgsend {
+  color: #ffffff;
+}
+.admin_chat > p {
+  font-size: 30px!important;
+}
