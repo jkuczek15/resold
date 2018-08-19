@@ -86,11 +86,12 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
             }
 
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId);
+            $collection = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId == null ? -1 : $vendorId);
             $products = [];
             foreach ($collection as $productData) {
                 array_push($products, $productData->getProductId());
             }
+
             $cedProductcollection = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
                     ->addAttributeToSelect($objectManager->get('Magento\Catalog\Model\Config')->getProductAttributes())
                     ->addAttributeToFilter('entity_id', ['in'=>$products])
