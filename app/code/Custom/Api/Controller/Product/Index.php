@@ -67,6 +67,9 @@ class Index extends \Magento\Framework\App\Action\Action
       $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       $_product = $objectManager->create('\Magento\Catalog\Model\Product');
 
+      $post['name'] = ucfirst(strtolower($post['name']));
+      $post['title_description'] = ucfirst(strtolower($post['title_description']));
+
       // TODO: Add server side validation for raw data
       // Create a unique product ID and save product to database
       $sku = uniqid("product-", true);
