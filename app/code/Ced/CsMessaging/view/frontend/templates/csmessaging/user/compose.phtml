@@ -146,7 +146,16 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
     </section>
     <!-- /.content -->
 </div>
+
 <script>
+require([
+    "jquery",
+], ($) => {
+
+  $(document).ready(function(){
+    $('li:contains("Messages")').addClass('current');
+  });
+});
     function send() {
         var text = jQuery("#compose-textarea").val();
         var vendor_subject = jQuery("#vendor_subject").val();

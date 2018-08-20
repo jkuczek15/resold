@@ -20,6 +20,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
     <update handle="csmarketplace_vendor"/>
     <body>
+    <referenceBlock name="page.main.title">
+        <action method="setPageTitle">
+            <argument translate="true" name="title" xsi:type="string">Messages</argument>
+        </action>
+    </referenceBlock>
 		<referenceContainer name="vendor.dashboard.wrapper">
 			<block class="Ced\CsMessaging\Block\Adminread" name="csmarketplace_vendor" as="order.listtkjhk" template="Ced_CsMessaging::csmessaging/admin/read.phtml" cacheable="false" />
 		</referenceContainer>

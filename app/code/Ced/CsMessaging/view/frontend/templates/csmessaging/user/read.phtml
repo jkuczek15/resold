@@ -1,11 +1,4 @@
-<style>
 
-    .page-title-wrapper {
-        display: none;
-    }
-
-
-</style>
 <?php $chat_id = $this->getRequest()->getParam('id');
 $chat = $this->_messagingFactory->create()->load($chat_id);
 $originalDate = $chat->getTime();
@@ -79,3 +72,14 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
         </div>
     </section>
 </div>
+
+<script>
+require([
+    "jquery",
+], ($) => {
+
+  $(document).ready(function(){
+    $('li:contains("Messages")').addClass('current');
+  });
+});
+</script>
