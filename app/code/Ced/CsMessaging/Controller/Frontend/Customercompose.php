@@ -97,7 +97,7 @@ class Customercompose extends \Magento\Framework\App\Action\Action
             $enable=1;//Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
             if($enable=='1') {
                 $resultRedirect = $this->resultPageFactory->create();
-                $resultRedirect->getConfig()->getTitle()->set(__('Customer Messaging'));
+                $resultRedirect->getConfig()->getTitle()->set(__('Messages'));
                 return $resultRedirect;
             }
             else{
@@ -105,8 +105,8 @@ class Customercompose extends \Magento\Framework\App\Action\Action
             }
         }
         else{
-            $value = $this->session->setBeforeAuthUrl($this->urlBuilder->getUrl().'csmessaging/frontend/customercompose?id='.$this->getRequest()->getParam('id'));
-            $this->_redirect('customer/account/login');
+            //$value = $this->session->setBeforeAuthUrl($this->urlBuilder->getUrl().'csmessaging/frontend/customercompose?id='.$this->getRequest()->getParam('id'));
+            $this->_redirect('customer/account/login/referer/aHR0cHM6Ly9sb2NhbGhvc3Qv/');
         }
 
     }

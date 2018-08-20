@@ -29,39 +29,39 @@ class Sent extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\App\Response\Http\FileFactory
      */
     protected $_fileFactory;
-    
+
     public $_allowedResource = true;
-    
+
     /**
- * @var Session 
+ * @var Session
 */
     protected $session;
-    
+
     /**
      * @var PageFactory
      */
     protected $resultPageFactory;
-    
+
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
      */
     protected $resultJsonFactory;
-    
+
     /**
      * @var \Magento\Framework\UrlInterface
      */
     protected $urlModel;
-    
+
     /**
      * @var \Magento\Framework\Module\Manager
      */
     protected $_resultPageFactory;
-     
+
     /**
      * @var \Magento\Framework\Module\Manager
      */
     protected $_moduleManager;
-    
+
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -95,7 +95,7 @@ class Sent extends \Magento\Framework\App\Action\Action
             $enable=1;//Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
             if($enable=='1') {
                 $resultRedirect = $this->resultPageFactory->create();
-                $resultRedirect->getConfig()->getTitle()->set(__('Customer Messaging'));
+                $resultRedirect->getConfig()->getTitle()->set(__('Messages'));
                 return $resultRedirect;
             }
             else{
@@ -105,8 +105,8 @@ class Sent extends \Magento\Framework\App\Action\Action
         else{
             $this->_redirect('customer/account/login');
         }
-        
-        
+
+
         /* if($customer = Mage::getSingleton('customer/session')->isLoggedIn()) {
         $enable=Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
         if($enable=='1'){
@@ -116,11 +116,11 @@ class Sent extends \Magento\Framework\App\Action\Action
         else{
         $this->_redirect('customer/account/');
         }
-        } */      
-       
+        } */
+
     }
-    
-    
+
+
     public function getVendorId()
     {
         return 'admin';
