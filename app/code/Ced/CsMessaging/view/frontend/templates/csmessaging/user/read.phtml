@@ -17,14 +17,6 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header content-header-wrap">
-        <h3>
-            <?php echo __('Customer Vendor & Admin Conversation Area') ?>
-        </h3>
-
-    </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -38,22 +30,11 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                     <div class="box-body no-padding">
                         <ul class="nav nav-pills nav-stacked">
                             <li>
-                                <a href="<?php echo $this->getUrl('csmessaging/frontend/customercompose')//Mage::getUrl('csvendorchat/frontend/customercompose')?>"
-                                   class="btn btn-block margin-bottom">Compose</a>
-                            </li>
-                            <li>
                                 <a href="<?php echo $this->getUrl('csmessaging/frontend/inbox');//Mage::getUrl('csvendorchat/frontend/inbox')?>"><i
-                                            class="fa fa-inbox"></i><?php echo __('Vendor Inbox'); ?> <span
+                                            class="fa fa-inbox"></i><?php echo __(' Inbox'); ?> <span
                                             class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
                                             echo '(';
                                             echo $vendorInboxCount;
-                                            echo ')';
-                                        } ?></span></a></li>
-                            <li>
-                                <a href="<?php echo $this->getUrl('csmessaging/frontend/admininbox'); ?>"> <?php echo __('Admin Inbox'); ?>
-                                    <span class="label label-primary pull-right"><?php if ($adminInboxCount > 0) {
-                                            echo '(';
-                                            echo $adminInboxCount;
                                             echo ')';
                                         } ?></span></a></li>
                             <li>
@@ -98,4 +79,3 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
         </div>
     </section>
 </div>
-

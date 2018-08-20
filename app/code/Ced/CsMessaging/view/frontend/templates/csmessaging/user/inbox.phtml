@@ -42,14 +42,14 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                    class="btn btn-block margin-bottom compose-tab"><?php echo __('Compose') ?></a>
                             </li> -->
                             <li class="active"><a
-                                        href="<?php echo $this->getUrl('csmessaging/frontend/inbox'); ?>"><?php echo __('Inbox'); ?>
+                                        class="fa fa-inbox" href="<?php echo $this->getUrl('csmessaging/frontend/inbox'); ?>"><?php echo __(' Inbox'); ?>
                                     <span class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
                                             echo '(';
                                             echo $vendorInboxCount;
                                             echo ')';
                                         } ?></span></a></li>
                             <li><a href="<?php echo $this->getUrl('csmessaging/frontend/sent'); ?>"
-                                   class="sent-mail-tab"> Sent</a></li>
+                                   class="sent-mail-tab fa fa-envelope-o"> Sent</a></li>
                         </ul>
                     </div>
                 </div>
