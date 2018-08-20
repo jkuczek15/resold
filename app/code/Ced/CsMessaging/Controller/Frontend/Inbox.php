@@ -95,7 +95,7 @@ class Inbox extends \Magento\Framework\App\Action\Action
             $enable=1;//Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
             if($enable=='1') {
                 $resultRedirect = $this->resultPageFactory->create();
-                $resultRedirect->getConfig()->getTitle()->set(__('Customer Messaging'));
+                $resultRedirect->getConfig()->getTitle()->set(__('Messages'));
                 return $resultRedirect;
             }
             else{
@@ -123,6 +123,6 @@ class Inbox extends \Magento\Framework\App\Action\Action
 
     public function getVendorId()
     {
-        return 'admin';
+        return $this->session->getVendorId();
     }
 }

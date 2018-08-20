@@ -29,40 +29,40 @@ class Read extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\App\Response\Http\FileFactory
      */
     protected $_fileFactory;
-    
+
     public $_allowedResource = true;
-    
+
     /**
- * @var Session 
+ * @var Session
 */
     protected $session;
     protected $_messagingFactory;
-    
+
     /**
      * @var PageFactory
      */
     protected $resultPageFactory;
-    
+
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
      */
     protected $resultJsonFactory;
-    
+
     /**
      * @var \Magento\Framework\UrlInterface
      */
     protected $urlModel;
-    
+
     /**
      * @var \Magento\Framework\Module\Manager
      */
     protected $_resultPageFactory;
-     
+
     /**
      * @var \Magento\Framework\Module\Manager
      */
     protected $_moduleManager;
-    
+
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -96,7 +96,7 @@ class Read extends \Magento\Framework\App\Action\Action
     {
         if(!$customer =  $this->session->isLoggedIn()) {
             $this->_redirect('customer/account/login');
-            return; 
+            return;
         }
         $chatid=$this->getRequest()->getParam('id');
         $customer_id=$this->session->getCustomer()->getId();
@@ -106,10 +106,10 @@ class Read extends \Magento\Framework\App\Action\Action
             $chat->save();
         }
         $resultRedirect = $this->resultPageFactory->create();
-        $resultRedirect->getConfig()->getTitle()->set(__('Customer Messaging'));
+        $resultRedirect->getConfig()->getTitle()->set(__('Messages'));
                 return $resultRedirect;
-        
-        
+
+
         /* if($customer = Mage::getSingleton('customer/session')->isLoggedIn()) {
         $enable=Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
         if($enable=='1'){
@@ -119,11 +119,11 @@ class Read extends \Magento\Framework\App\Action\Action
         else{
         $this->_redirect('customer/account/');
         }
-        } */      
-       
+        } */
+
     }
-    
-    
+
+
     public function getVendorId()
     {
         return 'admin';
