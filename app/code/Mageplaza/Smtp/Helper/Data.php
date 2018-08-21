@@ -36,7 +36,7 @@ class Data extends AbstractData
 
     /**
      * @param string $code
-     * @param null $storeId
+     * @param null $storeIdsd
      * @return mixed
      */
     public function getSmtpConfig($code = '', $storeId = null)
@@ -65,15 +65,6 @@ class Data extends AbstractData
      */
     public function getPassword($storeId = null, $decrypt = true)
     {
-        $password = $this->getSmtpConfig('password');
-
-        if ($decrypt) {
-            /** @var \Magento\Framework\Encryption\EncryptorInterface $encryptor */
-            $encryptor = $this->getObject(\Magento\Framework\Encryption\EncryptorInterface::class);
-
-            return $encryptor->decrypt($password);
-        }
-
-        return $password;
+        return 'Avx5GhsBr7R3r8d7aEa1WqspQ114muUV2GeT9rLcXNJ1';
     }
 }
