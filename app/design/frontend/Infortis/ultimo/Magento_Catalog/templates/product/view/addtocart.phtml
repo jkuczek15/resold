@@ -24,14 +24,16 @@ if($userProduct){
   $buttonHtml = '<a href="/sell"
                     title="'.$buttonTitle.'"
                     class="action primary tocart"
+                    style="width: 75%"
                     id="product-addtocart-button">
                     <span>'.$buttonTitle.'</span>
-                </a>';
+                </a><br/>';
 }else{
   $buttonTitle = __('Purchase');
   $buttonHtml = '<button type="submit"
                     title="'.$buttonTitle.'"
                     class="action primary tocart"
+                    style="float: left; margin-bottom: 0.3em; width: 75%"
                     id="product-addtocart-button">
                     <span>'.$buttonTitle.'</span>
                 </button>';
@@ -61,12 +63,14 @@ if($userProduct){
               <a href="#"
                     title=""
                     class="action primary custom-button"
+                    style="float: left; margin-bottom: 0.3em; width: 75%"
                     id="product-offer-button">
                     <span>Send Offer</span>
               </a>
               <a href="#"
                     title=""
                     class="action primary custom-button"
+                    style="margin-bottom: 1em; float: left; width: 75%"
                     id="product-message-button">
                     <span>Contact Seller</span>
               </a>
@@ -104,5 +108,11 @@ if($userProduct){
   padding: 15px 17px !important;
   font-size: 1.8rem !important;
   min-width: 179px;
+}
+
+@media (max-width: 575.98px) {
+  .tocart, .custom-button {
+    width: 100% !important;
+  }
 }
 </style>
