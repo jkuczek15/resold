@@ -24,4 +24,5 @@
             template="Ced_CsMarketplace::vendor.phtml" before="-">
         </block>
     </referenceContainer>
+    <move element="product.view.extra" destination="product.info.main" after="product.info.price" />
 </body>

@@ -27,7 +27,7 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
 	$vendorModel = current($vendorModel);
 	$public_name = $vendorModel['public_name'];?>
-	<div class="vendor-info"><?php echo __('Seller').' : ';?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></div>
+	<div class="vendor-info"><?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></div>
 <?php
 }
 ?>
