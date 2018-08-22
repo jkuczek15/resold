@@ -86,7 +86,7 @@
             </div>
         </div>
         <div class="field description">
-            <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Description') ?></span></label>
+            <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Details') ?></span></label>
             <div class="control">
                 <textarea name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="3" data-validate="{required:true}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
             </div>
