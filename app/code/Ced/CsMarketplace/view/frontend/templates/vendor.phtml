@@ -27,7 +27,16 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
 	$vendorModel = current($vendorModel);
 	$public_name = $vendorModel['public_name'];?>
-	<div class="vendor-info"><?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></div>
+	<div class="vendor-info">
+		<div class="row">
+			<div class="col-md-6 listedBy">
+				<?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a>
+			</div>
+			<div class="col-md-6">
+				<a target="_blank" href="https://stripe.com/about"><img width="44%" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
+			</div>
+		</div>
+	</div>
 <?php
 }
 ?>
@@ -35,5 +44,11 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 .vendor-info {
     margin-bottom: 8px;
     margin-top: 4px;
+}
+.product-info-main .product-info-price {
+	margin-bottom: 0px
+}
+.listedBy {
+	margin-top: 0.5em;
 }
 </style>
