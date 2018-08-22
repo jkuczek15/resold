@@ -30,7 +30,7 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 	<div class="vendor-info">
 		<div class="row">
 			<div class="col-md-6 listedBy">
-				<?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a>
+				<strong><?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></strong>
 			</div>
 			<div class="col-md-6">
 				<a target="_blank" href="https://stripe.com/about"><img width="44%" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
@@ -49,6 +49,6 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 	margin-bottom: 0px
 }
 .listedBy {
-	margin-top: 0.5em;
+	margin-top: 0.45em;
 }
 </style>

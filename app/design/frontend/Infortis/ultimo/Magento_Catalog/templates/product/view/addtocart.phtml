@@ -69,8 +69,8 @@ if($userProduct){
               </a>
               <a href="#"
                     title=""
-                    class="action primary custom-button"
-                    style="margin-bottom: 1em; float: left; width: 75%"
+                    class="action primary custom-button contact-seller"
+                    style="float: left; width: 75%"
                     id="product-message-button">
                     <span>Contact Seller</span>
               </a>
@@ -109,10 +109,15 @@ if($userProduct){
   font-size: 1.8rem !important;
   min-width: 179px;
 }
-
+.product-info-main .product-info-stock-sku {
+  padding-bottom: 0px;
+}
 @media (max-width: 575.98px) {
   .tocart, .custom-button {
     width: 100% !important;
+  }
+  .contact-seller {
+    margin-bottom: 1em;
   }
 }
 </style>
