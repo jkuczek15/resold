@@ -29,11 +29,11 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 	$public_name = $vendorModel['public_name'];?>
 	<div class="vendor-info">
 		<div class="row">
-			<div class="col-md-6 listedBy">
+			<div class="col-xs-7 listedBy">
 				<strong><?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></strong>
 			</div>
-			<div class="col-md-6">
-				<a target="_blank" href="https://stripe.com/about"><img width="44%" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
+			<div class="col-xs-5">
+				<a target="_blank" href="https://stripe.com/about"><img class="powered_by_stripe" width="85%;" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
 			</div>
 		</div>
 	</div>
@@ -44,11 +44,21 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 .vendor-info {
     margin-bottom: 8px;
     margin-top: 4px;
+		display:flex;
 }
 .product-info-main .product-info-price {
 	margin-bottom: 0px
 }
+.powered_by_stripe {
+	margin-left: 5.5em;
+	float: right;
+}
 .listedBy {
 	margin-top: 0.45em;
+}
+@media (max-width: 575.98px) {
+	.powered_by_stripe {
+		margin-top: 0.4em
+	}
 }
 </style>
