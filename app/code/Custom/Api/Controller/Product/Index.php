@@ -72,6 +72,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
       // TODO: Add server side validation for raw data
       // Create a unique product ID and save product to database
+      date_default_timezone_set('America/Chicago');
       $sku = uniqid("product-", true);
       $_product = $objectManager->create('Magento\Catalog\Model\Product');
       $_product->setName($post['name']);
@@ -88,6 +89,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
       $_product->setCustomAttribute('title_description', $post['title_description']);
       $_product->setCustomAttribute('condition', $post['condition']);
+      $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
 
       // set the local/global attribute
       $local = isset($post['local']) ? $post['local'] : null;
