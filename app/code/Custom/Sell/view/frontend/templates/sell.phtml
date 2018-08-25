@@ -2,6 +2,7 @@
 /**
 * Sell Form
 */
+var_dump($_SERVER['HTTP_HOST']);
 ?>
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="location" id="location" value="" />

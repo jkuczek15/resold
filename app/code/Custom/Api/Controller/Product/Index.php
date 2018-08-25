@@ -93,17 +93,25 @@ class Index extends \Magento\Framework\App\Action\Action
       $local = isset($post['local']) ? $post['local'] : null;
       $global = isset($post['global']) ? $post['global'] : null;
 
+      if($_SERVER['HTTP_HOST'] == 'localhost'){
+        // local/dev server
+        $local_attr_id = 227;
+      }else{
+        // prod server
+        $local_attr_id = 224;
+      }
+
       if($local == 'true' && $global == 'true'){
         $local_global = 'Local & Global';
         $_product->setCustomAttribute('location', $post['location']);
-        $_product->setCustomAttribute('local_global', 229);
+        $_product->setCustomAttribute('local_global', $local_attr_id + 2);
       }else if($local == 'true'){
         $local_global = 'Local Only';
         $_product->setCustomAttribute('location', $post['location']);
-        $_product->setCustomAttribute('local_global', 227);
+        $_product->setCustomAttribute('local_global', $local_attr_id);
       }else{
         $local_global = 'Global Only';
-        $_product->setCustomAttribute('local_global', 228);
+        $_product->setCustomAttribute('local_global', $local_attr_id + 1);
       }
 
       // TODO: Add service side validation for images
