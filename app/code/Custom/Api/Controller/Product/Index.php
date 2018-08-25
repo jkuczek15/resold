@@ -96,14 +96,15 @@ class Index extends \Magento\Framework\App\Action\Action
       if($local == 'true' && $global == 'true'){
         $local_global = 'Local & Global';
         $_product->setCustomAttribute('location', $post['location']);
+        $_product->setCustomAttribute('local_global', 229);
       }else if($local == 'true'){
         $local_global = 'Local Only';
         $_product->setCustomAttribute('location', $post['location']);
+        $_product->setCustomAttribute('local_global', 227);
       }else{
         $local_global = 'Global Only';
+        $_product->setCustomAttribute('local_global', 228);
       }
-
-      $_product->setCustomAttribute('local_global', $local_global);
 
       // TODO: Add service side validation for images
       // tempory location for product images
