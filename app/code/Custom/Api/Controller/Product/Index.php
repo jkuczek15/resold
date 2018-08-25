@@ -95,8 +95,10 @@ class Index extends \Magento\Framework\App\Action\Action
 
       if($local == 'true' && $global == 'true'){
         $local_global = 'Local & Global';
+        $_product->setCustomAttribute('location', $post['location']);
       }else if($local == 'true'){
         $local_global = 'Local Only';
+        $_product->setCustomAttribute('location', $post['location']);
       }else{
         $local_global = 'Global Only';
       }
