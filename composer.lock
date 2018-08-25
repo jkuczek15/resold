@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.65.0",
+            "version": "3.66.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0daae6292e8355156a9be73bc1cc4dd7075cac0d"
+                "reference": "661ab047454a8f136f817f122330b299ceaad607"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0daae6292e8355156a9be73bc1cc4dd7075cac0d",
-                "reference": "0daae6292e8355156a9be73bc1cc4dd7075cac0d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/661ab047454a8f136f817f122330b299ceaad607",
+                "reference": "661ab047454a8f136f817f122330b299ceaad607",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-08-20T20:24:35+00:00"
+            "time": "2018-08-23T20:35:47+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -6988,16 +6988,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v6.15.0",
+            "version": "v6.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "20e18a9feface85d183eece03e84013ff794d5b1"
+                "reference": "8094ae22db6ce887f073f456127175837a35b2b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/20e18a9feface85d183eece03e84013ff794d5b1",
-                "reference": "20e18a9feface85d183eece03e84013ff794d5b1",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/8094ae22db6ce887f073f456127175837a35b2b1",
+                "reference": "8094ae22db6ce887f073f456127175837a35b2b1",
                 "shasum": ""
             },
             "require": {
@@ -7007,8 +7007,8 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
+                "php-coveralls/php-coveralls": "1.*",
                 "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "~0.6.1",
                 "squizlabs/php_codesniffer": "~2.0"
             },
             "type": "library",
@@ -7039,7 +7039,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2018-08-03T10:54:52+00:00"
+            "time": "2018-08-23T08:19:12+00:00"
         },
         {
             "name": "symfony/console",
