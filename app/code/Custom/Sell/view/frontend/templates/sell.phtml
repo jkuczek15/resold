@@ -2,6 +2,13 @@
 /**
 * Sell Form
 */
+if($_SERVER['HTTP_HOST'] == 'localhost'){
+  // local/dev server
+  $new_attr_id = 230;
+}else{
+  // prod server
+  $new_attr_id = 227;
+}
 ?>
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="location" id="location" value="" />
@@ -62,10 +69,10 @@
             <div class="control">
                 <select name="condition" id="conditon" data-validate="{required:true}" v-model="form_data.condition">
                   <option value=""></option>
-                  <option value="New">New</option>
-                  <option value="Like New">Like New</option>
-                  <option value="Good">Good</option>
-                  <option value="Used">Used</option>
+                  <option value="<?= $new_attr_id ?>">New</option>
+                  <option value="<?= $new_attr_id + 1 ?>">Like New</option>
+                  <option value="<?= $new_attr_id + 2 ?>">Good</option>
+                  <option value="<?= $new_attr_id + 3 ?>">Used</option>
                 </select>
             </div>
         </div>
