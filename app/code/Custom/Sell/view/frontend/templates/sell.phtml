@@ -71,7 +71,7 @@
         <div class="field local">
             <label class="label" for="local"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
             <div class="control">
-                <input type="checkbox" value="true" name="local" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local" /> Local <span style="margin-right: 1.5em"></span>
+                <input type="checkbox" value="true" name="local" onclick="initLocal();" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local" /> Local <span style="margin-right: 1.5em"></span>
                 <input type="checkbox" value="true" name="global" id="global" v-model="form_data.global" /> Global
                 <div class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
             </div>
@@ -102,7 +102,15 @@
         </div>
     </div>
 </form>
+<div id='map'></div>
 
+<style>
+     /* Always set the map height explicitly to define the size of the div
+      * element that contains the map. */
+     #map {
+       height: 100%;
+     }
+</style>
 <script>
 require([
     "jquery",
@@ -194,3 +202,47 @@ require([
    };
 });
 </script>
+<script>
+/**************************************************
+******************* GOOGLE MAPS *******************
+**************************************************/
+var map, infoWindow, pos;
+function initMap() {
+   map = new google.maps.Map(document.getElementById('map'), {
+     center: {lat: -34.397, lng: 150.644},
+     zoom: 6
+   });
+   infoWindow = new google.maps.InfoWindow;
+};
+function initLocal() {
+  // Try HTML5 geolocation
+  if(!document.getElementById("local").checked || pos) return;
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      console.log(pos);
+      infoWindow.setPosition(pos);
+      infoWindow.setContent('Location found.');
+      infoWindow.open(map);
+      map.setCenter(pos);
+    }, function() {
+      alert('You must give Resold access to your location to post locally.');
+      document.getElementById("local").checked = false;
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+};
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' : 'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(map);
+};
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBn-qn2lVWPma_DYxAbA5_0W4NhmdaH0u8&callback=initMap"></script>
