@@ -74,7 +74,7 @@
             <div class="control">
                 <input type="checkbox" value="true" name="local" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local" /> Local <span style="margin-right: 1.5em"></span>
                 <input type="checkbox" value="true" name="global" id="global" v-model="form_data.global" /> Global
-                <div class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
+                <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
             </div>
         </div>
         <div class="field images">
