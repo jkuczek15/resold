@@ -42,7 +42,7 @@
             <?php foreach ($block->getFilters() as $filter): ?>
                 <?php if ($filter->getItemsCount()): ?>
                     <?php if (!$wrapOptions): ?>
-                        <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><?php /* @escapeNotVerified */ echo __('Shopping Options') ?></strong>
+                        <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><?php /* @escapeNotVerified */ echo __('Filter Options') ?></strong>
                         <div class="filter-options" id="narrow-by-list" data-role="content" data-mage-init='{"accordion":{"openedState": "active", "collapsible": true, "active": <?php echo $expandedOnLoad; ?>, "multipleCollapsible": <?php echo $isMultipleCollapsible; ?> , "openOnFocus": true }}'>
                     <?php  $wrapOptions = true; endif; ?>
                     <?php // Display, if not a category filter or if category filter allowed ?>
