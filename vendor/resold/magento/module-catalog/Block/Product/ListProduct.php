@@ -152,11 +152,6 @@ class ListProduct extends AbstractProduct implements IdentityInterface
           // add custom filters to product collection
           $this->_productCollection->addAttributeToFilter('latitude', array('notnull' => true));
           $this->_productCollection->addAttributeToFilter('longitude', array('notnull' => true));
-
-          // $this->_productCollection->getSelect()->assemble();
-          // $this->_productCollection->getSelect()->__toString();
-          // echo $this->_productCollection->getSelect();
-          // exit;
         }
 
         return $this->_productCollection;
