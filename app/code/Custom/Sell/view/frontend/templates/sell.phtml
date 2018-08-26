@@ -11,7 +11,8 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 }
 ?>
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
-    <input type="hidden" name="location" id="location" value="" />
+    <input type="hidden" name="latitude" id="latitude" value="" />
+    <input type="hidden" name="longitude" id="longitude" value="" />
     <fieldset class="fieldset" id="app">
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Item Name') ?></span></label>
@@ -186,7 +187,6 @@ require([
    // click function for local checkbox
    $('#local').click(getLocation);
    var pos;
-
    /**************************************************
    ******************* FUNCTIONS *********************
    **************************************************/
@@ -199,7 +199,8 @@ require([
            lat: position.coords.latitude,
            lng: position.coords.longitude
          };
-         $('#location').val(`${pos.lat},${pos.lng}`);
+         $('#latitude').val(`${pos.lat}`);
+         $('#longitude').val(`${pos.lng}`);
        }, function() {
          document.getElementById("local").checked = false;
          alert('You must give Resold access to your location to post locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');

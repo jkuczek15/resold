@@ -105,11 +105,13 @@ class Index extends \Magento\Framework\App\Action\Action
 
       if($local == 'true' && $global == 'true'){
         $local_global = 'Local & Global';
-        $_product->setCustomAttribute('location', $post['location']);
+        $_product->setCustomAttribute('latitude', $post['latitude']);
+        $_product->setCustomAttribute('longitude', $post['longitude']);
         $_product->setCustomAttribute('local_global', $local_attr_id + 2);
       }else if($local == 'true'){
         $local_global = 'Local Only';
-        $_product->setCustomAttribute('location', $post['location']);
+        $_product->setCustomAttribute('latitude', $post['latitude']);
+        $_product->setCustomAttribute('longitude', $post['longitude']);
         $_product->setCustomAttribute('local_global', $local_attr_id);
       }else{
         $local_global = 'Global Only';
