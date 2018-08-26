@@ -36,7 +36,7 @@
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
 					<arguments>
 					    <argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getCsMarketplaceLink"/>
-							<argument name="path" xsi:type="string">market</argument>
+							<argument name="path" xsi:type="string">all?local=true</argument>
 					</arguments>
 				</block>
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="i-am-a-vendor-link" ifconfig="ced_vshops/general/vshoppage_title_enable">
