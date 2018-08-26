@@ -33,7 +33,8 @@
         "aws/aws-sdk-php": "^3.64",
         "stripe/stripe-php": "^6.15",
         "mageplaza/module-delete-orders": "^1.1",
-        "zsoerenm/magento2-optionaltelephone": "^1.4"
+        "zsoerenm/magento2-optionaltelephone": "^1.4",
+        "czonetech/ajaxified-catalog": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.0",

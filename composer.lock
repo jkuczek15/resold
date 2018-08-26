@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f32a2017d8d72bfc8bc9a7742738977",
+    "content-hash": "82e37ac95e7e7d1e08da35caa5611510",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -479,6 +479,55 @@
                 "validator"
             ],
             "time": "2018-04-30T10:33:04+00:00"
+        },
+        {
+            "name": "czonetech/ajaxified-catalog",
+            "version": "1.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/czone-tech/magento2-ajaxified-catalog.git",
+                "reference": "e7ef6d3d0f17aec194f283a14a9b7aa1dbf3a810"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/czone-tech/magento2-ajaxified-catalog/zipball/e7ef6d3d0f17aec194f283a14a9b7aa1dbf3a810",
+                "reference": "e7ef6d3d0f17aec194f283a14a9b7aa1dbf3a810",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": "100.0.*|100.1.*",
+                "php": "~5.5.9.0|~5.6.0|7.0.2|~7.0.6"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "CzoneTech\\AjaxifiedCatalog\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Czone Technologies",
+                    "email": "support@czonetechnologies.com",
+                    "homepage": "http://www.czonetechnologies.com/"
+                }
+            ],
+            "description": "Implements AJAX loading in layered navigation and product list sections.",
+            "keywords": [
+                "ajax layered navigation",
+                "layered navigation",
+                "magento 2",
+                "magento2 ajax",
+                "magento2 ajax catalog",
+                "magento2 layered navigation"
+            ],
+            "time": "2016-10-26T05:47:35+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
