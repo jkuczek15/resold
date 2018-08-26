@@ -40,6 +40,8 @@ define([
             url: ''
         },
 
+        position: null,
+
         _create: function () {
             this._super();
             this._bind($(this.options.pagerControl), this.options.pager, this.options.pagerDefault);
@@ -68,16 +70,20 @@ define([
             var urlParts = link.attr('href').split('?');
             var self = this;
 
-            if(urlParts[1].includes('local_global=227') || urlParts[1].includes('local_global=224')){
-              // filter by local only, get the user's location
-              navigator.geolocation.getCurrentPosition(function(position) {
-                self.makeAjaxCall(urlParts[0], urlParts[1], position.coords.latitude, position.coords.longitude);
-              }, function() {
-                alert('You must give Resold access to your location to view posts locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');
-                handleLocationError(true, infoWindow, map.getCenter());
-              });
+            if((urlParts[1].includes('local_global=227') || urlParts[1].includes('local_global=224'))){
+              if(this.position == null){
+                // filter by local only, get the user's location
+                navigator.geolocation.getCurrentPosition(function(position) {
+                  self.makeAjaxCall(urlParts[0], urlParts[1], position.coords.latitude, position.coords.longitude);
+                }, function() {
+                  alert('You must give Resold access to your location to view posts locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');
+                  handleLocationError(true, infoWindow, map.getCenter());
+                });
+              }else{
+                self.makeAjaxCall(urlParts[0], urlParts[1], this.position.latitude, this.position.longitude);
+              }
             }else{
-              this.makeAjaxCall(urlParts[0], urlParts[1], null, null);
+              self.makeAjaxCall(urlParts[0], urlParts[1], null, null);
             }
 
             evt.preventDefault();
@@ -155,6 +161,7 @@ define([
         makeAjaxCall: function (baseUrl, paramData, latitude, longitude) {
             var self = this;
             if(latitude != null && longitude != null){
+              this.position = {latitude, longitude};
               paramData += `&latitude=${latitude}&longitude=${longitude}`;
             }
             $.ajax({
