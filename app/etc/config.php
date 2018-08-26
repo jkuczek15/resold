@@ -145,6 +145,7 @@ return array (
     'Mageplaza_Core' => 1,
     'Mageplaza_DeleteOrders' => 1,
     'Mageplaza_Smtp' => 1,
+    'Meanbee_InfiniteScroll' => 1,
     'Thai_S3' => 1,
     'Zorn_OptionalTelephone' => 1,
   ),
