@@ -66,7 +66,20 @@ define([
         applyFilterToProductsList: function (evt) {
             var link = $(evt.currentTarget);
             var urlParts = link.attr('href').split('?');
-            this.makeAjaxCall(urlParts[0], urlParts[1]);
+            var self = this;
+
+            if(urlParts[1].includes('local_global=227') || urlParts[1].includes('local_global=224')){
+              // filter by local only, get the user's location
+              navigator.geolocation.getCurrentPosition(function(position) {
+                self.makeAjaxCall(urlParts[0], urlParts[1], position.coords.latitude, position.coords.longitude);
+              }, function() {
+                alert('You must give Resold access to your location to view posts locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');
+                handleLocationError(true, infoWindow, map.getCenter());
+              });
+            }else{
+              this.makeAjaxCall(urlParts[0], urlParts[1], null, null);
+            }
+
             evt.preventDefault();
         },
         updateUrl: function (url, paramData) {
@@ -127,7 +140,6 @@ define([
             );
         },
 
-
         changeUrl: function (paramName, paramValue, defaultValue) {
             var urlPaths = this.options.url.split('?'),
                 baseUrl = urlPaths[0],
@@ -137,8 +149,11 @@ define([
             this.makeAjaxCall(baseUrl, paramData);
         },
 
-        makeAjaxCall: function (baseUrl, paramData) {
+        makeAjaxCall: function (baseUrl, paramData, latitude, longitude) {
             var self = this;
+            if(latitude != null && longitude != null){
+              paramData += `&latitude=${latitude}&longitude=${longitude}`;
+            }
             $.ajax({
                 url: baseUrl,
                 data: (paramData && paramData.length > 0 ? paramData + '&ajax=1' : 'ajax=1'),
