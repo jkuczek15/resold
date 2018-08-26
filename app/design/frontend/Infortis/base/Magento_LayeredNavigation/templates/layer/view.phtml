@@ -43,7 +43,7 @@
                 <?php if ($filter->getItemsCount()): ?>
                     <?php if (!$wrapOptions): ?>
                         <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><?php /* @escapeNotVerified */ echo __('Filter Options') ?></strong>
-                        <div class="filter-options" id="narrow-by-list" data-role="content" data-mage-init='{"accordion":{"openedState": "active", "collapsible": false, "active": true, "multipleCollapsible": true, "openOnFocus": true }}'>
+                        <div class="filter-options" id="narrow-by-list" data-role="content" data-mage-init='{"accordion":{"openedState": "active", "collapsible": true, "active": false, "multipleCollapsible": true, "openOnFocus": true }}'>
                     <?php  $wrapOptions = true; endif; ?>
                     <?php // Display, if not a category filter or if category filter allowed ?>
                     <?php if ($filter->getRequestVar() != 'cat' || $showCategoryFilter): ?>
@@ -72,9 +72,7 @@
 .filter-options-title::after {
   display: none;
 }
-@media (min-width: 576px) {
-  .filter-options-content {
-    display: block !important;
-  }
+.filter-options-content {
+  display: block !important;
 }
 </style>
