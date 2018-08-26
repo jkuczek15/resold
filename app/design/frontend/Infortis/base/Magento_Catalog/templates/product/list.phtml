@@ -77,7 +77,7 @@ use Magento\Framework\App\Action\Action;
     {
         $viewMode = 'grid';
         $imageTypeId = 'itemgrid_category_page_grid'; // Image dimensions declared in this entry (in view.xml) override Magento's default dimensions
-        
+
         $showDescription = false;
         $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
         $wrapperClasses = " {$viewMode} items-grid items-grid-partitioned category-products-grid";
@@ -184,6 +184,7 @@ use Magento\Framework\App\Action\Action;
 
     // Product labels classes
     $wrapperClasses .= ' ' . $helperLabels->getLabelsClasses();
+
     ?>
     <div class="products wrapper<?php if ($wrapperClasses) echo $wrapperClasses; ?>">
         <ol class="products list items product-items<?php if ($itemgridClasses) echo $itemgridClasses; ?>">
@@ -194,7 +195,7 @@ use Magento\Framework\App\Action\Action;
                     <?php
                         $_productNameStripped = $block->stripTags($_product->getName(), null, true);
                         $actualImgWidth = '';
-                        
+
                         if ($imageDimensions === 0) // No dimensions specified
                         {
                             $productImage = $block->getImage($_product, $imageTypeId);
@@ -231,7 +232,7 @@ use Magento\Framework\App\Action\Action;
 
                             <?php else: // Only one dimension specified ?>
 
-                                <img class="product-image-photo" 
+                                <img class="product-image-photo"
                                     src="<?php echo $helperImage->getImageUrl($_product, $imageTypeId, $imgWidth, $imgHeight); ?>" />
 
                             <?php endif; ?>
@@ -394,7 +395,7 @@ use Magento\Framework\App\Action\Action;
                         clearInterval(checkSwatchExistInterval);
                     }
                 }, 200);
-            }); 
+            });
         </script>
     <?php endif; ?>
     <?php if (!$block->isRedirectToCartEnabled()) : ?>
@@ -406,4 +407,27 @@ use Magento\Framework\App\Action\Action;
         }
         </script>
     <?php endif; ?>
+<?php
+  if(isset($_GET['local']) && $_GET['local'] == 'true/'){
+?>
+<script>
+require([
+  "jquery",
+], ($) => {
+    $(window).load(() => {
+      $('a').filter(function(index) {
+        var href = $(this).attr('href');
+        if(href != null){
+          if(href.includes('local_global=227') || href.includes('local_global=224')){
+            var self = this;
+            setTimeout(function(){ $(self)[0].click(); }, 1000);
+          }
+        }
+      });
+    });
+});
+</script>
+<?php
+  }
+ ?>
 <?php endif; ?>

@@ -204,6 +204,10 @@ div.filter-options-item:nth-child(2) > div:nth-child(2) > ol:nth-child(1) > li:n
   display: none;
 }
 
+div.filter-options-item:nth-child(1) > div:nth-child(2) > ol:nth-child(1) > li:nth-child(1) > a:nth-child(1) > span:nth-child(1) {
+  display: none;
+}
+
 .filter-options-title {
   cursor: initial;
 }

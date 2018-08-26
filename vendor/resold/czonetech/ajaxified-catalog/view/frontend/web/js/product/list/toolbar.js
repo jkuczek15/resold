@@ -86,6 +86,9 @@ define([
             if (!url) {
                 return;
             }
+
+            url = url.substring(0, url.indexOf('?'));
+            paramData = paramData.replace('local=true%2F&', '');
             if (paramData && paramData.length > 0) {
                 url += '?' + paramData;
             }
