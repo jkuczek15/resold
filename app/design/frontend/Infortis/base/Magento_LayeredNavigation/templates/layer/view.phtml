@@ -23,9 +23,9 @@
         $showCategoryFilter = $theme->getCfg('layered_navigation/category_filter'); // Specifies if category filter should be displayed or removed
 
         // In accordion mode and if no filters expanded on load, add special class
-        $blockClasses = ($expandedOnLoad === 'false' && $isMultipleCollapsible === 'false') ? ' filters-collapsed' : '';
+        $blockClasses = '';
     ?>
-    <div class="block filter<?php echo $blockClasses; ?>" id="layered-filter-block" data-mage-init='{"collapsible":{"openedState": "active", "collapsible": true, "active": false, "collateral": { "openedState": "filter-active", "element": "body" } }}'>
+    <div class="block filter<?php echo $blockClasses; ?>" id="layered-filter-block" data-mage-init='{"collapsible":{"openedState": "active", "collapsible": false, "active": true, "collateral": { "openedState": "filter-active", "element": "body" } }}'>
         <?php $filtered = count($block->getLayer()->getState()->getFilters()) ?>
         <div class="block-title filter-title" data-count="<?php /* @escapeNotVerified */ echo $filtered; ?>">
             <strong data-role="title"><?php /* @escapeNotVerified */ echo __('Shop By') ?></strong>
@@ -43,7 +43,7 @@
                 <?php if ($filter->getItemsCount()): ?>
                     <?php if (!$wrapOptions): ?>
                         <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><?php /* @escapeNotVerified */ echo __('Filter Options') ?></strong>
-                        <div class="filter-options" id="narrow-by-list" data-role="content" data-mage-init='{"accordion":{"openedState": "active", "collapsible": true, "active": <?php echo $expandedOnLoad; ?>, "multipleCollapsible": <?php echo $isMultipleCollapsible; ?> , "openOnFocus": true }}'>
+                        <div class="filter-options" id="narrow-by-list" data-role="content" data-mage-init='{"accordion":{"openedState": "active", "collapsible": false, "active": true, "multipleCollapsible": true, "openOnFocus": true }}'>
                     <?php  $wrapOptions = true; endif; ?>
                     <?php // Display, if not a category filter or if category filter allowed ?>
                     <?php if ($filter->getRequestVar() != 'cat' || $showCategoryFilter): ?>
@@ -68,3 +68,11 @@
         </div>
     </div>
 <?php endif; ?>
+<style>
+.filter-options-title::after {
+  display: none;
+}
+.filter-options-content {
+  display: block !important;
+}
+</style>
