@@ -1,11 +1,17 @@
 <?xml version="1.0"?>
 
-<!-- 
-<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"> 
+<!--
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-
+      <referenceBlock name="product.info.details">
+          <block class="Magento\Catalog\Block\Product\View" name="location.tab" as="location" template="product/view/location.phtml" group="detailed_info" >
+             <arguments>
+                <argument translate="true" name="title" xsi:type="string">Location</argument>
+             </arguments>
+          </block>
+        </referenceBlock>
         <referenceContainer name="content">
             <block class="Infortis\Base\Block\Product\View" name="product-view-wrapper" template="product/view.phtml" before="-">
                 <container name="container_product_image_1" label="Product View, Image Column" />
