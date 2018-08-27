@@ -95,14 +95,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $local = isset($post['local']) ? $post['local'] : null;
       $global = isset($post['global']) ? $post['global'] : null;
 
-      if($_SERVER['HTTP_HOST'] == 'localhost'){
-        // local/dev server
-        $local_attr_id = 227;
-      }else{
-        // prod server
-        $local_attr_id = 224;
-      }
-
+      $local_attr_id = 224;
       if($local == 'true' && $global == 'true'){
         $local_global = 'Local & Global';
         $_product->setCustomAttribute('latitude', $post['latitude']);
