@@ -130,7 +130,7 @@ class ListProduct extends AbstractProduct implements IdentityInterface
             }
         }
 
-        if(isset($_GET['local_global']) && ($_GET['local_global'] == 227 || $_GET['local_global'] == 224))
+        if(isset($_GET['local_global']) && $_GET['local_global'] == 224)
         {
           // filter products based on the user's nearest location
           $input_lat = isset($_GET['latitude']) ? $_GET['latitude'] : '0';

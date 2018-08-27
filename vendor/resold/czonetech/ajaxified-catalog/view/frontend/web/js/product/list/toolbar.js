@@ -70,7 +70,7 @@ define([
             var urlParts = link.attr('href').split('?');
             var self = this;
 
-            if((urlParts[1].includes('local_global=227') || urlParts[1].includes('local_global=224'))){
+            if(urlParts[1].includes('local_global=224')){
               if(this.position == null){
                 // filter by local only, get the user's location
                 navigator.geolocation.getCurrentPosition(function(position) {

@@ -6,13 +6,12 @@
  */
   $latitude_attr = $block->getProduct()->getCustomAttribute('latitude');
   $longitude_attr = $block->getProduct()->getCustomAttribute('longitude');
-  if($latitude_attr == null || $longitude_attr == null){
-      exit;
-  }else{
+  if($latitude_attr != null && $longitude_attr != null){
     $latitude = $latitude_attr->getValue();
     $longitude = $longitude_attr->getValue();
-  }
 ?>
 <div style="display: flex">
   <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=<?= $latitude ?>%2C%20<?= $longitude ?>&key=AIzaSyBn-qn2lVWPma_DYxAbA5_0W4NhmdaH0u8" allowfullscreen></iframe>
 </div>
+<?php
+  }
