@@ -9,6 +9,7 @@ use Magento\Framework\App\Action\Action;
  * @var $block \Magento\Catalog\Block\Product\ListProduct
  */
 
+
 ?>
 <style>
 hr {
@@ -17,6 +18,9 @@ hr {
   border-color: #e5e5e5;
 }
 </style>
+<?php
+if(!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1){
+?>
 <div id="block-search" class="block block-search search-wrapper" style="width: 100%">
     <div class="block block-title"><strong>Search</strong></div>
     <div class="block block-content">
@@ -36,7 +40,8 @@ hr {
     </div>
 </div><hr/>
 <?php
-  $_productCollection = $block->getLoadedProductCollection();
+}
+    $_productCollection = $block->getLoadedProductCollection();
     $collectionSize = $_productCollection->count();
 ?>
 <?php if (!$collectionSize): ?>
