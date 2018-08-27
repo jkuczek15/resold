@@ -12,6 +12,11 @@
              </arguments>
           </block>
         </referenceBlock>
+        <referenceBlock name="product.attributes">
+          <arguments>
+              <argument translate="true" name="title" xsi:type="string">More Info</argument>
+          </arguments>
+        </referenceBlock>
         <referenceContainer name="content">
             <block class="Infortis\Base\Block\Product\View" name="product-view-wrapper" template="product/view.phtml" before="-">
                 <container name="container_product_image_1" label="Product View, Image Column" />
