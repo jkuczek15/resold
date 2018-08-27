@@ -37,6 +37,9 @@
     }
 ?>
 <?php if ($detailedInfoGroup = $block->getGroupChildNames('detailed_info', 'getChildHtml')):?>
+<?php
+  $detailedInfoGroup = ["product.info.description", "product.attributes", "location.tab", "reviews.tab"];
+ ?>
     <div class="product info detailed collateral-container">
         <?php $layout = $block->getLayout(); ?>
         <div class="<?php echo $innerContainerClasses; ?>" <?php if ($jsScriptInit): ?>data-mage-init='<?php echo $jsScriptInit; ?>'<?php endif; ?>>
