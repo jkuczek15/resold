@@ -135,7 +135,9 @@ class ListProduct extends AbstractProduct implements IdentityInterface
           // filter products based on the user's nearest location
           $input_lat = isset($_GET['latitude']) ? $_GET['latitude'] : '0';
           $input_long = isset($_GET['longitude']) ? $_GET['longitude'] : '0';
-          $distance = 50;
+
+          // great circle distance (miles)
+          $distance = 30;
 
           // magic
           $latitude_expr = 'IF(at_latitude.value > 0, at_latitude.value, at_latitude_default.value)';
