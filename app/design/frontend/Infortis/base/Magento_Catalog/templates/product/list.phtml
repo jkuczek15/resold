@@ -8,9 +8,35 @@ use Magento\Framework\App\Action\Action;
  *
  * @var $block \Magento\Catalog\Block\Product\ListProduct
  */
+
 ?>
+<style>
+hr {
+  margin-bottom: 0.4em;
+  margin-top: 1em;
+  border-color: #e5e5e5;
+}
+</style>
+<div id="block-search" class="block block-search search-wrapper" style="width: 100%">
+    <div class="block block-title"><strong>Search</strong></div>
+    <div class="block block-content">
+        <form class="form minisearch" id="search_mini_form" action="https://localhost/catalogsearch/result/" method="get">
+            <div class="field search">
+              <div class="control">
+                <input style="border-color: #ddd" id="search" name="q" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
+                <div id="search_autocomplete" class="search-autocomplete" style="display: none;"></div>
+              </div>
+            </div>
+            <div class="actions">
+              <button id="action-search" type="submit" title="Search" class="action search" disabled="">
+                  <span class="icon ic ic-search ib ib-square ib-hover"></span>
+              </button>
+            </div>
+        </form>
+    </div>
+</div><hr/>
 <?php
-    $_productCollection = $block->getLoadedProductCollection();
+  $_productCollection = $block->getLoadedProductCollection();
     $collectionSize = $_productCollection->count();
 ?>
 <?php if (!$collectionSize): ?>
