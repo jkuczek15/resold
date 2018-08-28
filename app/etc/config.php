@@ -19,6 +19,7 @@ return array (
     'Magento_Customer' => 1,
     'Infortis_UltraSlideshow' => 1,
     'Magento_AdminNotification' => 1,
+    'MageHost_PerformanceDashboard' => 1,
     'Magento_Indexer' => 1,
     'Magento_AdvancedPricingImportExport' => 1,
     'Magento_Backend' => 1,

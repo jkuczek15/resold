@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "82e37ac95e7e7d1e08da35caa5611510",
+    "content-hash": "453df9df5c89635a7baa254bff9797aa",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.66.2",
+            "version": "3.67.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "eefa7317be6a8aceacf10364ea964e70fc7647f8"
+                "reference": "110008fb199a4a0ceac1798484368dda420fb613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/eefa7317be6a8aceacf10364ea964e70fc7647f8",
-                "reference": "eefa7317be6a8aceacf10364ea964e70fc7647f8",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/110008fb199a4a0ceac1798484368dda420fb613",
+                "reference": "110008fb199a4a0ceac1798484368dda420fb613",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-08-25T00:49:07+00:00"
+            "time": "2018-08-27T22:48:01+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -824,6 +824,51 @@
                 "terminal"
             ],
             "time": "2015-01-18T14:31:58+00:00"
+        },
+        {
+            "name": "magehost/performance-dashboard",
+            "version": "1.14.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/magehost/performance-dashboard.git",
+                "reference": "4dbe7ecebe5b5ee93a2f61af63f65fa067f9c2b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/magehost/performance-dashboard/zipball/4dbe7ecebe5b5ee93a2f61af63f65fa067f9c2b4",
+                "reference": "4dbe7ecebe5b5ee93a2f61af63f65fa067f9c2b4",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": ">=100.0",
+                "magento/module-backend": ">=100.0",
+                "magento/module-page-cache": ">=100.0",
+                "magento/module-store": ">=100.0",
+                "monolog/monolog": ">=1.11",
+                "psr/log": ">=1.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "MageHost\\PerformanceDashboard\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "MageHost.pro - Jeroen Vermeulen",
+                    "email": "jeroen@magehost.pro"
+                }
+            ],
+            "description": "Performance Dashboard for Magento 2.x by MageHost.pro",
+            "homepage": "https://github.com/magehost/performance-dashboard",
+            "time": "2018-07-16T21:32:03+00:00"
         },
         {
             "name": "magento/composer",
@@ -7150,7 +7195,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.44",
+            "version": "v2.8.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -7367,16 +7412,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.8.44",
+            "version": "v2.8.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "cc83afdb5ac99147806b3bb65a3ff1227664f596"
+                "reference": "4be278e19064c3492095de50c9e375caae569ae1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/cc83afdb5ac99147806b3bb65a3ff1227664f596",
-                "reference": "cc83afdb5ac99147806b3bb65a3ff1227664f596",
+                "url": "https://api.github.com/repos/symfony/process/zipball/4be278e19064c3492095de50c9e375caae569ae1",
+                "reference": "4be278e19064c3492095de50c9e375caae569ae1",
                 "shasum": ""
             },
             "require": {
@@ -7412,7 +7457,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26T11:13:39+00:00"
+            "time": "2018-08-03T09:45:57+00:00"
         },
         {
             "name": "tedivm/jshrink",
@@ -10364,7 +10409,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.44",
+            "version": "v2.8.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
