@@ -45,6 +45,3 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 
 # Grant permissions to all web files
 sudo chmod -R 777 /var/www/html
-
-# Optimize composer autoload
-composer install -o &> /dev/null || true
