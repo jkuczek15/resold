@@ -15,7 +15,7 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 # Install Magento and apply configuration for AWS cloud server
 /var/www/html/bin/magento setup:install \
 --backend-frontname="stm"  \
---session-save="files" \
+--session-save="redis" \
 --db-host="localhost" \
 --db-name="MagentoQuickstartDB" \
 --db-user="root" \
@@ -47,4 +47,4 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 sudo chmod -R 777 /var/www/html
 
 # Optimize composer autoload
-composer install -o &> /dev/null
+composer install -o &> /dev/null || true
