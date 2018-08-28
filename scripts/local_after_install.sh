@@ -15,7 +15,7 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 # Install Magento and apply configuration for AWS cloud server
 /var/www/html/bin/magento setup:install \
 --backend-frontname="stm"  \
---session-save="redis" \
+--session-save="files" \
 --db-host="localhost" \
 --db-name="MagentoQuickstartDB" \
 --db-user="root" \
