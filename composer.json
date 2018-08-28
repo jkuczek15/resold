@@ -34,7 +34,8 @@
         "stripe/stripe-php": "^6.15",
         "mageplaza/module-delete-orders": "^1.1",
         "zsoerenm/magento2-optionaltelephone": "^1.4",
-        "czonetech/ajaxified-catalog": "^1.0"
+        "czonetech/ajaxified-catalog": "^1.0",
+        "magehost/performance-dashboard": "^1.14"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.0",
