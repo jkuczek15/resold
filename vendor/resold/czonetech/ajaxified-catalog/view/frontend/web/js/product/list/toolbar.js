@@ -4,6 +4,7 @@
  * ashish@czonetechnologies.com
  */
 
+var win = this;
 define([
     "jquery",
     "jquery/ui",
@@ -74,6 +75,7 @@ define([
               if(this.position == null){
                 // filter by local only, get the user's location
                 navigator.geolocation.getCurrentPosition(function(position) {
+                  // update the product collection
                   self.makeAjaxCall(urlParts[0], urlParts[1], position.coords.latitude, position.coords.longitude);
                 }, function() {
                   alert('You must give Resold access to your location to view posts locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');
@@ -149,6 +151,31 @@ define([
             );
         },
 
+        updatePlace: function(longitude, latitude, paramData){
+            console.log(paramData);
+            if(!paramData.includes('local_global=224')){
+              $('#location-city').html('');
+              return;
+            }
+            if(win.localStorage.place != undefined){
+              // location already stored with local storage
+              $('#location-city').html(`- 50 miles from ${win.localStorage.place}. ${win.localStorage.state}`);
+            }else{
+              // get the user's city from mapbox
+              let api_key = 'pk.eyJ1Ijoiamt1Y3playIsImEiOiJjamxlZ2kyMzYwMnhsM3ByazM1ZWtibzllIn0.hsE3V5wLucE2wl8jdQhfTQ';
+              let mapbox_url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${api_key}`;
+              $.get(mapbox_url, (data) => {
+                  if(data && data.features && data.features.length > 4){
+                      let place = data.features[3].text;
+                      let state = data.features[4].text;
+                      $('#location-city').html(`- 50 miles from ${place}, ${state}`);
+                      win.localStorage.place = place;
+                      win.localStorage.state = state;
+                  }
+              });
+            }
+        },
+
         changeUrl: function (paramName, paramValue, defaultValue) {
             var urlPaths = this.options.url.split('?'),
                 baseUrl = urlPaths[0],
@@ -176,6 +203,7 @@ define([
                 if (response.success) {
                     self.updateUrl(baseUrl, paramData);
                     self.updateContent(response.html);
+                    self.updatePlace(longitude, latitude, paramData);
                 } else {
                     var msg = response.error_message;
                     if (msg) {
@@ -190,7 +218,6 @@ define([
                     type: 'error',
                     text: 'Sorry, something went wrong. Please try again later.'
                 });
-
             });
         },
         setMessage: function (obj) {

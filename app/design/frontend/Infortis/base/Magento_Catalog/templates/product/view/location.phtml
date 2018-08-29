@@ -10,8 +10,8 @@
     $latitude = $latitude_attr->getValue();
     $longitude = $longitude_attr->getValue();
 ?>
-<div style="display: flex">
-  <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=<?= $latitude ?>%2C%20<?= $longitude ?>&key=AIzaSyBn-qn2lVWPma_DYxAbA5_0W4NhmdaH0u8" allowfullscreen></iframe>
+<div style="width: 100%; overflow: hidden; display: flex;">
+  <iframe id="mapframe" width="600" height="450" frameborder="0" style="border:0; margin-top: -110px;" src="https://www.google.com/maps/embed/v1/place?q=<?= $latitude ?>%2C%20<?= $longitude ?>&key=AIzaSyBn-qn2lVWPma_DYxAbA5_0W4NhmdaH0u8" allowfullscreen></iframe>
 </div>
 <?php
   }
