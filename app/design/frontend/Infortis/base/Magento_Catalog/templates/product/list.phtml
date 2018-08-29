@@ -439,12 +439,15 @@ if(!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1){
         </script>
     <?php endif; ?>
 <?php
-  if(isset($_GET['local']) && $_GET['local'] == 'true/'){
+
 ?>
 <script>
 require([
   "jquery",
 ], ($) => {
+<?php
+    if(isset($_GET['local']) && $_GET['local'] == 'true/'){
+?>
     $(window).load(() => {
       $('a').filter(function(index) {
         var text = $(this).text();
@@ -454,9 +457,18 @@ require([
         }
       });
     });
-});
-</script>
 <?php
   }
+  if(isset($_GET['local_global']) && $_GET['local_global'] == 224){
  ?>
+    $(document).ready(() => {
+        if(localStorage.place != undefined && localStorage.state != undefined){
+          $('#location-city').html(`- 50 miles from ${localStorage.place}, ${localStorage.state}`);
+        }
+    });
+<?php
+  }
+?>
+});
+</script>
 <?php endif; ?>
