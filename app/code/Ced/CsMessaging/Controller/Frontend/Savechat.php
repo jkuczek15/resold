@@ -130,7 +130,6 @@ class Savechat extends \Magento\Framework\App\Action\Action
               $receiver_email=$vendor->getEmail();
             }
             $receiver_id=$vendor_data;
-
         }
 
         $vendor=$this->_vendorFactory->create()->load($receiver_id);
@@ -158,7 +157,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
             $count++;
         }
         if($receiver_email!="") {
-            try{
+            try {
                 $model=$this->_messagingFactory->create();
                 $model->setData('subject', $subject);
                 $model->setData('message', $message);
@@ -174,52 +173,46 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $model->setData('role', 'customer');
                 $model->save();
 
-
-                if(isset($data['sent_to_vendor'])) {
-                      $data= array();
-                      $data['receiver_email'] = $receiver_email;
-                      $data['text'] = $message;
-                      $data['vendor_name'] = $sender_name;
-                      $data['receiver_name'] = $receiver_name;
-                      $data['subject'] = $subject;
-                      $this->_template  = 'send_cmail_to_vendor';
-                      $this->inlineTranslation->suspend();
-                      $this->_transportBuilder->setTemplateIdentifier($this->_template)
-                            ->setTemplateOptions(
-                                [
-                                'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
-                                'store' => $this->_storeManager->getStore()->getId(),
-                                ]
-                            )
-                            ->setTemplateVars($data)
-                            ->setFrom([
-                                'name' => $sender_name,
-                                'email' => $sender_email
-                                ])
-                            ->addTo($receiver_email, $receiver_name);
-                      try {
-                        $transport = $this->_transportBuilder->getTransport();
-                        $transport->sendMessage();
-                        $this->inlineTranslation->resume();
-                      } catch (\Exception $e) {
-                          throw new \Exception (__($e->getMessage()));
-                      }
-
+                // send the email
+                $data= array();
+                $data['receiver_email'] = $receiver_email;
+                $data['text'] = $message;
+                $data['vendor_name'] = $sender_name;
+                $data['receiver_name'] = $receiver_name;
+                $data['subject'] = $subject;
+                $this->_template  = 'send_cmail_to_vendor';
+                $this->inlineTranslation->suspend();
+                $this->_transportBuilder->setTemplateIdentifier($this->_template)
+                      ->setTemplateOptions(
+                          [
+                          'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
+                          'store' => $this->_storeManager->getStore()->getId(),
+                          ]
+                      )
+                      ->setTemplateVars($data)
+                      ->setFrom([
+                          'name' => $sender_name,
+                          'email' => $sender_email
+                          ])
+                      ->addTo($receiver_email, $receiver_name);
+                try {
+                  $transport = $this->_transportBuilder->getTransport();
+                  $transport->sendMessage();
+                  $this->inlineTranslation->resume();
+                } catch (\Exception $e) {
+                    throw new \Exception (__($e->getMessage()));
                 }
-                 /**
-                     * Send the Response to admin
-                     */
             }
             catch(\Exception $e){
                 throw new \Exception (__($e->getMessage()));
             }
-            $this->messageManager->addSuccessMessage(__('Your Query Has Been Sent.'));
-             $this->_redirect('csmessaging/frontend/customercompose');
+            $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
+            echo 'success';
         }
         else
         {
           $this->messageManager->addErrorMessage(__('Please Specify Recipient.'));
-          $this->_redirect('csmessaging/frontend/customercompose');
+          echo 'error';
         }
     }
 

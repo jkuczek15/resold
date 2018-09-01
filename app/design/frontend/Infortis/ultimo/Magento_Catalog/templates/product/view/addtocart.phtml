@@ -81,6 +81,10 @@ if($userProduct){
     </div>
 </div>
 <div style="display: none" id="contact-seller-modal">
+  <form method="post" action="/csmessaging/frontend/savechat" id="contact-seller-form">
+    <input type="hidden" name="email_subject" id="email_subject" value="<?= $_product->getName() ?>" />
+    <input type="hidden" name="vendor_id" id="vendor_id" value="<?= $sessionId ?>" />
+    <input type="hidden" name="sent_to_vendor" value="Y" />
     <table style="width: 100%">
       <tr>
         <td><strong>Item:</strong></td>
@@ -88,9 +92,10 @@ if($userProduct){
       </tr>
       <tr>
         <td><strong>Message:</strong></td>
-        <td><textarea rows="5"></textarea></td>
+        <td><textarea id="text_email" name="text_email" rows="5"></textarea></td>
       </tr>
     </table>
+  </form>
 </div>
 <div style="display: none" id="make-offer-modal">
     <table style="width: 100%">
@@ -108,6 +113,7 @@ if($userProduct){
       </tr>
     </table>
 </div>
+
 <?php endif; ?>
 <?php if ($block->isRedirectToCartEnabled()) : ?>
     <script type="text/x-magento-init">
@@ -171,11 +177,19 @@ require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
     innerScroll: true,
     title: 'Contact Seller - ' + $('.listedBy:first').text().replace('Listed by: ', ''),
     buttons: [{
-        text: $.mage.__('Send'),
-        class: 'send-button',
-        click: function () {
-            this.closeModal();
-        }
+      text: $.mage.__('Send'),
+      class: 'send-button',
+      click: function () {
+        var data = {
+          'vendor_id': $('#vendor_id').val(),
+          'email_subject': $('#email_subject').val(),
+          'text_email': $('#text_email').val()
+        };
+        $.post('/csmessaging/frontend/savechat', data, (response) => {
+          $('#text_email').val('');
+          this.closeModal();
+        });
+      }
     }]
   };
   $('#product-message-button').click(() => {
