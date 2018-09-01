@@ -14,7 +14,8 @@
 $model =  \Magento\Framework\App\ObjectManager::getInstance();
 $productSku = $_product->getSku();
 $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
-$sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
+$customer = $model->create('Magento\Customer\Model\Session');
+$sessionId = $customer->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
 
 // whether this is the current seller's product
@@ -79,6 +80,34 @@ if($userProduct){
         </div>
     </div>
 </div>
+<div style="display: none" id="contact-seller-modal">
+    <table style="width: 92%">
+      <tr>
+        <td><strong>Item:</strong></td>
+        <td><strong><span class="item-name"></span></strong></td>
+      </tr>
+      <tr>
+        <td><strong>Message:</strong></td>
+        <td><textarea rows="5"></textarea></td>
+      </tr>
+    </table>
+</div>
+<div style="display: none" id="make-offer-modal">
+    <table style="width: 92%">
+      <tr>
+        <td><strong>Item:</strong></td>
+        <td><strong><span class="item-name"></span></strong></td>
+      </tr>
+      <tr>
+        <td><strong>Offer Price:</strong></td>
+        <td><input type="text" name="offer_price" id="offer_price" /></td>
+      </tr>
+      <tr>
+        <td><strong>Message:</strong></td>
+        <td><textarea name="message" id="message" rows="5"></textarea></td>
+      </tr>
+    </table>
+</div>
 <?php endif; ?>
 <?php if ($block->isRedirectToCartEnabled()) : ?>
     <script type="text/x-magento-init">
@@ -120,4 +149,56 @@ if($userProduct){
     margin-bottom: 1em;
   }
 }
+.modal-inner-wrap {
+  width: 35% !important;
+}
 </style>
+<script>
+require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
+  var options = {
+    type: 'popup',
+    responsive: true,
+    innerScroll: true,
+    title: 'Contact Seller - ' + $('.listedBy:first').text().replace('Listed by: ', ''),
+    buttons: [{
+        text: $.mage.__('Send'),
+        class: '',
+        click: function () {
+            this.closeModal();
+        }
+    }]
+  };
+  $('#product-message-button').click(() => {
+<?php
+if($customer->isLoggedIn()){
+?>
+  options.title = options.title.replace('Send Offer', 'Contact Seller');
+  $('.item-name').html($('.page-title:first').text());
+  var popup = modal(options, $('#contact-seller-modal'));
+  $('#contact-seller-modal').modal('openModal');
+<?php
+}else{
+?>
+  $('.authorization-link a:first')[0].click();
+<?php
+}// end if customer is logged in
+?>
+});
+$('#product-offer-button').click(() => {
+<?php
+if($customer->isLoggedIn()){
+?>
+  options.title = options.title.replace('Contact Seller', 'Send Offer');
+  $('.item-name').html($('.page-title:first').text());
+  var popup = modal(options, $('#make-offer-modal'));
+  $('#make-offer-modal').modal('openModal');
+<?php
+}else{
+?>
+  $('.authorization-link a:first')[0].click();
+<?php
+}// end if customer is logged in
+?>
+  });
+});
+</script>
