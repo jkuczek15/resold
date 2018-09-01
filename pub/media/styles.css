@@ -203,3 +203,11 @@
 .filter-options-title {
   cursor: initial;
 }
+
+#search {
+  border-color: #9b9494 !important;
+}
+
+#search::placeholder {
+    color: #3f3c3c;
+}
