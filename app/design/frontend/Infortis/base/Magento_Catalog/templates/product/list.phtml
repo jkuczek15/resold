@@ -24,15 +24,15 @@ if(!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1){
 <div id="block-search" class="block block-search search-wrapper" style="width: 100%">
     <div class="block block-title"><strong>Search</strong></div>
     <div class="block block-content">
-        <form class="form minisearch" id="search_mini_form" action="https://localhost/catalogsearch/result/" method="get">
+        <form class="form minisearch" id="search_mini_form" action="<?= $_SERVER['REQUEST_URI'] ?>" method="get">
             <div class="field search">
               <div class="control">
-                <input style="border-color: #ddd" id="search" name="q" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
+                <input value="<?= isset($_GET['q']) ? $_GET['q'] : '' ?>" style="border-color: #ddd" id="search" name="q" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
                 <div id="search_autocomplete" class="search-autocomplete" style="display: none;"></div>
               </div>
             </div>
             <div class="actions">
-              <button id="action-search" type="submit" title="Search" class="action search" disabled="">
+              <button id="action-search" type="submit" title="Search" class="action search">
                   <span class="icon ic ic-search ib ib-square ib-hover"></span>
               </button>
             </div>
