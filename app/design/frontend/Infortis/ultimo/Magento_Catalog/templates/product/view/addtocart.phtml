@@ -81,7 +81,7 @@ if($userProduct){
     </div>
 </div>
 <div style="display: none" id="contact-seller-modal">
-    <table style="width: 92%">
+    <table style="width: 100%">
       <tr>
         <td><strong>Item:</strong></td>
         <td><strong><span class="item-name"></span></strong></td>
@@ -93,14 +93,14 @@ if($userProduct){
     </table>
 </div>
 <div style="display: none" id="make-offer-modal">
-    <table style="width: 92%">
+    <table style="width: 100%">
       <tr>
         <td><strong>Item:</strong></td>
         <td><strong><span class="item-name"></span></strong></td>
       </tr>
       <tr>
-        <td><strong>Offer Price:</strong></td>
-        <td><input type="text" name="offer_price" id="offer_price" /></td>
+        <td><strong>Offer ($):</strong></td>
+        <td><input type="number" name="offer_price" id="offer_price" /></td>
       </tr>
       <tr>
         <td><strong>Message:</strong></td>
@@ -150,7 +150,17 @@ if($userProduct){
   }
 }
 .modal-inner-wrap {
-  width: 35% !important;
+  width: 40% !important;
+}
+.send-button {
+  float: right;
+}
+@media (max-width: 575.98px) {
+  .modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
+      height: auto;
+      width: 100% !important;
+      min-height: 0;
+  }
 }
 </style>
 <script>
@@ -162,7 +172,7 @@ require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
     title: 'Contact Seller - ' + $('.listedBy:first').text().replace('Listed by: ', ''),
     buttons: [{
         text: $.mage.__('Send'),
-        class: '',
+        class: 'send-button',
         click: function () {
             this.closeModal();
         }
