@@ -155,9 +155,9 @@ class ListProduct extends AbstractProduct implements IdentityInterface
           $this->_productCollection->addAttributeToFilter('latitude', array('notnull' => true));
           $this->_productCollection->addAttributeToFilter('longitude', array('notnull' => true));
         }
-        if(isset($_GET['q']) && $_GET['q'] != null){
+        if(isset($_GET['qc']) && $_GET['qc'] != null){
           $this->_productCollection->addAttributeToFilter([
-               ['attribute' => 'name', 'like' => '%'.$_GET['q'].'%']
+               ['attribute' => 'name', 'like' => '%'.$_GET['qc'].'%']
           ]);
         }
 

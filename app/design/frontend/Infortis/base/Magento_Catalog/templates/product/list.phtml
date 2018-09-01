@@ -37,7 +37,7 @@ if(!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1){
             <input type="hidden" id="condition" name="condition" value="<?= $condition ?>" />
             <div class="field search">
               <div class="control">
-                <input value="<?= isset($_GET['q']) ? $_GET['q'] : '' ?>" style="border-color: #ddd" id="search" name="q" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
+                <input value="<?= isset($_GET['qc']) ? $_GET['qc'] : '' ?>" style="border-color: #ddd" id="search" name="qc" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
                 <div id="search_autocomplete" class="search-autocomplete" style="display: none;"></div>
               </div>
             </div>
@@ -472,8 +472,8 @@ require([
   if(isset($_GET['local_global']) && $_GET['local_global'] == 231){
  ?>
     $(document).ready(() => {
-        if(localStorage.place != undefined && localStorage.state != undefined){
-          $('#location-city').html(`- 50 miles from ${localStorage.place}, ${localStorage.state}`);
+        if(sessionStorage.place != undefined && sessionStorage.state != undefined){
+          $('#location-city').html(`- 50 miles from ${sessionStorage.place}, ${sessionStorage.state}`);
         }
     });
 <?php

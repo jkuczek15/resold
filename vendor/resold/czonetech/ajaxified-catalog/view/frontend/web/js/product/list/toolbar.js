@@ -157,9 +157,9 @@ define([
               $('#location-city').html('');
               return;
             }
-            if(win.localStorage.place != undefined){
+            if(win.sessionStorage.place != undefined && win.sessionStorage.state != undefined){
               // location already stored with local storage
-              $('#location-city').html(`- 50 miles from ${win.localStorage.place}. ${win.localStorage.state}`);
+              $('#location-city').html(`- 50 miles from ${win.sessionStorage.place}. ${win.sessionStorage.state}`);
             }else{
               // get the user's city from mapbox
               let api_key = 'pk.eyJ1Ijoiamt1Y3playIsImEiOiJjamxlZ2kyMzYwMnhsM3ByazM1ZWtibzllIn0.hsE3V5wLucE2wl8jdQhfTQ';
@@ -169,8 +169,8 @@ define([
                       let place = data.features[3].text;
                       let state = data.features[4].text;
                       $('#location-city').html(`- 50 miles from ${place}, ${state}`);
-                      win.localStorage.place = place;
-                      win.localStorage.state = state;
+                      win.sessionStorage.place = place;
+                      win.sessionStorage.state = state;
                   }
               });
             }
