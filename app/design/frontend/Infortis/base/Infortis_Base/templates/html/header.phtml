@@ -8,6 +8,8 @@
     $theme = $block->getHelperTheme();
     $helperHeader = $block->getHelperHeader();
     $connectorMenu = $block->getHelperConnectorMenu();
+    $model =  \Magento\Framework\App\ObjectManager::getInstance();
+    $customer = $model->create('Magento\Customer\Model\Session');
 
     //Get HTML of header blocks
     //**************************************************************
@@ -19,10 +21,10 @@
 
     $cartHtml = $this->getChildHtml('minicart');
     $compareHtml = $this->getChildHtml('compareMini'); //TODO: original name is catalog.compare.sidebar. Add it through layout and add custom name.
-    $compareLinkHtml = $this->getChildHtml('catalog.compare.link'); //TODO: this is original block in the header with the link to compare 
+    $compareLinkHtml = $this->getChildHtml('catalog.compare.link'); //TODO: this is original block in the header with the link to compare
     $logoHtml = $this->getChildHtml('site-logo');
     $logoMobileHtml = $this->getChildHtml('site-logo-mobile');
-    $searchHtml = $this->getChildHtml('topSearch'); //TODO: 
+    $searchHtml = $this->getChildHtml('topSearch'); //TODO:
 
     $accountLinksHtml = $this->getChildHtml('account-links'); //('top.links')
     //$userMenuHtml = $this->getChildHtml('header-wrapper') . $this->getChildHtml('store.links'); //TODO: tmp append 'store.links' here
@@ -86,7 +88,7 @@
     $classes['root'] = '';
     if ($moveSwitchers)
         $classes['root'] .= ' move-switchers';
-    
+
     //Menu
     $classes['nav-container'] = '';
     if ($sticky && $theme->getCfg('header/sticky_full_width'))
@@ -213,7 +215,7 @@
     }
 
     //Main menu
-    if (!empty($menuHtml)) 
+    if (!empty($menuHtml))
     {
         $skipLinksCount++;
     }
@@ -345,7 +347,7 @@
                 <?php
                     //Central column is displayed above left and right columns to avoid incorrect layout
                     //because all columns contain inline elements.
-                    $containerHeaderTopCentral = $this->getChildHtml('container_header_top_central_1'); 
+                    $containerHeaderTopCentral = $this->getChildHtml('container_header_top_central_1');
                 ?>
                 <?php if (isset($html['topCentral']) || $containerHeaderTopCentral): ?>
                     <div class="central-column">
@@ -464,7 +466,7 @@
                             <?php endif; ?>
                         </div> <!-- end: right column -->
                     <?php endif; ?>
-                    
+
                 </div> <!-- end: hp-blocks-holder -->
 
             </div> <!-- end: inner-container -->
@@ -565,7 +567,22 @@ requirejs(['jquery', 'smartheader', 'stickyheader', 'dropdownDialog'], function(
 </script>
 
 <style>
-.sticky-header .level-top > span { 
+.sticky-header .level-top > span {
   font-size: 0.89em;
 }
+<?php
+if($customer->isLoggedIn()){
+?>
+.hp-block.central-column.grid12-5 {
+  width: 54%;
+}
+<?php
+}else{
+?>
+.hp-block.central-column.grid12-5 {
+  width: 47%;
+}
+<?php
+}// end if user logged in
+?>
 </style>
