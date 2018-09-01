@@ -176,6 +176,14 @@ define([
             }
         },
 
+        updateHidden(longitude, latitude, paramData){
+          var filters = ['local_global', 'condition', 'latitude', 'longitude', 'price'];
+          for(let filter of filters){
+              let value = this.getQueryVariable(filter);
+              $(`#${filter}`).val(value);
+          }
+        },
+
         changeUrl: function (paramName, paramValue, defaultValue) {
             var urlPaths = this.options.url.split('?'),
                 baseUrl = urlPaths[0],
@@ -204,6 +212,7 @@ define([
                     self.updateUrl(baseUrl, paramData);
                     self.updateContent(response.html);
                     self.updatePlace(longitude, latitude, paramData);
+                    self.updateHidden(longitude, latitude, paramData);
                 } else {
                     var msg = response.error_message;
                     if (msg) {
@@ -225,6 +234,17 @@ define([
             messageComponent().messages({
                 messages: messages
             });
+        },
+        getQueryVariable: function(variable) {
+          var query = window.location.search.substring(1);
+          var vars = query.split('&');
+          for (var i = 0; i < vars.length; i++) {
+              var pair = vars[i].split('=');
+              if (decodeURIComponent(pair[0]) == variable) {
+                  return decodeURIComponent(pair[1]);
+              }
+          }
+          return '';
         }
     });
 
