@@ -90,25 +90,33 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setCustomAttribute('title_description', $post['title_description']);
       $_product->setCustomAttribute('condition', $post['condition']);
       $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
-
+      $_product->setCustomAttribute('local_global', implode(',', $post['local_global']));
       // set the local/global attribute
-      $local = isset($post['local']) ? $post['local'] : null;
-      $global = isset($post['global']) ? $post['global'] : null;
+      // $local = isset($post['local']) ? 1 : 0;
+      // $global = isset($post['global']) ? 1 : 0;
+      $global = 1;
+      $local = 1;
+      // $local_attr_id = 224;
+      // if($local == 'true' && $global == 'true'){
+      //   $local_global = 'Local & Global';
+      //   $_product->setCustomAttribute('latitude', $post['latitude']);
+      //   $_product->setCustomAttribute('longitude', $post['longitude']);
+      //   $_product->setCustomAttribute('local_global', $local_attr_id + 2);
+      // }else if($local == 'true'){
+      //   $local_global = 'Local Only';
+      //   $_product->setCustomAttribute('latitude', $post['latitude']);
+      //   $_product->setCustomAttribute('longitude', $post['longitude']);
+      //   $_product->setCustomAttribute('local_global', $local_attr_id);
+      // }else{
+      //   $local_global = 'Global Only';
+      //   $_product->setCustomAttribute('local_global', $local_attr_id + 1);
+      // }
 
-      $local_attr_id = 224;
-      if($local == 'true' && $global == 'true'){
-        $local_global = 'Local & Global';
+      // $_product->setCustomAttribute('local', $local);
+      // $_product->setCustomAttribute('global', $global);
+      if($local){
         $_product->setCustomAttribute('latitude', $post['latitude']);
         $_product->setCustomAttribute('longitude', $post['longitude']);
-        $_product->setCustomAttribute('local_global', $local_attr_id + 2);
-      }else if($local == 'true'){
-        $local_global = 'Local Only';
-        $_product->setCustomAttribute('latitude', $post['latitude']);
-        $_product->setCustomAttribute('longitude', $post['longitude']);
-        $_product->setCustomAttribute('local_global', $local_attr_id);
-      }else{
-        $local_global = 'Global Only';
-        $_product->setCustomAttribute('local_global', $local_attr_id + 1);
       }
 
       // TODO: Add service side validation for images

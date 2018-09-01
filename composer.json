@@ -83,6 +83,10 @@
         "zorn_optionaltelephone": {
             "type": "vcs",
             "url": "git@github.com:zsoerenm/magento2-optionaltelephone.git"
+        },
+        "niks-multiple-layered-navigation": {
+            "type": "vcs",
+            "url": "git@github.com:NikZh/magento2-multiple-layered-navigation.git"
         }
     },
     "extra": {

@@ -38,9 +38,10 @@ define([
             productsListBlock: '.products.wrapper',
             layeredNavigationFilterBlock: '.block.filter',
             filterItemControl: '.block.filter .item a, .block.filter .filter-clear,.block.filter .swatch-option-link-layered',
-            url: ''
+            url: '',
         },
 
+        local_id: 231,
         position: null,
 
         _create: function () {
@@ -71,7 +72,7 @@ define([
             var urlParts = link.attr('href').split('?');
             var self = this;
 
-            if(urlParts[1].includes('local_global=224')){
+            if(urlParts[1].includes(`local_global=${this.local_id}`)){
               if(this.position == null){
                 // filter by local only, get the user's location
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -152,8 +153,7 @@ define([
         },
 
         updatePlace: function(longitude, latitude, paramData){
-            console.log(paramData);
-            if(!paramData.includes('local_global=224')){
+            if(!paramData.includes(`local_global=${this.local_id}`)){
               $('#location-city').html('');
               return;
             }
