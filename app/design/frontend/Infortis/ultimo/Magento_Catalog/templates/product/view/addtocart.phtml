@@ -85,33 +85,54 @@ if($userProduct){
     <input type="hidden" name="email_subject" id="email_subject" value="<?= $_product->getName() ?>" />
     <input type="hidden" name="vendor_id" id="vendor_id" value="<?= $sessionId ?>" />
     <input type="hidden" name="sent_to_vendor" value="Y" />
-    <table style="width: 100%">
-      <tr>
-        <td><strong>Item:</strong></td>
-        <td><strong><span class="item-name"></span></strong></td>
-      </tr>
-      <tr>
-        <td><strong>Message:</strong></td>
-        <td><textarea id="text_email" name="text_email" rows="5"></textarea></td>
-      </tr>
-    </table>
+    <div class="row" style="margin-bottom: 1em">
+      <div class="col-md-2">
+        <strong>Item:</strong>
+      </div>
+      <div class="col-md-6">
+        <span class="item-name"></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <strong>Message:</strong>
+      </div>
+      <div class="col-md-8">
+        <textarea id="text_email_contact_seller" name="text_email" rows="7"></textarea>
+      </div>
+    </div>
   </form>
 </div>
 <div style="display: none" id="make-offer-modal">
-    <table style="width: 100%">
-      <tr>
-        <td><strong>Item:</strong></td>
-        <td><strong><span class="item-name"></span></strong></td>
-      </tr>
-      <tr>
-        <td><strong>Offer ($):</strong></td>
-        <td><input type="number" name="offer_price" id="offer_price" /></td>
-      </tr>
-      <tr>
-        <td><strong>Message:</strong></td>
-        <td><textarea name="message" id="message" rows="5"></textarea></td>
-      </tr>
-    </table>
+  <form method="post" action="/csmessaging/frontend/savechat" id="contact-seller-form">
+    <input type="hidden" name="email_subject" id="email_subject" value="<?= $_product->getName() ?>" />
+    <input type="hidden" name="vendor_id" id="vendor_id" value="<?= $sessionId ?>" />
+    <input type="hidden" name="sent_to_vendor" value="Y" />
+    <div class="row" style="margin-bottom: 1em">
+      <div class="col-md-2">
+        <strong>Item:</strong>
+      </div>
+      <div class="col-md-6">
+        <span class="item-name"></span>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom: 1em">
+      <div class="col-md-2">
+        <strong>Offer ($):</strong>
+      </div>
+      <div class="col-md-2">
+        <input type="number" name="offer_price" id="offer_price" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <strong>Message:</strong>
+      </div>
+      <div class="col-md-8">
+        <textarea id="text_email_offer" name="text_email" rows="7"></textarea>
+      </div>
+    </div>
+  </form>
 </div>
 
 <?php endif; ?>
@@ -164,7 +185,7 @@ if($userProduct){
 @media (max-width: 575.98px) {
   .modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
       height: auto;
-      width: 100% !important;
+      width: 87% !important;
       min-height: 0;
   }
 }
@@ -183,10 +204,10 @@ require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
         var data = {
           'vendor_id': $('#vendor_id').val(),
           'email_subject': $('#email_subject').val(),
-          'text_email': $('#text_email').val()
+          'text_email': $('#text_email_contact_seller').val()
         };
         $.post('/csmessaging/frontend/savechat', data, (response) => {
-          $('#text_email').val('');
+          $('#text_email_contact_seller').val('');
           this.closeModal();
         });
       }
