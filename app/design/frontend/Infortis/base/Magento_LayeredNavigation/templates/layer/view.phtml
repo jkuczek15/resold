@@ -35,7 +35,7 @@
 
             <?php if ($block->getLayer()->getState()->getFilters()): ?>
                 <div class="block-actions filter-actions">
-                    <a href="<?php /* @escapeNotVerified */ echo preg_replace('/\?.*/', '', $block->getClearUrl()) ?>" class="action clear filter-clear"><span><?php /* @escapeNotVerified */ echo __('Clear All') ?></span></a>
+                    <a href="<?php /* @escapeNotVerified */ echo preg_replace('/\?.*/', '', $block->getClearUrl()) . (isset($_GET['q']) ? '?q='.$_GET['q'] : '') ?>" class="action clear filter-clear"><span><?php /* @escapeNotVerified */ echo __('Clear All') ?></span></a>
                 </div>
             <?php endif; ?>
             <?php $wrapOptions = false; ?>
