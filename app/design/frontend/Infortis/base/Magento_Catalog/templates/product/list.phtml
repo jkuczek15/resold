@@ -19,7 +19,7 @@ hr {
 }
 </style>
 <?php
-if(!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1){
+if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQUEST_URI'], 'catalogsearch') === FALSE){
   $local_global = isset($_GET['local_global']) ? $_GET['local_global'] : '';
   $latitude = isset($_GET['latitude']) ? $_GET['latitude'] : '';
   $longitude = isset($_GET['longitude']) ? $_GET['longitude'] : '';
