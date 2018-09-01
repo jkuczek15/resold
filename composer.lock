@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "453df9df5c89635a7baa254bff9797aa",
+    "content-hash": "7c2128e2d6e7f4957b9774fa44991552",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.67.1",
+            "version": "3.67.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "a77e6796841056f46543393f5cd06aa9fa4cc40a"
+                "reference": "df94a9ad78c9e817a9887bedf0e5b269c4f25810"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a77e6796841056f46543393f5cd06aa9fa4cc40a",
-                "reference": "a77e6796841056f46543393f5cd06aa9fa4cc40a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/df94a9ad78c9e817a9887bedf0e5b269c4f25810",
+                "reference": "df94a9ad78c9e817a9887bedf0e5b269c4f25810",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-08-28T19:38:00+00:00"
+            "time": "2018-08-31T21:53:42+00:00"
         },
         {
             "name": "braintree/braintree_php",

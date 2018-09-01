@@ -80,8 +80,8 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
         <div class="field local">
             <label class="label" for="local"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
             <div class="control">
-                <input type="checkbox" value="true" name="local" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local" /> Local <span style="margin-right: 1.5em"></span>
-                <input type="checkbox" value="true" name="global" id="global" v-model="form_data.global" /> Global
+                <input type="checkbox" value="231" name="local_global[]" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local" /> Local <span style="margin-right: 1.5em"></span>
+                <input type="checkbox" value="232" name="local_global[]" id="global" v-model="form_data.global" /> Global
                 <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
             </div>
         </div>
