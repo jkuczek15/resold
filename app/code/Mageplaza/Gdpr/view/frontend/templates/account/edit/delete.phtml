@@ -1,0 +1,58 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_Gdpr
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/** @var \Magento\Customer\Block\Address\Book $block */
+
+/** @var \Mageplaza\Gdpr\Helper\Data $helper */
+$helper = $this->helper(\Mageplaza\Gdpr\Helper\Data::class);
+
+if ($helper->allowDeleteAccount()): ?>
+    <fieldset class="fieldset info mp-gdpr-delete-account">
+        <legend class="legend">
+            <span><?php echo __('Delete Account') ?></span>
+        </legend><br>
+        <div class="gdpr-delete-message">
+            <?php echo $helper->getDeleteAccountMessage() ?>
+        </div>
+
+        <?php echo $block->getChildHtml('form_additional_info'); ?>
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button type="submit" class="action save primary action-delete" role="delete-account" data-address="" title="<?php echo __('Delete your account') ?>">
+                    <span><?php echo __('Delete your account') ?></span>
+                </button>
+            </div>
+        </div>
+    </fieldset>
+    <script type="text/x-magento-init">
+    {
+        ".page-main": {
+            "address": {
+                "deleteAddress": "button[role='delete-account']",
+                "deleteUrlPrefix": "<?php echo $block->escapeUrl(rtrim($helper->getDeleteAccountUrl(), '/')) ?>",
+                "deleteConfirmMessage": "<?php echo __('Are you sure you want to delete your account?') ?>",
+                "extraData": <?php echo $helper->getExtraData(); ?>
+            }
+        }
+    }
+    </script>
+<?php endif; ?>
