@@ -43,5 +43,9 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 # Deploy Magento static content
 /var/www/html/bin/magento setup:static-content:deploy
 
+# Create the potato compressor image cache folders
+mkdir /var/www/html/pub/static/_po_compressor
+mkdir /var/www/html/pub/static/_po_compressor/po_cmp_image_merge
+
 # Grant permissions to all web files
 sudo chmod -R 777 /var/www/html

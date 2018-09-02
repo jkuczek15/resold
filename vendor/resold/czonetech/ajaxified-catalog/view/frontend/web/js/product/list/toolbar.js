@@ -72,7 +72,7 @@ define([
             var urlParts = link.attr('href').split('?');
             var self = this;
 
-            if(urlParts[1].includes(`local_global=${this.local_id}`)){
+            if(urlParts[1] != undefined && urlParts[1].includes(`local_global=${this.local_id}`)){
               if(this.position == null){
                 // filter by local only, get the user's location
                 navigator.geolocation.getCurrentPosition(function(position) {
