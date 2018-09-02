@@ -49,6 +49,7 @@ atlassian*
 !/pub/static/.htaccess
 !/pub/media/styles.css
 robots.txt
+!/pub/media/sitemap.xml
 
 /var/*
 !/var/.htaccess
