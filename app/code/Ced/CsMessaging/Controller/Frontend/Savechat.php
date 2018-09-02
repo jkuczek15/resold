@@ -115,35 +115,23 @@ class Savechat extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+        // get request data
     	  $data = $this->getRequest()->getPostValue();
-        $subject=$this->getRequest()->getPost('email_subject');
-        $message=$this->getRequest()->getPost('text_email');
-        $receiver_email=$this->getRequest()->getPost('receiver_email');
-        $receiver_id=$this->getRequest()->getPost('vendor_id');
-        if($receiver_email=="") {
-            $vendor_data=$this->getRequest()->getPost('vendor_data');
-            if ($vendor_data == 0)
-            {
-              $receiver_email = $this->scopeConfig->getValue('trans_email/ident_general/email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE); //fetch receiver email address
-            } else {
-              $vendor=$this->_vendorFactory->create()->load($vendor_data);
-              $receiver_email=$vendor->getEmail();
-            }
-            $receiver_id=$vendor_data;
-        }
+        $subject = $this->getRequest()->getPost('email_subject');
+        $message = $this->getRequest()->getPost('text_email');
+        $receiver_email = $this->getRequest()->getPost('receiver_email');
+        $receiver_id = $this->getRequest()->getPost('vendor_id');
 
-        $vendor=$this->_vendorFactory->create()->load($receiver_id);
-        if ($this->getRequest()->getPost('vendor_data') == 0)
-        {
-          $receiver_name = $this->scopeConfig->getValue('trans_email/ident_general/name', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        } else {
-          $receiver_name=$vendor->getName();
-        }
+        // get current seller data
+        $vendor = $this->_vendorFactory->create()->load($receiver_id);
+        $receiver_email = $vendor->getEmail();
+        $receiver_name = $vendor->getName();
 
+        // get current customer data
         $customerData = $this->session->getCustomer();
-        $sender_id= $customerData->getId();
-        $sender_name=$customerData->getName();
-        $sender_email=$customerData->getEmail();
+        $sender_id = $customerData->getId();
+        $sender_name = $customerData->getName();
+        $sender_email = $customerData->getEmail();
 
         $date=$this->date->date('Y-m-d');//Mage::getModel('core/date')->date('Y-m-d');
         $time=$this->date->date('H:i:s');//Mage::getModel('core/date')->date('H:i:s');
