@@ -97,8 +97,8 @@ define([
             }
 
             url = url.substring(0, url.indexOf('?'));
-            paramData = paramData.replace('local=true%2F&', '');
             if (paramData && paramData.length > 0) {
+                paramData = paramData.replace('local=true%2F&', '');
                 url += '?' + paramData;
             }
 
@@ -153,7 +153,7 @@ define([
         },
 
         updatePlace: function(longitude, latitude, paramData){
-            if(!paramData.includes(`local_global=${this.local_id}`)){
+            if(paramData == undefined || !paramData.includes(`local_global=${this.local_id}`)){
               $('#location-city').html('');
               return;
             }
