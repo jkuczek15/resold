@@ -2,13 +2,7 @@
 /**
 * Sell Form
 */
-if($_SERVER['HTTP_HOST'] == 'localhost'){
-  // local/dev server
-  $new_attr_id = 230;
-}else{
-  // prod server
-  $new_attr_id = 227;
-}
+$new_attr_id = 227;
 ?>
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="latitude" id="latitude" value="" />
@@ -88,9 +82,9 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
         <div class="field images">
             <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
             <div class="control">
-              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." name="images[]" accept="image/*" capture />
+              <input type="file" id="image_0" data-validate="{'required-file': true}" data-msg-required-file="Please select an image." name="images[]" accept="image/*" />
               <span v-for="index in num_images-1" :key="index">
-                <input type="file" v-bind:id="'image_'+index" name="images[]" class="image_input" accept="image/*" capture />
+                <input type="file" v-bind:id="'image_'+index" name="images[]" class="image_input" accept="image/*" />
               </span>
             </div>
         </div>

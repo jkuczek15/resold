@@ -73,6 +73,7 @@ class Index extends \Magento\Framework\App\Action\Action
       // TODO: Add server side validation for raw data
       // Create a unique product ID and save product to database
       date_default_timezone_set('America/Chicago');
+      $local_global = implode(',', $post['local_global']);
       $sku = uniqid("product-", true);
       $_product = $objectManager->create('Magento\Catalog\Model\Product');
       $_product->setName($post['name']);
@@ -90,31 +91,11 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setCustomAttribute('title_description', $post['title_description']);
       $_product->setCustomAttribute('condition', $post['condition']);
       $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
-      $_product->setCustomAttribute('local_global', implode(',', $post['local_global']));
-      // set the local/global attribute
-      // $local = isset($post['local']) ? 1 : 0;
-      // $global = isset($post['global']) ? 1 : 0;
-      $global = 1;
-      $local = 1;
-      // $local_attr_id = 224;
-      // if($local == 'true' && $global == 'true'){
-      //   $local_global = 'Local & Global';
-      //   $_product->setCustomAttribute('latitude', $post['latitude']);
-      //   $_product->setCustomAttribute('longitude', $post['longitude']);
-      //   $_product->setCustomAttribute('local_global', $local_attr_id + 2);
-      // }else if($local == 'true'){
-      //   $local_global = 'Local Only';
-      //   $_product->setCustomAttribute('latitude', $post['latitude']);
-      //   $_product->setCustomAttribute('longitude', $post['longitude']);
-      //   $_product->setCustomAttribute('local_global', $local_attr_id);
-      // }else{
-      //   $local_global = 'Global Only';
-      //   $_product->setCustomAttribute('local_global', $local_attr_id + 1);
-      // }
+      $_product->setCustomAttribute('local_global', $local_global);
 
-      // $_product->setCustomAttribute('local', $local);
-      // $_product->setCustomAttribute('global', $global);
-      if($local){
+      // set the local/global attribute
+      if(strpos($local_global, "231") !== FALSE){
+        // local product
         $_product->setCustomAttribute('latitude', $post['latitude']);
         $_product->setCustomAttribute('longitude', $post['longitude']);
       }
