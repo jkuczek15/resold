@@ -146,6 +146,8 @@ return array (
     'Magento_WishlistSampleData' => 1,
     'Mageplaza_Core' => 1,
     'Mageplaza_DeleteOrders' => 1,
+    'Mageplaza_Seo' => 1,
+    'Mageplaza_Sitemap' => 1,
     'Mageplaza_Smtp' => 1,
     'Thai_S3' => 1,
     'Zorn_OptionalTelephone' => 1,
