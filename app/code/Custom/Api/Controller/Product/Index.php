@@ -119,7 +119,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $newPath = $mediaDir.$tmpPath.'.'.$extension;
 
             // move the uploaded image to the media directory
-            rename($tmpPath, $newPath);
+            move_uploaded_file($tmpPath, $newPath);
 
             // link the image to the product and upload it to the S3 bucket
             $_product->addImageToMediaGallery($newPath, array('image', 'small_image', 'thumbnail'), false, false);
