@@ -44,6 +44,7 @@ rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
 /var/www/html/bin/magento setup:static-content:deploy
 
 # Create the potato compressor image cache folders
+rm -rf /var/www/html/pub/static/_po_compressor
 mkdir /var/www/html/pub/static/_po_compressor
 mkdir /var/www/html/pub/static/_po_compressor/po_cmp_image_merge
 
