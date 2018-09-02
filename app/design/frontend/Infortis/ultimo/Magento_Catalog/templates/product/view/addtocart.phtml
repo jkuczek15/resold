@@ -207,7 +207,6 @@ require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
           'text_email': $('#text_email_contact_seller').val()
         };
         $.post('/csmessaging/frontend/savechat', data, (response) => {
-          console.log(response);
           $('#text_email_contact_seller').val('');
           this.closeModal();
         });
