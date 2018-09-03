@@ -50,6 +50,7 @@ atlassian*
 !/pub/media/styles.css
 robots.txt
 /pub/media/favicon/default/LOGO_MAIN_NO_BACKGROUND.png
+!/pub/media/sitemap.xml
 
 /var/*
 !/var/.htaccess
