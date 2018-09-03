@@ -423,6 +423,9 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
             <?php endforeach; ?>
         </ol>
     </div>
+    <input type="hidden" value="<?= (isset($_GET['local']) && $_GET['local'] == 'true/') ? 'Y' : 'N' ?>" id="auto_local_refresh" />
+    <input type="hidden" value="<?= (isset($_GET['local_global']) && $_GET['local_global'] == '231') ? 'Y' : 'N' ?>" id="local_global" />
+    <input type="hidden" value="<?= (isset($_REQUEST['ajax']) && $_REQUEST['ajax'] == 1) ? 'Y' : 'N' ?>" id="ajax" />
     <?php if (!$hideToolbar): ?>
         <?php echo $block->getToolbarHtml() ?>
     <?php endif; ?>
@@ -448,37 +451,25 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
         }
         </script>
     <?php endif; ?>
-<?php
-
-?>
 <script>
 require([
   "jquery",
 ], ($) => {
-<?php
-    if(isset($_GET['local']) && $_GET['local'] == 'true/'){
-?>
-    $(window).load(() => {
-      $('a').filter(function(index) {
-        var text = $(this).text();
-        if(text != null && this.href.includes("local_global=231")){
-          var self = this;
-          setTimeout(function(){ $(self)[0].click(); }, 750);
-        }
-      });
-    });
-<?php
-  }
-  if(isset($_GET['local_global']) && $_GET['local_global'] == 231){
- ?>
     $(document).ready(() => {
-        if(sessionStorage.place != undefined && sessionStorage.state != undefined){
-          $('#location-city').html(`- 50 miles from ${sessionStorage.place}, ${sessionStorage.state}`);
-        }
+      if($('#auto_local_refresh').val() == 'Y' && $('#ajax').val() == 'N'){
+          console.log('testing');
+          $('a').filter(function(index) {
+            var text = $(this).text();
+            if(text != null && this.href.includes("local_global=231")){
+              var self = this;
+              setTimeout(function(){ $(self).click(); }, 1250);
+            }
+          });
+      }
+      if($('#local_global').val() == 'Y' && sessionStorage.place != undefined && sessionStorage.state != undefined){
+        $('#location-city').html(`- 50 miles from ${sessionStorage.place}, ${sessionStorage.state}`);
+      }
     });
-<?php
-  }
-?>
 });
 </script>
 <?php endif; ?>
