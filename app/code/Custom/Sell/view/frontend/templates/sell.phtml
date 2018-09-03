@@ -176,7 +176,7 @@ require([
     });
 
    // after everything loads, add our click handler
-   $(window).load(() => $('#submit').prop('disabled', false));
+   $('#submit').prop('disabled', false);
 
    // click function for local checkbox
    $('#local').click(getLocation);
