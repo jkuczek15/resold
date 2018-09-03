@@ -4,6 +4,10 @@
 */
 $new_attr_id = 227;
 ?>
+<div id="error" class="alert" style="display: none">
+ <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+ <strong><span id="error-text"></span></strong>
+</div>
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="latitude" id="latitude" value="" />
     <input type="hidden" name="longitude" id="longitude" value="" />
@@ -105,7 +109,32 @@ $new_attr_id = 227;
         </div>
     </div>
 </form>
+<style>
+/* The alert message box */
+.alert {
+   padding: 20px;
+   background-color: #f2dede; /* Red */
+   color: #a94442;
+   margin-bottom: 15px;
+}
 
+/* The close button */
+.closebtn {
+   margin-left: 15px;
+   color: #565252;
+   font-weight: bold;
+   float: right;
+   font-size: 22px;
+   line-height: 20px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+   color: black;
+}
+</style>
 <script>
 require([
     "jquery",
@@ -124,6 +153,29 @@ require([
         local_global_error: false,
         image_error: false,
         form_data: {}
+      }
+    });
+
+    $('#sell_form').submit(function(){
+      if($(this).valid()){
+        $.ajax({
+          data: new FormData($(this)[0]),
+          processData: false,
+          contentType: false,
+          url: $(this).attr('action'),
+          type: $(this).attr('method'),
+          showLoader: true,
+          cache: true,
+          success: function(data){
+            if(data.error != undefined){
+              $('#error-text').html(data.error);
+              $('#error').show();
+            }else if(data.success == 'Y'){
+              window.location = '/customer/account/listings';
+            }
+          }
+        });
+        return false;
       }
     });
 
@@ -160,7 +212,6 @@ require([
         $('.lowestcategory').hide();
       }else{
         app.lowestcategories = app.subcategories[subcategory];
-
         if(isNaN(app.lowestcategories)){
           $('#lowestcategory_select').val('');
           $('.lowestcategory').show();
@@ -188,6 +239,7 @@ require([
      // Try HTML5 geolocation
      if(!document.getElementById("local").checked || pos) return;
      if (navigator.geolocation) {
+       $('#submit').prop('disabled', true);
        navigator.geolocation.getCurrentPosition(function(position) {
          pos = {
            lat: position.coords.latitude,
@@ -195,9 +247,11 @@ require([
          };
          $('#latitude').val(`${pos.lat}`);
          $('#longitude').val(`${pos.lng}`);
+         $('#submit').prop('disabled', false);
        }, function() {
          document.getElementById("local").checked = false;
          alert('You must give Resold access to your location to post locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');
+         $('#submit').prop('disabled', false);
          handleLocationError(true, infoWindow, map.getCenter());
        });
      } else {

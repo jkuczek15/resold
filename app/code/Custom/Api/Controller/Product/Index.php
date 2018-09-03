@@ -60,18 +60,18 @@ class Index extends \Magento\Framework\App\Action\Action
       ###################################
       // Ensure user is logged in
       if (!$this->session->isLoggedIn()) {
-        return $resultRedirect->setPath('customer/account/login');
+        return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
       }// end if user not logged in
 
       // Ensure user is a seller
       if($this->session->getVendorId() == null){
-        return $resultRedirect->setPath('/sell');
+        return $this->resultJsonFactory->create()->setData(['error' => 'Your account must be connected to Stripe to sell items.']);
       }// end if vendor id not set
 
       // Ensure POST request
       $post = $this->getRequest()->getPostValue();
       if(empty($post)){
-        return $resultRedirect->setPath('/sell');
+        return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
       }// end if post array empty
 
       ####################################
@@ -89,28 +89,28 @@ class Index extends \Magento\Framework\App\Action\Action
       // check required fields
       foreach($required as $require){
         if(!isset($post[$require]) || $post[$require] == null || (!is_array($post[$require]) && trim($post[$require]) == null) || (is_array($post[$require]) && count($post[$require]) == 0)){
-          return $resultRedirect->setPath('/sell');
+          return $this->resultJsonFactory->create()->setData(['error' => 'Missing one or more required fields.']);
         }// end if field is not set
       }// end foreach over required fields
 
       // price validation
       $price = $post['price'];
       if(!is_numeric($price) || $price < 20){
-        return $resultRedirect->setPath('/sell');
+        return $this->resultJsonFactory->create()->setData(['error' => 'Price must be an integer greater than 20.']);
       }// end if invalid price
 
       // location validation
       $local_global = implode(',', $post['local_global']);
       if(strpos($local_global, $local_id) !== FALSE){
         if(!isset($post['latitude']) || !isset($post['longitude']) || !is_numeric($post['latitude']) || !is_numeric($post['longitude'])){
-          return $resultRedirect->setPath('/sell');
+          return $this->resultJsonFactory->create()->setData(['error' => 'Invalid location.']);
         }// end if latitude longitude not set
       }// end if local global
 
       // image validation
       $images = $_FILES['images']['name'];
       if(count($images) == 0){
-        return $resultRedirect->setPath('/sell');
+        return $this->resultJsonFactory->create()->setData(['error' => 'At least one image is required.']);
       }// end if no images uploaded
 
       ####################################
@@ -195,6 +195,6 @@ class Index extends \Magento\Framework\App\Action\Action
       ]);
 
       // on success, redirect user to their listing page
-      return $resultRedirect->setPath('customer/account/listings');
+      return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
     }// end function execute
 }
