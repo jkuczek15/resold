@@ -52,28 +52,84 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      // Redirect users back to the sell form on validation errors
       $resultRedirect = $this->resultRedirectFactory->create();
+
+      ####################################
+      // REQUEST AND USER VALIDATON
+      ###################################
+      // Ensure user is logged in
       if (!$this->session->isLoggedIn()) {
         return $resultRedirect->setPath('customer/account/login');
-      }
+      }// end if user not logged in
 
+      // Ensure user is a seller
+      if($this->session->getVendorId() == null){
+        return $resultRedirect->setPath('/sell');
+      }// end if vendor id not set
+
+      // Ensure POST request
       $post = $this->getRequest()->getPostValue();
-
       if(empty($post)){
-        return $this->resultJsonFactory->create()->setData(['error' => 'This request method is not supported.']);
-      }
+        return $resultRedirect->setPath('/sell');
+      }// end if post array empty
 
+      ####################################
+      // FORM VALIDATION
+      ###################################
+      $local_id = '231';
+      $required =  ['local_global',
+                    'name',
+                    'description',
+                    'title_description',
+                    'price',
+                    'lowestcategory',
+                    'condition'];
+
+      // check required fields
+      foreach($required as $require){
+        if(!isset($post[$require]) || $post[$require] == null || (!is_array($post[$require]) && trim($post[$require]) == null) || (is_array($post[$require]) && count($post[$require]) == 0)){
+          return $resultRedirect->setPath('/sell');
+        }// end if field is not set
+      }// end foreach over required fields
+
+      // price validation
+      $price = $post['price'];
+      if(!is_numeric($price) || $price < 20){
+        return $resultRedirect->setPath('/sell');
+      }// end if invalid price
+
+      // location validation
+      $local_global = implode(',', $post['local_global']);
+      if(strpos($local_global, $local_id) !== FALSE){
+        if(!isset($post['latitude']) || !isset($post['longitude']) || !is_numeric($post['latitude']) || !is_numeric($post['longitude'])){
+          return $resultRedirect->setPath('/sell');
+        }// end if latitude longitude not set
+      }// end if local global
+
+      // image validation
+      $images = $_FILES['images']['name'];
+      if(count($images) == 0){
+        return $resultRedirect->setPath('/sell');
+      }// end if no images uploaded
+
+      ####################################
+      // SAVE PRODUCT TO DATABASE
+      ###################################
       // POST request
+      $all_category_id = 105;
       $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       $_product = $objectManager->create('\Magento\Catalog\Model\Product');
 
+      // Clean up the title and title description
       $post['name'] = ucwords(strtolower($post['name']));
-      $post['title_description'] = ucfirst(strtolower($post['title_description']));
+      $post['title_description'] = ucfirst($post['title_description']);
 
-      // TODO: Add server side validation for raw data
-      // Create a unique product ID and save product to database
+      // Set our time zone to Chicago
       date_default_timezone_set('America/Chicago');
-      $local_global = implode(',', $post['local_global']);
+
+      // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
+      // set all of our product attributes and save it to the database
       $sku = uniqid("product-", true);
       $_product = $objectManager->create('Magento\Catalog\Model\Product');
       $_product->setName($post['name']);
@@ -83,7 +139,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setVisibility(4);
       $_product->setPrice($post['price']);
       $_product->setDescription(nl2br($post['description']));
-      $_product->setCategoryIds([$post['lowestcategory'], 105]);
+      $_product->setCategoryIds([$post['lowestcategory'], $all_category_id]);
       $_product->setCreatedAt(strtotime('now'));
       $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
       $_product->setWebsiteIds(array(1));
@@ -94,16 +150,14 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setCustomAttribute('local_global', $local_global);
 
       // set the local/global attribute
-      if(strpos($local_global, "231") !== FALSE){
+      if(strpos($local_global, $local_id) !== FALSE){
         // local product
         $_product->setCustomAttribute('latitude', $post['latitude']);
         $_product->setCustomAttribute('longitude', $post['longitude']);
-      }
+      }// end if setting local attribute
 
-      // TODO: Add service side validation for images
       // tempory location for product images
       $mediaDir = '/var/www/html/pub/media';
-      $images = $_FILES['images']['name'];
 
       // save uploaded images to the product gallery
       foreach($images as $key => $image)
@@ -140,6 +194,7 @@ class Index extends \Magento\Framework\App\Action\Action
         'vendor_id' => $this->session->getVendorId()
       ]);
 
+      // on success, redirect user to their listing page
       return $resultRedirect->setPath('customer/account/listings');
     }// end function execute
 }
