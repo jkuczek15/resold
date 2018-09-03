@@ -457,7 +457,6 @@ require([
 ], ($) => {
     $(document).ready(() => {
       if($('#auto_local_refresh').val() == 'Y' && $('#ajax').val() == 'N'){
-          console.log('testing');
           $('a').filter(function(index) {
             var text = $(this).text();
             if(text != null && this.href.includes("local_global=231")){
