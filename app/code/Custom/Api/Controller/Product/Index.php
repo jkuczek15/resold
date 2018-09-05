@@ -108,10 +108,10 @@ class Index extends \Magento\Framework\App\Action\Action
       }// end if local global
 
       // image validation
-      // $images = $_FILES['images']['name'];
-      // if(count($images) == 0){
-      //   return $this->resultJsonFactory->create()->setData(['error' => 'At least one image is required.']);
-      // }// end if no images uploaded
+      $images = $_FILES['images']['name'];
+      if(count($images) == 0){
+        return $this->resultJsonFactory->create()->setData(['error' => 'At least one image is required.']);
+      }// end if no images uploaded
 
       ####################################
       // SAVE PRODUCT TO DATABASE
@@ -160,28 +160,28 @@ class Index extends \Magento\Framework\App\Action\Action
       $mediaDir = '/var/www/html/pub/media';
 
       // save uploaded images to the product gallery
-      // foreach($images as $key => $image)
-      // {
-      //     // get temporary location of image and image extension
-      //     $tmpPath = $_FILES['images']['tmp_name'][$key];
-      //
-      //     if($tmpPath != '')
-      //     {
-      //       $extension = pathinfo($image, PATHINFO_EXTENSION);
-      //
-      //       // new path for the image stored in the media directory
-      //       $newPath = $mediaDir.$tmpPath.'.'.$extension;
-      //
-      //       // move the uploaded image to the media directory
-      //       move_uploaded_file($tmpPath, $newPath);
-      //
-      //       // link the image to the product and upload it to the S3 bucket
-      //       $_product->addImageToMediaGallery($newPath, array('image', 'small_image', 'thumbnail'), false, false);
-      //
-      //       // remove the image from our file Filesystem
-      //       unlink($newPath);
-      //     }// end if we have a temp file path
-      // }// end foreach loop over images
+      foreach($images as $key => $image)
+      {
+          // get temporary location of image and image extension
+          $tmpPath = $_FILES['images']['tmp_name'][$key];
+
+          if($tmpPath != '')
+          {
+            $extension = pathinfo($image, PATHINFO_EXTENSION);
+
+            // new path for the image stored in the media directory
+            $newPath = $mediaDir.$tmpPath.'.'.$extension;
+
+            // move the uploaded image to the media directory
+            move_uploaded_file($tmpPath, $newPath);
+
+            // link the image to the product and upload it to the S3 bucket
+            $_product->addImageToMediaGallery($newPath, array('image', 'small_image', 'thumbnail'), false, false);
+
+            // remove the image from our file Filesystem
+            unlink($newPath);
+          }// end if we have a temp file path
+      }// end foreach loop over images
 
       // save the product to the database
       $_product->save();
