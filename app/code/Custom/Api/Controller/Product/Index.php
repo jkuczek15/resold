@@ -159,7 +159,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $mediaDir = '/var/www/html/pub/media';
 
       // loop over all temporary images uploaded for this product
-      foreach($image_paths as $image_path)
+      foreach(array_reverse($image_paths) as $image_path)
       {
         // image will be given a new path once linked to the product
         $path = $mediaDir.$image_path;
