@@ -168,6 +168,9 @@ require([
           return false;
         }// end if no images selected
 
+        // remove file inputs (causes bug on iphone)
+        $('input[type="file"]').remove();
+
         // append the image paths to the form
         $('<input>').attr({
           type: 'hidden',
