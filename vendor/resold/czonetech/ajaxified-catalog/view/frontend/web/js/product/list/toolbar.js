@@ -153,24 +153,32 @@ define([
         },
 
         updatePlace: function(longitude, latitude, paramData){
+
             if(paramData == undefined || !paramData.includes(`local_global=${this.local_id}`)){
               $('#location-city').html('');
               return;
             }
-            if(win.sessionStorage.place != undefined && win.sessionStorage.state != undefined){
+            if(win.sessionStorage.place != undefined){
               // location already stored with local storage
-              $('#location-city').html(`- 50 miles from ${win.sessionStorage.place}. ${win.sessionStorage.state}`);
+              $('#location-city').html(`- 50 miles from ${win.sessionStorage.place}`);
             }else{
               // get the user's city from mapbox
               let api_key = 'pk.eyJ1Ijoiamt1Y3playIsImEiOiJjamxlZ2kyMzYwMnhsM3ByazM1ZWtibzllIn0.hsE3V5wLucE2wl8jdQhfTQ';
               let mapbox_url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${api_key}`;
               $.get(mapbox_url, (data) => {
-                  if(data && data.features && data.features.length > 4){
-                      let place = data.features[3].text;
-                      let state = data.features[4].text;
-                      $('#location-city').html(`- 50 miles from ${place}, ${state}`);
+
+                  if(data && data.features && data.features.length > 0){
+
+                      let place = '';
+                      for(let feature of data.features){
+                          if(feature.place_type.includes("place")){
+                            place = feature.place_name;
+                            break;
+                          }// end if place type is place
+                      }// end for loop over features
+
+                      $('#location-city').html(`- 50 miles from ${place}`);
                       win.sessionStorage.place = place;
-                      win.sessionStorage.state = state;
                   }
               });
             }

@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.67.4",
+            "version": "3.67.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "df94a9ad78c9e817a9887bedf0e5b269c4f25810"
+                "reference": "b74a9e68b44f25215093b3fd480ee6cf3657e9df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/df94a9ad78c9e817a9887bedf0e5b269c4f25810",
-                "reference": "df94a9ad78c9e817a9887bedf0e5b269c4f25810",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b74a9e68b44f25215093b3fd480ee6cf3657e9df",
+                "reference": "b74a9e68b44f25215093b3fd480ee6cf3657e9df",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-08-31T21:53:42+00:00"
+            "time": "2018-09-07T20:09:11+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -7082,16 +7082,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v6.16.0",
+            "version": "v6.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "8094ae22db6ce887f073f456127175837a35b2b1"
+                "reference": "ffe3497cd9ea5298208a8747f978926bfc497074"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/8094ae22db6ce887f073f456127175837a35b2b1",
-                "reference": "8094ae22db6ce887f073f456127175837a35b2b1",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/ffe3497cd9ea5298208a8747f978926bfc497074",
+                "reference": "ffe3497cd9ea5298208a8747f978926bfc497074",
                 "shasum": ""
             },
             "require": {
@@ -7133,7 +7133,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2018-08-23T08:19:12+00:00"
+            "time": "2018-09-05T21:49:08+00:00"
         },
         {
             "name": "symfony/console",

@@ -465,8 +465,8 @@ require([
             }
           });
       }
-      if($('#local_global').val() == 'Y' && sessionStorage.place != undefined && sessionStorage.state != undefined){
-        $('#location-city').html(`- 50 miles from ${sessionStorage.place}, ${sessionStorage.state}`);
+      if($('#local_global').val() == 'Y' && sessionStorage.place != undefined){
+        $('#location-city').html(`- 50 miles from ${sessionStorage.place}`);
       }
     });
 });
