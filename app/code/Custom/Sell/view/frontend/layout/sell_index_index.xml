@@ -1,13 +1,14 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Custom_Sell::css/sell_form.css" />
+        <css src="Custom_Sell::css/fine-uploader.min.css" />
+        <css src="Custom_Sell::css/fine-uploader-gallery.min.css" />
         <script src="https://sdk.amazonaws.com/js/aws-sdk-2.282.1.min.js" src_type="url" />
         <title>Sell</title>
     </head>
     <body>
         <referenceContainer name="content">
           <block class="Custom\Sell\Block\Sell" name="sell_form" template="Custom_Sell::sell.phtml" before="-" />
-          <link src="Custom_Sell::js/sell_form.js" />
         </referenceContainer>
     </body>
 </page>
