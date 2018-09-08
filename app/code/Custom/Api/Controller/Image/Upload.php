@@ -62,10 +62,25 @@ class Upload extends \Magento\Framework\App\Action\Action
         // temp server image path
         $tmpPath = $image['tmp_name'];
 
+        // type of image
+        $type = $image['type'];
+        switch($type){
+          case 'image/jpeg':
+            $extension = 'jpeg';
+            break;
+          case 'image/jpg':
+            $extension = 'jpg';
+            break;
+          case 'image/png':
+            $extension = 'png';
+            break;
+          default:
+            $extension = 'png';
+            break;
+        }// end switch on type
+
         if($tmpPath != '')
         {
-            $extension = pathinfo($image['name'], PATHINFO_EXTENSION);
-
             // temporary path with extension for image
             $tmpPathExt = $tmpPath.'.'.$extension;
 

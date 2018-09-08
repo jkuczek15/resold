@@ -216,6 +216,11 @@ require([
             itemLimit: 10,
             sizeLimit: 5120000  // 5 MB
         },
+        scaling: {
+          sendOriginal: false,
+          includeExif: true,
+          sizes: [{ maxSize: 1400 }]
+        },
         thumbnails: {
             placeholders: {
                 notAvailablePath: "/pub/media/icons/not_available-generic.png",
