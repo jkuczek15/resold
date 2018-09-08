@@ -52,9 +52,6 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-      // Redirect users back to the sell form on validation errors
-      $resultRedirect = $this->resultRedirectFactory->create();
-
       ####################################
       // REQUEST AND USER VALIDATON
       ###################################
@@ -108,9 +105,11 @@ class Index extends \Magento\Framework\App\Action\Action
       }// end if local global
 
       // image validation
-      $images = $_FILES['images']['name'];
-      if(count($images) == 0){
+      $image_paths = $post['image_paths'];
+      if($image_paths == ''){
         return $this->resultJsonFactory->create()->setData(['error' => 'At least one image is required.']);
+      }else{
+        $image_paths = explode(',', $image_paths);
       }// end if no images uploaded
 
       ####################################
@@ -159,29 +158,14 @@ class Index extends \Magento\Framework\App\Action\Action
       // tempory location for product images
       $mediaDir = '/var/www/html/pub/media';
 
-      // save uploaded images to the product gallery
-      foreach($images as $key => $image)
+      // loop over all temporary images uploaded for this product
+      foreach($image_paths as $image_path)
       {
-          // get temporary location of image and image extension
-          $tmpPath = $_FILES['images']['tmp_name'][$key];
-
-          if($tmpPath != '')
-          {
-            $extension = pathinfo($image, PATHINFO_EXTENSION);
-
-            // new path for the image stored in the media directory
-            $newPath = $mediaDir.$tmpPath.'.'.$extension;
-
-            // move the uploaded image to the media directory
-            move_uploaded_file($tmpPath, $newPath);
-
-            // link the image to the product and upload it to the S3 bucket
-            $_product->addImageToMediaGallery($newPath, array('image', 'small_image', 'thumbnail'), false, false);
-
-            // remove the image from our file Filesystem
-            unlink($newPath);
-          }// end if we have a temp file path
-      }// end foreach loop over images
+        // image will be given a new path once linked to the product
+        $path = $mediaDir.$image_path;
+        $_product->addImageToMediaGallery($path, array('image', 'small_image', 'thumbnail'), false, false);
+        unlink($path);
+      }// end foreach loop over image paths
 
       // save the product to the database
       $_product->save();
