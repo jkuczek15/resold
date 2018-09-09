@@ -203,6 +203,8 @@ if($userProduct){
 require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
 
 $(document).ready(() => {
+    // fix for ios safari
+    $('.authorization-link a:first').css('cursor', 'pointer');
 
     $('.product-edit').click((e) => {
       e.preventDefault();
