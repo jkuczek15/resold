@@ -124,6 +124,20 @@
         }
     }
 
+</script>
+<script>
+require(['jquery'], ($) => {
+
+    $(document).ready(() => {
+      if ($(".fotorama").length !== 0) {
+        disableGalleryTouchmove();
+      }else {
+        $('.gallery-placeholder').on('gallery:loaded', function() {
+          disableGalleryTouchmove()
+        });
+      }
+    });
+
     function disableGalleryTouchmove() {
       $(".fotorama").one("fotorama:load", function () {
         $(".fotorama__img").on("touchmove", function(e) {
@@ -131,12 +145,5 @@
         });
       });
     }
-
-    if ($(".fotorama").length !== 0) {
-      disableGalleryTouchmove();
-    }else {
-      $('.gallery-placeholder').on('gallery:loaded', function() {
-        disableGalleryTouchmove()
-      });
-    }
+});
 </script>
