@@ -123,7 +123,20 @@
             }
         }
     }
+
+    function disableGalleryTouchmove() {
+      $(".fotorama").one("fotorama:load", function () {
+        $(".fotorama__img").on("touchmove", function(e) {
+          e.stopPropagation();
+        });
+      });
+    }
+
+    if ($(".fotorama").length !== 0) {
+      disableGalleryTouchmove();
+    }else {
+      $('.gallery-placeholder').on('gallery:loaded', function() {
+        disableGalleryTouchmove()
+      });
+    }
 </script>
-<style>
-.fotorama__stage__frame.fotorama__active { position: static !important;  }
-</style>
