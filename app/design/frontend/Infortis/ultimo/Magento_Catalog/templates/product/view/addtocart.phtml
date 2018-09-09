@@ -22,13 +22,13 @@ $VendorId = $VendorProduct->getVendorId();
 $userProduct = $sessionId == $VendorId;
 if($userProduct){
   $buttonTitle = __('Edit');
-  $buttonHtml = '<a href="/sell"
+  $buttonHtml = '<button
                     title="'.$buttonTitle.'"
                     class="action primary tocart"
                     style="float: left; margin-bottom: 0.3em; width: 75%"
                     id="product-edit">
                     <span>'.$buttonTitle.'</span>
-                </a><br/>';
+                </button><br/>';
 }else{
   $buttonTitle = __('Purchase');
   $buttonHtml = '<button type="submit"
@@ -192,6 +192,12 @@ if($userProduct){
 </style>
 <script>
 require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
+
+  $('#product-edit').click((e) => {
+    e.preventDefault();
+    window.location = '/sell';
+  });
+
   var options = {
     type: 'popup',
     responsive: true,
