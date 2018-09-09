@@ -24,7 +24,7 @@ if($userProduct){
   $buttonTitle = __('Edit');
   $buttonHtml = '<button type="submit"
                     title="'.$buttonTitle.'"
-                    class="action primary tocart"
+                    class="action primary tocart product-edit"
                     style="float: left; margin-bottom: 0.3em; width: 75%"
                     id="product-addtocart">
                     <span>'.$buttonTitle.'</span>
@@ -193,7 +193,7 @@ if($userProduct){
 <script>
 require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
 
-  $('#product-edit').click((e) => {
+  $('.product-edit').click((e) => {
     e.preventDefault();
     window.location = '/sell';
   });
