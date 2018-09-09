@@ -14,6 +14,14 @@
 ?>
 <?php
     $theme = $this->helper('Infortis\Base\Helper\Data');
+    // Include and instantiate the class.
+    $detect = new Mobile_Detect;
+    if($detect->isMobile()){
+      $allowFullscreen = 'false';
+    }else{
+      $allowFullscreen = 'true';
+    }
+
 ?>
 
 <div class="gallery-placeholder _block-content-loading" data-gallery-role="gallery-placeholder">
@@ -73,7 +81,7 @@
                         "arrows": <?php /* @escapeNotVerified */ echo $block->getVar("gallery/arrows"); ?>,
                     <?php endif; ?>
                     <?php if (($block->getVar("gallery/allowfullscreen"))): ?>
-                        "allowfullscreen": <?php /* @escapeNotVerified */ echo $block->getVar("gallery/allowfullscreen"); ?>,
+                        "allowfullscreen": "<?= $allowFullscreen ?>",
                     <?php endif; ?>
                     <?php if (($block->getVar("gallery/caption"))): ?>
                         "showCaption": <?php /* @escapeNotVerified */ echo $block->getVar("gallery/caption"); ?>,
