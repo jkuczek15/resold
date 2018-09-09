@@ -22,13 +22,13 @@ $VendorId = $VendorProduct->getVendorId();
 $userProduct = $sessionId == $VendorId;
 if($userProduct){
   $buttonTitle = __('Edit');
-  $buttonHtml = '<button
+  $buttonHtml = '<button type="submit"
                     title="'.$buttonTitle.'"
                     class="action primary tocart"
                     style="float: left; margin-bottom: 0.3em; width: 75%"
-                    id="product-edit">
+                    id="product-addtocart">
                     <span>'.$buttonTitle.'</span>
-                </button><br/>';
+                </button>';
 }else{
   $buttonTitle = __('Purchase');
   $buttonHtml = '<button type="submit"
