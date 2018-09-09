@@ -134,6 +134,10 @@
 <script>
 require(['jquery'], ($) => {
 
+    $(document).ready(() => {
+      $(".page-wrapper").css("cssText", "display: block !important;");
+    });
+
     if ($(".fotorama").length !== 0) {
       disableGalleryTouchmove();
     }else{
@@ -151,8 +155,3 @@ require(['jquery'], ($) => {
     }
   });
 </script>
-<style>
-div .page-wrapper[style] {
-   display: block !important;
-}
-</style>
