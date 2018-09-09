@@ -80,9 +80,7 @@
                     <?php if (($block->getVar("gallery/arrows"))): ?>
                         "arrows": <?php /* @escapeNotVerified */ echo $block->getVar("gallery/arrows"); ?>,
                     <?php endif; ?>
-                    <?php if (($block->getVar("gallery/allowfullscreen"))): ?>
                         "allowfullscreen": "<?= $allowFullscreen ?>",
-                    <?php endif; ?>
                     <?php if (($block->getVar("gallery/caption"))): ?>
                         "showCaption": <?php /* @escapeNotVerified */ echo $block->getVar("gallery/caption"); ?>,
                     <?php endif; ?>
