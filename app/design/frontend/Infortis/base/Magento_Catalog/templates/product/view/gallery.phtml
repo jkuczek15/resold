@@ -138,7 +138,7 @@ require(['jquery'], ($) => {
 
     function disableGalleryTouchmove() {
       $(".fotorama").on("fotorama:load", function () {
-        $(".fotorama__img").on("touchmove", function(e) {
+        $("body").on("touchmove", function(e) {
           e.stopPropagation();
         });
       });
