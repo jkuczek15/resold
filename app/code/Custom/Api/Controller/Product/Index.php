@@ -37,11 +37,13 @@ class Index extends \Magento\Framework\App\Action\Action
      public function __construct(
         Context $context,
         Session $customerSession,
-        JsonFactory $resultJsonFactory
+        JsonFactory $resultJsonFactory,
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory
     )
     {
         $this->session = $customerSession;
         $this->resultJsonFactory = $resultJsonFactory;
+        $this->_categoryFactory = $categoryFactory;
         parent::__construct($context);
     }
 
@@ -82,6 +84,11 @@ class Index extends \Magento\Framework\App\Action\Action
                     'price',
                     'lowestcategory',
                     'condition'];
+
+      if((!isset($post['lowestcategory']) || $post['lowestcategory'] == null) && isset($post['subcategory'])){
+        $subcategory = $this->_categoryFactory->create()->getCollection()->addAttributeToFilter('name', $post['subcategory'])->setPageSize(1)->getFirstItem();
+        $post['lowestcategory'] = $subcategory->getId();
+      }// end if lowest category not set
 
       // check required fields
       foreach($required as $require){
