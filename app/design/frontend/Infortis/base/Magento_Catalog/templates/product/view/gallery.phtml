@@ -128,18 +128,16 @@
 <script>
 require(['jquery'], ($) => {
 
-    $(document).ready(() => {
-      if ($(".fotorama").length !== 0) {
-        disableGalleryTouchmove();
-      }else {
-        $('.gallery-placeholder').on('gallery:loaded', function() {
-          disableGalleryTouchmove()
-        });
-      }
-    });
+    if ($(".fotorama").length !== 0) {
+      disableGalleryTouchmove();
+    }else {
+      $('.gallery-placeholder').on('gallery:loaded', function() {
+        disableGalleryTouchmove()
+      });
+    }
 
     function disableGalleryTouchmove() {
-      $(".fotorama").one("fotorama:load", function () {
+      $(".fotorama").on("fotorama:load", function () {
         $(".fotorama__img").on("touchmove", function(e) {
           e.stopPropagation();
         });
