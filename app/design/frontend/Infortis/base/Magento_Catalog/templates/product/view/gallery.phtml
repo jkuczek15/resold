@@ -131,11 +131,16 @@
     }
 
 </script>
+<style>
+.custom-page-wrapper {
+  display: block !important;
+}
+</style>
 <script>
 require(['jquery'], ($) => {
 
     $(document).ready(() => {
-      $(".page-wrapper").css("cssText", "display: block !important;");
+      $(".page-wrapper").addClass('custom-page-wrapper');
     });
 
     if ($(".fotorama").length !== 0) {
