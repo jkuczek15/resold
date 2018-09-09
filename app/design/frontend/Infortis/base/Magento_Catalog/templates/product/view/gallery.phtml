@@ -14,15 +14,14 @@
 ?>
 <?php
     $theme = $this->helper('Infortis\Base\Helper\Data');
-    // Include and instantiate the class.
+
+    // Detect if we are on a mobile device
     $detect = new Mobile_Detect;
     if($detect->isMobile()){
       $allowFullscreen = 'false';
     }else{
       $allowFullscreen = 'true';
     }
-
-    var_dump($allowFullscreen);
 ?>
 <div class="gallery-placeholder _block-content-loading" data-gallery-role="gallery-placeholder">
     <div data-role="loader" class="loading-mask">
