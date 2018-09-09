@@ -202,63 +202,66 @@ if($userProduct){
 <script>
 require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
 
-  $('.product-edit').click((e) => {
-    e.preventDefault();
-    window.location = '/sell';
-  });
+$(document).ready(() => {
 
-  var options = {
-    type: 'popup',
-    responsive: true,
-    innerScroll: true,
-    title: 'Contact Seller - ' + $('.listedBy:first').text().replace('Listed by: ', ''),
-    buttons: [{
-      text: $.mage.__('Send'),
-      class: 'send-button',
-      click: function () {
-        var data = {
-          'vendor_id': $('#vendor_id').val(),
-          'email_subject': $('#email_subject').val(),
-          'text_email': $('#text_email_contact_seller').val()
-        };
-        $.post('/csmessaging/frontend/savechat', data, (response) => {
-          $('#text_email_contact_seller').val('');
-          this.closeModal();
-        });
-      }
-    }]
-  };
-  $('#product-message-button').click(() => {
+    $('.product-edit').click((e) => {
+      e.preventDefault();
+      window.location = '/sell';
+    });
+
+    var options = {
+      type: 'popup',
+      responsive: true,
+      innerScroll: true,
+      title: 'Contact Seller - ' + $('.listedBy:first').text().replace('Listed by: ', ''),
+      buttons: [{
+        text: $.mage.__('Send'),
+        class: 'send-button',
+        click: function () {
+          var data = {
+            'vendor_id': $('#vendor_id').val(),
+            'email_subject': $('#email_subject').val(),
+            'text_email': $('#text_email_contact_seller').val()
+          };
+          $.post('/csmessaging/frontend/savechat', data, (response) => {
+            $('#text_email_contact_seller').val('');
+            this.closeModal();
+          });
+        }
+      }]
+    };
+    $('#product-message-button').click(() => {
 <?php
-if($customer->isLoggedIn()){
+  if($customer->isLoggedIn()){
 ?>
-  options.title = options.title.replace('Send Offer', 'Contact Seller');
-  $('.item-name').html($('.page-title:first').text());
-  var popup = modal(options, $('#contact-seller-modal'));
-  $('#contact-seller-modal').modal('openModal');
+    options.title = options.title.replace('Send Offer', 'Contact Seller');
+    $('.item-name').html($('.page-title:first').text());
+    var popup = modal(options, $('#contact-seller-modal'));
+    $('#contact-seller-modal').modal('openModal');
 <?php
-}else{
+  }else{
 ?>
-  $('.authorization-link a:first')[0].click();
+    $('.authorization-link a:first')[0].click();
 <?php
-}// end if customer is logged in
+  }// end if customer is logged in
 ?>
-});
-$('#product-offer-button').click(() => {
+  });
+  $('#product-offer-button').click(() => {
 <?php
-if($customer->isLoggedIn()){
+  if($customer->isLoggedIn()){
 ?>
-  options.title = options.title.replace('Contact Seller', 'Send Offer');
-  $('.item-name').html($('.page-title:first').text());
-  var popup = modal(options, $('#make-offer-modal'));
-  $('#make-offer-modal').modal('openModal');
+    options.title = options.title.replace('Contact Seller', 'Send Offer');
+    $('.item-name').html($('.page-title:first').text());
+    var popup = modal(options, $('#make-offer-modal'));
+    $('#make-offer-modal').modal('openModal');
 <?php
-}else{
+  }else{
 ?>
-  $('.authorization-link a:first')[0].click();
+    $('.authorization-link a:first')[0].click();
 <?php
-}// end if customer is logged in
+  }// end if customer is logged in
 ?>
+    });
   });
 });
 </script>
