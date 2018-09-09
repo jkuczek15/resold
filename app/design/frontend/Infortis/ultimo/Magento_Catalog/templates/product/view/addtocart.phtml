@@ -243,8 +243,8 @@ $(document).ready(() => {
 <?php
   }else{
 ?>
-    $('.authorization-link a:first')[0].click();
-    console.log('should we get here message');
+    let login_uri = $('.authorization-link a:first')[0].href;
+    window.location = login_uri;
 <?php
   }// end if customer is logged in
 ?>
@@ -260,8 +260,8 @@ $(document).ready(() => {
 <?php
   }else{
 ?>
-    console.log('should we get here offer');
-    $('.authorization-link a:first')[0].click();
+    let login_uri = $('.authorization-link a:first')[0].href;
+    window.location = login_uri;
 <?php
   }// end if customer is logged in
 ?>
