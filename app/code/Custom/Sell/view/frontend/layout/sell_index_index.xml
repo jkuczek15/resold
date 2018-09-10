@@ -4,7 +4,6 @@
         <css src="Custom_Sell::css/fine-uploader.min.css" />
         <css src="Custom_Sell::css/fine-uploader-gallery.min.css" />
         <script src="https://sdk.amazonaws.com/js/aws-sdk-2.282.1.min.js" src_type="url" />
-        <title>Sell</title>
     </head>
     <body>
         <referenceContainer name="content">

@@ -3,7 +3,37 @@
 * Sell Form
 */
 $new_attr_id = 227;
+$all_category_id = 105;
+if(isset($_GET['id']) && $_GET['id'] != null)
+{
+    $product_id = $_GET['id'];
+    $mode = "Edit";
+    $title = "Edit Listing";
+
+    // retreive the seller's product
+    $model = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $model->create('Magento\Catalog\Model\Product')->load($product_id);
+    $productSku = $product->getSku();
+    $vendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+
+    // validation, make sure this product was created by the signed in user
+    if($vendorProduct->getVendorId() !== $block->getVendorId()){
+      echo "You do not have access to view this page.";
+      exit;
+    }// end if this isn't the seller's product
+
+    // list of category ids for product
+    $category_ids = array_values(array_diff($product->getCategoryIds(), [$all_category_id]));
+    $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($category_ids[0]);
+}else
+{
+  $product_id = null;
+  $mode = "Create";
+  $title = "Sell";
+}// end if we have a preset product id
+
 ?>
+<h1><?= $title ?></h1><br/>
 <div id="error" class="alert" style="display: none">
  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
  <strong><span id="error-text"></span></strong>
@@ -11,6 +41,13 @@ $new_attr_id = 227;
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="latitude" id="latitude" value="" />
     <input type="hidden" name="longitude" id="longitude" value="" />
+<?php
+  if($mode === "Edit"){
+?>
+  <input type="hidden" name="product_id" value="<?= $product_id ?>" />
+<?php
+}// end if mode === "edit"
+ ?>
     <fieldset class="fieldset" id="app">
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Item Name') ?></span></label>
@@ -78,8 +115,8 @@ $new_attr_id = 227;
         <div class="field local">
             <label class="label" for="local"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
             <div class="control">
-                <input type="checkbox" value="231" name="local_global[]" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local" /> Local <span style="margin-right: 1.5em"></span>
-                <input type="checkbox" value="232" name="local_global[]" id="global" v-model="form_data.global" /> Global
+                <input type="checkbox" value="231" name="local_global[]" id="local" data-validate="{'validate-local-global': true}" v-model="form_data.local_global" /> Local <span style="margin-right: 1.5em"></span>
+                <input type="checkbox" value="232" name="local_global[]" id="global" v-model="form_data.local_global" /> Global
                 <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
             </div>
         </div>
@@ -155,10 +192,34 @@ require([
         image_paths: [],
         local_global_error: false,
         image_error: false,
-        form_data: {}
+        form_data: {local_global: []}
       }
     });
 
+<?php
+  if($mode === "Edit"){
+?>
+  app.form_data.name = "<?= $product->getName() ?>";
+  app.form_data.title_description = "<?= $product->getData('title_description'); ?>";
+  app.form_data.price = "<?= $product->getPrice() ?>";
+  app.form_data.category = "<?= $lowestcategory->getParentCategory()->getParentCategory()->getName() ?>";
+  app.form_data.subcategory = "<?= $lowestcategory->getParentCategory()->getName() ?>";
+  app.form_data.lowestcategory = "<?= $category_ids[0] ?>";
+  app.form_data.condition = "<?= $product->getData('condition') ?>";
+  app.form_data.description = "<?= $product->getDescription() ?>";
+  let local_global = "<?= $product->getData('local_global') ?>";
+
+  if(local_global.includes("231")){
+    // local
+    app.form_data.local_global.push(231);
+  }
+  if(local_global.includes("232")){
+    // global
+    app.form_data.local_global.push(232);
+  }
+<?php
+}// end if mode == 'edit'
+?>
     // sell form submission function, ensure form is valid
     $('#sell_form').submit(function(){
       if($(this).valid()){
@@ -204,6 +265,12 @@ require([
     var uploader = new qq.FineUploader({
         element: document.getElementById('fine-uploader'),
         template: 'qq-template',
+        session: {
+          endpoint: "/api/Image/Get",
+          params: {
+            product_id: "<?= isset($_GET['id']) ? $_GET['id'] : '' ?>"
+          }
+        },
         request: {
             endpoint: "/api/Image/Upload"
         },
@@ -259,7 +326,21 @@ require([
     addCustomValidation();
 
     // initial api requests
-    $.get('/api/categories', (data) => app.categories = data);
+    $.get('/api/categories', (data) => {
+      app.categories = data;
+
+      if(app.form_data.category != null){
+        app.subcategories = app.categories[app.form_data.category];
+
+        if(app.form_data.subcategory != null){
+          app.lowestcategories = app.subcategories[app.form_data.subcategory];
+          $('.subcategory').show();
+          if(app.form_data.lowestcategory != null){
+              $('.lowestcategory').show();
+          }// end if lowest category set
+        }// end if subcategory set
+      }// end if category set
+    });
 
     // initialize validation
     $('#sell_form').mage('validation', {});

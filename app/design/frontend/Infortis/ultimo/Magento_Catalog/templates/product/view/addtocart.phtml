@@ -11,7 +11,7 @@
 <?php $_product = $block->getProduct(); ?>
 <?php
 
-$model =  \Magento\Framework\App\ObjectManager::getInstance();
+$model = \Magento\Framework\App\ObjectManager::getInstance();
 $productSku = $_product->getSku();
 $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 $customer = $model->create('Magento\Customer\Model\Session');
@@ -208,7 +208,7 @@ $(document).ready(() => {
 
     $('.product-edit').click((e) => {
       e.preventDefault();
-      window.location = '/sell';
+      window.location = '/sell?id=<?= $_product->getId(); ?>';
     });
 
     var options = {
