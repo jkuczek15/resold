@@ -283,7 +283,10 @@ require([
         deleteFile: {
             enabled: true,
             method: "POST",
-            endpoint: "/api/Image/Delete"
+            endpoint: "/api/Image/Delete",
+            params: {
+              product_id: '<?= $_GET['id'] ?>'
+            }
         },
         validation: {
             allowedExtensions: ['jpeg', 'jpg', 'png'],
