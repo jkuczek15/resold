@@ -318,6 +318,10 @@ require([
                   app.image_paths.splice(index, 1);
                 }// end if valid index
               }// end if success
+            },
+            onSessionRequestComplete: function(data){
+              // successfully retreived images from server
+              app.image_paths = data.map(image => image.uuid);
             }
         }
     });

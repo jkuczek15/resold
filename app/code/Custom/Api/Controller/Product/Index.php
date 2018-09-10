@@ -77,13 +77,12 @@ class Index extends \Magento\Framework\App\Action\Action
       // when editing, ensure this is the user's post
       $product_id = null;
       if(isset($post['product_id']) && $post['product_id'] != null){
+        // get the product id for the listing being updated
         $product_id = $post['product_id'];
 
-        // retreive the seller's product
+        // retreive the seller's product data
         $_product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
-        $productSku = $_product->getSku();
-        $vendorProduct = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
-        $_product->setSku($productSku);
+        $vendorProduct = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $_product->getSku())->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 
         if($vendorProduct->getVendorId() !== $this->session->getVendorId()){
           return $this->resultJsonFactory->create()->setData(['error' => "You cannot edit another seller's item."]);
@@ -187,19 +186,40 @@ class Index extends \Magento\Framework\App\Action\Action
       // tempory location for product images
       $mediaDir = '/var/www/html/pub/media';
 
+      // get the current product images
+      $current_images = $_product->getMediaGallery('images');
+
+      if(($current_images == null || count($current_images) == 0) && count($image_paths) > 0)
+      {
+        // create the base/primary image
+        $primary_path = $mediaDir.$image_paths[0];
+
+        if(strpos($primary_path, "/tmp") !== FALSE)
+        {
+          // uploading a new file
+          $_product->addImageToMediaGallery($primary_path, array('image', 'small_image', 'thumbnail'), false, false);
+          unset($image_paths[0]);
+          unlink($primary_path);
+        }// end if uploading a new file
+
+      }// end if number of images == 0
+
       // loop over all temporary images uploaded for this product
-      foreach(array_reverse($image_paths) as $image_path)
+      foreach($image_paths as $image_path)
       {
         // image will be given a new path once linked to the product
         $path = $mediaDir.$image_path;
-        $_product->addImageToMediaGallery($path, array('image', 'small_image', 'thumbnail'), false, false);
-        unlink($path);
+        if(strpos($path, "/tmp") !== FALSE)
+        {
+          $_product->addImageToMediaGallery($path, null, false, false);
+          unlink($path);
+        }// end if uploading a new file
       }// end foreach loop over image paths
 
       // save the product to the database
       $_product->save();
 
-      if($product_id == null){
+      if($product_id === null){
         // creating a new product and linking it to the seller
         // save a vendor product with the seller
         $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);

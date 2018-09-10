@@ -1465,7 +1465,7 @@ class Product extends \Magento\Catalog\Model\AbstractModel implements
         $directory = $this->_filesystem->getDirectoryRead(DirectoryList::MEDIA);
         if (!$this->hasData('media_gallery_images') && is_array($this->getMediaGallery('images'))) {
             $images = $this->_collectionFactory->create();
-            foreach (array_reverse($this->getMediaGallery('images')) as $image) {
+            foreach ($this->getMediaGallery('images') as $image) {
                 if ((isset($image['disabled']) && $image['disabled']) || empty($image['value_id'])) {
                     continue;
                 }

@@ -52,6 +52,7 @@ class Get extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      $result = [];
       // tempory location for product images
       if(isset($_GET['product_id']) && $_GET['product_id'] != null){
           $product_id = $_GET['product_id'];
