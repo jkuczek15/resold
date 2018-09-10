@@ -285,7 +285,7 @@ require([
             method: "POST",
             endpoint: "/api/Image/Delete",
             params: {
-              product_id: '<?= $_GET['id'] ?>'
+              product_id: '<?= isset($_GET['id']) ? $_GET['id'] : '' ?>'
             }
         },
         validation: {
