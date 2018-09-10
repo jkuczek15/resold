@@ -54,6 +54,7 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       ####################################
       // REQUEST AND USER VALIDATON
       ###################################
@@ -72,6 +73,23 @@ class Index extends \Magento\Framework\App\Action\Action
       if(empty($post)){
         return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
       }// end if post array empty
+
+      // when editing, ensure this is the user's post
+      $product_id = null;
+      if(isset($post['product_id']) && $post['product_id'] != null){
+        $product_id = $post['product_id'];
+
+        // retreive the seller's product
+        $_product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+        $productSku = $_product->getSku();
+        $vendorProduct = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+        $_product->setSku($productSku);
+
+        if($vendorProduct->getVendorId() !== $this->session->getVendorId()){
+          return $this->resultJsonFactory->create()->setData(['error' => "You cannot edit another seller's item."]);
+        }// end if this is not the seller's product
+
+      }// end if editing a post
 
       ####################################
       // FORM VALIDATION
@@ -105,7 +123,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
       // location validation
       $local_global = implode(',', $post['local_global']);
-      if(strpos($local_global, $local_id) !== FALSE){
+      if($product_id == null && strpos($local_global, $local_id) !== FALSE){
         if(!isset($post['latitude']) || !isset($post['longitude']) || !is_numeric($post['latitude']) || !is_numeric($post['longitude'])){
           return $this->resultJsonFactory->create()->setData(['error' => 'Invalid location.']);
         }// end if latitude longitude not set
@@ -124,8 +142,6 @@ class Index extends \Magento\Framework\App\Action\Action
       ###################################
       // POST request
       $all_category_id = 105;
-      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-      $_product = $objectManager->create('\Magento\Catalog\Model\Product');
 
       // Clean up the title and title description
       $post['name'] = ucwords(strtolower($post['name']));
@@ -134,29 +150,35 @@ class Index extends \Magento\Framework\App\Action\Action
       // Set our time zone to Chicago
       date_default_timezone_set('America/Chicago');
 
-      // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
-      // set all of our product attributes and save it to the database
-      $sku = uniqid("product-", true);
-      $_product = $objectManager->create('Magento\Catalog\Model\Product');
+      if(!isset($_product))
+      {
+          // creating a new product
+          // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
+          // set all of our product attributes and save it to the database
+          $sku = uniqid("product-", true);
+          $_product = $objectManager->create('Magento\Catalog\Model\Product');
+          $_product->setSku($sku);
+          $_product->setCreatedAt(strtotime('now'));
+          $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
+      }// end if creating a product
+
       $_product->setName($post['name']);
-      $_product->setSku($sku);
       $_product->setTypeId('simple');
+      $_product->setStoreId(1);
       $_product->setAttributeSetId(4);
       $_product->setVisibility(4);
       $_product->setPrice($post['price']);
       $_product->setDescription(nl2br($post['description']));
       $_product->setCategoryIds([$post['lowestcategory'], $all_category_id]);
-      $_product->setCreatedAt(strtotime('now'));
       $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
       $_product->setWebsiteIds(array(1));
       $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
       $_product->setCustomAttribute('title_description', $post['title_description']);
       $_product->setCustomAttribute('condition', $post['condition']);
-      $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
       $_product->setCustomAttribute('local_global', $local_global);
 
-      // set the local/global attribute
-      if(strpos($local_global, $local_id) !== FALSE){
+      // set the location attribute
+      if(strpos($local_global, $local_id) !== FALSE && isset($post['latitude']) && $post['latitude'] != null && isset($post['longitude']) && $post['longitude'] != null){
         // local product
         $_product->setCustomAttribute('latitude', $post['latitude']);
         $_product->setCustomAttribute('longitude', $post['longitude']);
@@ -177,13 +199,16 @@ class Index extends \Magento\Framework\App\Action\Action
       // save the product to the database
       $_product->save();
 
-      // save a vendor product with the seller
-      $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);
-      $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE);
-      $this->_eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
-        'product' => $_product,
-        'vendor_id' => $this->session->getVendorId()
-      ]);
+      if($product_id == null){
+        // creating a new product and linking it to the seller
+        // save a vendor product with the seller
+        $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);
+        $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE);
+        $this->_eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
+          'product' => $_product,
+          'vendor_id' => $this->session->getVendorId()
+        ]);
+      }// end if creating a new product
 
       // on success, redirect user to their listing page
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
