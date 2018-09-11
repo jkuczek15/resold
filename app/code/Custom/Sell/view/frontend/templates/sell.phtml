@@ -312,7 +312,10 @@ require([
                     previewLink.setAttribute("href", `/pub/media${response.path}`);
                     app.image_paths.push(response.path);
                 }// end if success
-                $('.qq-upload-delete').first().hide();
+                $('.qq-upload-delete').first().click((e) => {
+                  alert("You cannot remove the first image. Please refresh the page to do so.");
+                  return false;
+              });
             },
             onDeleteComplete: function(id, xhr){
               let response = JSON.parse(xhr.response);
@@ -329,7 +332,10 @@ require([
             onSessionRequestComplete: function(data){
               // successfully retreived images from server
               app.image_paths = data.map(image => image.uuid);
-              $('.qq-upload-delete').first().hide();
+              $('.qq-upload-delete').first().click((e) => {
+                alert("You cannot remove the first image. Please refresh the page to do so.");
+                return false;
+              });
             }
         }
     });
