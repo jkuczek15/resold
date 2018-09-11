@@ -151,14 +151,14 @@ class Index extends \Magento\Framework\App\Action\Action
 
       if(!isset($_product))
       {
-          // creating a new product
-          // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
-          // set all of our product attributes and save it to the database
-          $sku = uniqid("product-", true);
-          $_product = $objectManager->create('Magento\Catalog\Model\Product');
-          $_product->setSku($sku);
-          $_product->setCreatedAt(strtotime('now'));
-          $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
+        // creating a new product
+        // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
+        // set all of our product attributes and save it to the database
+        $sku = uniqid("product-", true);
+        $_product = $objectManager->create('Magento\Catalog\Model\Product');
+        $_product->setSku($sku);
+        $_product->setCreatedAt(strtotime('now'));
+        $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
       }// end if creating a product
 
       $_product->setName($post['name']);
@@ -212,7 +212,8 @@ class Index extends \Magento\Framework\App\Action\Action
         $path = $mediaDir.$image_path;
         if(strpos($path, "/tmp") !== FALSE)
         {
-          if(file_exists($path)){
+          if(file_exists($path))
+          {
             $_product->addImageToMediaGallery($path, null, false, false);
             unlink($path);
           }// end if file exists

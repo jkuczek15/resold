@@ -261,6 +261,8 @@ require([
       }
     });
 
+
+
     // initialize a fine uploader client
     var uploader = new qq.FineUploader({
         element: document.getElementById('fine-uploader'),
@@ -328,6 +330,16 @@ require([
             onSessionRequestComplete: function(data){
               // successfully retreived images from server
               app.image_paths = data.map(image => image.uuid);
+<?php
+  if(isset($_GET['id']) && $_GET['id'] != null){
+?>
+              $('.qq-upload-delete').first().click((e) => {
+                alert("You cannot delete the first image.");
+                return false;
+              });
+<?php
+}// end if editing a product
+?>
             }
         }
     });
