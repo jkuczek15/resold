@@ -284,6 +284,7 @@ require([
             enabled: true,
             method: "POST",
             endpoint: "/api/Image/Delete",
+            forceConfirm: true,
             params: {
               product_id: '<?= isset($_GET['id']) ? $_GET['id'] : '' ?>'
             }
@@ -320,6 +321,8 @@ require([
                 if (index > -1) {
                   app.image_paths.splice(index, 1);
                 }// end if valid index
+              }else if(response.error){
+                alert(response.error);
               }// end if success
             },
             onSessionRequestComplete: function(data){

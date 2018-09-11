@@ -52,11 +52,11 @@ class Delete extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      $json = $this->resultJsonFactory->create();
       $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       // tempory location for product images
       $mediaDir = '/var/www/html/pub/media';
 
-      $result = ['success' => 'Y'];
       if(isset($_POST['qquuid']) && $_POST['qquuid'] != null)
       {
           $tmpPathExt = $_POST['qquuid'];
@@ -66,20 +66,31 @@ class Delete extends \Magento\Framework\App\Action\Action
             $filePath = $mediaDir.$tmpPathExt;
 
             if(file_exists($filePath)){
+              $result['success'] = 'Y';
               unlink($filePath);
             }// end if file exists
           }else if(isset($_POST['product_id']) && $_POST['product_id'] != null){
             // deleting and unlinking permanent product gallery images
             $product_id = $_POST['product_id'];
             $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
-            $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
-            $imageProcessor->removeImage($product, $tmpPathExt);
-            $product->save();
-            $result['path'] = $tmpPathExt;
-          }// end if temporary image directory
+            $images = $product->getMediaGalleryImages();
+
+            if ($images == null || count($images) == 1) {
+              $result['error'] = "You must have at least one image per listing.";
+              $json->setHttpResponseCode(\Magento\Framework\Webapi\Exception::HTTP_FORBIDDEN);
+            }else{
+                // we have more than one image. delete it
+                $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
+                $imageProcessor->removeImage($product, $tmpPathExt);
+                $product->save();
+                $result['success'] = 'Y';
+                $result['path'] = $tmpPathExt;
+            }// end if images null
+
+        }// end if temporary image directory
 
       }// end if temp file path is set
 
-      return $this->resultJsonFactory->create()->setData($result);
+      return $json->setData($result);
     }// end function execute
 }
