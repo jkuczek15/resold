@@ -193,15 +193,16 @@ class Index extends \Magento\Framework\App\Action\Action
       {
         // create the base/primary image
         $primary_path = $mediaDir.$image_paths[0];
-
         if(strpos($primary_path, "/tmp") !== FALSE)
         {
-          // uploading a new file
-          $_product->addImageToMediaGallery($primary_path, array('image', 'small_image', 'thumbnail'), false, false);
-          unset($image_paths[0]);
-          unlink($primary_path);
+          if(file_exists($primary_path))
+          {
+            // uploading a new file
+            $_product->addImageToMediaGallery($primary_path, array('image', 'small_image', 'thumbnail'), false, false);
+            unset($image_paths[0]);
+            unlink($primary_path);
+          }// end if file exists
         }// end if uploading a new file
-
       }// end if number of images == 0
 
       // loop over all temporary images uploaded for this product
@@ -211,8 +212,10 @@ class Index extends \Magento\Framework\App\Action\Action
         $path = $mediaDir.$image_path;
         if(strpos($path, "/tmp") !== FALSE)
         {
-          $_product->addImageToMediaGallery($path, null, false, false);
-          unlink($path);
+          if(file_exists($path)){
+            $_product->addImageToMediaGallery($path, null, false, false);
+            unlink($path);
+          }// end if file exists
         }// end if uploading a new file
       }// end foreach loop over image paths
 
