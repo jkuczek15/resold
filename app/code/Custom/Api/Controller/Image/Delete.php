@@ -60,7 +60,6 @@ class Delete extends \Magento\Framework\App\Action\Action
       if(isset($_POST['qquuid']) && $_POST['qquuid'] != null)
       {
           $tmpPathExt = $_POST['qquuid'];
-
           if(strpos($tmpPathExt, "/tmp") !== FALSE){
             // deleting a temporary file on the server
             $filePath = $mediaDir.$tmpPathExt;
@@ -75,21 +74,15 @@ class Delete extends \Magento\Framework\App\Action\Action
             $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
             $images = $product->getMediaGalleryImages();
 
-            if ($images == null || count($images) == 1) {
-              $result['error'] = "You must have at least one image per listing.";
-              $json->setHttpResponseCode(\Magento\Framework\Webapi\Exception::HTTP_FORBIDDEN);
-            }else{
-                // we have more than one image. delete it
-                $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
-                $imageProcessor->removeImage($product, $tmpPathExt);
-                $product->save();
-                $result['success'] = 'Y';
-                $result['path'] = $tmpPathExt;
-            }// end if images null
+            // we have more than one image. delete it
+            $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
+            $imageProcessor->removeImage($product, $tmpPathExt);
+            $product->save();
+            $result['success'] = 'Y';
+            $result['path'] = $tmpPathExt;
+          }// end if images null
 
-        }// end if temporary image directory
-
-      }// end if temp file path is set
+      }// end if temporary image directory
 
       return $json->setData($result);
     }// end function execute
