@@ -69,7 +69,7 @@ class Get extends \Magento\Framework\App\Action\Action
           $mediaDir = '/pub/media/catalog/product';
           foreach($images as $image){
             $result[] = [
-              'name' => '',
+              'name' => 'Image '.$count++,
               'uuid' => $image['file'],
               'thumbnailUrl' => $mediaDir.$image['file']
             ];
