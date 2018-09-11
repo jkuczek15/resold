@@ -322,10 +322,16 @@ require([
                 $('.qq-upload-size').hide();
                 $('.qq-upload-file').hide();
                 if(!first_image){
+<?php
+  if(!isset($_GET['id']) || $_GET['id'] == null){
+ ?>
                   $('.qq-upload-delete').first().click((e) => {
                     alert("You cannot remove the first image. <?= !isset($_GET['id']) || $_GET['id'] == null ? "Please refresh the page to do so." : '' ?>");
                     return false;
                   });
+<?php
+}// end if creating a new product
+?>
                   first_image = true;
                 }// end if not first image
             },
