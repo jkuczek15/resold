@@ -56,24 +56,30 @@ class Delete extends \Magento\Framework\App\Action\Action
       // tempory location for product images
       $mediaDir = '/var/www/html/pub/media';
 
+      $result = ['success' => 'Y'];
       if(isset($_POST['qquuid']) && $_POST['qquuid'] != null)
       {
           $tmpPathExt = $_POST['qquuid'];
 
           if(strpos($tmpPathExt, "/tmp") !== FALSE){
             // deleting a temporary file on the server
-            unlink($mediaDir.$tmpPathExt);
+            $filePath = $mediaDir.$tmpPathExt;
+
+            if(file_exists($filePath)){
+              unlink($filePath);
+            }// end if file exists
           }else if(isset($_POST['product_id']) && $_POST['product_id'] != null){
             // deleting and unlinking permanent product gallery images
             $product_id = $_POST['product_id'];
             $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
             $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
             $imageProcessor->removeImage($product, $tmpPathExt);
+            $product->save();
+            $result['path'] = $tmpPathExt;
           }// end if temporary image directory
 
       }// end if temp file path is set
 
-      $product->save();
-      return $this->resultJsonFactory->create()->setData(['success' => 'Y', 'path' => $tmpPathExt]);
+      return $this->resultJsonFactory->create()->setData($result);
     }// end function execute
 }
