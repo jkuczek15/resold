@@ -59,28 +59,28 @@ class Delete extends \Magento\Framework\App\Action\Action
 
       if(isset($_POST['qquuid']) && $_POST['qquuid'] != null)
       {
-          $tmpPathExt = $_POST['qquuid'];
-          if(strpos($tmpPathExt, "/tmp") !== FALSE){
-            // deleting a temporary file on the server
-            $filePath = $mediaDir.$tmpPathExt;
+        $tmpPathExt = $_POST['qquuid'];
+        if(strpos($tmpPathExt, "/tmp") !== FALSE){
+          // deleting a temporary file on the server
+          $filePath = $mediaDir.$tmpPathExt;
 
-            if(file_exists($filePath)){
-              $result['success'] = 'Y';
-              unlink($filePath);
-            }// end if file exists
-          }else if(isset($_POST['product_id']) && $_POST['product_id'] != null){
-            // deleting and unlinking permanent product gallery images
-            $product_id = $_POST['product_id'];
-            $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
-            $images = $product->getMediaGalleryImages();
-
-            // we have more than one image. delete it
-            $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
-            $imageProcessor->removeImage($product, $tmpPathExt);
-            $product->save();
+          if(file_exists($filePath)){
             $result['success'] = 'Y';
-            $result['path'] = $tmpPathExt;
-          }// end if images null
+            unlink($filePath);
+          }// end if file exists
+        }else if(isset($_POST['product_id']) && $_POST['product_id'] != null){
+          // deleting and unlinking permanent product gallery images
+          $product_id = $_POST['product_id'];
+          $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+          $images = $product->getMediaGalleryImages();
+
+          // we have more than one image. delete it
+          $imageProcessor = $objectManager->create('\Magento\Catalog\Model\Product\Gallery\Processor');
+          $imageProcessor->removeImage($product, $tmpPathExt);
+          $product->save();
+          $result['success'] = 'Y';
+          $result['path'] = $tmpPathExt;
+        }// end if images null
 
       }// end if temporary image directory
 
