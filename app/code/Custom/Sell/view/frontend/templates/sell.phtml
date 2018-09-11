@@ -145,6 +145,12 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     </div>
 </form>
 <style>
+.qq-gallery .qq-thumbnail-wrapper {
+  height: 105px;
+}
+.qq-gallery .qq-upload-list li {
+  height: 11em;
+}
 /* The alert message box */
 .alert {
    padding: 20px;
@@ -262,6 +268,7 @@ require([
     });
 
     // initialize a fine uploader client
+    let first_image = false;
     var uploader = new qq.FineUploader({
         element: document.getElementById('fine-uploader'),
         template: 'qq-template',
@@ -312,12 +319,17 @@ require([
                     previewLink.setAttribute("href", `/pub/media${response.path}`);
                     app.image_paths.push(response.path);
                 }// end if success
-                $('.qq-upload-delete').first().click((e) => {
-                  alert("You cannot remove the first image. Please refresh the page to do so.");
-                  return false;
-              });
+                $('.qq-upload-size').hide();
+                $('.qq-upload-file').hide();
+                if(!first_image){
+                  $('.qq-upload-delete').first().click((e) => {
+                    alert("You cannot remove the first image. <?= !isset($_GET['id']) || $_GET['id'] == null ? "Please refresh the page to do so." : '' ?>");
+                    return false;
+                  });
+                  first_image = true;
+                }// end if not first image
             },
-            onDeleteComplete: function(id, xhr){
+            onDeleteComplete: function(id, xhr) {
               let response = JSON.parse(xhr.response);
               if(response.success){
                 // remove the path from our client side list of image paths
@@ -329,11 +341,13 @@ require([
                 alert(response.error);
               }// end if success
             },
-            onSessionRequestComplete: function(data){
+            onSessionRequestComplete: function(data) {
               // successfully retreived images from server
               app.image_paths = data.map(image => image.uuid);
+              $('.qq-upload-size').hide();
+              $('.qq-upload-file').hide();
               $('.qq-upload-delete').first().click((e) => {
-                alert("You cannot remove the first image. Please refresh the page to do so.");
+                alert("You cannot remove the first image. <?= !isset($_GET['id']) || $_GET['id'] == null ? "Please refresh the page to do so." : '' ?>");
                 return false;
               });
             }
