@@ -12,6 +12,14 @@
  * @see \Magento\Catalog\Block\Product\View
  */
 ?>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.1&appId=459353637836730&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <?php
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $_product = $block->getProduct();
@@ -27,20 +35,34 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
 	$vendorModel = current($vendorModel);
 	$public_name = $vendorModel['public_name'];?>
-	<div class="vendor-info">
-		<div class="row">
-			<div class="col-xs-7 listedBy">
-				<strong><?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></strong>
-			</div>
-			<div class="col-xs-5">
-				<a target="_blank" href="https://stripe.com/about"><img class="powered_by_stripe" width="85%;" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
-			</div>
-		</div>
-	</div>
 <?php
 }
 ?>
+<script>
+require(['jquery'], ($) => {
+		$('.price-container').append(`
+			<div class="row">
+				<div class="col-xs-4"></div>
+				<div class="col-xs-1"></div>
+				<div class="col-xs-4">
+					<div style="margin-bottom: 0.2em; margin-left: 1.75em;" class="fb-share-button" data-href="<?= "https://resold.us/".$_SERVER['PHP_SELF'].$_SERVER['REQUEST_URI'] ?>" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-5">
+					<strong><?php echo __('Listed by: ');?><a href=<?php echo $shopUrl;?>><?php echo $public_name; ?></a></strong>
+				</div>
+				<div class="col-xs-4 stripe-container">
+						<a target="_blank" href="https://stripe.com/about"><img class="powered_by_stripe" width="85%;" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
+				</div>
+			</div>`);
+
+});
+</script>
 <style>
+.maindiv-social {
+	display: none;
+}
 .vendor-info {
     margin-bottom: 8px;
     margin-top: 4px;
@@ -58,7 +80,10 @@ if (!empty($VendorId) && $sessionId != $VendorId) {
 }
 @media (max-width: 575.98px) {
 	.powered_by_stripe {
-		margin-top: 0.4em
+		margin-top: 0.4em;
+	}
+	.stripe-container {
+		margin-left: 1.2em;
 	}
 }
 </style>

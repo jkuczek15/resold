@@ -96,11 +96,24 @@ define([
                 return;
             }
 
+            let setParams = false;
             url = url.substring(0, url.indexOf('?'));
             if (paramData && paramData.length > 0) {
+                paramData = paramData.replace('longitude=&', '');
+                paramData = paramData.replace('latitude=&', '');
                 paramData = paramData.replace('local=true%2F&', '');
                 url += '?' + paramData;
+                setParams = true;
             }
+
+            let search = $('#urlSearch').val();
+            if(search != ''){
+              if(setParams){
+                url += `&qc=${search}`;
+              }else{
+                url += `?qc=${search}`;
+              }
+            }// end if search not null
 
             if (typeof history.replaceState === 'function') {
                 history.replaceState(null, null, url);
@@ -207,6 +220,11 @@ define([
               this.position = {latitude, longitude};
               paramData += `&latitude=${latitude}&longitude=${longitude}`;
             }
+            let search = $('#urlSearch').val();
+            if(search != ''){
+              baseUrl += `?qc=${search}`;
+            }// end if search not null
+
             $.ajax({
                 url: baseUrl,
                 data: (paramData && paramData.length > 0 ? paramData + '&ajax=1' : 'ajax=1'),
