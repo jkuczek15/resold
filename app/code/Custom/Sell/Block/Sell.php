@@ -27,6 +27,11 @@ class Sell extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
     }
 
+    public function _prepareLayout()
+    {
+       $this->pageConfig->getTitle()->set(__('Sell on Resold'));
+       return parent::_prepareLayout();
+    }
 
     public function getVendorId()
     {
