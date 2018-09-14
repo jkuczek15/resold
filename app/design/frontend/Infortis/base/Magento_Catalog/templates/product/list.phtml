@@ -426,6 +426,7 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
     <input type="hidden" value="<?= (isset($_GET['local']) && $_GET['local'] == 'true/') ? 'Y' : 'N' ?>" id="auto_local_refresh" />
     <input type="hidden" value="<?= (isset($_GET['local_global']) && $_GET['local_global'] == '231') ? 'Y' : 'N' ?>" id="local_global" />
     <input type="hidden" value="<?= (isset($_REQUEST['ajax']) && $_REQUEST['ajax'] == 1) ? 'Y' : 'N' ?>" id="ajax" />
+    <input type="hidden" value="<?= isset($_GET['qc']) ? $_GET['qc'] : '' ?>" id="urlSearch" />
     <?php if (!$hideToolbar): ?>
         <?php echo $block->getToolbarHtml() ?>
     <?php endif; ?>
