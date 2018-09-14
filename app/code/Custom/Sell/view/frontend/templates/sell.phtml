@@ -33,6 +33,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 }// end if we have a preset product id
 
 ?>
+<title>Sell</title>
 <h1><?= $title ?></h1><br/>
 <div id="error" class="alert" style="display: none">
  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -145,6 +146,9 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     </div>
 </form>
 <style>
+.page-title-wrapper {
+  display: none;
+}
 .qq-gallery .qq-thumbnail-wrapper {
   height: 105px;
 }
