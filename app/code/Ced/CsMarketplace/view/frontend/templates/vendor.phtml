@@ -74,7 +74,7 @@ require(['jquery'], ($) => {
         <div class="col-xs-3 stripe-container" style="display: none" id="social5">
         	<a target="_blank" href="https://stripe.com/about"><img class="powered_by_stripe" width="100%;" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
         </div>
-        <div class="col-xs-1" style="padding-left: 1.2em; margin-top: 0.2em;" id="social2">
+        <div class="col-xs-1" style="padding-left: 1.2em;" id="social2">
           <i title="Copy to Clipboard" style="cursor: pointer;" onclick="copyToClipboard()" class="fas fa-copy"></i>
         </div>
       </div>
@@ -132,6 +132,7 @@ const copyToClipboard = () => {
   }
   #social2 {
     padding-left: 0em !important;
+    margin-top: 0.2em;
   }
   #social3 {
     margin-left: 2.25em;
