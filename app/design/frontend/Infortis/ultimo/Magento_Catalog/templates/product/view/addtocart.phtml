@@ -24,8 +24,8 @@ if($userProduct){
   $buttonTitle = __('Edit');
   $buttonHtml = '<button type="submit"
                     title="'.$buttonTitle.'"
-                    class="action primary tocart product-edit"
-                    style="float: left; margin-bottom: 0.3em; width: 75%; cursor: pointer;"
+                    class="action primary tocart product-edit custom-button"
+                    style="float: left; margin-bottom: 0.3em; width: 100%; cursor: pointer;"
                     id="product-addtocart">
                     <span>'.$buttonTitle.'</span>
                 </button>';
@@ -80,7 +80,7 @@ if($userProduct){
               <a href="#"
                     title=""
                     class="action primary custom-button"
-                    style="float: left; margin-bottom: 0.3em; width: 75%; cursor: pointer;"
+                    style="float: left; margin-bottom: 0.3em; width: 100%; cursor: pointer;"
                     id="product-delete-button">
                     <span>Delete</span>
               </a>
@@ -198,6 +198,15 @@ if($userProduct){
       min-height: 100%;
   }
 }
+<?php
+if($userProduct){
+?>
+.custom-button {
+  min-width: 12.5em;
+}
+<?php
+}// end if user product
+?>
 </style>
 <script>
 require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {

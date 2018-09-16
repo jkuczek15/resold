@@ -29,22 +29,42 @@ $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollect
 $sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
 
-if (!empty($VendorId) && $sessionId != $VendorId) {
+//if (!empty($VendorId) && $sessionId != $VendorId) {
 	$array = array('name');
 	$vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
 	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
 	$vendorModel = current($vendorModel);
 	$public_name = $vendorModel['public_name'];?>
 <?php
-}
+//}
 ?>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <script>
 require(['jquery'], ($) => {
-		$('.price-container').append(`
+
+  $(document).ready(() => {
+    window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+    }(document, "script", "twitter-wjs"));
+
+    // social media buttons
+    $('.price-container').append(`
 			<div class="row">
 				<div class="col-xs-5" style="padding-left: 0;" id="social1"></div>
-				<div class="col-xs-1" style="padding-left: 0;"></div>
+				<div class="col-xs-1" style="padding-left: 0;" id="social6"></div>
         <div class="col-xs-1" style="padding-left: 0; padding-right: 0.2em;" id="social3">
           <div style="margin-bottom: 0.2em; float: right; padding-left: 0;" class="fb-share-button" data-href="<?= "https://resold.us/".$_SERVER['PHP_SELF'].$_SERVER['REQUEST_URI'] ?>" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
         </div>
@@ -69,24 +89,6 @@ require(['jquery'], ($) => {
 						<a target="_blank" href="https://stripe.com/about"><img class="powered_by_stripe" width="85%;" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
 				</div>
 			</div>`);
-
-  $(document).ready(() => {
-    window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-      t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
-
-    t._e = [];
-    t.ready = function(f) {
-      t._e.push(f);
-    };
-
-    return t;
-    }(document, "script", "twitter-wjs"));
   });
 });
 
@@ -126,7 +128,7 @@ const copyToClipboard = () => {
 @media (max-width: 575.98px) {
   .stripe-container {
     display: none;
-		margin-left: 2.55em;
+		margin-left: 2.3em;
   }
   #social1 {
     float: right;
@@ -136,12 +138,18 @@ const copyToClipboard = () => {
   }
   #social3 {
     margin-left: 2.25em;
+    padding-left: 3.6em !important;
   }
   #social4 {
     width: 100%;
   }
   #social5 {
     display: block !important;
+    width: 5.1em !important;
+    padding-right: 0.3em;
+  }
+  #social6 {
+    display: none;
   }
 }
 </style>
