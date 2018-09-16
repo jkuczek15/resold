@@ -29,14 +29,11 @@ $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollect
 $sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
 
-//if (!empty($VendorId) && $sessionId != $VendorId) {
-	$array = array('name');
-	$vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
-	$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
-	$vendorModel = current($vendorModel);
-	$public_name = $vendorModel['public_name'];?>
-<?php
-//}
+$array = array('name');
+$vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
+$shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
+$vendorModel = current($vendorModel);
+$public_name = $vendorModel['public_name'];
 ?>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <script>
