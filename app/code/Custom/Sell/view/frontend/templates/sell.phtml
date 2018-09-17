@@ -53,25 +53,37 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Item Name') ?></span></label>
             <div class="control">
-                <input name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Item Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 24}" v-model="form_data.name" />
+                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Item Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 24}" v-model="form_data.name" />
             </div>
         </div>
         <div class="field title_description">
             <label class="label" for="title_description"><span><?php /* @escapeNotVerified */ echo __('Title Description') ?></span></label>
             <div class="control">
-                <input name="title_description" id="title_description" title="<?php /* @escapeNotVerified */ echo __('Title Description') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('title_description')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 42}" v-model="form_data.title_description" />
+                <input class="form-input" name="title_description" id="title_description" title="<?php /* @escapeNotVerified */ echo __('Title Description') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('title_description')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 42}" v-model="form_data.title_description" />
             </div>
         </div>
         <div class="field price">
-            <label class="label" for="price"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
+          <label class="label" for="price"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
+          <div class="col-md-1" style="padding-left: 0">
             <div class="control">
-                <input name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="form_data.price" />
+              <input style="width: 7em !important;" class="form-input" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="form_data.price" />
             </div>
+          </div>
+          <div class="col-md-3 service-fee">
+            <div class="control">
+              <strong class="label" style="padding-right: 15px"><span><?php /* @escapeNotVerified */ echo __('Service Fee') ?></span></strong>
+              <input disabled style="width: 40% !important; color: black;" class="form-input" name="price" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('service_fee')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="serviceFee" />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <strong style="padding-right: 15px;"><span><?php /* @escapeNotVerified */ echo __('Your Profit') ?></span></strong>
+            <input disabled style="width: 40% !important; color: black;" class="form-input" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
+          </div>
         </div>
         <div class="field category">
             <label class="label" for="category_select"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
             <div class="control">
-                <select style="cursor: pointer;" name="category" id="category_select" data-validate="{required:true}" v-model="form_data.category">
+                <select class="form-input" style="cursor: pointer;" name="category" id="category_select" data-validate="{required:true}" v-model="form_data.category">
                   <option value=""></option>
                   <option v-for="(data, category) in categories" v-bind:value="category">
                   {{ category }}
@@ -82,7 +94,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field subcategory">
             <label class="label" for="subcategory_select"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
             <div class="control">
-                <select style="cursor: pointer" name="subcategory" id="subcategory_select" data-validate="{required:true}" v-model="form_data.subcategory">
+                <select class="form-input" style="cursor: pointer" name="subcategory" id="subcategory_select" data-validate="{required:true}" v-model="form_data.subcategory">
                   <option value=""></option>
                   <option v-for="(data, subcategory) in subcategories" v-bind:value="subcategory">
                   {{ subcategory }}
@@ -93,7 +105,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field lowestcategory">
             <label class="label" for="lowestcategory_select"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
             <div class="control">
-                <select style="cursor: pointer" name="lowestcategory" id="lowestcategory_select" data-validate="{required:true}" v-model="form_data.lowestcategory">
+                <select class="form-input" style="cursor: pointer" name="lowestcategory" id="lowestcategory_select" data-validate="{required:true}" v-model="form_data.lowestcategory">
                   <option value=""></option>
                   <option v-for="lowestcategory in lowestcategories" v-bind:value="lowestcategory.id">
                   {{ lowestcategory.name }}
@@ -104,7 +116,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field condition">
             <label class="label" for="condition"><span><?php /* @escapeNotVerified */ echo __('Condition') ?></span></label>
             <div class="control">
-                <select style="cursor: pointer" name="condition" id="conditon" data-validate="{required:true}" v-model="form_data.condition">
+                <select class="form-input" style="cursor: pointer" name="condition" id="conditon" data-validate="{required:true}" v-model="form_data.condition">
                   <option value=""></option>
                   <option value="<?= $new_attr_id ?>">New</option>
                   <option value="<?= $new_attr_id + 1 ?>">Like New</option>
@@ -129,20 +141,18 @@ if(isset($_GET['id']) && $_GET['id'] != null)
                 <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
             </div>
         </div>
-        <span id="mobile1" style="display: none;">
-            <br/>
-        </span>
+        <span id="mobile1" style="display: none;"><br/></span>
         <div class="field images">
             <label class="label" for="images"><span><?php /* @escapeNotVerified */ echo __('Images') ?></span></label>
             <div class="control">
               <!-- Fine Uploader DOM Element ====================================================================== -->
-              <div id="fine-uploader"></div>
+              <div class="form-input" id="fine-uploader"></div>
             </div>
         </div>
         <div class="field description">
             <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Details') ?></span></label>
             <div class="control">
-                <textarea name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="5" data-validate="{required:true}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
+                <textarea class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="5" data-validate="{required:true}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
             </div>
         </div>
         <?php echo $block->getChildHtml('form.additional.info'); ?>
@@ -238,6 +248,16 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     margin-top: 3em;
   }
 }
+
+@media (min-width: 576px) {
+  .form-input {
+    width: 70% !important;
+  }
+  .service-fee {
+    text-align: center;
+    padding-left: 2em;
+  }
+}
 </style>
 <script>
 require([
@@ -258,6 +278,14 @@ require([
         local_global_error: false,
         image_error: false,
         form_data: {local_global: []}
+      },
+      computed: {
+        serviceFee: function () {
+          return this.form_data.price * 0.1;
+        },
+        yourProfit: function(){
+          return this.form_data.price - (this.form_data.price * 0.1);
+        }
       }
     });
 
