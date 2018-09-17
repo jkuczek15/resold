@@ -78,7 +78,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
           </div>
           <div class="col-md-3 your-profit">
             <strong style="padding-right: 15px;"><span><?php /* @escapeNotVerified */ echo __('Your Profit ($)') ?></span></strong>
-            <input disabled style="width: 31% !important; color: black;" class="form-input" id="your-profit" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
+            <input disabled style="width: 31% !important; color: black;" class="form-input" id="your_profit" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
           </div>
         </div>
         <div class="field category">
@@ -314,12 +314,13 @@ require([
 ?>
   app.form_data.name = "<?= $product->getName() ?>";
   app.form_data.title_description = "<?= $product->getData('title_description'); ?>";
-  app.form_data.price = "<?= $product->getPrice() ?>";
   app.form_data.category = "<?= $lowestcategory->getParentCategory()->getParentCategory()->getName() ?>";
   app.form_data.subcategory = "<?= $lowestcategory->getParentCategory()->getName() ?>";
   app.form_data.lowestcategory = "<?= $category_ids[0] ?>";
   app.form_data.condition = "<?= $product->getData('condition') ?>";
   app.form_data.description = "<?= $product->getDescription() ?>";
+  // required for reactive service fee and your profit
+  Vue.set(app.form_data, 'price', "<?= $product->getPrice() ?>");
   let local_global = "<?= $product->getData('local_global') ?>";
 
   if(local_global.includes("231")){
@@ -534,6 +535,19 @@ require([
      }else{
        checkbutton.removeClass('blue-background');
      }
+   });
+   $(document).ready(() => {
+    setTimeout(() => {
+      let fee = app.form_data.price * 0.1;
+      $('.local_global').each(function(){
+         let checkbutton = $(this).closest('.ck-button');
+         if(this.checked){
+           checkbutton.addClass('blue-background');
+         }else{
+           checkbutton.removeClass('blue-background');
+         }
+       });
+    }, 200);
    });
 
    var pos;
