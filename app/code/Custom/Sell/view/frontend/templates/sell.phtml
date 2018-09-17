@@ -63,21 +63,22 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             </div>
         </div>
         <div class="field price">
-          <label class="label" for="price"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
-          <div class="col-md-1" style="padding-left: 0">
+          <strong class="label desktop-price" for="price"><span><?php /* @escapeNotVerified */ echo __('Price ($)') ?></span></strong>
+          <div class="col-md-1" style="padding-left: 0; padding-right: 0;">
             <div class="control">
-              <input style="width: 7em !important;" class="form-input" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="form_data.price" />
+              <strong style="display: none" class="label mobile-price" for="price"><span><?php /* @escapeNotVerified */ echo __('Price ($)') ?></span></strong>
+              <input class="form-input price-input" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="form_data.price" />
             </div>
           </div>
           <div class="col-md-3 service-fee">
             <div class="control">
-              <strong class="label" style="padding-right: 15px"><span><?php /* @escapeNotVerified */ echo __('Service Fee') ?></span></strong>
-              <input disabled style="width: 40% !important; color: black;" class="form-input" name="price" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('service_fee')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="serviceFee" />
+              <strong class="label" style="padding-right: 15px"><span><?php /* @escapeNotVerified */ echo __('Service Fee ($)') ?></span></strong>
+              <input disabled style="width: 31% !important; color: black;" class="form-input" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('service_fee')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="serviceFee" />
             </div>
           </div>
-          <div class="col-md-3">
-            <strong style="padding-right: 15px;"><span><?php /* @escapeNotVerified */ echo __('Your Profit') ?></span></strong>
-            <input disabled style="width: 40% !important; color: black;" class="form-input" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
+          <div class="col-md-3 your-profit">
+            <strong style="padding-right: 15px;"><span><?php /* @escapeNotVerified */ echo __('Your Profit ($)') ?></span></strong>
+            <input disabled style="width: 31% !important; color: black;" class="form-input" id="your-profit" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('price')) ?>" class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
           </div>
         </div>
         <div class="field category">
@@ -247,6 +248,22 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     display: block !important;
     margin-top: 3em;
   }
+  .mobile-price {
+    display: inline-block !important;
+    padding-right: 4.15em;
+  }
+  .desktop-price {
+    display: none !important;
+  }
+  .service-fee {
+    padding-left: 0;
+  }
+  .your-profit {
+    padding-left: 0;
+  }
+  .price-input {
+    width: 7.15em !important;
+  }
 }
 
 @media (min-width: 576px) {
@@ -256,6 +273,9 @@ if(isset($_GET['id']) && $_GET['id'] != null)
   .service-fee {
     text-align: center;
     padding-left: 2em;
+  }
+  .price-input {
+    width: 5.7em !important;
   }
 }
 </style>
