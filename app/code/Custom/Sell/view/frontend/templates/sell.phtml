@@ -305,7 +305,8 @@ require([
           return Number(num).toFixed(2);
         },
         yourProfit: function(){
-          return this.form_data.price - (this.form_data.price * 0.1);
+          let num = this.form_data.price - (this.form_data.price * 0.1);
+          return Number(num).toFixed(2);
         }
       }
     });
