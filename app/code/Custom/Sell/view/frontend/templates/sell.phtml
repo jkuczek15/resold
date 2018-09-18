@@ -7,6 +7,11 @@ $all_category_id = 105;
 if(isset($_GET['id']) && $_GET['id'] != null)
 {
     $product_id = $_GET['id'];
+    if(!is_numeric($product_id)){
+      echo "You do not have access to view this page.";
+      exit;
+    }// end if someone passed a wrong id
+
     $mode = "Edit";
     $title = "Edit Listing";
 
