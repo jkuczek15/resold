@@ -264,8 +264,13 @@ option:disabled {
   .price-input {
     width: 7.05em !important;
   }
-  .ck-button:hover {
-      background: #EFEFEF;
+  .checked-button:hover {
+    background: #3CBBD8 !important;
+    color: white;
+  }
+  .unchecked-button:hover {
+    background-color: #EFEFEF !important;
+    color: black;
   }
 }
 
@@ -536,9 +541,11 @@ require([
    $('.local_global').click(function(){
      let checkbutton = $(this).closest('.ck-button');
      if(this.checked){
-       checkbutton.addClass('blue-background');
+       checkbutton.removeClass('unchecked-button');
+       checkbutton.addClass('blue-background').addClass('checked-button');
      }else{
-       checkbutton.removeClass('blue-background');
+       checkbutton.removeClass('blue-background').removeClass('checked-button');
+       checkbutton.addClass('unchecked-button');
      }
    });
    $(document).ready(() => {
@@ -547,9 +554,11 @@ require([
       $('.local_global').each(function(){
          let checkbutton = $(this).closest('.ck-button');
          if(this.checked){
-           checkbutton.addClass('blue-background');
+           checkbutton.removeClass('unchecked-button');
+           checkbutton.addClass('blue-background').addClass('checked-button');
          }else{
-           checkbutton.removeClass('blue-background');
+           checkbutton.removeClass('blue-background').removeClass('checked-button');
+           checkbutton.addClass('unchecked-button');
          }
        });
     }, 200);
