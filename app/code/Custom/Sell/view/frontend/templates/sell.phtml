@@ -72,7 +72,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
           <div class="col-md-1" style="padding-left: 0; padding-right: 0;">
             <div class="control">
               <strong style="display: none" class="label mobile-price" for="price"><span><?php /* @escapeNotVerified */ echo __('Price ($)') ?></span></strong>
-              <input class="form-input price-input" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="form_data.price" />
+              <input class="form-input price-input" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20, max: 100000, 'validate-integer': true}" v-model="form_data.price" />
+              <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="price_error" v-if="price_error" v-cloak>Please enter a whole number.</div>
             </div>
           </div>
           <div class="col-md-3 service-fee">
@@ -309,6 +310,7 @@ require([
         lowestcategories: [],
         image_paths: [],
         local_global_error: false,
+        price_error: false,
         image_error: false,
         form_data: {local_global: []}
       },
@@ -601,15 +603,29 @@ require([
      $.validator.addMethod(
         'validate-local-global',
         function (value) {
-            // custom validation
-            if(!document.getElementById('local').checked && !document.getElementById('global').checked){
-              app.local_global_error = true;
-              return false;
-            }
-            app.local_global_error = false;
-            return true;
+          // custom validation
+          if(!document.getElementById('local').checked && !document.getElementById('global').checked){
+            app.local_global_error = true;
+            return false;
           }
+          app.local_global_error = false;
+          return true;
+        }
       );
+      $.validator.addMethod(
+        'validate-integer',
+        function (value) {
+          // custom validation
+          if(Number.isInteger(parseFloat(value))){
+            app.price_error = false;
+            return true;
+          }else{
+            app.price_error = true;
+            return false;
+          }
+        }
+      );
+      $.validator.messages['validate-integer'] = '';
   };
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
