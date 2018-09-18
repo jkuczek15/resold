@@ -322,7 +322,7 @@ require([
   app.form_data.condition = "<?= $product->getData('condition') ?>";
   app.form_data.description = "<?= $product->getDescription() ?>";
   // required for reactive service fee and your profit
-  Vue.set(app.form_data, 'price', "<?= $product->getPrice() ?>");
+  Vue.set(app.form_data, 'price', Number("<?= $product->getPrice() ?>").toFixed(2));
   let local_global = "<?= $product->getData('local_global') ?>";
 
   if(local_global.includes("231")){
@@ -336,8 +336,6 @@ require([
 <?php
 }// end if mode == 'edit'
 ?>
-  setTimeout(() => {
-  }, 200);
     // sell form submission function, ensure form is valid
     $('#sell_form').submit(function(){
       if($(this).valid()){
