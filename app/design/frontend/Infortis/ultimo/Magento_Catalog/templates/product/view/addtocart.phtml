@@ -219,8 +219,7 @@ $(document).ready(() => {
       e.preventDefault();
       window.location = '/sell?id=<?= $_product->getId(); ?>';
     });
-
-    var options = {
+    var contactOptions = {
       type: 'popup',
       responsive: true,
       innerScroll: true,
@@ -241,13 +240,36 @@ $(document).ready(() => {
         }
       }]
     };
+
+    var offerOptions = {
+      type: 'popup',
+      responsive: true,
+      innerScroll: true,
+      title: 'Send Offer - ' + $('.listedBy:first').text().replace('Listed by: ', ''),
+      buttons: [{
+        text: $.mage.__('Send'),
+        class: 'send-button',
+        click: function () {
+          var data = {
+            'vendor_id': $('#vendor_id').val(),
+            'email_subject': $('#email_subject').val(),
+            'text_email': $('#text_email_offer').val(),
+            'offer_price': $('#offer_price').val(),
+            'is_offer': 'Y'
+          };
+          $.post('/csmessaging/frontend/savechat', data, (response) => {
+            $('#text_email_contact_seller').val('');
+            this.closeModal();
+          });
+        }
+      }]
+    };
     $('#product-message-button').click(() => {
 <?php
   if($customer->isLoggedIn()){
 ?>
-    options.title = options.title.replace('Send Offer', 'Contact Seller');
     $('.item-name').html($('.page-title:first').text());
-    var popup = modal(options, $('#contact-seller-modal'));
+    var popup = modal(contactOptions, $('#contact-seller-modal'));
     $('#contact-seller-modal').modal('openModal');
 <?php
   }else{
@@ -262,9 +284,8 @@ $(document).ready(() => {
 <?php
   if($customer->isLoggedIn()){
 ?>
-    options.title = options.title.replace('Contact Seller', 'Send Offer');
     $('.item-name').html($('.page-title:first').text());
-    var popup = modal(options, $('#make-offer-modal'));
+    var popup = modal(offerOptions, $('#make-offer-modal'));
     $('#make-offer-modal').modal('openModal');
 <?php
   }else{
