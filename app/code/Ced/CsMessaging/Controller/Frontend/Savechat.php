@@ -121,6 +121,8 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $message = $this->getRequest()->getPost('text_email');
         $receiver_email = $this->getRequest()->getPost('receiver_email');
         $receiver_id = $this->getRequest()->getPost('vendor_id');
+        $is_offer = $this->getRequest()->getPost('is_offer');
+        $offer_price = $this->getRequest()->getPost('offer_price');
 
         // get current seller data
         $vendor = $this->_vendorFactory->create()->load($receiver_id);
@@ -164,10 +166,15 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 // send the email
                 $data= array();
                 $data['receiver_email'] = $receiver_email;
+
                 $data['text'] = $message;
                 $data['vendor_name'] = $sender_name;
                 $data['receiver_name'] = $receiver_name;
                 $data['subject'] = $subject;
+                $data['sender_name'] = $sender_name;
+                $data['is_offer'] = $is_offer;
+                $data['offer_price'] = $offer_price;
+
                 $this->_template  = 'send_cmail_to_vendor';
                 $this->inlineTranslation->suspend();
                 $this->_transportBuilder->setTemplateIdentifier($this->_template)

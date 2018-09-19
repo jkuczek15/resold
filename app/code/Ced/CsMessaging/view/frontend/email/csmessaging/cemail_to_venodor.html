@@ -25,24 +25,34 @@
             <td align="center" valign="top" style="padding:20px 0 20px 0">
                 <!-- [ header starts here] -->
                 <table bgcolor="FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #E0E0E0;">
-
                     <!-- [ middle starts here] -->
                     <tr>
                         <td valign="top">
-                            <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">Dear {{var receiver_name}},</h1>
-                            <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">Customer has sent you a mail .Please Check</p>
-                          <p style="font-size:12px; line-height:16px; margin:0 0 8px 0;">Content of this Message is as : </p>
-
+                            <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">{{var receiver_name}},</h1>
+                            {{if is_offer}}
+                            <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">{{var sender_name}} has made you an offer of <strong>${{var offer_price}}</strong> for your {{var subject}}:</p>
+                            {{else}}
+                            <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">{{var sender_name}} has sent you a message regarding your {{var subject}}:</p>
+                            {{/if}}
                             <p style="font-size:12px; line-height:16px; margin:0;">{{var text}}</p>
-
                         </td>
                     </tr>
                     <tr>
-                        <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;"><center><p style="font-size:12px; margin:0;">Thank you again,</p></center></td>
+                      <td>
+                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;">Reply</button></a>
+                      {{if is_offer}}
+                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;">Accept</button></a>
+                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;">Counter Offer</button></a>
+                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;">Decline</button></a>
+                      {{/if}}
+                     </td>
+                    </tr>
+                    <tr>
+                      <td><p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">Click {{if is_offer}}a{{else}}the{{/if}} button above or respond by replying to the email.</p>
                     </tr>
                 </table>
             </td>
         </tr>
-    </table>
-</div>
+      </table>
+    </div>
 </body>
