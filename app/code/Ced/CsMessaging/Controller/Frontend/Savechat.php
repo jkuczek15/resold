@@ -174,6 +174,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data['sender_name'] = $sender_name;
                 $data['is_offer'] = $is_offer;
                 $data['offer_price'] = $offer_price;
+                $data['product_url'] = $_SERVER['HTTP_REFERER'];
 
                 $this->_template  = 'send_cmail_to_vendor';
                 $this->inlineTranslation->suspend();
@@ -201,7 +202,11 @@ class Savechat extends \Magento\Framework\App\Action\Action
             catch(\Exception $e){
                 throw new \Exception (__($e->getMessage()));
             }
-            $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
+            if($is_offer){
+              $this->messageManager->addSuccessMessage(__('Your offer has been sent.'));
+            }else{
+              $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
+            }
             echo 'success';
         }
         else

@@ -13,6 +13,7 @@
 
 $model = \Magento\Framework\App\ObjectManager::getInstance();
 $productSku = $_product->getSku();
+$price = $_product->getPrice();
 $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 $customer = $model->create('Magento\Customer\Model\Session');
 $sessionId = $customer->getVendorId();
@@ -90,10 +91,8 @@ if($userProduct){
     </div>
 </div>
 <div style="display: none" id="contact-seller-modal">
+</form>
   <form method="post" action="/csmessaging/frontend/savechat" id="contact-seller-form">
-    <input type="hidden" name="email_subject" id="email_subject" value="<?= $_product->getName() ?>" />
-    <input type="hidden" name="vendor_id" id="vendor_id" value="<?= $VendorId ?>" />
-    <input type="hidden" name="sent_to_vendor" value="Y" />
     <div class="row" style="margin-bottom: 1em">
       <div class="col-md-2">
         <strong>Item:</strong>
@@ -107,16 +106,16 @@ if($userProduct){
         <strong>Message:</strong>
       </div>
       <div class="col-md-8">
-        <textarea id="text_email_contact_seller" name="text_email" rows="10"></textarea>
+        <textarea id="text_email_contact_seller" rows="10" required></textarea>
       </div>
     </div>
   </form>
 </div>
 <div style="display: none" id="make-offer-modal">
-  <form method="post" action="/csmessaging/frontend/savechat" id="contact-seller-form">
-    <input type="hidden" name="email_subject" id="email_subject" value="<?= $_product->getName() ?>" />
-    <input type="hidden" name="vendor_id" id="vendor_id" value="<?= $VendorId ?>" />
-    <input type="hidden" name="sent_to_vendor" value="Y" />
+  <form method="post" action="/csmessaging/frontend/savechat" id="make-offer-form">
+    <input type="hidden" id="email_subject" value="<?= $_product->getName() ?>" />
+    <input type="hidden" id="vendor_id" value="<?= $VendorId ?>" />
+    <input type="hidden" id="sent_to_vendor" value="Y" />
     <div class="row" style="margin-bottom: 1em">
       <div class="col-md-2">
         <strong>Item:</strong>
@@ -129,8 +128,8 @@ if($userProduct){
       <div class="col-md-2">
         <strong>Offer ($):</strong>
       </div>
-      <div class="col-md-2">
-        <input type="number" name="offer_price" id="offer_price" />
+      <div class="col-md-4">
+        <input type="number" id="offer_price" min="<?= 0.75 * $price ?>" required />
       </div>
     </div>
     <div class="row">
@@ -138,7 +137,7 @@ if($userProduct){
         <strong>Message:</strong>
       </div>
       <div class="col-md-8">
-        <textarea id="text_email_offer" name="text_email" rows="10"></textarea>
+        <textarea id="text_email_offer" rows="10" required></textarea>
       </div>
     </div>
   </form>
@@ -167,6 +166,9 @@ if($userProduct){
 <style>
 .product-info-main .box-tocart .action.tocart, .product-options-bottom .box-tocart .action.tocart, .bundle-options-container .box-tocart .action.tocart, .product-info-main .box-tocart .action.instant-purchase, .product-options-bottom .box-tocart .action.instant-purchase, .bundle-options-container .box-tocart .action.instant-purchase {
   min-width: 179px;
+}
+#offer_price-error, #text_email_offer-error, #text_email_contact_seller-error {
+  color: #e02b27;
 }
 .custom-button {
   line-height: 2.2rem !important;
@@ -228,18 +230,23 @@ $(document).ready(() => {
         text: $.mage.__('Send'),
         class: 'send-button',
         click: function () {
-          var data = {
-            'vendor_id': $('#vendor_id').val(),
-            'email_subject': $('#email_subject').val(),
-            'text_email': $('#text_email_contact_seller').val()
-          };
-          $.post('/csmessaging/frontend/savechat', data, (response) => {
-            $('#text_email_contact_seller').val('');
-            this.closeModal();
-          });
-        }
+          if($('#contact-seller-form').valid()){
+            var data = {
+              'vendor_id': $('#vendor_id').val(),
+              'email_subject': $('#email_subject').val(),
+              'text_email': $('#text_email_contact_seller').val()
+            };
+            $.post('/csmessaging/frontend/savechat', data, (response) => {
+              $('#text_email_contact_seller').val('');
+              this.closeModal();
+            });
+          }// end if form valid
+        }// end click function
       }]
     };
+
+    $('#contact-seller-form').submit(() => false);
+    $('#make-offer-form').submit(() => false);
 
     var offerOptions = {
       type: 'popup',
@@ -250,18 +257,20 @@ $(document).ready(() => {
         text: $.mage.__('Send'),
         class: 'send-button',
         click: function () {
-          var data = {
-            'vendor_id': $('#vendor_id').val(),
-            'email_subject': $('#email_subject').val(),
-            'text_email': $('#text_email_offer').val(),
-            'offer_price': $('#offer_price').val(),
-            'is_offer': 'Y'
-          };
-          $.post('/csmessaging/frontend/savechat', data, (response) => {
-            $('#text_email_contact_seller').val('');
-            this.closeModal();
-          });
-        }
+          if($('#make-offer-form').valid()){
+            var data = {
+              'vendor_id': $('#vendor_id').val(),
+              'email_subject': $('#email_subject').val(),
+              'text_email': $('#text_email_offer').val(),
+              'offer_price': $('#offer_price').val(),
+              'is_offer': 'Y'
+            };
+            $.post('/csmessaging/frontend/savechat', data, (response) => {
+              $('#text_email_contact_seller').val('');
+              this.closeModal();
+            });
+          }// end if form valid
+        }// end click function
       }]
     };
     $('#product-message-button').click(() => {
