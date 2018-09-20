@@ -180,11 +180,10 @@ class Queryform extends \Magento\Framework\View\Element\Template
 
           // $sender_id= $customerData->getId();
         $sender_email=$customerData->getEmail();
-        //print_r($sender_email);die('kfhdskf');
-        $collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'vendor')->addFieldToFilter('receiver_email', $sender_email)->setOrder('chat_id', 'desc')->addFieldToFilter('send_to', 'customer');
+
+        $collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'customer')->addFieldToFilter('receiver_email', $sender_email)->setOrder('chat_id', 'desc');
 
         $this->setCollection($collection);
-
     }
 
      /* public function getinboxcollection()
@@ -215,7 +214,7 @@ class Queryform extends \Magento\Framework\View\Element\Template
     {
         $customerData = $this->customerSession->getCustomer();
         $sender_email=$customerData->getEmail();
-        $collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'vendor')->addFieldToFilter('receiver_email', $sender_email)->addFieldToFilter('send_to', 'customer')->setOrder('chat_id', 'desc')->getData();
+        $collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'customer')->addFieldToFilter('receiver_email', $sender_email)->setOrder('chat_id', 'desc')->getData();
         return $collection;
     }
 
@@ -223,7 +222,7 @@ class Queryform extends \Magento\Framework\View\Element\Template
     {
     	$customerData = $this->customerSession->getCustomer();
     	$sender_email=$customerData->getEmail();
-    	$collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'vendor')->addFieldToFilter('receiver_email', $sender_email)->addFieldToFilter('postread', 'new')->addFieldToFilter('send_to', 'customer')->setOrder('chat_id', 'desc')->getData();
+    	$collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'customer')->addFieldToFilter('receiver_email', $sender_email)->addFieldToFilter('postread', 'new')->setOrder('chat_id', 'desc')->getData();
     	return $collection;
     }
 

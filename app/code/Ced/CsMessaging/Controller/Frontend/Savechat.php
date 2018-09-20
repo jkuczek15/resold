@@ -115,6 +115,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+        date_default_timezone_set("America/Chicago");
         // get request data
     	  $data = $this->getRequest()->getPostValue();
         $subject = $this->getRequest()->getPost('email_subject');
