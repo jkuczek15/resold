@@ -157,6 +157,7 @@ class Queryform extends \Magento\Framework\View\Element\Template
         \Ced\CsMarketplace\Model\VendorFactory $vendorFactory,
         \Ced\CsMessaging\Model\MessagingFactory $messagingFactory,
         \Magento\Framework\Registry $registry,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         Data $messagingHelper,
         array $data = []
     ) {
@@ -174,6 +175,7 @@ class Queryform extends \Magento\Framework\View\Element\Template
         $this->pageConfig = $context->getPageConfig();
         $this->_coreRegistry = $registry;
         $this->_messagingHelper = $messagingHelper;
+        $this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context, $data);
 
         $customerData = $this->customerSession->getCustomer();

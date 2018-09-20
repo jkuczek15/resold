@@ -93,6 +93,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                         <td class="mailbox-attachment"></td>
                                         <td class="mailbox-date"><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo date("F d, Y g:i A", strtotime($value['time']))
                                             ?></a></td>
+                                        <td><span style="cursor: pointer;" class="fa fa-trash"></span></td>
                                     </tr>
                                     <?php
                                 endforeach; ?>
@@ -113,3 +114,8 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
             <?php echo $block->getPagerHtml(); ?> <!-- this is render next prev link -->
         </center>
 </div>
+<style>
+.right-sidebar-wrap{
+  padding-left: 0px;
+}
+</style>
