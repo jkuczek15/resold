@@ -21,7 +21,6 @@ $collection = $block->getCollection();
 $messages = $block->getinboxcollection();
 $adminInboxCount = $this->_messagingHelper->getCustomerInboxCountForAdmin();
 $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
-
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -76,23 +75,24 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                 <?php foreach ($collection as $msg => $value): ?>
                                     <?php
                                     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                                    $vendor_name = $objectManager->get('Ced\CsMarketplace\Model\Vendor')->loadByEmail($value['sender_email'])->getPublicName();
+                                    $sender = $objectManager->get('\Magento\Customer\Api\CustomerRepositoryInterface')->get($value['sender_email']);
+                                    $vendor_name = $sender->getFirstName() . ' ' . $sender->getLastName();
                                     ?>
                                     <tr>
-                                        <td class="mailbox-check><input class=" chat_id
-                                        " type="checkbox" value="<?php echo $value['chat_id'] ?>"/></td>
-                                        <!--                           <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-                                         -->
-                                        <td class="mailbox-name"><a
-                                                    href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo ucwords($vendor_name) ?></a>
+                                        <td class="mailbox-name">
+                                          <a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo ucwords($vendor_name) ?></a>
                                         </td>
-                                        <td class="mailbox-subject">
-                                            <b><?php echo $value['subject'] ?></b><?php echo substr($value['message'], 0, 16); ?>
-                                            ...
+                                        <td class="mailbox-subject"><b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo $value['subject'] ?></a></td>
+                                        <td class="mailbox-subject"></b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo substr($value['message'], 0, 16); ?></a>
+                                      <?php
+                                        if(count($value['message']) > 16){
+                                          echo '...';
+                                        }
+                                       ?>
                                         </td>
                                         <td class="mailbox-attachment"></td>
-                                        <td class="mailbox-date"><?php echo date("d-F-Y H:m:s", strtotime($value['time']))
-                                            ?></td>
+                                        <td class="mailbox-date"><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo date("F d, Y g:i A", strtotime($value['time']))
+                                            ?></a></td>
                                     </tr>
                                     <?php
                                 endforeach; ?>

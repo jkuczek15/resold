@@ -72,18 +72,19 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                     <?php if ($collection->getSize()): ?>
                                         <?php foreach ($collection as $msg => $value): ?>
                                             <tr>
-
-                                                <!--                           <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-                                                 -->
                                                 <td class="mailbox-name"><a
                                                             href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo $value['receiver_name'] ?></a>
                                                 </td>
-                                                <td class="mailbox-subject"><b><?php echo $value['subject'] ?></td>
-                                                <td class="mailbox-subject"></b><?php echo substr($value['message'], 0, 16); ?>
-                                                    ...
+                                                <td class="mailbox-subject"><b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo $value['subject'] ?></a></td>
+                                                <td class="mailbox-subject"></b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo substr($value['message'], 0, 16); ?></a>
+                                                <?php
+                                                  if(count($value['message']) > 16){
+                                                    echo '...';
+                                                  }
+                                                 ?>
                                                 </td>
                                                 <td class="mailbox-attachment"></td>
-                                                <td class="mailbox-date"><?php echo date("d-F-Y H:m:s", strtotime($value['time'])) ?></td>
+                                                <td class="mailbox-date"><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo date("F d, Y g:i A", strtotime($value['time'])) ?></a></td>
                                             </tr>
                                         <?php endforeach ?>
                                     <?php endif; ?>
