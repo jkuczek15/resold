@@ -89,7 +89,8 @@ class Savechat extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface
     ) {
            $this->scopeConfig=$scopeConfig;
            $this->_escaper = $escaper;
@@ -104,6 +105,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $this->_moduleManager = $moduleManager;
         $this->date = $date;
         $this->_storeManager = $storeManager;
+        $this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context);
         //     $this->resultJsonFactory = $this->_objectManager->create('Magento\Framework\Controller\Result\JsonFactory');
     }
@@ -120,15 +122,21 @@ class Savechat extends \Magento\Framework\App\Action\Action
     	  $data = $this->getRequest()->getPostValue();
         $subject = $this->getRequest()->getPost('email_subject');
         $message = $this->getRequest()->getPost('text_email');
-        $receiver_email = $this->getRequest()->getPost('receiver_email');
         $receiver_id = $this->getRequest()->getPost('vendor_id');
         $is_offer = $this->getRequest()->getPost('is_offer');
         $offer_price = $this->getRequest()->getPost('offer_price');
+        $reply = $this->getRequest()->getPost('reply');
 
-        // get current seller data
-        $vendor = $this->_vendorFactory->create()->load($receiver_id);
-        $receiver_email = $vendor->getEmail();
-        $receiver_name = $vendor->getName();
+        if($reply){
+            $vendor = $this->_customerRepositoryInterface->getById($receiver_id);
+            $receiver_email = $vendor->getEmail();
+            $receiver_name = $vendor->getFirstName() . " " . $vendor->getLastName();
+        }else{
+          // get current seller data
+          $vendor = $this->_vendorFactory->create()->load($receiver_id);
+          $receiver_email = $vendor->getEmail();
+          $receiver_name = $vendor->getName();
+        }
 
         // get current customer data
         $customerData = $this->session->getCustomer();

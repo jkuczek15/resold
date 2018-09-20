@@ -27,10 +27,14 @@
 <?php
 
 
-$vendor_id = $this->getRequest()->getParam('id');
+$vendor_id = $this->getRequest()->getParam('vendor_id');
+$subject = $this->getRequest()->getParam('subject');
+$customer_id = $this->getRequest()->getParam('id');
+$customer = $this->_customerRepositoryInterface->getById($customer_id);
+$customerName = $customer->getFirstName() . " " . $customer->getLastName();
+
 $vendor = $this->_vendorFactory->load($vendor_id);
 $vendor_email = $vendor->getEmail();
-//echo $vendor_email;die;
 $messages = $this->getCollection();
 $vendors = $this->_vendorFactory->getCollection()->getData();
 $admin_name = $this->_scopeConfig->getValue('trans_email/ident_general/name', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
@@ -74,58 +78,32 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
             <div class="right-sidebar-wrap mail-compose">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><?php echo __('Compose New Message') ?></h3>
+                        <h3 class="box-title">Reply to <?= $customerName ?></h3>
                         <div class="clear"></div>
                     </div>
                     <!-- /.box-header -->
                     <form method="post"
                           action="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/savechat"
                           enctype="multipart/form-data">
-                        <div class="chhosevendors">
-                            <?php if ($vendor_id == 0 && $vendor_id != '') { ?>
-                                <input type="text" readonly="true" value="<?php echo $admin_name; ?>"/>
-                            <?php } else { ?>
-                                <select name="vendor_data" id="vendor_data">
-                                    <option value=""><?php echo __('Select the Vendor') ?></option>
+                          <input type="hidden" name="sent_to_vendor" value="1" />
+                          <input type="hidden" name="reply" value="1" />
+                          <input type="hidden" value="<?php echo $customer->getId() ?>" name="vendor_id" />
+                          <input type="hidden" name="email_subject" value="<?= $subject ?>" />
 
-                                    <?php foreach ($vendors as $key => $value) {
-                                        $vendor = $this->_vendorFactory->load($value['entity_id']);
-                                        $vendor_email = $vendor->getEmail();
-                                        $vendor_name = $vendor->getName();
-                                        /*if ($value['entity_id'] == 0)
-                                        {
-                                            $vendor_name = $value['name'];
-                                        }*/
-
-                                        ?>
-                                        <option value="<?php echo $value['entity_id'] ?>" <?php if ($value['entity_id'] == $vendor_id) { ?> selected="selected"<?php } ?>><?php echo $vendor_name ?></option>
-                                    <?php } ?>
-                                </select>
-                            <?php } ?>
+                        <div class="table responsive">
+                          <table class="table">
+                            <tr>
+                              <td>Item:</td>
+                              <td><strong><?= $subject ?></strong></td>
+                            </tr>
+                          </table>
                         </div>
-
-                        <input type="hidden" value="<?php echo $vendor_id ?>"
-                               name="vendor_id"/>
-                        <div class="form-group">
-                            <input class="form-control" name="email_subject"
-                                   placeholder="Subject:" id="vendor_subject" value=""/>
-                        </div>
+                      <br/>
 
                         <div class="form-group">
                             <textarea id="compose-textarea" name="text_email" class="form-control"
                                       style="height: 200px;width:97%;" value=""></textarea>
                         </div>
-                        <?php if ($this->_scopeConfig->getValue('ced_csmarketplace/csmessaging/customer_send_mail', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)) { ?>
-                            <div class="customer-to-vendor-email">
-                                <input type="checkbox" name="sent_to_vendor" value="1"/>
-                                <?php if ($vendor_id == 0 && $vendor_id != '') { ?>
-                                    <label><?php echo __('Email this message to Admin') ?></label>
-                                <?php } else { ?>
-                                    <label><?php echo __('Email this message to Vendor') ?></label>
-                                <?php } ?>
-                            </div>
-
-                        <?php } ?>
                         <div class="box-footer">
                             <div class="pull-right">
 
@@ -147,6 +125,11 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
     <!-- /.content -->
 </div>
 
+<style>
+.right-sidebar-wrap {
+  padding-left: 0px;
+}
+</style>
 <script>
 require([
     "jquery",
@@ -161,20 +144,11 @@ require([
         var vendor_subject = jQuery("#vendor_subject").val();
         var vendorremail = jQuery("#vendor_data").val();
         var vendorId = '<?php echo $vendor_id; ?>';
-        if (!vendorremail && vendorId != 0 && vendorId != '') {
-            alert('Please Specify The Recipient');
-        }
-        else if (!text) {
+        if (!text) {
             alert('Message cannot be Empty');
-        }
-        else if (!vendor_subject) {
-            alert('Subject cannot be Empty');
-
-        }
-        else {
+        }else {
             var btn = document.getElementById('btn-chat');
             btn.setAttribute('type', 'submit');
         }
-
     }
 </script>
