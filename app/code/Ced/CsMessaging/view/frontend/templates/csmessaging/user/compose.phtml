@@ -96,11 +96,11 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                               <td>Item:</td>
                               <td><strong><?= $subject ?></strong></td>
                             </tr>
+
                           </table>
                         </div>
-                      <br/>
-
                         <div class="form-group">
+                          <label>Message:</label>
                             <textarea id="compose-textarea" name="text_email" class="form-control"
                                       style="height: 200px;width:97%;" value=""></textarea>
                         </div>
@@ -127,6 +127,9 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 
 <style>
 .right-sidebar-wrap {
+  padding-left: 0px;
+}
+table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td {
   padding-left: 0px;
 }
 </style>

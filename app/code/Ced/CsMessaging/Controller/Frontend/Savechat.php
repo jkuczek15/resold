@@ -180,10 +180,13 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data['vendor_name'] = $sender_name;
                 $data['receiver_name'] = $receiver_name;
                 $data['subject'] = $subject;
+                $data['encoded_subject'] = urlencode($subject);
                 $data['sender_name'] = $sender_name;
                 $data['is_offer'] = $is_offer;
                 $data['offer_price'] = $offer_price;
                 $data['product_url'] = $_SERVER['HTTP_REFERER'];
+                $data['host'] = $_SERVER['HTTP_HOST'];
+                $data['vendor_id'] = $receiver_id;
 
                 $this->_template  = 'send_cmail_to_vendor';
                 $this->inlineTranslation->suspend();
@@ -216,7 +219,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
             }else{
               $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
             }
-            echo 'success';
+            return $this->_redirect('csmessaging/frontend/inbox/');
         }
         else
         {
