@@ -93,7 +93,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                         <td class="mailbox-attachment"></td>
                                         <td class="mailbox-date"><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo date("F d, Y g:i A", strtotime($value['time']))
                                             ?></a></td>
-                                        <td><span style="cursor: pointer;" class="fa fa-trash"></span></td>
+                                        <td><span data-id="<?= $value['chat_id'] ?>" style="cursor: pointer;" class="fa fa-trash delete-message"></span></td>
                                     </tr>
                                     <?php
                                 endforeach; ?>
@@ -114,8 +114,64 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
             <?php echo $block->getPagerHtml(); ?> <!-- this is render next prev link -->
         </center>
 </div>
+<div style="display: none" id="delete-message-modal">
+  <form method="post" action="/csmessaging/frontend/savechat" id="delete-message-form">
+    <div class="row" style="margin-bottom: 1em">
+      <div class="col-md-12" style="margin-left: 1em;">
+        <strong>Are you sure you want to delete this message?</strong>
+      </div>
+    </div>
+  </form>
+</div>
 <style>
 .right-sidebar-wrap{
   padding-left: 0px;
 }
+.delete-button {
+  background-color: #db3b21;
+  border-color: #db3b21;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+}
+@media (max-width: 575.98px) {
+  .modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
+      height: auto;
+      width: 100% !important;
+      min-height: 100%;
+  }
+  .modal-footer {
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  .modal-content {
+    padding-bottom: 0 !important;
+  }
+}
 </style>
+<script>
+require([
+    "jquery",
+    'Magento_Ui/js/modal/modal'
+], ($, modal) => {
+  $('.delete-message').click(function(){
+      let chat_id = $(this).data('id');
+      var deleteOptions = {
+        type: 'popup',
+        responsive: true,
+        innerScroll: true,
+        title: 'Delete Message',
+        buttons: [{
+          text: $.mage.__('Delete'),
+          class: 'delete-button',
+          click: function () {
+            $.post('/api/messages/delete', { chat_id }, (response) => {
+              window.location.reload();
+            });
+          }// end click function
+        }]
+      };
+      var popup = modal(deleteOptions, $('#delete-message-modal'));
+      $('#delete-message-modal').modal('openModal');
+  });
+});
+</script>

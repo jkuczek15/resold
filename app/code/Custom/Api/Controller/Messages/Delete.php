@@ -13,7 +13,7 @@
  * @copyright   Copyright Resold (https://resold.us/)
  * @license     https://resold.us/license-agreement
  */
-namespace Custom\Api\Controller\Product;
+namespace Custom\Api\Controller\Messages;
 
 use Magento\Customer\Model\Session;
 use \Magento\Framework\App\Action\Context;
@@ -60,28 +60,20 @@ class Delete extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-      $this->_registry->register('isSecureArea', true);
-      // Ensure POST request
+      $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
+      $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+      $connection = $resource->getConnection();
+
       $post = $this->getRequest()->getPostValue();
-      if(empty($post) || !isset($post['product_id'])){
+      if(empty($post) || !isset($post['chat_id'])){
         return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
       }// end if post array empty
 
-      $model = \Magento\Framework\App\ObjectManager::getInstance();
-      $product_id = $post['product_id'];
-      $product = $this->_productRepositoryInterface->getById($product_id);
-      $vendorId = $this->session->getVendorId();
-      $vendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $product->getSku())->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+      // delete the message
+      $chat_id = $post['chat_id'];
+      $sql = "DELETE FROM ced_csmessaging WHERE chat_id = '".$chat_id."'";
+      $connection->query($sql);
 
-      // validation, make sure this product was created by the signed in user
-      if($vendorProduct->getVendorId() !== $vendorId){
-        return $this->resultJsonFactory->create()->setData(['error' => 'You do not have access to delete this listing,']);
-      }// end if this isn't the seller's product
-
-      $this->_productRepositoryInterface->delete($product);
-
-      // on success, redirect user to their listing page
-      $this->_messageManager->addSuccess(__("Successfully deleted your listing."));
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
     }// end function execute
 }
