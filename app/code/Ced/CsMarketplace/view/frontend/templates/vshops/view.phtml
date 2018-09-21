@@ -43,35 +43,7 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
         <!-- <div class="block-title">
         </div> -->
         <?php ?>
-        <div class="block-content" style="padding: 10px;">
-            <img src="<?php echo $helper->getResizeImage($this->getVendorLogo(), 'logo', $width, $height); ?>"/>
-            <!-- <ul>
-                <?php foreach ($this->getLeftProfileAttributes() as $attribute) {?>
-                    <li>
-                        <?php if ($attribute->getFrontendInput() == 'file' || $attribute->getFrontendInput() == 'image') : ?>
-                            <label>
-                                <i class="<?php echo $attribute->getData('fontawesome_class_for_left_profile'); ?>"></i>
-                                <?php if (strlen($attribute->getStoreLabel()) > 0) {
-                                    echo $attribute->getStoreLabel();
-                                } else {
-                                    echo __($attribute->getFrontendLabel());
-                                } ?></label>:<a
-                                    href="<?php echo $mediaUrl.$this->escapeHtml($block->Method($attribute->getAttributeCode())) ?>"><?php echo basename(__($this->escapeHtml($block->Method($attribute->getAttributeCode())))); ?></a>
-                        <?php else: ?>
-                            <label>
-                                <i class="<?php echo $attribute->getData('fontawesome_class_for_left_profile'); ?>"></i>
-                                <?php if (strlen($attribute->getStoreLabel()) > 0) {
-                                    echo $attribute->getStoreLabel();
-                                } else {
-                                    echo __($attribute->getFrontendLabel());
-                                } ?></label>:<?php echo __($this->escapeHtml($block->Method($attribute->getAttributeCode()))); ?>
-                        <?php endif; ?>
-                    </li>
-                <?php }
-                 ?>
-            </ul> -->
-        </div>
-    </div>
+            </div>
     <style>
         i {
             font-size: 12px;
@@ -87,6 +59,9 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
             color: black;
             text-decoration: none;
         }
+        .page-layout-2columns-left .column.main {
+          width: 100%;
+        }
 
         .block-poll .block-content li a:hover {
             color: #1E7EC8;
@@ -98,6 +73,13 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
 
         .sidebar .block-content ul li {
             list-style: none;
+        }
+        .action.sorter-action.sort-asc{
+          display: none;
+        }
+
+        .sorter {
+          margin-right: 10.5em !important;
         }
     </style>
 <?php } ?>
