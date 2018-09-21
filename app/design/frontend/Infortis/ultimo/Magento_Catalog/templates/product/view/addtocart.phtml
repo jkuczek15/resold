@@ -80,7 +80,7 @@ if($userProduct){
 <?php if ($userProduct): ?>
               <a href="#"
                     title=""
-                    class="action primary custom-button"
+                    class="action primary custom-button product-delete"
                     style="float: left; margin-bottom: 0.3em; width: 100%; cursor: pointer;"
                     id="product-delete-button">
                     <span>Delete</span>
@@ -142,6 +142,15 @@ if($userProduct){
     </div>
   </form>
 </div>
+<div style="display: none" id="delete-item-modal">
+  <form method="post" action="/csmessaging/frontend/savechat" id="delete-item-form">
+    <div class="row" style="margin-bottom: 1em">
+      <div class="col-md-12" style="margin-left: 1em;">
+        <strong>Are you sure you want to delete this item?</strong>
+      </div>
+    </div>
+  </form>
+</div>
 
 <?php endif; ?>
 <?php if ($block->isRedirectToCartEnabled()) : ?>
@@ -193,11 +202,24 @@ if($userProduct){
 .send-button {
   float: right;
 }
+.delete-button {
+  background-color: #db3b21;
+  border-color: #db3b21;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+}
 @media (max-width: 575.98px) {
   .modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
       height: auto;
       width: 100% !important;
       min-height: 100%;
+  }
+  .modal-footer {
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+  .modal-content {
+    padding-bottom: 0 !important;
   }
 }
 <?php
@@ -221,6 +243,30 @@ $(document).ready(() => {
       e.preventDefault();
       window.location = '/sell?id=<?= $_product->getId(); ?>';
     });
+
+    $('.product-delete').click(() => {
+      var deleteOptions = {
+        type: 'popup',
+        responsive: true,
+        innerScroll: true,
+        title: 'Delete Item - <?= $_product->getName() ?>',
+        buttons: [{
+          text: $.mage.__('Delete'),
+          class: 'delete-button',
+          click: function () {
+            let product_id = <?= $_product->getId() ?>;
+            $.post('/api/product/delete', { product_id }, (response) => {
+              if(response.success == 'Y'){
+                window.location = '/customer/account/listings/';
+              }
+            });
+          }// end click function
+        }]
+      };
+      var popup = modal(deleteOptions, $('#delete-item-modal'));
+      $('#delete-item-modal').modal('openModal');
+    });
+
     var contactOptions = {
       type: 'popup',
       responsive: true,
