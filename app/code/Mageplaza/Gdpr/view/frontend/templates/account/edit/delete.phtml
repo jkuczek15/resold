@@ -26,16 +26,16 @@ $helper = $this->helper(\Mageplaza\Gdpr\Helper\Data::class);
 
 if ($helper->allowDeleteAccount()): ?>
     <fieldset class="fieldset info mp-gdpr-delete-account">
-        <legend class="legend">
+        <legend class="legend" class="left-pad">
             <span><?php echo __('Delete Account') ?></span>
         </legend><br>
-        <div class="gdpr-delete-message">
+        <div class="gdpr-delete-message left-pad">
             <?php echo $helper->getDeleteAccountMessage() ?>
         </div>
 
         <?php echo $block->getChildHtml('form_additional_info'); ?>
 
-        <div class="actions-toolbar">
+        <div class="actions-toolbar left-pad">
             <div class="primary">
                 <button type="submit" class="action save primary action-delete" role="delete-account" data-address="" title="<?php echo __('Delete your account') ?>">
                     <span><?php echo __('Delete your account') ?></span>
@@ -56,3 +56,10 @@ if ($helper->allowDeleteAccount()): ?>
     }
     </script>
 <?php endif; ?>
+<style>
+@media (min-width: 576px) {
+  .left-pad {
+    margin-left: 25.8% !important;
+  }
+}
+</style>
