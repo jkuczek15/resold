@@ -219,7 +219,9 @@ class Savechat extends \Magento\Framework\App\Action\Action
             }else{
               $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
             }
-            return $this->_redirect('csmessaging/frontend/inbox/');
+            if($reply){
+              return $this->_redirect('csmessaging/frontend/inbox/');
+            }
         }
         else
         {
