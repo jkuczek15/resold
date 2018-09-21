@@ -17,6 +17,9 @@ hr {
   margin-top: 1em;
   border-color: #e5e5e5;
 }
+.action.sorter-action{
+  display: none;
+}
 </style>
 <?php
 if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQUEST_URI'], 'catalogsearch') === FALSE){
