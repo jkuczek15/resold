@@ -59,7 +59,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 
                     <div class="box-body no-padding">
                         <ul class="nav nav-pills nav-stacked">
-                            <li><a
+                            <li class="active"><a
                                         href="<?php echo $this->getUrl('csmessaging/frontend/inbox');//Mage::getUrl('csvendorchat/frontend/inbox')?>">
                                         <i class="fa fa-inbox"></i><?php echo __(' Inbox'); ?> <span
                                             class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
@@ -97,6 +97,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                             <tr>
                               <td>Item:</td>
                               <td><strong><a target="_blank" href="<?= $product->getProductUrl() ?>"><?= $subject ?></a></strong></td>
+                              <td><a style="float: right" class="btn btn-box-tool action subscribe primary" onClick="history.go(-1);return true;"><span></span><<</span>Back</a></td>
                             </tr>
                           </table>
                         </div>

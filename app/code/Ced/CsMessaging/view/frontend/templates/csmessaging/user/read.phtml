@@ -29,7 +29,7 @@ $sender = $this->getCustomerById($chat->getSenderId());
 
                     <div class="box-body no-padding">
                         <ul class="nav nav-pills nav-stacked">
-                            <li>
+                            <li <?= !$sentMessage ? "class='active'" : '' ?>>
                                 <a href="<?php echo $this->getUrl('csmessaging/frontend/inbox');//Mage::getUrl('csvendorchat/frontend/inbox')?>"><i
                                             class="fa fa-inbox"></i><?php echo __(' Inbox'); ?> <span
                                             class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
@@ -37,7 +37,7 @@ $sender = $this->getCustomerById($chat->getSenderId());
                                             echo $vendorInboxCount;
                                             echo ')';
                                         } ?></span></a></li>
-                            <li>
+                            <li <?= $sentMessage ? "class='active'" : '' ?>>
                                 <a href="<?php echo $this->getUrl('csmessaging/frontend/sent');//Mage::getUrl('csvendorchat/frontend/sent')?>"><i
                                             class="fa fa-envelope-o"></i> Sent</a></li>
                             <!--   <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
