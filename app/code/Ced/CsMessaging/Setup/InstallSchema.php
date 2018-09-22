@@ -56,7 +56,7 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             null,
             ['nullable' => false, 'default' => ''],
-            'Message'  
+            'Message'
         )->addColumn(
             'sender_id',
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
@@ -117,7 +117,26 @@ class InstallSchema implements InstallSchemaInterface
             100,
             ['nullable' => false, 'default' => ''],
             'Post Read'
+        )->addColumn(
+            'product_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            10,
+            ['nullable' => false, 'default' => ''],
+            'Product Id'
+        )->addColumn(
+            'sent_box',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            1,
+            ['nullable' => false, 'default' => '1'],
+            'In Sent Box'
+        )->addColumn(
+            'inbox',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            1,
+            ['nullable' => false, 'default' => '1'],
+            'In Inbox'
         );
+;
         $installer->getConnection()->createTable($table);
         $installer->endSetup();
 

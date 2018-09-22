@@ -177,6 +177,7 @@ class Sent extends \Magento\Framework\View\Element\Template
         $collection =$this->_messagingFactory->create()->getCollection()
                                                         ->addFieldToFilter('role', 'customer')
                                                         ->addFieldToFilter('sender_id', $sender_id)
+                                                        ->addFieldToFilter('sent_box', 1)
                                                         ->setOrder('chat_id', 'desc');
         $this->setCollection($collection);
 

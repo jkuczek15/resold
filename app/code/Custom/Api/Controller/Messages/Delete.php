@@ -31,6 +31,8 @@ class Delete extends \Magento\Framework\App\Action\Action
      */
     protected $resultJsonFactory;
 
+    public $_messagingFactory;
+
     /**
      * @param \Magento\Framework\App\Action\Context $context
      */
@@ -40,6 +42,7 @@ class Delete extends \Magento\Framework\App\Action\Action
         JsonFactory $resultJsonFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepositoryInterface,
+        \Ced\CsMessaging\Model\MessagingFactory $messagingFactory,
         \Magento\Framework\Registry $registry
     )
     {
@@ -47,6 +50,7 @@ class Delete extends \Magento\Framework\App\Action\Action
         $this->resultJsonFactory = $resultJsonFactory;
         $this->_categoryFactory = $categoryFactory;
         $this->_productRepositoryInterface = $productRepositoryInterface;
+        $this->_messagingFactory = $messagingFactory;
         $this->_registry = $registry;
         parent::__construct($context);
     }
@@ -69,7 +73,15 @@ class Delete extends \Magento\Framework\App\Action\Action
 
       // delete the message
       $chat_id = $post['chat_id'];
-      $sql = "DELETE FROM ced_csmessaging WHERE chat_id = '".$chat_id."'";
+      $chat = $this->_messagingFactory->create()->load($chat_id);
+
+      if($this->session->getId() == $chat->getSenderId()){
+        $column = 'sent_box';
+      }else{
+        $column = 'inbox';
+      }
+
+      $sql = "UPDATE ced_csmessaging SET ".$column." = 0 WHERE chat_id = '".$chat_id."'";
       $connection->query($sql);
 
       $this->messageManager->addSuccess(__("Successfully deleted message."));
