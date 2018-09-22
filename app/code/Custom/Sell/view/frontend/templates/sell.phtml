@@ -70,16 +70,16 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         </div>
         <div class="field price">
           <strong class="label desktop-price" for="price">
-              <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
-                <span data-toggle="tooltip" title="Please include shipping costs in price" style="font-size: 0.9em;" class="fa fa-info"></span>
+              <span data-toggle="tooltip" title="Please include shipping costs in price" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                <span style="font-size: 0.9em;" class="fa fa-info"></span>
               </span>
               <?php /* @escapeNotVerified */ echo __('Price ($)') ?>
           </strong>
           <div class="col-md-1" style="padding-left: 0; padding-right: 0;">
             <div class="control">
               <strong style="display: none" class="label mobile-price" for="price">
-                <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
-                  <span data-toggle="tooltip" title="Please include shipping costs in price" style="font-size: 0.9em;" class="fa fa-info"></span>
+                <span data-toggle="tooltip" title="Please include shipping costs in price" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                  <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
                 <?php /* @escapeNotVerified */ echo __('Price ($)') ?>
               </strong><input class="form-input price-input mobile-price-textbox" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20, max: 100000, 'validate-integer': true}" v-model="form_data.price" />
@@ -89,8 +89,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
           <div class="col-md-3 service-fee">
             <div class="control">
               <strong class="label" style="padding-right: 15px">
-                <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
-                  <span data-toggle="tooltip" title="10% service fee" style="font-size: 0.9em;" class="fa fa-info"></span>
+                <span data-toggle="tooltip" title="10% service fee" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                  <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
                 <?php /* @escapeNotVerified */ echo __('Service Fee ($)') ?>
               </strong>
@@ -145,8 +145,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         </div>
         <div class="field local">
             <label class="label" style="margin-top: 0.5em;">
-                <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
-                  <span data-toggle="tooltip" title="Select Local for Local Meetups <br/> Select Global for Shipping" style="font-size: 0.9em;" class="fa fa-info"></span>
+                <span data-toggle="tooltip" title="Select Local for Local Meetups <br/> Select Global for Shipping" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                  <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
               <?php /* @escapeNotVerified */ echo __('Local / Global') ?></label>
             <div class="control">
