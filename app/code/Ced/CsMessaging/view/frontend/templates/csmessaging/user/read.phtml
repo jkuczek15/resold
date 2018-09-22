@@ -21,7 +21,7 @@ if($sentMessage){
   $sender = $this->getCustomerById($chat->getSenderId());
 }
 if($offer_price != null){
-  $offer_price = money_format('%(#10n', $offer_price);
+  $offer_price = trim(money_format('%(#10n', $offer_price));
 }
 
 ?>
