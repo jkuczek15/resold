@@ -115,7 +115,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                           </div>
                           <div class="offer-info" style="display: none">
                             <div class="col-md-3" style="margin-top: 1.1em;">
-                              Price: <strong>$<?= money_format('%(#10n', $product->getPrice()) ?></strong>
+                              Price: <strong>$<?= trim(money_format('%(#10n', $product->getPrice())) ?></strong>
                             </div>
                             <div class="col-md-6" style="margin-top: 0.8em;">
                               <div class="row">
