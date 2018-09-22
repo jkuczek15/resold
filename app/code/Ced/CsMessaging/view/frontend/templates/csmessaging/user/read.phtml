@@ -67,11 +67,14 @@ $sender = $this->getCustomerById($chat->getSenderId());
                         <div class="mailbox-read-info" style="padding-top: 0.2em; padding-left: 3px; max-height: 3.3em;">
                           <div class="row">
                             <div class="col-xs-6">
-                              <h3><?php echo $chat->getSubject(); ?>
+                              <a target="_blank" href="<?= $product->getProductUrl() ?>">
+                                <h3><?php echo $chat->getSubject(); ?>
+                              </a>
                             </h3>
                           </div>
                             <div class="col-xs-6">
-                              <a style="float: right" target="_blank" class="btn btn-box-tool action subscribe primary" href="<?= $product->getProductUrl() ?>">View Listing</a>
+                              <a style="float: right" class="btn btn-box-tool action subscribe primary"
+                               onClick="history.go(-1);return true;"><span></span><<</span>Back</a>
                             </div>
                           </div>
                         </div>
@@ -94,8 +97,7 @@ $sender = $this->getCustomerById($chat->getSenderId());
                           <?php
                         }// end if not a sent message
                            ?>
-                            <a class="btn btn-box-tool action subscribe primary"
-                               onClick="history.go(-1);return true;"><span></span><<</span>Back</a>
+                           <a style="float: right; margin-left: 0.7em;" target="_blank" class="btn btn-box-tool action subscribe primary" href="<?= $product->getProductUrl() ?>">View Listing</a>
                         </div>
                       </div>
                     </div>
