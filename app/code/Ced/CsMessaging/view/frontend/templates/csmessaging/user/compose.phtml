@@ -96,9 +96,8 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                           <table class="table">
                             <tr>
                               <td>Item:</td>
-                              <td><strong><a href="<?= $product->getProductUrl() ?>"><?= $subject ?></a></strong></td>
+                              <td><strong><a target="_blank" href="<?= $product->getProductUrl() ?>"><?= $subject ?></a></strong></td>
                             </tr>
-
                           </table>
                         </div>
                         <div class="form-group">
@@ -107,10 +106,10 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                       style="height: 200px;width:97%;" value=""></textarea>
                         </div>
                         <div class="box-footer">
-                            <a target="_blank" href="<?= $product->getProductUrl() ?>">View this Listing</a>
+                            <button class="btn btn-primary" onclick="window.open('<?= $product->getProductUrl() ?>', '_blank'); return false;">View Listing</button>
                             <div class="pull-right">
                                 <button class="btn btn-primary" id="btn-chat" type="button" onclick="send()">
-                                    <i class="fa fa-envelope-o"> <?php echo __('Send') ?></i>
+                                    <i class="fa fa-envelope-o"></i> <?php echo __('Send') ?>
                                 </button>
                             </div>
 
