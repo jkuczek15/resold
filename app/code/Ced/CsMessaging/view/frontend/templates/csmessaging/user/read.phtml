@@ -13,7 +13,13 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 
 // get sender data
 $sentMessage = $chat->getSenderId() == $this->getCustomer()->getId();
-$sender = $this->getCustomerById($chat->getSenderId());
+
+if($sentMessage){
+  $sender = $this->getCustomerById($chat->getVendorId());
+}else{
+  $sender = $this->getCustomerById($chat->getSenderId());
+}
+
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
