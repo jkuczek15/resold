@@ -188,7 +188,10 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data['offer_price'] = $offer_price;
                 $data['product_url'] = $_SERVER['HTTP_REFERER'];
                 $data['host'] = $_SERVER['HTTP_HOST'];
+
                 $data['vendor_id'] = $receiver_id;
+                $data['sender_id'] = $sender_id;
+                $data['product_id'] = $product_id;
 
                 $this->_template  = 'send_cmail_to_vendor';
                 $this->inlineTranslation->suspend();

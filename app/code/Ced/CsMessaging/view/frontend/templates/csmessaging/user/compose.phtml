@@ -27,6 +27,8 @@
 <?php
 
 $product_id = $this->getRequest()->getParam('product_id');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
 $vendor_id = $this->getRequest()->getParam('vendor_id');
 $subject = $this->getRequest()->getParam('subject');
 $customer_id = $this->getRequest()->getParam('id');
@@ -94,7 +96,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                           <table class="table">
                             <tr>
                               <td>Item:</td>
-                              <td><strong><?= $subject ?></strong></td>
+                              <td><strong><a href="<?= $product->getProductUrl() ?>"><?= $subject ?></a></strong></td>
                             </tr>
 
                           </table>
@@ -105,8 +107,8 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                       style="height: 200px;width:97%;" value=""></textarea>
                         </div>
                         <div class="box-footer">
+                            <a target="_blank" href="<?= $product->getProductUrl() ?>">View this Listing</a>
                             <div class="pull-right">
-
                                 <button class="btn btn-primary" id="btn-chat" type="button" onclick="send()">
                                     <i class="fa fa-envelope-o"> <?php echo __('Send') ?></i>
                                 </button>
