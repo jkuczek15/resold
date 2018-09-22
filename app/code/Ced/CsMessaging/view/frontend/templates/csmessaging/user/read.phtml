@@ -2,6 +2,8 @@
 <?php $chat_id = $this->getRequest()->getParam('id');
 $chat = $this->_messagingFactory->create()->load($chat_id);
 $product_id = $chat->getData('product_id');
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
 
 $originalDate = $chat->getTime();
 $newDate = date("F d, Y g:i A", strtotime($originalDate));
@@ -63,7 +65,17 @@ $sender = $this->getCustomerById($chat->getSenderId());
                     </div>
                     <div class="box-body no-padding">
                         <div class="mailbox-read-info" style="padding-top: 0.2em; padding-left: 3px; max-height: 3.3em;">
-                            <h3><?php echo $chat->getSubject(); ?></h3></br>
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <h3><?php echo $chat->getSubject(); ?>
+                            </h3>
+                          </div>
+                            <div class="col-xs-6">
+                              <a style="float: right" target="_blank" class="btn btn-box-tool action subscribe primary" href="<?= $product->getProductUrl() ?>">View Listing</a>
+                            </div>
+                          </div>
+                        </div>
+                          </br>
                         </div><!-- /.mailbox-read-info -->
                         <!-- /.mailbox-controls -->
                         <div class="mailbox-read-message" style="padding-left: 5px;">
@@ -71,7 +83,7 @@ $sender = $this->getCustomerById($chat->getSenderId());
                         </div><!-- /.mailbox-read-message -->
                     </div><!-- /.box-body -->
                     <div class="box-footer" style="margin-top: 1em;">
-                      <div class="col-xs-12" style="margin-top: 0.5em; padding-left: 5px">
+                      <div class="col-xs-12" style="margin-top: 0.5em; padding-left: 5px; padding-right: 0px;">
                         <span class="mailbox-read-time" style="margin-right: 1em;"><?php echo $newDate; ?></span>
                         <div class="pull-right mobile-left">
                           <?php
@@ -96,12 +108,20 @@ $sender = $this->getCustomerById($chat->getSenderId());
 .right-sidebar-wrap{
   padding-left: 0px;
 }
+.columns::after {
+  clear: none;
+}
 @media(max-width: 578px){
   .mailbox-read-time{
     font-size: 12px;
   }
   .mobile-left {
     float: left !important;
+  }
+}
+@media(min-width: 578px){
+  .desktop-full {
+    width: 100% !important;
   }
 }
 </style>
