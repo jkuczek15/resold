@@ -69,29 +69,43 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             </div>
         </div>
         <div class="field price">
-          <strong class="label desktop-price" for="price"><span><?php /* @escapeNotVerified */ echo __('Price ($)') ?></span></strong>
+          <strong class="label desktop-price" for="price">
+              <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                <span data-toggle="tooltip" title="Please include shipping costs in price" style="font-size: 0.9em;" class="fa fa-info"></span>
+              </span>
+              <?php /* @escapeNotVerified */ echo __('Price ($)') ?>
+          </strong>
           <div class="col-md-1" style="padding-left: 0; padding-right: 0;">
             <div class="control">
-              <strong style="display: none" class="label mobile-price" for="price"><span><?php /* @escapeNotVerified */ echo __('Price ($)') ?></span></strong>
-              <input class="form-input price-input" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20, max: 100000, 'validate-integer': true}" v-model="form_data.price" />
+              <strong style="display: none" class="label mobile-price" for="price">
+                <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                  <span data-toggle="tooltip" title="Please include shipping costs in price" style="font-size: 0.9em;" class="fa fa-info"></span>
+                </span>
+                <?php /* @escapeNotVerified */ echo __('Price ($)') ?>
+              </strong><input class="form-input price-input mobile-price-textbox" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20, max: 100000, 'validate-integer': true}" v-model="form_data.price" />
               <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="price_error" v-if="price_error" v-cloak>Please enter a whole number.</div>
             </div>
           </div>
           <div class="col-md-3 service-fee">
             <div class="control">
-              <strong class="label" style="padding-right: 15px"><span><?php /* @escapeNotVerified */ echo __('Service Fee ($)') ?></span></strong>
+              <strong class="label" style="padding-right: 15px">
+                <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                  <span data-toggle="tooltip" title="10% service fee" style="font-size: 0.9em;" class="fa fa-info"></span>
+                </span>
+                <?php /* @escapeNotVerified */ echo __('Service Fee ($)') ?>
+              </strong>
               <input disabled step="0.01" style="width: 31% !important; color: black;" class="form-input" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="serviceFee" />
             </div>
           </div>
           <div class="col-md-3 your-profit">
-            <strong style="padding-right: 15px;"><span><?php /* @escapeNotVerified */ echo __('Your Profit ($)') ?></span></strong>
+            <strong class="your-profit-label"><span><?php /* @escapeNotVerified */ echo __('Your Profit ($)') ?></span></strong>
             <input disabled step="0.01" style="width: 31% !important; color: black;" class="form-input" id="your_profit" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
           </div>
         </div>
         <div class="field category">
             <label class="label" for="category_select"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
             <div class="control">
-                <select class="form-input" style="cursor: pointer;" name="category" id="category_select" data-validate="{required:true}" v-model="form_data.category">
+                <select class="form-input" name="category" id="category_select" data-validate="{required:true}" v-model="form_data.category">
                   <option v-for="(data, category) in categories" v-bind:value="category">
                   {{ category }}
                   </option>
@@ -101,7 +115,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field subcategory">
             <label class="label" for="subcategory_select"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
             <div class="control">
-                <select class="form-input" style="cursor: pointer" name="subcategory" id="subcategory_select" data-validate="{required:true}" v-model="form_data.subcategory">
+                <select class="form-input" name="subcategory" id="subcategory_select" data-validate="{required:true}" v-model="form_data.subcategory">
                   <option v-for="(data, subcategory) in subcategories" v-bind:value="subcategory">
                   {{ subcategory }}
                   </option>
@@ -111,7 +125,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field lowestcategory">
             <label class="label" for="lowestcategory_select"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
             <div class="control">
-                <select class="form-input" style="cursor: pointer" name="lowestcategory" id="lowestcategory_select" data-validate="{required:true}" v-model="form_data.lowestcategory">
+                <select class="form-input" name="lowestcategory" id="lowestcategory_select" data-validate="{required:true}" v-model="form_data.lowestcategory">
                   <option v-for="lowestcategory in lowestcategories" v-bind:value="lowestcategory.id">
                   {{ lowestcategory.name }}
                   </option>
@@ -121,7 +135,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field condition">
             <label class="label" for="condition"><span><?php /* @escapeNotVerified */ echo __('Condition') ?></span></label>
             <div class="control">
-                <select class="form-input" style="cursor: pointer" name="condition" id="conditon" data-validate="{required:true}" v-model="form_data.condition">
+                <select class="form-input" name="condition" id="conditon" data-validate="{required:true}" v-model="form_data.condition">
                   <option value="<?= $new_attr_id ?>">New</option>
                   <option value="<?= $new_attr_id + 1 ?>">Like New</option>
                   <option value="<?= $new_attr_id + 2 ?>">Good</option>
@@ -130,7 +144,11 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             </div>
         </div>
         <div class="field local">
-            <label class="label" for="local"><span><?php /* @escapeNotVerified */ echo __('Local / Global') ?></span></label>
+            <label class="label" style="margin-top: 0.5em;">
+                <span style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                  <span data-toggle="tooltip" title="Select Local for Local Meetups <br/> Select Global for Shipping" style="font-size: 0.9em;" class="fa fa-info"></span>
+                </span>
+              <?php /* @escapeNotVerified */ echo __('Local / Global') ?></label>
             <div class="control">
                 <div class="ck-button">
                   <label style="cursor: pointer;">
@@ -249,6 +267,14 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 option:disabled {
   color: red !important;
 }
+.tippy-tooltip.custom-theme .tippy-backdrop {
+  font-weight: bold;
+}
+
+/* If `animateFill: false` */
+.tippy-tooltip.custom-theme {
+  font-size: 14px;
+}
 
 @media (max-width: 575.98px) {
   #mobile1 {
@@ -257,7 +283,7 @@ option:disabled {
   }
   .mobile-price {
     display: inline-block !important;
-    padding-right: 4.15em;
+    padding-right: 4.4em;
   }
   .desktop-price {
     display: none !important;
@@ -269,7 +295,7 @@ option:disabled {
     padding-left: 0;
   }
   .price-input {
-    width: 7.05em !important;
+    width: 29.9% !important;
   }
   .checked-button:hover {
     background: #3CBBD8 !important;
@@ -278,6 +304,9 @@ option:disabled {
   .unchecked-button:hover {
     background-color: #EFEFEF !important;
     color: black;
+  }
+  .your-profit-label {
+    padding-right: 2.3em;
   }
 }
 
@@ -292,6 +321,9 @@ option:disabled {
   .price-input {
     width: 5.7em !important;
   }
+  .your-profit-label {
+    padding-right: 15px;
+  }
 }
 </style>
 <script>
@@ -300,8 +332,9 @@ require([
     "mage/mage",
     "mage/validation",
     "vue",
-    "fine-uploader"
-], ($, mage, validation, Vue, qq) => {
+    "fine-uploader",
+    "tippy"
+], ($, mage, validation, Vue, qq, tippy) => {
     // initialize a new Vue app
     var app = new Vue({
       el: '#app',
@@ -557,6 +590,7 @@ require([
      }
    });
    $(document).ready(() => {
+    tippy('[data-toggle="tooltip"]',{ theme: 'custom', arrow: true, animation: 'fade', allowHtml: true });
     setTimeout(() => {
       let fee = app.form_data.price * 0.1;
       $('.local_global').each(function(){

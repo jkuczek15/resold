@@ -40,8 +40,7 @@ class Delete extends \Magento\Framework\App\Action\Action
         JsonFactory $resultJsonFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepositoryInterface,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        \Magento\Framework\Registry $registry
     )
     {
         $this->session = $customerSession;

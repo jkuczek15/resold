@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b75b3cc2bf10fcd635bc09b7bd45e06",
+    "content-hash": "ca7e4aa4592d89d5c810b095834163a0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.67.16",
+            "version": "3.67.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "881b968ca164b401c26f5e3f9894bad34309cf6a"
+                "reference": "b937c2193a4f509de5cd5836fa2a37904fc8e465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/881b968ca164b401c26f5e3f9894bad34309cf6a",
-                "reference": "881b968ca164b401c26f5e3f9894bad34309cf6a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b937c2193a4f509de5cd5836fa2a37904fc8e465",
+                "reference": "b937c2193a4f509de5cd5836fa2a37904fc8e465",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-09-20T21:20:22+00:00"
+            "time": "2018-09-21T20:29:41+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -7186,6 +7186,36 @@
                 "stripe"
             ],
             "time": "2018-09-18T13:48:26+00:00"
+        },
+        {
+            "name": "swissup/tippyjs",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swissup/tippyjs.git",
+                "reference": "b3bafb784d344deb547666b549c1b9083d54d6bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swissup/tippyjs/zipball/b3bafb784d344deb547666b549c1b9083d54d6bc",
+                "reference": "b3bafb784d344deb547666b549c1b9083d54d6bc",
+                "shasum": ""
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Swissup\\Tippyjs\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Highly customizable vanilla JS tooltip/popover library for Magento 2",
+            "time": "2018-08-06T06:47:24+00:00"
         },
         {
             "name": "symfony/console",
