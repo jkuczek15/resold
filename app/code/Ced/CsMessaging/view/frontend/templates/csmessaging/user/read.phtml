@@ -7,6 +7,9 @@ $messages = $this->getinboxcollection();
 $adminInboxCount = $this->_messagingHelper->getCustomerInboxCountForAdmin();
 $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 
+// get sender data
+$sentMessage = $chat->getSenderId() == $this->getCustomer()->getId();
+$sender = $this->getCustomerById($chat->getSenderId());
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -43,29 +46,44 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
             <div class="right-sidebar-wrap mail-read">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Message</h3>
-                        <div class="pull-right">
-                            <a class="btn btn-box-tool action subscribe primary"
-                               href="<?php echo $this->getUrl(); ?>csmessaging/frontend/customercompose?id=<?php echo $chat->getSenderId() ?>&subject=<?= urlencode($chat->getSubject()) ?>&vendor_id=<?= $chat->getVendorId() ?>">Reply</a>
-                            <a class="btn btn-box-tool action subscribe primary"
-                               onClick="history.go(-1);return true;"><span></span><<</span>Back</a>
-                        </div>
-                        </br>
-                        <div class="clear"></div>
+                      <?php
+                      if($sentMessage){
+?>
+                        <h3 class="box-title">Sent To <?= $sender->getFirstName() ." ".$sender->getLastName() ?></h3>
+<?php
+                      }else{
+?>
+                        <h3 class="box-title">Message From <?= $sender->getFirstName() ." ".$sender->getLastName() ?></h3>
+<?php
+                      }// end if sent message
+                       ?>
+                      <div class="clear"></div>
                     </div>
                     <div class="box-body no-padding">
-                        <div class="mailbox-read-info">
+                        <div class="mailbox-read-info" style="padding-top: 0.2em; padding-left: 3px; max-height: 3.3em;">
                             <h3><?php echo $chat->getSubject(); ?></h3></br>
-
-                            <h5><?php //echo $chat->getReceiverEmail(); ?> <span
-                                        class="mailbox-read-time pull-right"><?php echo $newDate; ?></span></h5><br>
                         </div><!-- /.mailbox-read-info -->
                         <!-- /.mailbox-controls -->
-                        <div class="mailbox-read-message">
+                        <div class="mailbox-read-message" style="padding-left: 5px;">
                             <?php echo $chat->getMessage() ?>
                         </div><!-- /.mailbox-read-message -->
                     </div><!-- /.box-body -->
-                    <div class="box-footer">
+                    <div class="box-footer" style="margin-top: 1em;">
+                      <div class="col-xs-12" style="margin-top: 0.5em; padding-left: 5px">
+                        <span class="mailbox-read-time" style="margin-right: 1em;"><?php echo $newDate; ?></span>
+                        <div class="pull-right mobile-left">
+                          <?php
+                          if(!$sentMessage){
+                          ?>
+                            <a class="btn btn-box-tool action subscribe primary"
+                               href="<?php echo $this->getUrl(); ?>csmessaging/frontend/customercompose?id=<?php echo $chat->getSenderId() ?>&subject=<?= urlencode($chat->getSubject()) ?>&vendor_id=<?= $chat->getVendorId() ?>">Reply</a>
+                          <?php
+                        }// end if not a sent message
+                           ?>
+                            <a class="btn btn-box-tool action subscribe primary"
+                               onClick="history.go(-1);return true;"><span></span><<</span>Back</a>
+                        </div>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -75,6 +93,14 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 <style>
 .right-sidebar-wrap{
   padding-left: 0px;
+}
+@media(max-width: 578px){
+  .mailbox-read-time{
+    font-size: 12px;
+  }
+  .mobile-left {
+    float: left !important;
+  }
 }
 </style>
 
