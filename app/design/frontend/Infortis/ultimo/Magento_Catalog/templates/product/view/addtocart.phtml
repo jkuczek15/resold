@@ -129,7 +129,7 @@ if($userProduct){
         <strong>Offer ($):</strong>
       </div>
       <div class="col-md-4">
-        <input type="number" id="offer_price" min="<?= 0.75 * $price ?>" required />
+        <input type="number" id="offer_price" min="<?= 0.75 * $price ?>" required step="1" />
       </div>
     </div>
     <div class="row">
@@ -281,7 +281,7 @@ $(document).ready(() => {
               'vendor_id': $('#vendor_id').val(),
               'email_subject': $('#email_subject').val(),
               'text_email': $('#text_email_contact_seller').val(),
-              'product_id': '<?= $_product->getId() ?>' 
+              'product_id': '<?= $_product->getId() ?>'
             };
             $.post('/csmessaging/frontend/savechat', data, (response) => {
               $('#text_email_contact_seller').val('');
