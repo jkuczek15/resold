@@ -265,4 +265,14 @@ class Queryform extends \Magento\Framework\View\Element\Template
             return $this->_coreRegistry->registry('current_vendor')->getId();
     }
 
+    public function getCustomerById($customerId)
+    {
+      return $this->_customerRepositoryInterface->getById($customerId);
+    }
+
+    public function getCustomer()
+    {
+      return $this->customerSession->getCustomer();
+    }
+
 }
