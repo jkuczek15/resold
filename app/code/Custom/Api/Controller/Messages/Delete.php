@@ -40,6 +40,7 @@ class Delete extends \Magento\Framework\App\Action\Action
         JsonFactory $resultJsonFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepositoryInterface,
+        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Registry $registry
     )
     {
@@ -47,8 +48,8 @@ class Delete extends \Magento\Framework\App\Action\Action
         $this->resultJsonFactory = $resultJsonFactory;
         $this->_categoryFactory = $categoryFactory;
         $this->_productRepositoryInterface = $productRepositoryInterface;
-        $this->_registry = $registry;
         $this->_messageManager = $messageManager;
+        $this->_registry = $registry;
         parent::__construct($context);
     }
 
@@ -73,6 +74,7 @@ class Delete extends \Magento\Framework\App\Action\Action
       $sql = "DELETE FROM ced_csmessaging WHERE chat_id = '".$chat_id."'";
       $connection->query($sql);
 
+      $this->_messageManager->addSuccess(__("Successfully deleted message."));
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
     }// end function execute
 }
