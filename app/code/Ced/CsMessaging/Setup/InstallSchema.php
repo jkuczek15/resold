@@ -135,6 +135,12 @@ class InstallSchema implements InstallSchemaInterface
             1,
             ['nullable' => false, 'default' => '1'],
             'In Inbox'
+        )->addColumn(
+            'offer_price',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            10,
+            ['nullable' => true, 'default' => null],
+            'Offer Price'
         );
 ;
         $installer->getConnection()->createTable($table);

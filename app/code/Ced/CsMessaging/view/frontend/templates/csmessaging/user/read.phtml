@@ -102,10 +102,15 @@ $sender = $this->getCustomerById($chat->getSenderId());
                     </div>
                 </div>
             </div>
+            <div class="clear"></div>
         </div>
+        <div class="clear"></div>
     </section>
 </div>
 <style>
+.page-wrapper {
+  min-height: 87%;
+}
 .right-sidebar-wrap{
   padding-left: 0px;
 }
@@ -118,6 +123,9 @@ $sender = $this->getCustomerById($chat->getSenderId());
   }
   .mobile-left {
     float: left !important;
+  }
+  .page-main {
+    padding-top: 0px !important;
   }
 }
 @media(min-width: 578px){

@@ -172,6 +172,9 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $model->setData('postread', 'new');
                 $model->setData('role', 'customer');
                 $model->setData('product_id', $product_id);
+                if($offer_price != 0){
+                  $model->setData('offer_price', $offer_price);
+                }// end if offer price non zero
                 $model->save();
 
                 // send the email
@@ -225,7 +228,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
               $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
             }
             if($reply){
-              return $this->_redirect('csmessaging/frontend/inbox/');
+              return $this->_redirect('csmessaging/frontend/sent/');
             }
         }
         else
