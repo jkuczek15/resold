@@ -183,7 +183,7 @@ class Queryform extends \Magento\Framework\View\Element\Template
           // $sender_id= $customerData->getId();
         $sender_email=$customerData->getEmail();
 
-        $collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'customer')->addFieldToFilter('receiver_email', $sender_email)->setOrder('chat_id', 'desc');
+        $collection = $this->_messagingFactory->create()->getCollection()->addFieldToFilter('role', 'customer')->addFieldToFilter('receiver_email', $sender_email)->addFieldToFilter('inbox', 1)->setOrder('chat_id', 'desc');
 
         $this->setCollection($collection);
     }

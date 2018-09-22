@@ -280,7 +280,8 @@ $(document).ready(() => {
             var data = {
               'vendor_id': $('#vendor_id').val(),
               'email_subject': $('#email_subject').val(),
-              'text_email': $('#text_email_contact_seller').val()
+              'text_email': $('#text_email_contact_seller').val(),
+              'product_id': '<?= $_product->getId() ?>' 
             };
             $.post('/csmessaging/frontend/savechat', data, (response) => {
               $('#text_email_contact_seller').val('');
@@ -309,7 +310,8 @@ $(document).ready(() => {
               'email_subject': $('#email_subject').val(),
               'text_email': $('#text_email_offer').val(),
               'offer_price': $('#offer_price').val(),
-              'is_offer': 'Y'
+              'is_offer': 'Y',
+              'product_id': '<?= $_product->getId() ?>'
             };
             $.post('/csmessaging/frontend/savechat', data, (response) => {
               $('#text_email_contact_seller').val('');

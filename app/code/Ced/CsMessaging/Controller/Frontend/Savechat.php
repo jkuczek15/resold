@@ -126,6 +126,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $is_offer = $this->getRequest()->getPost('is_offer');
         $offer_price = $this->getRequest()->getPost('offer_price');
         $reply = $this->getRequest()->getPost('reply');
+        $product_id = $this->getRequest()->getPost('product_id');
 
         if($reply){
             $vendor = $this->_customerRepositoryInterface->getById($receiver_id);
@@ -170,6 +171,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $model->setData('vcount', $count);
                 $model->setData('postread', 'new');
                 $model->setData('role', 'customer');
+                $model->setData('product_id', $product_id);
                 $model->save();
 
                 // send the email
