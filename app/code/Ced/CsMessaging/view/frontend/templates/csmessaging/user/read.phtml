@@ -1,6 +1,8 @@
 
 <?php $chat_id = $this->getRequest()->getParam('id');
 $chat = $this->_messagingFactory->create()->load($chat_id);
+$product_id = $chat->getData('product_id');
+
 $originalDate = $chat->getTime();
 $newDate = date("F d, Y g:i A", strtotime($originalDate));
 $messages = $this->getinboxcollection();
@@ -76,7 +78,7 @@ $sender = $this->getCustomerById($chat->getSenderId());
                           if(!$sentMessage){
                           ?>
                             <a class="btn btn-box-tool action subscribe primary"
-                               href="<?php echo $this->getUrl(); ?>csmessaging/frontend/customercompose?id=<?php echo $chat->getSenderId() ?>&subject=<?= urlencode($chat->getSubject()) ?>&vendor_id=<?= $chat->getVendorId() ?>">Reply</a>
+                               href="<?php echo $this->getUrl(); ?>csmessaging/frontend/customercompose?id=<?php echo $chat->getSenderId() ?>&product_id=<?= $product_id ?>&subject=<?= urlencode($chat->getSubject()) ?>&vendor_id=<?= $chat->getVendorId() ?>">Reply</a>
                           <?php
                         }// end if not a sent message
                            ?>
