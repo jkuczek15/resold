@@ -40,7 +40,6 @@ class Delete extends \Magento\Framework\App\Action\Action
         JsonFactory $resultJsonFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepositoryInterface,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Registry $registry
     )
     {
@@ -48,7 +47,6 @@ class Delete extends \Magento\Framework\App\Action\Action
         $this->resultJsonFactory = $resultJsonFactory;
         $this->_categoryFactory = $categoryFactory;
         $this->_productRepositoryInterface = $productRepositoryInterface;
-        $this->_messageManager = $messageManager;
         $this->_registry = $registry;
         parent::__construct($context);
     }
@@ -81,7 +79,7 @@ class Delete extends \Magento\Framework\App\Action\Action
       $this->_productRepositoryInterface->delete($product);
 
       // on success, redirect user to their listing page
-      $this->_messageManager->addSuccess(__("Successfully deleted your listing."));
+      $this->messageManager->addSuccess(__("Successfully deleted your listing."));
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
     }// end function execute
 }
