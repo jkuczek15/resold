@@ -77,13 +77,18 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                                     $sender = $objectManager->get('\Magento\Customer\Api\CustomerRepositoryInterface')->get($value['sender_email']);
                                     $vendor_name = $sender->getFirstName() . ' ' . $sender->getLastName();
+                                    if($value['offer_price'] != null){
+                                      $message = '<span style="background-color: #E9E9E9">Offer Price: $'.trim(money_format('%(#10n', $value['offer_price']))."</span>";
+                                    }else{
+                                      $message = substr($value['message'], 0, 16);
+                                    }
                                     ?>
                                     <tr>
                                         <td class="mailbox-name">
                                           <a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo ucwords($vendor_name) ?></a>
                                         </td>
                                         <td class="mailbox-subject"><b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo $value['subject'] ?></a></td>
-                                        <td class="mailbox-subject"></b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo substr($value['message'], 0, 16); ?></a>
+                                        <td class="mailbox-subject"></b><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo $message; ?></a>
                                       <?php
                                         if(count($value['message']) > 16){
                                           echo '...';
