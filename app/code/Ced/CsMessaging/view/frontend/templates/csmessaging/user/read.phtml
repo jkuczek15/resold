@@ -64,7 +64,7 @@ $sender = $this->getCustomerById($chat->getSenderId());
                       <div class="clear"></div>
                     </div>
                     <div class="box-body no-padding">
-                        <div class="mailbox-read-info" style="padding-top: 0.2em; padding-left: 3px; max-height: 3.3em;">
+                        <div class="mailbox-read-info" style="padding-top: 0.2em; padding-left: 3px; max-height: 3.3em; padding-bottom: 0.5em;">
                           <div class="row">
                             <div class="col-xs-6">
                               <a target="_blank" href="<?= $product->getProductUrl() ?>">
@@ -78,12 +78,11 @@ $sender = $this->getCustomerById($chat->getSenderId());
                             </div>
                           </div>
                         </div>
-                          </br>
                         </div><!-- /.mailbox-read-info -->
                         <!-- /.mailbox-controls -->
                         <div class="mailbox-read-message" style="padding-left: 5px;">
                             <?php echo $chat->getMessage() ?>
-                        </div><!-- /.mailbox-read-message -->
+                        </div>  <!-- /.mailbox-read-message -->
                     </div><!-- /.box-body -->
                     <div class="box-footer" style="margin-top: 1em;">
                       <div class="col-xs-12" style="margin-top: 0.5em; padding-left: 5px; padding-right: 0px;">
