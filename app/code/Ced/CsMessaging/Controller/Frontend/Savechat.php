@@ -175,9 +175,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $model->setData("sender_email", $sender_email);
                 $model->setData('date', $date);
                 $model->setData('time', $time);
-                if(!$accept_offer){
-                  $model->setData('vendor_id', $receiver_id);
-                }
+                $model->setData('vendor_id', $receiver_id);
                 $model->setData('vcount', $count);
                 $model->setData('postread', 'new');
                 $model->setData('role', 'customer');
@@ -233,16 +231,18 @@ class Savechat extends \Magento\Framework\App\Action\Action
             catch(\Exception $e){
                 throw new \Exception (__($e->getMessage()));
             }
+
+              session_write_close();
             if(!$accept_offer){
               if($is_offer){
                 $this->messageManager->addSuccessMessage(__('Your offer has been sent.'));
               }else{
                 $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
               }
+            }else{
+              $this->messageManager->addSuccess(__('You have accepted an offer of <strong>$'.trim(money_format('%(#10n', $offer_price)).'</strong> for your <strong>'.rtrim($subject, '/').'</strong>.'));
             }
-            if($accept_offer){
-              return $this->_redirect('csmessaging/frontend/sent?offer_price='.$offer_price.'&name='.$subject);
-            }else if($reply){
+            if($reply){
               return $this->_redirect('csmessaging/frontend/sent/');
             }
         }
