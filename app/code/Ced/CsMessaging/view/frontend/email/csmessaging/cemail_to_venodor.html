@@ -29,12 +29,12 @@
                     <tr>
                         <td valign="top">
                             <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">{{var receiver_name}},</h1>
-                            {{if is_offer}}
-                            <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">{{var sender_name}} has made you an offer of <strong>${{var offer_price}}</strong> for your {{var subject}}:</p>
-                            {{else}}
-                            <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">{{var sender_name}} has sent you a message regarding your {{var subject}}:</p>
-                            {{/if}}
-                            <p style="font-size:12px; line-height:16px; margin:0;">{{var text}}</p>
+                              {{if is_offer}}
+                                <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">{{var sender_name}} has made you an offer of <strong>${{var offer_price}}</strong> for your {{var subject}}:</p>
+                              {{else}}
+                                <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">{{var sender_name}} has sent you a message regarding your {{var subject}}:</p>
+                              {{/if}}
+                            <p style="font-size:12px; line-height:16px; margin:0;">{{var text|raw}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -50,7 +50,7 @@
                     </tr>
                     <tr>
                       <td>
-                          <p style="font-size:12px; line-height:16px; margin:0 0 4px 0;">Click {{if is_offer}}a{{else}}the{{/if}} button above or respond by replying to the email. <a style="margin-left: 6.5em;" href="{{var product_url}}">Click here to view this listing.</a></p>
+                          <p style="font-size:12px; line-height:16px; margin:0 0 4px 0;">Click {{if is_offer}}a{{else}}the{{/if}} button above or respond by replying to the email. {{if accept_offer}} {{else}}<a style="margin-left: 6.5em;" href="{{var product_url}}">Click here to view this listing.</a>{{/if}}</p>
                       </td>
                     </tr>
                 </table>

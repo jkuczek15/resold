@@ -6,6 +6,12 @@ $offer_price = $chat->getData('offer_price');
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
 
+// determine if this is the seller
+$vendorProduct = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $product->getSku())->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+$vendorId = $vendorProduct->getVendorId();
+$customerVendorId = $this->getSession()->getVendorId();
+$is_seller = $vendorId == $customerVendorId;
+
 $originalDate = $chat->getTime();
 $newDate = date("F d, Y g:i A", strtotime($originalDate));
 $messages = $this->getinboxcollection();
@@ -20,6 +26,7 @@ if($sentMessage){
 }else{
   $sender = $this->getCustomerById($chat->getSenderId());
 }
+$raw_offer_price = $offer_price;
 if($offer_price != null){
   $offer_price = trim(money_format('%(#10n', $offer_price));
 }
@@ -120,8 +127,8 @@ if($offer_price != null){
   <?php
                             if(!$sentMessage && $offer_price != null){
    ?>
-                                <a style="margin-top: 0.3em" href="#" class="btn btn-box-tool action subscribe primary">Accept</a>
-                                <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Decline</a>
+                                <a style="margin-top: 0.3em; cursor: pointer;"  id="accept_offer" class="btn btn-box-tool action subscribe primary">Accept</a>
+                                <a style="margin-top: 0.3em; cursor: pointer;" id="decline_offer" class="btn btn-box-tool action subscribe primary">Decline</a>
                                 <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Counter Offer</a>
   <?php
                             }// end if offer
@@ -173,6 +180,28 @@ if($offer_price != null){
 require([
     "jquery",
 ], ($) => {
+  $('#accept_offer').click(() => {
+<?php
+  if($is_seller){
+?>
+  let offer_price = '<?= $raw_offer_price ?>';
+  let product_id = '<?= $product_id ?>';
+  let receiver_id = '<?= $sender->getId() ?>';
+  $.post('/api/product/acceptoffer', { offer_price, product_id, receiver_id }, (response) => {
+      $.post('/csmessaging/frontend/savechat', response, (data) => {
+        if(data.success == 'Y'){
+          window.location = '/csmessaging/frontend/sent/';
+        }
+      });
+  });
+<?php
+  }else{
+?>
+
+<?php
+  }// end if is seller
+?>
+  });
   $(document).ready(function(){
     $('li:contains("Messages")').addClass('current');
   });

@@ -276,4 +276,9 @@ class Queryform extends \Magento\Framework\View\Element\Template
       return $this->customerSession->getCustomer();
     }
 
+    public function getSession()
+    {
+      return $this->customerSession;
+    }
+
 }
