@@ -232,7 +232,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 throw new \Exception (__($e->getMessage()));
             }
 
-              session_write_close();
+            session_write_close();
             if(!$accept_offer){
               if($is_offer){
                 $this->messageManager->addSuccessMessage(__('Your offer has been sent.'));

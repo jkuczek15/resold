@@ -138,7 +138,7 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
         <strong>Offer ($):</strong>
       </div>
       <div class="col-md-4">
-        <input type="number" id="offer_price" min="<?= 0.75 * $price ?>" required step="1" />
+        <input type="number" id="offer_price" min="<?= 0.75 * $price ?>" max="<?= $price ?>" required step="1" />
       </div>
     </div>
     <div class="row">
