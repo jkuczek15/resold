@@ -90,7 +90,7 @@ class AcceptOffer extends \Magento\Framework\App\Action\Action
       $_product->setPrice($offer_price);
       $_product->save();
 
-      $link = " <a href='".$_product->getProductUrl()."'>Click here to view the updated listing.</a>";
+      $link = " <a target='_blank' href='".$_product->getProductUrl()."'>Click here to view the updated listing.</a>";
       $customer_name = $this->session->getCustomer()->getName();
       $result = [
         'email_subject' => $_product->getName(),
