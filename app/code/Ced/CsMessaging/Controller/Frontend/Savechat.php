@@ -90,8 +90,11 @@ class Savechat extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
     ) {
+
+          $this->resultJsonFactory = $resultJsonFactory;
            $this->scopeConfig=$scopeConfig;
            $this->_escaper = $escaper;
           $this->inlineTranslation = $inlineTranslation;
@@ -128,6 +131,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $reply = $this->getRequest()->getPost('reply');
         $product_id = $this->getRequest()->getPost('product_id');
         $seller_cust_id = $this->getRequest()->getPost('seller_cust_id');
+        $accept_offer = $this->getRequest()->getPost('accept_offer');
 
         if($reply){
             $vendor = $this->_customerRepositoryInterface->getById($receiver_id);
@@ -138,10 +142,6 @@ class Savechat extends \Magento\Framework\App\Action\Action
           $vendor = $this->_vendorFactory->create()->load($receiver_id);
           $receiver_email = $vendor->getEmail();
           $receiver_name = $vendor->getName();
-        }
-
-        if($seller_cust_id != null){
-          $receiver_id = $seller_cust_id;
         }
 
         // get current customer data
@@ -196,6 +196,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data['offer_price'] = $offer_price;
                 $data['product_url'] = $_SERVER['HTTP_REFERER'];
                 $data['host'] = $_SERVER['HTTP_HOST'];
+                $data['accept_offer'] = $accept_offer;
 
                 $data['vendor_id'] = $receiver_id;
                 $data['sender_id'] = $sender_id;
@@ -227,12 +228,16 @@ class Savechat extends \Magento\Framework\App\Action\Action
             catch(\Exception $e){
                 throw new \Exception (__($e->getMessage()));
             }
-            if($is_offer){
-              $this->messageManager->addSuccessMessage(__('Your offer has been sent.'));
-            }else{
-              $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
+            if(!$accept_offer){
+              if($is_offer){
+                $this->messageManager->addSuccessMessage(__('Your offer has been sent.'));
+              }else{
+                $this->messageManager->addSuccessMessage(__('Your message has been sent.'));
+              }
             }
-            if($reply){
+            if($accept_offer){
+              return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
+            }else if($reply){
               return $this->_redirect('csmessaging/frontend/sent/');
             }
         }
