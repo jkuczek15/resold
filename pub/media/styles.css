@@ -211,3 +211,9 @@
 #search::placeholder {
     color: #3f3c3c;
 }
+.payment-option-content {
+  display: none !important;
+}
+.action.action-toggle{
+  display: none  !important;
+}
