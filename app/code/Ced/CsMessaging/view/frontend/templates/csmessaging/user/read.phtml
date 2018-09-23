@@ -22,9 +22,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 $sentMessage = $chat->getSenderId() == $this->getCustomer()->getId();
 
 if($sentMessage){
-
   $sender = $this->getCustomerById($chat->getVendorId());
-
 }else{
   $sender = $this->getCustomerById($chat->getSenderId());
 }
@@ -131,7 +129,7 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
                             if(!$sentMessage && $offer_price != null){
    ?>
                                 <a style="margin-top: 0.3em; cursor: pointer;"  id="accept_offer" class="btn btn-box-tool action subscribe primary mobile-right">Accept</a>
-                                <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary mobile-right">Counter Offer</a>
+                                <a href="<?php echo $this->getUrl(); ?>csmessaging/frontend/customercompose?id=<?php echo $chat->getSenderId() ?>&product_id=<?= $product_id ?>&subject=<?= urlencode($chat->getSubject()) ?>&vendor_id=<?= $chat->getVendorId() ?>&counter=true" style="margin-top: 0.3em;" class="btn btn-box-tool action subscribe primary mobile-right">Counter Offer</a>
   <?php
                             }// end if offer
   ?>
@@ -151,7 +149,7 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
       <form id="message-form" action="/csmessaging/frontend/savechat" method="POST"></form>
         <div class="row" style="margin-bottom: 1em">
           <div class="col-md-12" style="margin-left: 1em;">
-            <p>Are you sure you want to accept this offer?</p>
+            <p>Are you sure you want to accept this offer?</p><br/>
             <p>This will update your listing price from <strong>$<?= $formatted_price ?></strong> to <strong>$<?= $offer_price ?>.</strong></p>
           </div>
         </div>
@@ -239,7 +237,7 @@ require([
 <?php
   }else{
 ?>
-
+  window.location = '<?= $product->getProductUrl() ?>';
 <?php
   }// end if is seller
 ?>

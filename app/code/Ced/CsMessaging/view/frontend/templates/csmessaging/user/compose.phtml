@@ -80,7 +80,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
             <div class="right-sidebar-wrap mail-compose">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Reply to <?= $customerName ?></h3>
+                        <h3 class="box-title"><?= isset($_GET['counter']) && $_GET['counter'] == 'true' ?  'Counter Offer' : 'Reply' ?> to <?= $customerName ?></h3>
                         <div class="clear"></div>
                     </div>
                     <!-- /.box-header -->
@@ -123,7 +123,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                   Offer Price ($):
                                 </div>
                                 <div class="col-xs-4">
-                                  <input type="number" name="offer_price" id="offer-price" step="1" />
+                                  <input type="number" name="offer_price" id="offer-price" step="1" disabled />
                                 </div>
                               </div>
                             </div>
@@ -219,9 +219,18 @@ require([
     $('.offer-info').toggle();
     let checkbutton = $(this).closest('.ck-button');
     checkbutton.toggleClass('blue-background');
+    $('#offer-price').attr('disabled', function(_, attr){ return !attr});
   });
   $(document).ready(function(){
     $('li:contains("Messages")').addClass('current');
+    <?php
+    if(isset($_GET['counter']) && $_GET['counter'] == 'true'){
+?>
+      $('.is_offer').click();
+      $('#offer-price').focus();
+<?php
+    }// end if counter offer
+ ?>
   });
 });
     function send() {
