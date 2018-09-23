@@ -177,7 +177,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $model->setData('postread', 'new');
                 $model->setData('role', 'customer');
                 $model->setData('product_id', $product_id);
-                if($offer_price != 0){
+                if($offer_price != 0 && !$accept_offer){
                   $model->setData('offer_price', $offer_price);
                 }// end if offer price non zero
                 $model->save();
@@ -236,7 +236,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
               }
             }
             if($accept_offer){
-              return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
+              return $this->_redirect('csmessaging/frontend/sent?offer_price='.$offer_price.'&name='.$subject);
             }else if($reply){
               return $this->_redirect('csmessaging/frontend/sent/');
             }

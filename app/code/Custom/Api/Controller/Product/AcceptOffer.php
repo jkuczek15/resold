@@ -90,12 +90,13 @@ class AcceptOffer extends \Magento\Framework\App\Action\Action
       $_product->setPrice($offer_price);
       $_product->save();
 
-      $link = " <a href='".$_product->getProductUrl()."'>Click here to view updated listing price.</a>";
+      $link = " <a href='".$_product->getProductUrl()."'>Click here to view the updated listing.</a>";
       $customer_name = $this->session->getCustomer()->getName();
       $result = [
         'email_subject' => $_product->getName(),
         'text_email' => $customer_name . ' has accepted your offer of <strong>$'.trim(money_format('%(#10n', $offer_price)).'</strong>.'.$link,
         'vendor_id' => $receiver_id,
+        'offer_price' => $offer_price,
         'reply' => true,
         'accept_offer' => true,
         'product_id' => $product_id,

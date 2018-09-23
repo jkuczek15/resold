@@ -91,6 +91,12 @@ class Sent extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+        if(isset($_GET['offer_price']) && $_GET['offer_price'] != null && isset($_GET['name']) && $_GET['name'] != null){
+          $offer_price = $_GET['offer_price'];
+          $name = $_GET['name'];
+          $this->messageManager->addSuccess(__('You have accepted an offer of <strong>$'.trim(money_format('%(#10n', $offer_price)).'</strong> for your <strong>'.rtrim($name, '/').'</strong>.'));
+        }// end if accepted offer
+
         if($customer =  $this->session->isLoggedIn()) {
             $enable=1;//Mage::getStoreConfig('ced_csmarketplace/vendor_chat_group/vendorchat');
             if($enable=='1') {

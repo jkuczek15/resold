@@ -207,6 +207,11 @@ class Sent extends \Magento\Framework\View\Element\Template
         return $this->_objectManager->get('Magento\Customer\Model\Customer');
     }
 
+    public function getMessageManager()
+    {
+      return $this->messageManager;
+    }
+
     /**
      * Serialize attributes
      *
