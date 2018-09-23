@@ -43,6 +43,12 @@ $admin_name = $this->_scopeConfig->getValue('trans_email/ident_general/name', \M
 //$vendors[] = ['entity_id'=> 0,'name'=>$admin_name];
 $adminInboxCount = $this->_messagingHelper->getCustomerInboxCountForAdmin();
 $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
+
+// determine if this is the seller
+$vendorProduct = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $product->getSku())->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+$vendorId = $vendorProduct->getVendorId();
+$customerVendorId = $this->getSession()->getVendorId();
+$is_seller = $vendorId == $customerVendorId;
 ?>
 
 <div class="top_msg"></div>
@@ -104,7 +110,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                           </div>
                         </div>
                         <div class="row" style="margin-bottom: 1em;">
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                             <div class="ck-button-wrapper">
                               <div class="ck-button">
                                 <label style="cursor: pointer;">
@@ -114,15 +120,25 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                             </div>
                           </div>
                           <div class="offer-info" style="display: none">
-                            <div class="col-md-3" style="margin-top: 1.1em;">
+                            <div class="col-md-2" style="margin-top: 1.1em;">
                               Price: <strong>$<?= trim(money_format('%(#10n', $product->getPrice())) ?></strong>
                             </div>
-                            <div class="col-md-6" style="margin-top: 0.8em;">
+                            <div class="col-md-7" style="margin-top: 0.8em;">
                               <div class="row">
-                                <div class="col-xs-5 offer-price-text" style="margin-top: 0.3em;">
+                                <div class="col-xs-7 offer-price-text" style="margin-top: 0.3em;">
+<?php
+                                  if($is_seller){
+?>
+                                    <span data-toggle="tooltip" title="Listing price will be updated after sending offer." style="background-color: rgb(238, 238, 238); margin-right: 0.4em; padding-left: 0.3em">
+                                      <span style="font-size: 0.9em;" class="fa fa-info"></span>
+                                    </span>
+<?php
+                                  }// end if is seller
+ ?>
                                   Offer Price ($):
                                 </div>
                                 <div class="col-xs-4">
+
                                   <input type="number" name="offer_price" id="offer-price" step="1" disabled />
                                 </div>
                               </div>
@@ -195,6 +211,13 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
 table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td {
   padding-left: 0px;
 }
+.tippy-tooltip.custom-theme .tippy-backdrop {
+  font-weight: bold;
+}
+/* If `animateFill: false` */
+.tippy-tooltip.custom-theme {
+  font-size: 14px;
+}
 
 @media(max-width: 578px){
   .page-main {
@@ -214,7 +237,8 @@ table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table
 <script>
 require([
     "jquery",
-], ($) => {
+    'tippy'
+], ($, tippy) => {
   $('.is_offer').on('click touch', function(){
     $('.offer-info').toggle();
     let checkbutton = $(this).closest('.ck-button');
@@ -222,6 +246,7 @@ require([
     $('#offer-price').attr('disabled', function(_, attr){ return !attr});
   });
   $(document).ready(function(){
+    tippy('[data-toggle="tooltip"]',{ theme: 'custom', arrow: true, animation: 'fade', allowHtml: true });
     $('li:contains("Messages")').addClass('current');
     <?php
     if(isset($_GET['counter']) && $_GET['counter'] == 'true'){
@@ -246,13 +271,21 @@ require([
           var offer_price = $('#offer-price').val();
           if(offer_price.trim() == ''){
             alert("Offer price cannot be empty.");
+          }else if(offer_price < 20){
+            alert("Offer price must be greater than or equal to $20.00");
           }else if(isNaN(offer_price) || offer_price % 1 != 0 ){
             alert("Offer price must be a whole number.");
+<?php
+  if(!$is_seller){
+?>
           }else if(offer_price < <?= $product->getPrice() * 0.75 ?>){
             let min_price = <?= $product->getPrice() ?> * 0.75;
             alert(`Offer price must be greater than or equal to $${min_price.toFixed(2)}`);
           }else if(offer_price > <?= $product->getPrice() ?>){
             alert('Offer price cannot be greater than the listing price.');
+<?php
+  }// end if user is not a seller
+?>
           }else{
             var btn = document.getElementById('btn-chat');
             btn.setAttribute('type', 'submit');
