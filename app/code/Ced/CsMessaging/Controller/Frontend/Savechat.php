@@ -154,6 +154,9 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $time=$this->date->date('H:i:s');//Mage::getModel('core/date')->date('H:i:s');
         $chat_collection= $this->_messagingFactory->create()->getCollection()->addFieldToFilter('sender_id', $receiver_id)->getLastItem()->getData();
 
+        if($seller_cust_id != null){
+          $receiver_id = $seller_cust_id;
+        }
         if(sizeof($chat_collection)==0) {
             $count=1;
         }
@@ -172,7 +175,9 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $model->setData("sender_email", $sender_email);
                 $model->setData('date', $date);
                 $model->setData('time', $time);
-                $model->setData('vendor_id', $receiver_id);
+                if(!$accept_offer){
+                  $model->setData('vendor_id', $receiver_id);
+                }
                 $model->setData('vcount', $count);
                 $model->setData('postread', 'new');
                 $model->setData('role', 'customer');
