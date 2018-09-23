@@ -120,6 +120,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         date_default_timezone_set("America/Chicago");
         // get request data
     	  $data = $this->getRequest()->getPostValue();
@@ -132,6 +133,18 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $product_id = $this->getRequest()->getPost('product_id');
         $seller_cust_id = $this->getRequest()->getPost('seller_cust_id');
         $accept_offer = $this->getRequest()->getPost('accept_offer');
+        $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+
+        // determine if this is the seller
+        $vendorProduct = $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $product->getSku())->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
+        $vendorId = $vendorProduct->getVendorId();
+        $customerVendorId = $this->session->getVendorId();
+        $is_seller = $vendorId == $customerVendorId;
+
+        if($is_seller && $is_offer && $offer_price != null){
+          $product->setPrice($offer_price);
+          $product->save();
+        }// end if counter offer
 
         if($reply){
             $vendor = $this->_customerRepositoryInterface->getById($receiver_id);
