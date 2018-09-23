@@ -39,12 +39,10 @@
                     </tr>
                     <tr>
                       <td>
-                        <a class="btn btn-primary" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;"><strong>Reply</strong></button></a>
-                        <span style="margin-left: 1.35em;"></span>
+                        <a style="cursor: pointer" class="btn btn-primary" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;"><strong>Reply</strong></button></a>
                       {{if is_offer}}
-                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;"><strong>Accept</strong></button></a>
-                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;"><strong>Counter Offer</strong></button></a>
-                        <a class="btn btn-primary" href="#"><button style="background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;"><strong>Decline</strong></button></a>
+                        <a style="cursor: pointer" class="btn btn-primary" href="https://{{var host}}/csmessaging/frontend/read?id={{var chat_id}}&accept_confirm=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;"><strong>Accept</strong></button></a>
+                        <a style="cursor: pointer" class="btn btn-primary" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&counter=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none;  font-size: 16px;"><strong>Counter Offer</strong></button></a>
                       {{/if}}
                      </td>
                     </tr>

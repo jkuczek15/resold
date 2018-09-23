@@ -202,6 +202,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data= array();
                 $data['receiver_email'] = $receiver_email;
 
+                $data['chat_id'] = $model->getId();
                 $data['text'] = $message;
                 $data['vendor_name'] = $sender_name;
                 $data['receiver_name'] = $receiver_name;
