@@ -134,7 +134,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                             <textarea id="compose-textarea" name="text_email" class="form-control" style="height: 200px;width:97%;" value=""></textarea>
                         </div>
                         <div class="box-footer">
-                            <button class="btn btn-primary" onClick="history.go(-1);return true;"><span></span><<</span>Back</button>
+                            <button class="btn btn-primary" onClick="history.go(-1);return false;"><span></span><<</span>Back</button>
                             <div class="pull-right">
                                 <button class="btn btn-primary" id="btn-chat" type="button" onclick="send()">
                                     <i class="fa fa-envelope-o"></i> <?php echo __('Send') ?>
