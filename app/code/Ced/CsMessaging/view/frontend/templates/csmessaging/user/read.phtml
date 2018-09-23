@@ -125,18 +125,17 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
                         <div class="col-xs-4" style="margin-top: 0.5em; padding-left: 5px; padding-right: 0px;">
                           <div class="mailbox-read-time" style="margin-left: 1em;"><?php echo $newDate; ?></div>
                         </div>
-                          <div class="col-xs-8 mobile-left">
+                          <div class="col-xs-8">
                             <div style="float: right;">
   <?php
                             if(!$sentMessage && $offer_price != null){
    ?>
-                                <a style="margin-top: 0.3em; cursor: pointer;"  id="accept_offer" class="btn btn-box-tool action subscribe primary">Accept</a>
-                                <a style="margin-top: 0.3em; cursor: pointer;" id="decline_offer" class="btn btn-box-tool action subscribe primary">Decline</a>
-                                <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Counter Offer</a>
+                                <a style="margin-top: 0.3em; cursor: pointer;"  id="accept_offer" class="btn btn-box-tool action subscribe primary mobile-right">Accept</a>
+                                <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary mobile-right">Counter Offer</a>
   <?php
                             }// end if offer
   ?>
-                             <a style="margin-top: 0.3em;" target="_blank" class="btn btn-box-tool action subscribe primary" href="<?= $product->getProductUrl() ?>">View Listing</a>
+                             <a style="margin-top: 0.3em;" target="_blank" class="btn btn-box-tool action subscribe primary mobile-right" href="<?= $product->getProductUrl() ?>">View Listing</a>
                            </div>
                           </div>
                         </div>
@@ -148,7 +147,6 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
         </div>
         <div class="clear"></div>
     </section>
-
     <div style="display: none" id="accept-offer-modal">
       <form id="message-form" action="/csmessaging/frontend/savechat" method="POST"></form>
         <div class="row" style="margin-bottom: 1em">
@@ -185,8 +183,8 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
   .modal-content {
     padding-bottom: 0 !important;
   }
-  .mobile-left {
-    float: left !important;
+  .mobile-right {
+    float: right;
   }
   .page-main {
     padding-top: 0px !important;
