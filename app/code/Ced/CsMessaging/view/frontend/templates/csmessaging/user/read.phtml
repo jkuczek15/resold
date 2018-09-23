@@ -243,6 +243,13 @@ require([
 ?>
   });
   $(document).ready(function(){
+<?php
+  if(isset($_GET['accept_confirm']) && $_GET['accept_confirm'] == 'true'){
+?>
+  $('#accept_offer').click();
+<?php
+  }// end if accept confirm
+ ?>
     $('li:contains("Messages")').addClass('current');
   });
 });

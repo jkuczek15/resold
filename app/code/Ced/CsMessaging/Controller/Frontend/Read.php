@@ -95,7 +95,9 @@ class Read extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         if(!$customer =  $this->session->isLoggedIn()) {
-            $this->_redirect('customer/account/login');
+            $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            $encoded_url = base64_encode($url);
+            $this->_redirect('customer/account/login/referer/'.$encoded_url);
             return;
         }
         $chatid=$this->getRequest()->getParam('id');

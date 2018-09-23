@@ -106,7 +106,9 @@ class Customercompose extends \Magento\Framework\App\Action\Action
         }
         else{
             //$value = $this->session->setBeforeAuthUrl($this->urlBuilder->getUrl().'csmessaging/frontend/customercompose?id='.$this->getRequest()->getParam('id'));
-            $this->_redirect('customer/account/login/referer/aHR0cHM6Ly9sb2NhbGhvc3Qv/');
+            $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            $encoded_url = base64_encode($url);
+            $this->_redirect('customer/account/login/referer/'.$encoded_url.'/');
         }
 
     }
