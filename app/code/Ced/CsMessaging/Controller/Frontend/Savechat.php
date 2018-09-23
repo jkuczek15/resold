@@ -211,7 +211,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data['sender_name'] = $sender_name;
                 $data['is_offer'] = $is_offer;
                 $data['offer_price'] = $offer_price;
-                $data['product_url'] = $_SERVER['HTTP_REFERER'];
+                $data['product_url'] = $product->getProductUrl();
                 $data['host'] = $_SERVER['HTTP_HOST'];
                 $data['accept_offer'] = $accept_offer;
 
