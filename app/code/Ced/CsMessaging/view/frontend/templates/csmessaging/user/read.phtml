@@ -33,7 +33,7 @@ $raw_offer_price = $offer_price;
 if($offer_price != null){
   $offer_price = trim(money_format('%(#10n', $offer_price));
 }
-
+$formatted_price = trim(money_format('%(#10n', $product->getPrice()));
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -148,9 +148,17 @@ if($offer_price != null){
         </div>
         <div class="clear"></div>
     </section>
-    <form id="message-form" action="/csmessaging/frontend/savechat" method="POST">
 
-    </form>
+    <div style="display: none" id="accept-offer-modal">
+      <form id="message-form" action="/csmessaging/frontend/savechat" method="POST"></form>
+        <div class="row" style="margin-bottom: 1em">
+          <div class="col-md-12" style="margin-left: 1em;">
+            <p>Are you sure you want to accept this offer?</p>
+            <p>This will update your listing price from <strong>$<?= $formatted_price ?></strong> to <strong>$<?= $offer_price ?>.</strong></p>
+          </div>
+        </div>
+      </form>
+    </div>
 <style>
 .page-wrapper {
   min-height: 87%;
@@ -185,24 +193,39 @@ if($offer_price != null){
 <script>
 require([
     "jquery",
-], ($) => {
+    'Magento_Ui/js/modal/modal'
+], ($, modal) => {
   $('#accept_offer').click(() => {
 <?php
   if($is_seller){
 ?>
-  let offer_price = '<?= $raw_offer_price ?>';
-  let product_id = '<?= $product_id ?>';
-  let receiver_id = '<?= $sender->getId() ?>';
-  $.post('/api/product/acceptoffer', { offer_price, product_id, receiver_id }, (response) => {
-      for(key in response){
-        $('<input>').attr({
-            type: 'hidden',
-            name: key,
-            value: response[key]
-        }).appendTo('#message-form');
-      }// end loop over response
-      $('#message-form').submit();
-    });
+  var acceptOptions = {
+    type: 'popup',
+    responsive: true,
+    innerScroll: true,
+    title: 'Accept Offer - <?= $product->getName() ?>',
+    buttons: [{
+      text: $.mage.__('Accept'),
+      class: 'accept-button',
+      click: function () {
+        let offer_price = '<?= $raw_offer_price ?>';
+        let product_id = '<?= $product_id ?>';
+        let receiver_id = '<?= $sender->getId() ?>';
+        $.post('/api/product/acceptoffer', { offer_price, product_id, receiver_id }, (response) => {
+            for(key in response){
+              $('<input>').attr({
+                  type: 'hidden',
+                  name: key,
+                  value: response[key]
+              }).appendTo('#message-form');
+            }// end loop over response
+            $('#message-form').submit();
+          });
+      }// end click function
+    }]
+  };
+  var popup = modal(acceptOptions, $('#accept-offer-modal'));
+  $('#accept-offer-modal').modal('openModal');
 <?php
   }else{
 ?>

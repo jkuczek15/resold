@@ -242,6 +242,8 @@ require([
           }else if(offer_price < <?= $product->getPrice() * 0.75 ?>){
             let min_price = <?= $product->getPrice() ?> * 0.75;
             alert(`Offer price must be greater than or equal to $${min_price.toFixed(2)}`);
+          }else if(offer_price > <?= $product->getPrice() ?>){
+            alert('Offer price cannot be greater than the listing price.');
           }else{
             var btn = document.getElementById('btn-chat');
             btn.setAttribute('type', 'submit');
