@@ -91,7 +91,7 @@ if($offer_price != null){
                             </h3>
                           </div>
                             <div class="col-xs-4" style="float: right">
-                              <a style="float: right; margin-left: 0.5em;" class="btn btn-box-tool action subscribe primary"
+                              <a style="float: right; margin-left: 0.5em; margin-bottom: 0.5em;" class="btn btn-box-tool action subscribe primary"
                                onClick="history.go(-1);return true;"><span></span><<</span>Back</a>
 <?php
                           if(!$sentMessage){
@@ -105,26 +105,30 @@ if($offer_price != null){
                           </div>
                         </div>
                         </div><!-- /.mailbox-read-info -->
-                        <span class="mobile-break">&nbsp;</span>
                         <!-- /.mailbox-controls -->
                         <div class="mailbox-read-message" style="padding-left: 5px;">
                             <?php echo $chat->getMessage() ?>
                         </div>  <!-- /.mailbox-read-message -->
                     </div><!-- /.box-body -->
                     <div class="box-footer" style="margin-top: 1em;">
-                      <div class="col-xs-12" style="margin-top: 0.5em; padding-left: 5px; padding-right: 0px;">
-                        <span class="mailbox-read-time" style="margin-right: 1em;"><?php echo $newDate; ?></span>
-                        <div class="pull-right mobile-left">
-<?php
-                          if(!$sentMessage && $offer_price != null){
- ?>
-                              <a style="margin-top: 0.3em" href="#" class="btn btn-box-tool action subscribe primary">Accept</a>
-                              <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Decline</a>
-                              <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Counter Offer</a>
-<?php
-                          }// end if offer
-?>
-                           <a style="margin-top: 0.3em;" target="_blank" class="btn btn-box-tool action subscribe primary" href="<?= $product->getProductUrl() ?>">View Listing</a>
+                      <div class="row" >
+                        <div class="col-xs-4" style="margin-top: 0.5em; padding-left: 5px; padding-right: 0px;">
+                          <div class="mailbox-read-time" style="margin-left: 1em;"><?php echo $newDate; ?></div>
+                        </div>
+                          <div class="col-xs-8 mobile-left">
+                            <div style="float: right;">
+  <?php
+                            if(!$sentMessage && $offer_price != null){
+   ?>
+                                <a style="margin-top: 0.3em" href="#" class="btn btn-box-tool action subscribe primary">Accept</a>
+                                <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Decline</a>
+                                <a style="margin-top: 0.3em;" href="#" class="btn btn-box-tool action subscribe primary">Counter Offer</a>
+  <?php
+                            }// end if offer
+  ?>
+                             <a style="margin-top: 0.3em;" target="_blank" class="btn btn-box-tool action subscribe primary" href="<?= $product->getProductUrl() ?>">View Listing</a>
+                           </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -134,7 +138,6 @@ if($offer_price != null){
         </div>
         <div class="clear"></div>
     </section>
-</div>
 <style>
 .page-wrapper {
   min-height: 87%;
@@ -155,9 +158,6 @@ if($offer_price != null){
   .page-main {
     padding-top: 0px !important;
   }
-  .mobile-break {
-    margin-top: 4em;
-  }
 }
 @media(min-width: 578px){
   .desktop-full {
@@ -173,7 +173,6 @@ if($offer_price != null){
 require([
     "jquery",
 ], ($) => {
-
   $(document).ready(function(){
     $('li:contains("Messages")').addClass('current');
   });
