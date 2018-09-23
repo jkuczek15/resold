@@ -145,6 +145,9 @@ if($offer_price != null){
         </div>
         <div class="clear"></div>
     </section>
+    <form id="message-form" action="/csmessaging/frontend/savechat" method="POST">
+
+    </form>
 <style>
 .page-wrapper {
   min-height: 87%;
@@ -188,12 +191,15 @@ require([
   let product_id = '<?= $product_id ?>';
   let receiver_id = '<?= $sender->getId() ?>';
   $.post('/api/product/acceptoffer', { offer_price, product_id, receiver_id }, (response) => {
-      $.post('/csmessaging/frontend/savechat', response, (data) => {
-        if(data.success == 'Y'){
-          window.location = '/csmessaging/frontend/sent/';
-        }
-      });
-  });
+      for(key in response){
+        $('<input>').attr({
+            type: 'hidden',
+            name: key,
+            value: response[key]
+        }).appendTo('#message-form');
+      }// end loop over response
+      $('#message-form').submit();
+    });
 <?php
   }else{
 ?>
