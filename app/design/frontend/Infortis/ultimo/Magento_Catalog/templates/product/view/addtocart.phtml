@@ -10,7 +10,6 @@
 ?>
 <?php $_product = $block->getProduct(); ?>
 <?php
-
 $model = \Magento\Framework\App\ObjectManager::getInstance();
 $productSku = $_product->getSku();
 $price = $_product->getPrice();
@@ -40,6 +39,15 @@ if($userProduct){
                     <span>'.$buttonTitle.'</span>
                 </button>';
 }
+
+$resource = $model->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+//Select Data from table
+$sql = "SELECT value FROM MagentoQuickstartDB.ced_csmarketplace_vendor_int WHERE value_id = '".$VendorId."'";
+$result = $connection->fetchAll($sql);
+if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != null){
+  $seller_cust_id = $result[0]['value'];
+}// end if
 ?>
 <?php if ($_product->isSaleable()): ?>
 <div class="box-tocart">
@@ -115,6 +123,7 @@ if($userProduct){
   <form method="post" action="/csmessaging/frontend/savechat" id="make-offer-form">
     <input type="hidden" id="email_subject" value="<?= $_product->getName() ?>" />
     <input type="hidden" id="vendor_id" value="<?= $VendorId ?>" />
+    <input type="hidden" id="seller_cust_id" value="<?= $seller_cust_id ?>" />
     <input type="hidden" id="sent_to_vendor" value="Y" />
     <div class="row" style="margin-bottom: 1em">
       <div class="col-md-2">
@@ -279,6 +288,7 @@ $(document).ready(() => {
           if($('#contact-seller-form').valid()){
             var data = {
               'vendor_id': $('#vendor_id').val(),
+              'seller_cust_id': $('#seller_cust_id').val(),
               'email_subject': $('#email_subject').val(),
               'text_email': $('#text_email_contact_seller').val(),
               'product_id': '<?= $_product->getId() ?>'
@@ -307,6 +317,7 @@ $(document).ready(() => {
           if($('#make-offer-form').valid()){
             var data = {
               'vendor_id': $('#vendor_id').val(),
+              'seller_cust_id': $('#seller_cust_id').val(),
               'email_subject': $('#email_subject').val(),
               'text_email': $('#text_email_offer').val(),
               'offer_price': $('#offer_price').val(),

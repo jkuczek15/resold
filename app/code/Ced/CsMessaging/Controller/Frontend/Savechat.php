@@ -127,6 +127,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $offer_price = $this->getRequest()->getPost('offer_price');
         $reply = $this->getRequest()->getPost('reply');
         $product_id = $this->getRequest()->getPost('product_id');
+        $seller_cust_id = $this->getRequest()->getPost('seller_cust_id');
 
         if($reply){
             $vendor = $this->_customerRepositoryInterface->getById($receiver_id);
@@ -137,6 +138,10 @@ class Savechat extends \Magento\Framework\App\Action\Action
           $vendor = $this->_vendorFactory->create()->load($receiver_id);
           $receiver_email = $vendor->getEmail();
           $receiver_name = $vendor->getName();
+        }
+
+        if($seller_cust_id != null){
+          $receiver_id = $seller_cust_id;
         }
 
         // get current customer data

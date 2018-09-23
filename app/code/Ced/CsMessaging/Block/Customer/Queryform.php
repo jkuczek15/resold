@@ -267,7 +267,8 @@ class Queryform extends \Magento\Framework\View\Element\Template
 
     public function getCustomerById($customerId)
     {
-      return $this->_customerRepositoryInterface->getById($customerId);
+      $customer = $this->_customerRepositoryInterface->getById($customerId);
+      return $customer;
     }
 
     public function getCustomer()
