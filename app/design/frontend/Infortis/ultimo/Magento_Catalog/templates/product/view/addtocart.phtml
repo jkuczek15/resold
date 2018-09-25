@@ -138,7 +138,7 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
         <strong>Offer ($):</strong>
       </div>
       <div class="col-md-4">
-        <input type="number" id="offer_price" min="<?= 0.75 * $price ?>" max="<?= $price ?>" required step="1" />
+        <input type="number" id="offer_price" min="20" max="<?= $price ?>" step="1" required />
       </div>
     </div>
     <div class="row">
@@ -315,17 +315,29 @@ $(document).ready(() => {
         class: 'send-button',
         click: function () {
           if($('#make-offer-form').valid()){
+            let offer_price = $('#offer_price').val();
+            let message = $('#text_email_offer').val();
+
+            if(offer_price < 0.75 * <?= $_product->getPrice() ?>){
+              alert("Offer price must be at least $" + (0.75 * <?= $_product->getPrice() ?>) + ".");
+              return;
+            }else if(message.trim() == ''){
+              alert("Message cannot be empty.");
+              return;
+            }// end if offer price invalid
+
             var data = {
               'vendor_id': $('#vendor_id').val(),
               'seller_cust_id': $('#seller_cust_id').val(),
               'email_subject': $('#email_subject').val(),
-              'text_email': $('#text_email_offer').val(),
-              'offer_price': $('#offer_price').val(),
+              'text_email': message,
+              'offer_price': offer_price,
               'is_offer': 'Y',
               'product_id': '<?= $_product->getId() ?>'
             };
             $.post('/csmessaging/frontend/savechat', data, (response) => {
-              $('#text_email_contact_seller').val('');
+              $('#text_email_offer').val('');
+              $('#offer_price').val('');
               this.closeModal();
             });
           }// end if form valid

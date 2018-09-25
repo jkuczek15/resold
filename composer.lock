@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.67.17",
+            "version": "3.67.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b937c2193a4f509de5cd5836fa2a37904fc8e465"
+                "reference": "590d47c6f2b07d665737e02ef3b6cee3155e12a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b937c2193a4f509de5cd5836fa2a37904fc8e465",
-                "reference": "b937c2193a4f509de5cd5836fa2a37904fc8e465",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/590d47c6f2b07d665737e02ef3b6cee3155e12a8",
+                "reference": "590d47c6f2b07d665737e02ef3b6cee3155e12a8",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-09-21T20:29:41+00:00"
+            "time": "2018-09-24T21:19:19+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -7134,16 +7134,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v6.17.2",
+            "version": "v6.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "df73bb330c35ee14ed443723a6fe122dbc954497"
+                "reference": "7363430e21a67ea3a3d3368985c39548ebcbb602"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/df73bb330c35ee14ed443723a6fe122dbc954497",
-                "reference": "df73bb330c35ee14ed443723a6fe122dbc954497",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/7363430e21a67ea3a3d3368985c39548ebcbb602",
+                "reference": "7363430e21a67ea3a3d3368985c39548ebcbb602",
                 "shasum": ""
             },
             "require": {
@@ -7185,7 +7185,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2018-09-18T13:48:26+00:00"
+            "time": "2018-09-24T23:09:04+00:00"
         },
         {
             "name": "swissup/tippyjs",
