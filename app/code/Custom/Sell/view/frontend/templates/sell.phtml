@@ -86,19 +86,19 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             </div>
           </div>
           <div class="col-md-3 service-fee">
-            <div class="control">
+            <div class="control" style="margin-top: 0.45em">
               <strong class="label" style="padding-right: 15px">
                 <span data-toggle="tooltip" title="10% service fee" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
                   <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
-                <?php /* @escapeNotVerified */ echo __('Service Fee ($)') ?>
+                <?php /* @escapeNotVerified */ echo __('Service Fee') ?>
               </strong>
-              <input disabled step="0.01" style="width: 31% !important; color: black;" class="form-input" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="serviceFee" />
+              <label style="width: 31% !important; color: black;" class="form-input" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" v-html="serviceFee"></label>
             </div>
           </div>
-          <div class="col-md-3 your-profit">
-            <strong class="your-profit-label"><span><?php /* @escapeNotVerified */ echo __('Your Profit ($)') ?></span></strong>
-            <input disabled step="0.01" style="width: 31% !important; color: black;" class="form-input" id="your_profit" title="<?php /* @escapeNotVerified */ echo __('Price') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: 20}" v-model="yourProfit" />
+          <div class="col-md-3 your-profit" style="margin-top: 0.45em; ">
+            <strong class="your-profit-label"><span><?php /* @escapeNotVerified */ echo __('Your Profit') ?></span></strong>
+              <label style="width: 31% !important; color: black;" class="form-input" id="your_profit" title="<?php /* @escapeNotVerified */ echo __('Your Profit') ?>" v-html="yourProfit"></label>
           </div>
         </div>
         <div class="field category">
@@ -282,7 +282,7 @@ option:disabled {
   }
   .mobile-price {
     display: inline-block !important;
-    padding-right: 4.4em;
+    padding-right: 2.75em;
   }
   .desktop-price {
     display: none !important;
@@ -350,11 +350,19 @@ require([
       computed: {
         serviceFee: function () {
           let num = this.form_data.price * 0.1;
-          return Number(num).toFixed(2);
+          if(isNaN(num)){
+            return '$0.00'
+          }else{
+            return '$'+Number(num).toFixed(2);
+          }
         },
         yourProfit: function(){
           let num = this.form_data.price - (this.form_data.price * 0.1);
-          return Number(num).toFixed(2);
+          if(isNaN(num)){
+            return '$0.00';
+          }else{
+            return '$'+Number(num).toFixed(2);
+          }
         }
       }
     });
