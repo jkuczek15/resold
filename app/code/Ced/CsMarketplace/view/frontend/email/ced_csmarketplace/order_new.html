@@ -17,89 +17,78 @@
  */
 -->
 <!--@vars {
- "layout handle=\"sales_email_order_items\" order=$order area=\"frontend\"":"Order Items Grid"   
+ "layout handle=\"sales_email_order_items\" order=$order area=\"frontend\"":"Order Items Grid"
 } @-->
 <!--@subject New Order Placed@-->
 
-<body style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
-<div style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
 {{template config_path="design/email/header_template"}}
-<table cellspacing="0" cellpadding="0" border="0" width="100%">
-<tr>
-    <td align="center" valign="top" style="padding:20px 0 20px 0">
-        <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #E0E0E0;">
-            <!-- [ middle starts here] -->
-            <tr>
-                <td valign="top">
-                    <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">Hello, {{trans "%vendor_name," vendor_name=$vendor.name }}</h1>
-                    <p style="font-size:12px; line-height:16px; margin:0;">
-                        {{trans "There is new order placed from"}} {{trans "%store_frontname," store_frontname=$store.getFrontendName() }}.
-                    </p>
-                    <p style="font-size:12px; line-height:16px; margin:0;">{{trans "The order detail is below. Thank you again for your business."}}</p>
-				</td>
-            </tr>
-            <tr>
-                <td>
-                    <h2 style="font-size:18px; font-weight:normal; margin:0;">Order #{{trans "%increment_id," increment_id=$order.increment_id }}<small>({{trans 'Placed on <span class="no-link">%created_at</span>' created_at=$order.getCreatedAtFormatted(2) |raw}})</small></h2>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table cellspacing="0" cellpadding="0" border="0" width="650">
-                        <thead>
-                        <tr>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">{{trans "Billing Information:"}}</th>
-                            <th width="10"></th>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">{{trans "Payment Method:"}}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                           <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                 <p>{{var formattedBillingAddress|raw}}</p>
-                            </td>
-                            <td>&nbsp;</td>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                {{var payment_html | raw}}
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br/>
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "%vendor_name," vendor_name=$vendor.name }}</p>
+            <p>
+                {{trans "Thank you for your order from"}} {{trans "%store_frontname," store_frontname=$store.getFrontendName() }}.
+                {{trans "Once your package ships we will send you a tracking number."}}
+                {{trans 'You can check the status of your order by <a href="%account_url">logging into your account</a>.' account_url=$this.getUrl($store,'customer/account/',[_nosid:1]) |raw}}
+            </p>
+            <p>
+                {{trans 'If you have questions about your order, you can email us at <a href="mailto:%store_email">%store_email</a>' store_email=$store_email |raw}}{{depend store_phone}} {{trans 'or call us at <a href="tel:%store_phone">%store_phone</a>' store_phone=$store_phone |raw}}{{/depend}}.
+                {{depend store_hours}}
+                    {{trans 'Our hours are <span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
+                {{/depend}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-summary">
+        <td>
+            <h1>{{trans 'Your Order <span class="no-link">#%increment_id</span>' increment_id=$order.increment_id |raw}}</h1>
+            <p>{{trans 'Placed on <span class="no-link">%created_at</span>' created_at=$order.getCreatedAtFormatted(2) |raw}}</p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            {{depend order.getEmailCustomerNote()}}
+            <table class="message-info">
+                <tr>
+                    <td>
+                        {{var order.getEmailCustomerNote()|escape|nl2br}}
+                    </td>
+                </tr>
+            </table>
+            {{/depend}}
+            <table class="order-details">
+                <tr>
+                    <td class="address-details">
+                        <h3>{{trans "Billing Info"}}</h3>
+                        <p>{{var formattedBillingAddress|raw}}</p>
+                    </td>
                     {{depend order.getIsNotVirtual()}}
-                    <table cellspacing="0" cellpadding="0" border="0" width="650">
-                        <thead>
-                        <tr>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">{{trans "Shipping Information:"}}</th>
-                            <th width="10"></th>
-                            <th align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">{{trans "Shipping Method:"}}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                 <p>{{var formattedShippingAddress|raw}}</p>
-                                &nbsp;
-                            </td>
-                            <td>&nbsp;</td>
-                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
-                                <p>{{var order.getShippingDescription()}}</p>
-                                &nbsp;
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br/>
-                    {{block class='Magento\\Sales\\Block\\Order\\Email\\Items' area='frontend' template='Ced_CsMarketplace::email//orders//order.phtml' order=$order vendor=$vendor}}
-                    <p style="font-size:12px; margin:0 0 10px 0">{{var order.getEmailCustomerNote()|escape|nl2br}}</p>
-                </td>
-            </tr>
-            <tr>
-                <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;"><center><p style="font-size:12px; margin:0;">{{trans "Thank you,"}} <strong>{{trans "%store_frontname," store_frontname=$store.getFrontendName() }}</strong></p></center></td>
-            </tr>
-        </table>
-    </td>
-</tr>
+                    <td class="address-details">
+                        <h3>{{trans "Shipping Info"}}</h3>
+                        <p>{{var formattedShippingAddress|raw}}</p>
+                    </td>
+                    {{/depend}}
+                </tr>
+                <tr>
+                    <td class="method-info">
+                        <h3>{{trans "Payment Method"}}</h3>
+                        {{var payment_html|raw}}
+                    </td>
+                    {{depend order.getIsNotVirtual()}}
+                    <td class="method-info">
+                        <h3>{{trans "Shipping Method"}}</h3>
+                        <p>{{var order.getShippingDescription()}}</p>
+                        {{if shipping_msg}}
+                        <p>{{var shipping_msg}}</p>
+                        {{/if}}
+                    </td>
+                    {{/depend}}
+                </tr>
+            </table>
+            {{layout handle="sales_email_order_items" order=$order area="frontend"}}
+        </td>
+    </tr>
 </table>
-</div>
-</body>
+
+{{template config_path="design/email/footer_template"}}
