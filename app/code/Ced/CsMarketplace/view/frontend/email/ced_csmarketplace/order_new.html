@@ -86,7 +86,7 @@
                     {{/depend}}
                 </tr>
             </table>
-            {{layout handle="sales_email_order_items" order=$order area="frontend"}}
+            {{block class='Magento\\Sales\\Block\\Order\\Email\\Items' area='frontend' template='Ced_CsMarketplace::email//orders//order.phtml' order=$order vendor=$vendor}}
         </td>
     </tr>
 </table>
