@@ -1,0 +1,71 @@
+<?php 
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category  Ced
+  * @package   Ced_CsVendorReview
+  * @author    CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+
+?>
+<?php
+
+	$detail_rating=$this->getRatingDetails();
+	if($this->isActivated()){
+	
+	$width = $this->getVendorRating();
+	$url="";
+	$url = $this->getUrl('csvendorreview/rating/lists', array('id'=>$this->getVendorId()));
+?>
+<div class="block">
+    <div class="block-title">
+        <strong><span><?php echo __('Vendor Review & Rating') ?></span></strong>
+    </div>
+    <div class="block-content" style="padding: 10px;">
+        <dl id="narrow-by-list2">
+            <ul>				
+				<?php if($width > 1){ ?>
+				<li>
+                    <strong><span><?php echo __('Average Rating') ?></span></strong>
+                </li>
+				<li>
+					<div class="rating-summary">     
+						 <div title="<?php echo $width ?>%" class="rating-result">
+							 <span style="width:<?php echo $width ?>%;"><span><?php echo $width ?>%</span></span>
+						 </div>
+					</div>
+                </li>
+				<?php foreach($detail_rating as $key=>$dr){?>
+					<li>
+                    <strong><span><?php echo $key ?></span></strong>
+					</li>
+					<li>
+						<div class="rating-summary">     
+							 <div title="<?php echo ceil($dr['rating']/$dr['count']) ?>%" class="rating-result">
+								 <span style="width:<?php echo ceil($dr['rating']/$dr['count']) ?>%;"><span><?php echo ceil($dr['rating']/$dr['count']) ?>%</span></span>
+							 </div>
+						</div>
+					</li>
+				<?php } ?>
+				<li>
+                    <a href="<?php echo $url ?>"><?php echo __('Add Your Review') ?></a>
+                </li>
+				<?php } else {?>
+					<li>
+						<a href="<?php echo $url ?>"><?php echo __('Be The First To Review') ?></a>
+					</li>
+                <?php } ?>
+            </ul>
+        </dl>
+    </div>
+</div>
+<?php } ?>

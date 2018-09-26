@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category  Ced
+  * @package   Ced_CsVendorReview
+  * @author    CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ced_CsVendorReview::vendor_review" title="Seller Reviews and Ratings" module="Ced_CsVendorReview" sortOrder="90" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsVendorReview::vendor_review" />
+        <add id="Ced_CsVendorReview::manage_review" title="Manage Review" module="Ced_CsVendorReview" sortOrder="10" parent="Ced_CsVendorReview::vendor_review" action="csvendorreview/review/index" resource="Ced_CsVendorReview::manage_review"/>
+        <add id="Ced_CsVendorReview::manage_rating" title="Manage Rating" module="Ced_CsVendorReview" sortOrder="11" parent="Ced_CsVendorReview::vendor_review" action="csvendorreview/rating/index" resource="Ced_CsVendorReview::manage_rating"/>
+    </menu>
+</config>
