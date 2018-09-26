@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- 
+<!--
 /**
  * CedCommerce
   *
@@ -20,7 +20,7 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <menu>
-        <add id="Ced_CsMessaging::view" title = "Vendor Messaging" module="Ced_CsMessaging" sortOrder="10" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMessaging::view" dependsOnModule="Ced_CsMarketplace" dependsOnConfig="ced_csmarketplace/csmessaging/active" />
         <add id="Ced_CsMessaging::sentbox" title="Messaging" module="Ced_CsMessaging" sortOrder="20" parent="Ced_CsMessaging::view" action="csmessaging/vendor/sent" resource="Ced_CsMessaging::sent" dependsOnModule="Ced_CsMarketplace" dependsOnConfig="ced_csmarketplace/csmessaging/active" />
+        <add id="Ced_CsMessaging::view" title = "Messaging" module="Ced_CsMessaging" sortOrder="10" parent="Ced_CsMarketplace::csmarketplace" resource="Ced_CsMessaging::view" dependsOnModule="Ced_CsMarketplace" dependsOnConfig="ced_csmarketplace/csmessaging/active" />
     </menu>
 </config>

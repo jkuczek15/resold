@@ -9,6 +9,7 @@ return array (
     'Magento_Theme' => 1,
     'Ced_CsProduct' => 1,
     'Ced_CsStripePayment' => 1,
+    'Ced_CsVendorReview' => 1,
     'Custom_Admin' => 1,
     'Custom_Api' => 1,
     'Custom_Sell' => 1,

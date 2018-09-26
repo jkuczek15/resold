@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * CedCommerce
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the End User License Agreement (EULA)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * http://cedcommerce.com/license-agreement.txt
+  *
+  * @category  Ced
+  * @package   Ced_CsVendorReview
+  * @author    CedCommerce Core Team <connect@cedcommerce.com >
+  * @copyright Copyright CEDCOMMERCE (http://cedcommerce.com/)
+  * @license      http://cedcommerce.com/license-agreement.txt
+  */
+
+?>
+
+<?php 	$_items = $this->getReviews();
+		$format = $block->getDateFormat() ?: \IntlDateFormatter::SHORT;
+		$_votes = $this->getRatings();
+
+?>
+<div class="block review-list" id="customer-reviews">
+    <div class="block-title">
+        <strong><?php echo __('Customer Reviews') ?></strong>
+    </div>
+    <div class="block-content">
+        <div class="toolbar review-toolbar">
+            <?php echo $block->getChildHtml('toolbar') ?>
+        </div>
+        <ol class="items review-items">
+        <?php foreach ($_items as $_review):?>
+            <li class="item review-item" itemscope itemprop="review" itemtype="http://schema.org/Review">
+                <div class="review-title" itemprop="name"><?php echo __('Review by ')?><span><?php echo $_review->getCustomerName(); ?></span></div>
+                <?php if (count($_votes)): ?>
+                    <div class="review-ratings">
+                    <?php foreach ($_votes as $_vote): ?>
+                    <div class="rating-summary item" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                        <span class="label rating-label"><span><?php echo $_vote->getRatingLabel() ?></span></span>
+                        <div class="rating-result" title="<?php echo $_review[$_vote->getRatingCode()] ?>%">
+	                        <meta itemprop="worstRating" content = "1"/>
+	                        <meta itemprop="bestRating" content = "100"/>
+							<span style="width:<?php echo $_review[$_vote->getRatingCode()] ?>%;">
+								<span><?php echo $_review[$_vote->getRatingCode()] ?>%</span>
+							</span>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+                <div class="review-content" itemprop="description">
+                    <?php echo nl2br($_review->getReview()) ?>
+                </div>
+                <div class="review-details">
+                    <p class="review-author">
+                        <span class="review-details-label"><?php /* @escapeNotVerified */ echo __('Review by')?></span>
+                        <strong class="review-details-value" itemprop="author"><?php echo $_review->getCustomerName(); ?></strong>
+                    </p>
+                    <p class="review-date">
+                        <span class="review-details-label"><?php /* @escapeNotVerified */ echo __('Posted on') ?></span>
+                        <time class="review-details-value" itemprop="datePublished" datetime="<?php echo $block->formatDate($_review->getCreatedAt(), $format)  ?>"><?php echo $block->formatDate($_review->getCreatedAt(), $format)  ?></time>
+                    </p>
+                </div>
+            </li>
+        <?php endforeach; ?>
+        </ol>
+        <div class="toolbar review-toolbar">
+            <?php echo $block->getChildHtml('toolbar') ?>
+        </div>
+    </div>
+	<?php echo $this->getChildHtml('csvendorreview_rating_form') ?>
+</div>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpcs version="3.2.2">
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Rating/Post.php" errors="0" warnings="2" fixable="0">
+    <warning line="43" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="51" column="43" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Rating/Lists.php" errors="0" warnings="6" fixable="0">
+    <warning line="35" column="41" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="36" column="40" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="39" column="35" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="41" column="41" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="45" column="53" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="47" column="44" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Review/Delete.php" errors="0" warnings="1" fixable="0">
+    <warning line="32" column="44" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Review/Save.php" errors="0" warnings="2" fixable="0">
+    <warning line="33" column="43" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="46" column="38" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Review/Edit.php" errors="0" warnings="3" fixable="0">
+    <warning line="31" column="39" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="33" column="48" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="45" column="38" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Review/MassDelete.php" errors="0" warnings="3" fixable="0">
+    <warning line="34" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="34" column="91" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method load() detected in loop</warning>
+    <warning line="35" column="27" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method delete() detected in loop</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Review/MassStatus.php" errors="0" warnings="3" fixable="0">
+    <warning line="37" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="37" column="86" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method load() detected in loop</warning>
+    <warning line="39" column="27" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method save() detected in loop</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Rating/Delete.php" errors="0" warnings="1" fixable="0">
+    <warning line="73" column="44" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Rating/Save.php" errors="0" warnings="6" fixable="0">
+    <warning line="45" column="43" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="56" column="38" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="74" column="62" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="79" column="42" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="101" column="21" source="MEQP2.Classes.PublicNonInterfaceMethods.PublicMethodFound" severity="8" fixable="0">The use of public non-interface method in ACTION is discouraged.</warning>
+    <warning line="105" column="20" source="MEQP1.SQL.RawQuery.FoundRawSql" severity="8" fixable="0">Possible raw SQL statement 'ALTER TABLE ' detected.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Rating/Edit.php" errors="0" warnings="3" fixable="0">
+    <warning line="29" column="39" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="31" column="48" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="42" column="38" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Rating/MassDelete.php" errors="0" warnings="3" fixable="0">
+    <warning line="78" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="78" column="91" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method load() detected in loop</warning>
+    <warning line="81" column="27" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method delete() detected in loop</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Controller/Adminhtml/Rating/MassStatus.php" errors="0" warnings="3" fixable="0">
+    <warning line="65" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="65" column="86" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method load() detected in loop</warning>
+    <warning line="67" column="27" source="MEQP1.Performance.Loop.ModelLSD" severity="8" fixable="0">Model LSD method save() detected in loop</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Model/Config.php" errors="0" warnings="1" fixable="0">
+    <warning line="48" column="21" source="MEQP2.Classes.ConstructorOperations.CustomOperationsFound" severity="8" fixable="0">Only dependency assignment operations are allowed in constructor. No other operations are allowed.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Block/Vshops/ListBlock.php" errors="0" warnings="5" fixable="0">
+    <warning line="27" column="47" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="39" column="42" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="49" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="53" column="44" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="59" column="13" source="MEQP1.Performance.EmptyCheck.FoundCount" severity="8" fixable="0">count(...) function should not be used to check if array is empty. Use empty(...) language construct instead</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Block/Vshops/View.php" errors="0" warnings="9" fixable="0">
+    <warning line="47" column="45" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="64" column="45" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="68" column="40" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="74" column="9" source="MEQP1.Performance.EmptyCheck.FoundCount" severity="8" fixable="0">count(...) function should not be used to check if array is empty. Use empty(...) language construct instead</warning>
+    <warning line="100" column="45" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="104" column="40" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="111" column="9" source="MEQP1.Performance.EmptyCheck.FoundCount" severity="8" fixable="0">count(...) function should not be used to check if array is empty. Use empty(...) language construct instead</warning>
+    <warning line="149" column="47" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="161" column="42" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Block/Rating/Form.php" errors="0" warnings="3" fixable="0">
+    <warning line="32" column="21" source="MEQP2.Classes.ConstructorOperations.CustomOperationsFound" severity="8" fixable="0">Only dependency assignment operations are allowed in constructor. No other operations are allowed.</warning>
+    <warning line="42" column="49" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="81" column="40" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Block/Rating/Lists.php" errors="0" warnings="3" fixable="0">
+    <warning line="32" column="21" source="MEQP2.Classes.ConstructorOperations.CustomOperationsFound" severity="8" fixable="0">Only dependency assignment operations are allowed in constructor. No other operations are allowed.</warning>
+    <warning line="42" column="41" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+    <warning line="62" column="40" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Block/BaseBlock.php" errors="0" warnings="1" fixable="0">
+    <warning line="46" column="21" source="MEQP2.Classes.ConstructorOperations.CustomOperationsFound" severity="8" fixable="0">Only dependency assignment operations are allowed in constructor. No other operations are allowed.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Block/Adminhtml/Review/Edit/Tab/General.php" errors="0" warnings="1" fixable="0">
+    <warning line="60" column="44" source="MEQP2.Classes.ObjectManager.ObjectManagerFound" severity="8" fixable="0">The direct use of ObjectManager is discouraged. Inject necessary dependencies via constructor.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Setup/InstallSchema.php" errors="0" warnings="1" fixable="0">
+    <warning line="27" column="1" source="MEQP2.SQL.MissedIndexes.MissedIndexes" severity="8" fixable="0">There was not found any index in database schema file.</warning>
+</file>
+<file name="/opt/xampp/7.0/htdocs/Magento/Marketplace/app/code/CsVendorReview/Setup/UpgradeData.php" errors="0" warnings="1" fixable="0">
+    <warning line="57" column="46" source="MEQP2.Classes.ResourceModel.OutsideOfResourceModel" severity="8" fixable="0">Data access method INSERT detected outside of Resource Model</warning>
+</file>
+</phpcs>
+
