@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.67.19",
+            "version": "3.67.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8575c7470c301fd7f2ed25e78bf23198db68c1cf"
+                "reference": "6c8bc0f42ba73bab85da67c3af9131e455c3f14c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8575c7470c301fd7f2ed25e78bf23198db68c1cf",
-                "reference": "8575c7470c301fd7f2ed25e78bf23198db68c1cf",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6c8bc0f42ba73bab85da67c3af9131e455c3f14c",
+                "reference": "6c8bc0f42ba73bab85da67c3af9131e455c3f14c",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-09-25T20:15:23+00:00"
+            "time": "2018-09-26T20:06:30+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -7188,17 +7188,17 @@
             "time": "2018-09-25T12:21:14+00:00"
         },
         {
-            "name": "swissup/tippyjs",
-            "version": "1.0.0",
+            "name": "swissup/module-tippyjs",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/swissup/tippyjs.git",
-                "reference": "b3bafb784d344deb547666b549c1b9083d54d6bc"
+                "url": "https://github.com/swissup/module-tippyjs.git",
+                "reference": "86ea00e24ff326d197d5b650eee222fee36cdf56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swissup/tippyjs/zipball/b3bafb784d344deb547666b549c1b9083d54d6bc",
-                "reference": "b3bafb784d344deb547666b549c1b9083d54d6bc",
+                "url": "https://api.github.com/repos/swissup/module-tippyjs/zipball/86ea00e24ff326d197d5b650eee222fee36cdf56",
+                "reference": "86ea00e24ff326d197d5b650eee222fee36cdf56",
                 "shasum": ""
             },
             "type": "magento2-module",
@@ -7215,7 +7215,32 @@
                 "MIT"
             ],
             "description": "Highly customizable vanilla JS tooltip/popover library for Magento 2",
-            "time": "2018-08-06T06:47:24+00:00"
+            "time": "2018-09-25T08:15:54+00:00"
+        },
+        {
+            "name": "swissup/tippyjs",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swissup/tippyjs.git",
+                "reference": "b2d13721a8878f0eda11c5e13f708a241ae303f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swissup/tippyjs/zipball/b2d13721a8878f0eda11c5e13f708a241ae303f9",
+                "reference": "b2d13721a8878f0eda11c5e13f708a241ae303f9",
+                "shasum": ""
+            },
+            "require": {
+                "swissup/module-tippyjs": "^1.1.0"
+            },
+            "type": "metapackage",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Highly customizable vanilla JS tooltip/popover library for Magento 2",
+            "time": "2018-09-25T12:34:56+00:00"
         },
         {
             "name": "symfony/console",
