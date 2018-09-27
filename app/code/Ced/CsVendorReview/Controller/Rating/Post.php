@@ -56,7 +56,6 @@ class Post extends \Magento\Framework\App\Action\Action
             }
 
             $customer = $this->_customerRepositoryInterface->getById($data['customer_id']);
-            
             $data['customer_name'] = $customer->getFirstName() . ' ' . $customer->getLastName();
             $this->model->setData($data);
             try {
