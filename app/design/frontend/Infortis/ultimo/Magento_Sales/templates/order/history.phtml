@@ -18,8 +18,8 @@
                     <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Order #') ?></th>
                     <th scope="col" class="col date"><?php /* @escapeNotVerified */ echo __('Date') ?></th>
                     <?php /* @noEscape */ echo $block->getChildHtml('extra.column.header');?>
-                    <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Ship To') ?></th>
-                    <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Order Total') ?></th>
+                    <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Buyer') ?></th>
+                    <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Total') ?></th>
                     <th scope="col" class="col actions">&nbsp;</th>
                 </tr>
             </thead>
@@ -33,8 +33,8 @@
                             <?php $extra->setOrder($_order); ?>
                             <?php /* @noEscape */ echo $extra->getChildHtml() ?>
                         <?php endif; ?>
-                        <td data-th="<?php echo $block->escapeHtml(__('Ship To')) ?>" class="col shipping"><?php echo $_order->getShippingAddress() ? $block->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
-                        <td data-th="<?php echo $block->escapeHtml(__('Order Total')) ?>" class="col total"><?php /* @escapeNotVerified */ echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Buyer')) ?>" class="col shipping"><?php echo $_order->getShippingAddress() ? $block->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Total')) ?>" class="col total"><?php /* @escapeNotVerified */ echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
                         <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
                             <a href="<?php /* @escapeNotVerified */ echo $block->getViewUrl($_order) ?>" class="action view">
                                 <span><?php /* @escapeNotVerified */ echo __('View Order') ?></span>
