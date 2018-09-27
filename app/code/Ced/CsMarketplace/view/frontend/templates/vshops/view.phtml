@@ -28,7 +28,6 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
     ->getStore()
     ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
 
-
 ?>
 <?php if ($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
     <style>
@@ -43,7 +42,7 @@ $mediaUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
         <!-- <div class="block-title">
         </div> -->
         <?php ?>
-            </div>
+    </div>
     <style>
         i {
             font-size: 12px;

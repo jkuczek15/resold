@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * CedCommerce
@@ -18,55 +18,55 @@
   */
 
 ?>
-<?php
 
+<?php
+	$vendor = $this->getVendor();
 	$detail_rating=$this->getRatingDetails();
 	if($this->isActivated()){
-	
+
 	$width = $this->getVendorRating();
 	$url="";
 	$url = $this->getUrl('csvendorreview/rating/lists', array('id'=>$this->getVendorId()));
 ?>
+
+<h1>Reviews for <?= $vendor->getName() ?><a href="<?= $vendor->getVendorShopUrl() ?>"><button style="margin-left: 2em;" class="btn btn-primary">View Store</button></a></h1>
 <div class="block">
-    <div class="block-title">
-        <strong><span><?php echo __('Vendor Review & Rating') ?></span></strong>
-    </div>
     <div class="block-content" style="padding: 10px;">
-        <dl id="narrow-by-list2">
-            <ul>				
 				<?php if($width > 1){ ?>
-				<li>
-                    <strong><span><?php echo __('Average Rating') ?></span></strong>
-                </li>
-				<li>
-					<div class="rating-summary">     
-						 <div title="<?php echo $width ?>%" class="rating-result">
-							 <span style="width:<?php echo $width ?>%;"><span><?php echo $width ?>%</span></span>
-						 </div>
-					</div>
-                </li>
-				<?php foreach($detail_rating as $key=>$dr){?>
-					<li>
-                    <strong><span><?php echo $key ?></span></strong>
-					</li>
-					<li>
-						<div class="rating-summary">     
-							 <div title="<?php echo ceil($dr['rating']/$dr['count']) ?>%" class="rating-result">
-								 <span style="width:<?php echo ceil($dr['rating']/$dr['count']) ?>%;"><span><?php echo ceil($dr['rating']/$dr['count']) ?>%</span></span>
+						<div class="col-md-1" style="margin-top: 0.3em;">
+            	<strong><span><??><?php echo __('Average	') ?></span></strong>
+						</div>
+					<div class="col-md-2">
+						<div class="rating-summary">
+							 <div title="<?php echo $width ?>%" class="rating-result">
+								 <span style="width:<?php echo $width ?>%;"><span><?php echo $width ?>%</span></span>
 							 </div>
 						</div>
-					</li>
+					</div>
+				<?php foreach($detail_rating as $key=>$dr){?>
+						<div class="col-md-1" style="margin-top: 0.3em">
+            	<strong><span><?php echo $key ?></span></strong>
+						</div>
+						<div class="col-md-2">
+							<div class="rating-summary">
+								 <div title="<?php echo ceil($dr['rating']/$dr['count']) ?>%" class="rating-result">
+									 <span style="width:<?php echo ceil($dr['rating']/$dr['count']) ?>%;"><span><?php echo ceil($dr['rating']/$dr['count']) ?>%</span></span>
+								 </div>
+							</div>
+						</div>
 				<?php } ?>
-				<li>
-                    <a href="<?php echo $url ?>"><?php echo __('Read / Add Review') ?></a>
-                </li>
+
 				<?php } else {?>
-					<li>
-						<a href="<?php echo $url ?>"><?php echo __('Be The First To Review') ?></a>
-					</li>
                 <?php } ?>
-            </ul>
-        </dl>
     </div>
 </div>
-<?php } ?>
+<?php } ?><hr />
+
+<style>
+.review-item {
+	padding-top: 0;
+}
+.block, .block-banners, .block-banners-inline {
+	margin-bottom: 1em !important;
+}
+</style>

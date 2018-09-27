@@ -20,6 +20,7 @@
 namespace Ced\CsVendorReview\Controller\Rating;
 
 use Magento\Framework\App\Action\Context;
+use Magento\Customer\Model\Session;
 use Ced\CsVendorReview\Model\Review;
 
 class Post extends \Magento\Framework\App\Action\Action
@@ -32,9 +33,13 @@ class Post extends \Magento\Framework\App\Action\Action
     public function __construct(
         Context $context,
         Review $model,
+        Session $customerSession,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = [])
     {
-       $this->model=$model;
+        $this->model=$model;
+        $this->session = $customerSession;
+        $this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context);
     }
     public function execute()
@@ -50,6 +55,9 @@ class Post extends \Magento\Framework\App\Action\Action
                 $data['status'] = 1;
             }
 
+            $customer = $this->_customerRepositoryInterface->getById($data['customer_id']);
+            
+            $data['customer_name'] = $customer->getFirstName() . ' ' . $customer->getLastName();
             $this->model->setData($data);
             try {
                  $this->model->save();
