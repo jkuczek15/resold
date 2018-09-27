@@ -43,7 +43,9 @@
 <?php
   if(count($_items) == 0){
 ?>
-  <div class="message warning"><?= explode(' ', $vendor->getName())[0] ?> has no reviews yet.</div>
+  <div class="message info empty">
+      <div><?= explode(' ', $vendor->getName())[0] ?> has no reviews yet</div>
+  </div>
   <style>
   #horizontal-rule {
     display: none;

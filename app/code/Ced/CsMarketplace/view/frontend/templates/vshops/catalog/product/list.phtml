@@ -96,9 +96,6 @@ if($vendor != null){
             <?php endforeach; ?>
         </ol>
     </div>
-     <p>
-        <?php echo $block->getToolbarHtml() ?>
-    </p>
     <?php if (!$block->isRedirectToCartEnabled()) : ?>
         <script type="text/x-magento-init">
         {
@@ -112,9 +109,15 @@ if($vendor != null){
 <?php } ?>
 
 <style>
+<?php
+if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
+ ?>
 .page-title-wrapper {
   display: none;
 }
+<?php
+}// end if vendor shop page
+?>
 @media (min-width: 575.98px) {.products.products-grid .products .product-item {margin-right: 2em;}}
 .toolbar-amount {
   margin-top: 0.5em;
