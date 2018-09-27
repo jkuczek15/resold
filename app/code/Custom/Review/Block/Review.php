@@ -11,30 +11,76 @@ use Magento\Backend\Block\Template\Context;
 
 class Review extends \Magento\Framework\View\Element\Template
 {
-    /**
-     * Sell block constructor.
-     * @param Session $customerSession
-     * @param Context $context
-     * @param Data $messagingHelper
-     * @param array $data
-     */
+    protected $_vendor;
+
+    protected $_storeManager;
+
+    protected $_session;
+
+    protected $request;
+
+    public $_objectManager;
+
     public function __construct(
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Framework\Registry $registry,
         Session $customerSession,
-        Context $context,
         array $data = []
     ) {
-        $this->customerSession = $customerSession;
         parent::__construct($context, $data);
+        $this->_coreRegistry = $registry;
+        $this->_objectManager=$objectManager;
+        $this->_session = $customerSession;
     }
 
-    public function _prepareLayout()
+    public function getVendor()
     {
-       $this->pageConfig->getTitle()->set(__('Post-Sale Review'));
-       return parent::_prepareLayout();
+        $vendorId = $_GET['seller_id'];
+        return $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
+    }
+
+    public function getProduct()
+    {
+      $productId = $_GET['product_id'];
+      return $this->_objectManager->create('Magento\Catalog\Model\Product')->load($productId);
     }
 
     public function getVendorId()
     {
-      return $this->customerSession->getVendorId();
+        return $this->getVendor()->getId();
+    }
+
+    public function getRatingOption()
+    {
+        return [
+        '0'        => __('Please Select Option'),
+        '20'    => __('1 OUT OF 5'),
+        '40'    => __('2 OUT OF 5'),
+        '60'    => __('3 OUT OF 5'),
+        '80'    => __('4 OUT OF 5'),
+        '100'    => __('5 OUT OF 5')
+        ];
+    }
+
+    public function getRatings()
+    {
+        $rating = $this->_objectManager->create('Ced\CsVendorReview\Model\Rating')->getCollection();
+        return $rating;
+    }
+
+    public function getAction()
+    {
+        return $this->getUrl('csvendorreview/rating/post');
+    }
+
+    public function getSession()
+    {
+      return $this->_session;
+    }
+
+    public function getCustomerId()
+    {
+      return $this->_session->getId();
     }
 }

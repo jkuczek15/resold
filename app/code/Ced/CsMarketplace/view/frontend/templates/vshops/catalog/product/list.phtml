@@ -22,7 +22,9 @@ use Magento\Framework\App\Action\Action;
 $_productCollection = $block->getLoadedProductCollection();
 $helper_data = $this->helper('Ced\CsMarketplace\Helper\Data');
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
+$vendor = $this->getVendor();
 ?>
+<h1><?= $vendor->getName() ?> &nbsp;<a href="/csvendorreview/rating/lists/id/<?= $vendor->getId() ?>/"><button class="btn btn-primary">View Reviews</button></a></h1>
 <?php if($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
 <?php if (!$_productCollection->count()): ?>
     <div class="message info empty">
@@ -104,6 +106,9 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 <?php } ?>
 
 <style>
+.page-title-wrapper {
+  display: none;
+}
 @media (min-width: 575.98px) {.products.products-grid .products .product-item {margin-right: 2em;}}
 .toolbar-amount {
   margin-top: 0.5em;

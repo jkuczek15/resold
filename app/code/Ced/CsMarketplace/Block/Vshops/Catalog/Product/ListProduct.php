@@ -128,6 +128,10 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
         return $this->_productCollection;
     }
 
+    public function getVendor()
+    {
+        return $this->_coreRegistry->registry('current_vendor');
+    }
 
     public function getCurrentStoreId()
     {

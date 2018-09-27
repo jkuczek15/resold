@@ -26,6 +26,8 @@
         $ob = \Magento\Framework\App\ObjectManager::getInstance();
         $msg = $ob->get('\Magento\Framework\Message\ManagerInterface');
         $messages = $msg->getMessages(true,"message_manager_example");
+        $vendor = $this->getVendor();
+
         if($msg = $messages->getLastAddedMessage())
         {
         ?>
@@ -85,5 +87,9 @@
             <?php echo $block->getChildHtml('toolbar') ?>
         </div>
     </div>
-    <?php echo $this->getChildHtml('csvendorreview_rating_form') ?>
 </div>
+<style>
+.page-title-wrapper {
+  display: none;
+}
+</style>
