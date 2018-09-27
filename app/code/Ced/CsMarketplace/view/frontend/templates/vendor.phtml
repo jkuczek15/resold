@@ -29,6 +29,45 @@ $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollect
 $sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
 
+// get vendor rating
+$review_data = $model->create('Ced\CsVendorReview\Model\Review')->getCollection()->addFieldToFilter('vendor_id', $VendorId)->addFieldToFilter('status', 1);
+$rating_data = $model->create('Ced\CsVendorReview\Model\Rating')->getCollection()->addFieldToSelect('rating_code');
+
+$count = 0;
+$rating_sum = 0;
+
+// get vendor products
+$vendor_products = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()
+    ->addFieldToFilter('vendor_id', $VendorId)
+    ->addFieldToFilter('check_status', 1)
+    ->addFieldToSelect('product_id');
+
+if (count($vendor_products)>0) {
+    $ratingFactory = $model->create('Magento\Review\Model\Rating');
+    foreach ($vendor_products as $product) {
+        $rating = $ratingFactory->getEntitySummary($product['product_id']);
+        if ($rating->getSum()!=null) {
+            $rating_sum+=($rating->getSum()/$rating->getCount());
+        }
+    }
+}
+
+foreach ($review_data as $key => $value) {
+    foreach ($rating_data as $k => $val) {
+        if ($value[$val['rating_code']] > 0) {
+            $rating_sum += $value[$val['rating_code']];
+            $count++;
+        }
+    }
+}
+
+if ($count > 0 && $rating_sum > 0) {
+    $width = $rating_sum/$count;
+    $width = ceil($width);
+} else {
+    $width = false;
+}
+
 $array = array('name');
 $vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
 $shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
@@ -80,7 +119,14 @@ require(['jquery'], ($) => {
       </div>
 			<div class="row">
 				<div class="col-xs-5" id="social4">
-					<strong class="listedBy"><a href=<?php echo $shopUrl;?>><?php echo "Listed by: ".$public_name; ?></a></strong>
+					<strong class="listedBy"><a href=<?php echo $shopUrl;?>><?php echo "Listed by: ".$public_name; ?></a></strong><br/>
+          <a href="/csvendorreview/rating/lists/id/<?= $VendorId ?>/">
+            <div class="rating-summary">
+               <div title="<?php echo $width ?>%" class="rating-result">
+                 <span style="width:<?php echo $width ?>%;"><span><?php echo $width ?>%</span></span>
+               </div>
+            </div>
+          </a>
 				</div>
 				<div class="col-xs-4 stripe-container">
 						<a target="_blank" href="https://stripe.com/about"><img class="powered_by_stripe" width="85%;" src="/pub/media/logo/default/powered_by_stripe.png" /></a>
@@ -104,6 +150,9 @@ const copyToClipboard = () => {
 .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
   padding-left: 0;
 }
+.rating-result {
+  margin-left: -0.5em !important;
+}
 .maindiv-social {
 	display: none;
 }
@@ -118,6 +167,11 @@ const copyToClipboard = () => {
 .powered_by_stripe {
 	margin-left: 5.5em;
 	float: right;
+}
+@media (min-width: 575.98px) {
+  #social4 {
+    margin-top: -0.5em;
+  }
 }
 @media (max-width: 575.98px) {
   .stripe-container {
