@@ -1,0 +1,19 @@
+.subcategory {
+  display: none;
+}
+
+.lowestcategory {
+  display: none;
+}
+
+.image_input {
+  display: none;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+div.custom-error {
+  color: #e1b26 !important;
+}
