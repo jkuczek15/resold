@@ -65,14 +65,26 @@ if ($count > 0 && $rating_sum > 0) {
     $width = $rating_sum/$count;
     $width = ceil($width);
 } else {
-    $width = false;
+    $width = 0;
 }
+
+
 
 $array = array('name');
 $vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
 $shopUrl = $model->create('Ced\CsMarketplace\Model\Vendor')->load($VendorId)->getVendorShopUrl();
 $vendorModel = current($vendorModel);
 $public_name = $vendorModel['public_name'];
+$name_parts = explode(' ', $public_name);
+
+if($public_name != null && isset($name_parts[0])){
+  if($width == 0){
+    $title = $name_parts[0] . ' has not sold any items yet.';
+  }else{
+    $title = 'View '.  $name_parts[0] . '\'s Reviews';
+  }
+}
+
 ?>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <script>
@@ -122,7 +134,7 @@ require(['jquery'], ($) => {
 					<strong class="listedBy"><a href=<?php echo $shopUrl;?>><?php echo "Listed by: ".$public_name; ?></a></strong><br/>
           <a href="/csvendorreview/rating/lists/id/<?= $VendorId ?>/">
             <div class="rating-summary">
-               <div title="<?php echo $width ?>%" class="rating-result">
+               <div title="<?php echo $title ?>" class="rating-result">
                  <span style="width:<?php echo $width ?>%;"><span><?php echo $width ?>%</span></span>
                </div>
             </div>
@@ -170,7 +182,7 @@ const copyToClipboard = () => {
 }
 @media (min-width: 575.98px) {
   #social4 {
-    margin-top: -0.5em;
+    margin-top: -0.9em;
   }
 }
 @media (max-width: 575.98px) {

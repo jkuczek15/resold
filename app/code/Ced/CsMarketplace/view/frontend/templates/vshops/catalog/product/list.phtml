@@ -24,13 +24,19 @@ $helper_data = $this->helper('Ced\CsMarketplace\Helper\Data');
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $vendor = $this->getVendor();
 ?>
-<h1><?= $vendor->getName() ?> &nbsp;<a href="/csvendorreview/rating/lists/id/<?= $vendor->getId() ?>/"><button class="btn btn-primary">View Reviews</button></a></h1>
 <?php if($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
 <?php if (!$_productCollection->count()): ?>
     <div class="message info empty">
         <div>You currently have no items for sale. Please visit our <a href="/sell">sell</a> page to begin listing items.</div>
     </div>
 <?php else: ?>
+<?php
+if($vendor != null){
+?>
+    <h1><?= $vendor->getName() ?> &nbsp;<a href="/csvendorreview/rating/lists/id/<?= $vendor->getId() ?>/"><button class="btn btn-primary">View Reviews</button></a></h1>
+<?php
+}// end if vendor is not null
+?>
     <?php echo $block->getToolbarHtml() ?>
     <?php echo $block->getAdditionalHtml() ?>
     <?php

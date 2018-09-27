@@ -40,6 +40,21 @@
         }
         ?>
 
+<?php
+  if(count($_items) == 0){
+?>
+  <div class="message warning"><?= explode(' ', $vendor->getName())[0] ?> has no reviews yet.</div>
+  <style>
+  #horizontal-rule {
+    display: none;
+  }
+  .block-content {
+    padding-bottom: 0 !important;
+  }
+  </style>
+<?php
+}else{
+?>
 <div class="block review-list" id="customer-reviews">
     <div class="block-content">
         <div class="toolbar review-toolbar">
@@ -48,7 +63,12 @@
         <ol class="items review-items">
         <?php foreach ($_items as $_review):?>
             <li class="item review-item" itemscope itemprop="review" itemtype="http://schema.org/Review">
-                <div class="review-title" itemprop="name"><?php echo __('Review by ')?><span><?php echo $_review->getCustomerName(); ?></span></div>
+                <div class="review-title" itemprop="name"><?php echo __('Review by ')?><span><?php echo $_review->getCustomerName(); ?></span><br/>
+
+                <span style="font-size: 16px"><?= $_review->getSubject() ?></span>
+
+                </div>
+
                 <?php if (count($_votes)): ?>
                     <div class="review-ratings">
                     <?php foreach ($_votes as $_vote): ?>
@@ -88,8 +108,15 @@
         </div>
     </div>
 </div>
+<?php
+  }// end if count == 0
+?>
 <style>
 .page-title-wrapper {
   display: none;
+}
+.review-title {
+  margin-top: 20px !important;
+  margin-bottom: 15px !important;
 }
 </style>
