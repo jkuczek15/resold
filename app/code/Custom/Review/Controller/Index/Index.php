@@ -67,10 +67,7 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        if(!isset($_GET['seller_id']) || $_GET['seller_id'] == null){
-          return $resultRedirect->setPath('/');
-        }
-        if(!isset($_GET['product_id']) || $_GET['product_id'] == null){
+        if(!isset($_GET['id']) || $_GET['id'] == null){
           return $resultRedirect->setPath('/');
         }
         // GET request
