@@ -1,13 +1,15 @@
 <?php
-		$vendor = $this->getVendor();
-		$product = $this->getProduct();
 		$rating_opt = $this->getRatingOption();
+		$order = $this->getOrder();
+		$items = $order->getAllItems();
+		$product_name = $items[0]->getProduct()->getName();
+
 		if($vendor->getName() == null){
 			echo 'Could not find seller or order information.';
 			return;
 		}
-		if($product->getName() == null){
-			echo 'Could not find item information.'		;
+		if($product_name == null){
+			echo 'Could not find item information.';
 			return;
 		}
 ?>

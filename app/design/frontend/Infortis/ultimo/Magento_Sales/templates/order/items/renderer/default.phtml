@@ -1,0 +1,53 @@
+
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var  $block \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer */
+$_item = $block->getItem();
+?>
+<tr id="order-item-row-<?php /* @escapeNotVerified */ echo $_item->getId() ?>">
+    <td class="col name" data-th="<?php echo $block->escapeHtml(__('Item Name')); ?>">
+        <strong class="product name product-item-name"><?php echo $block->escapeHtml($_item->getName()) ?></strong>
+
+        <?php $addtInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+        <?php if ($addtInfoBlock) :?>
+            <?php echo $addtInfoBlock->setItem($_item)->toHtml(); ?>
+        <?php endif; ?>
+        <?php echo $block->escapeHtml($_item->getDescription()) ?>
+    </td>
+    <td class="col seller" data-th="<?php echo $block->escapeHtml(__('Seller')); ?>">
+      <dl class="item-options">
+        <?php if ($_options = $block->getItemOptions()): ?>
+         <?php foreach ($_options as $_option) : ?>
+             <?php if (!$block->getPrintStatus()): ?>
+                 <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                 <dd>
+                     <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                         <?php /* @escapeNotVerified */ echo $_formatedOptionValue['full_view'] ?>
+                     <?php else: ?>
+                         <?php /* @escapeNotVerified */ echo $_formatedOptionValue['value'] ?>
+                     <?php endif; ?>
+                 </dd>
+             <?php else: ?>
+                 <dd>
+                     <?php echo nl2br($block->escapeHtml((isset($_option['print_value']) ? $_option['print_value'] : $_option['value']))) ?>
+                 </dd>
+             <?php endif; ?>
+         <?php endforeach; ?>
+       <?php endif; ?>
+         </dl>
+    </td>
+    <td class="col price" data-th="<?php echo $block->escapeHtml(__('Price')); ?>">
+        <?php echo $block->getItemPriceHtml(); ?>
+    </td>
+    <td class="col qty" data-th="<?php echo $block->escapeHtml(__('')); ?>">
+        </td>
+    <td class="col subtotal" data-th="<?php echo $block->escapeHtml(__('Subtotal')); ?>">
+        <?php echo $block->getItemRowTotalHtml(); ?>
+    </td>
+</tr>

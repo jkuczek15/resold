@@ -25,13 +25,22 @@ class Review extends \Magento\Framework\View\Element\Template
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Registry $registry,
+        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         Session $customerSession,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->_coreRegistry = $registry;
+        $this->orderRepository = $orderRepository;
         $this->_objectManager=$objectManager;
         $this->_session = $customerSession;
+    }
+
+
+    public function getOrder()
+    {
+      $order_id = $_GET['id'];
+      return $this->orderRepository->get($order_id);
     }
 
     public function getVendor()
