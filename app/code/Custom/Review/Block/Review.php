@@ -36,17 +36,56 @@ class Review extends \Magento\Framework\View\Element\Template
         $this->_session = $customerSession;
     }
 
-
     public function getOrder()
     {
       $order_id = $_GET['id'];
       return $this->orderRepository->get($order_id);
     }
 
+
+    public function hasExistingReview()
+    {
+      $resource = $this->_objectManager->get('Magento\Framework\App\ResourceConnection');
+      $connection = $resource->getConnection();
+
+      if(!isset($_GET['id']) || !is_numeric($_GET['id'])){
+        return null;
+      }// end if id invalid
+
+      $order_id = $_GET['id'];
+      $order = $this->orderRepository->get($order_id);
+      $order_number = $order->getIncrementId();
+
+      // Get vendor by order number
+      $sql = "SELECT vendor_id FROM MagentoQuickstartDB.ced_csvendorreview_review WHERE value = '".$this->escapeQuote($order_id)."'";
+      $result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+      return count($result) > 0;
+    }
+
     public function getVendor()
     {
-        $vendorId = $_GET['seller_id'];
-        return $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
+      $resource = $this->_objectManager->get('Magento\Framework\App\ResourceConnection');
+      $connection = $resource->getConnection();
+
+      if(!isset($_GET['id']) || !is_numeric($_GET['id'])){
+        return null;
+      }// end if id invalid
+
+      $order_id = $_GET['id'];
+      $order = $this->orderRepository->get($order_id);
+      $order_number = $order->getIncrementId();
+
+      // Get vendor by order number
+      $sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+      $result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+      if(count($result) == 0){
+        return null;
+      }// end if no vendor found
+
+      $vendor_id = $result[0]['vendor_id'];
+      return $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
     }
 
     public function getProduct()
