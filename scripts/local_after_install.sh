@@ -4,7 +4,7 @@
 sudo chmod -R 777 /var/www/html
 
 # Update and Install Magento dependencies using composer
-composer update -d /var/www/html
+composer install -d /var/www/html
 
 # Make the Magento command line tool executable
 sudo chmod +x /var/www/html/bin/magento

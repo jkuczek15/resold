@@ -1,0 +1,69 @@
+
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php $_order = $block->getOrder() ?>
+<?php if ($_order): ?>
+<?php
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+        $connection = $resource->getConnection();
+        $order_number = $_order->getIncrementId();
+
+        // Get vendor by order number
+        $sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$order_number."'";
+        $result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+        if(count($result) == 0){
+          return null;
+        }// end if no vendor found
+
+        $vendor_id = $result[0]['vendor_id'];
+        $vendor = $objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
+?>
+    <?php $_items = $_order->getAllItems(); ?>
+    <?php $_item = $_items[0]; ?>
+    <table class="email-items" style="width: 93% !important">
+        <thead>
+            <tr>
+                <th class="item-info">
+                    <?= /* @escapeNotVerified */  __('Item: &nbsp;&nbsp; ' . $_item->getName()); ?>
+                </th>
+                <th colspan=2 class="item-info">
+                    <?= /* @escapeNotVerified */  __('Price'); ?>
+                </th>
+            </tr>
+            <tr>
+                <th class="item-info">
+                    <?= /* @escapeNotVerified */  __('Seller: &nbsp;' . $vendor->getName()); ?>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+          <?= $block->getChildHtml('order_totals') ?>
+        </tbody>
+    </table>
+    <?php if ($this->helper('Magento\GiftMessage\Helper\Message')->isMessagesAllowed('order', $_order, $_order->getStore()) && $_order->getGiftMessageId()): ?>
+        <?php $_giftMessage = $this->helper('Magento\GiftMessage\Helper\Message')->getGiftMessage($_order->getGiftMessageId()); ?>
+        <?php if ($_giftMessage): ?>
+            <br />
+            <table class="message-gift">
+                <tr>
+                    <td>
+                        <h3><?= /* @escapeNotVerified */  __('Gift Message for this Order') ?></h3>
+                        <strong><?= /* @escapeNotVerified */  __('From:'); ?></strong> <?= $block->escapeHtml($_giftMessage->getSender()) ?>
+                        <br /><strong><?= /* @escapeNotVerified */  __('To:'); ?></strong> <?= $block->escapeHtml($_giftMessage->getRecipient()) ?>
+                        <br /><strong><?= /* @escapeNotVerified */  __('Message:'); ?></strong>
+                        <br /><?= $block->escapeHtml($_giftMessage->getMessage()) ?>
+                    </td>
+                </tr>
+            </table>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>
