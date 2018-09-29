@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * CedCommerce
@@ -16,51 +16,29 @@
  * @copyright   Copyright CEDCOMMERCE (http://cedcommerce.com/)
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
- 
+
 ?>
 <?php  $_order = $this->getOrder();?>
 <?php $currentVendor = $this->getVendor();?>
-<table cellspacing="0" cellpadding="0" border="0" width="650"
-    style="border: 1px solid #EAEAEA;"
-    summary="<?php echo __('Items Ordered') ?>">
-    <col />
-    <col width="1" />
-    <col width="1" />
-    <col width="1" />
-    <col width="1" />
+<table class="email-items">
     <thead>
         <tr>
-            <th align="left" bgcolor="#EAEAEA"
-                style="font-size: 13px; padding: 3px 9px"><?php echo __('Product Name') ?></th>
-            <th align="left" bgcolor="#EAEAEA"
-                style="font-size: 13px; padding: 3px 9px"><?php echo __('SKU') ?></th>
-            <th align="center" bgcolor="#EAEAEA"
-                style="font-size: 13px; padding: 3px 9px"><?php echo __('Qty') ?></th>
-            <th align="right" bgcolor="#EAEAEA"
-                style="font-size: 13px; padding: 3px 9px"><?php echo __('Price') ?></th>
+            <th class="item-info"><?php echo __('Item Name') ?></th>
+            <th class="item-price"> <?php echo __('Price') ?></th>
         </tr>
     </thead>
     <?php $sum=0; foreach ($_order->getAllItems() as $_item): ?>
     <?php if($_item->getVendorId() != $currentVendor->getId()) continue;?>
     <tbody>
-        <td align="left" 
-                style="font-size: 13px; padding: 3px 9px"><?php echo $_item->getName()?></td>
-        <td align="left"
-                style="font-size: 13px; padding: 3px 9px"><?php echo $_item->getSku()?></td>
-        <td align="center" 
-                style="font-size: 13px; padding: 3px 9px"><?php echo $_item->getQtyOrdered()?></td>
-        <td align="right" 
-                style="font-size: 13px; padding: 3px 9px"><?php echo $_item->getRowTotal()?></td>
-        <?php 
+        <td align="left" style="font-size: 13px; padding: 3px 9px"><?php echo $_item->getName()?></td>
+        <td align="right" style="font-size: 13px; padding: 3px 9px"><?php echo $_item->getRowTotal()?></td>
+        <?php
         $sum+=$_item->getRowTotal();
-        ?>        
+        ?>
     </tbody>
-    <?php endforeach; ?> 
+    <?php endforeach; ?>
     <tbody>
-        <td align="left" bgcolor="#EAEAEA"
-                ><?php echo __('SubTotal')?></td>
-        <td align="right" bgcolor="#EAEAEA"
-                ><?php echo $sum?></td>        
-    </tbody>  
+        <td><?php echo __('SubTotal')?></td>
+        <td><?php echo $sum?></td>
+    </tbody>
 </table>
-    
