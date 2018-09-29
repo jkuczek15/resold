@@ -13,6 +13,7 @@ use Magento\Sales\Model\Order\Email\Sender;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\Order\Address\Renderer;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Customer\Model\Session;
 
 /**
  * Class OrderSender
@@ -70,7 +71,8 @@ class OrderSender extends Sender
         PaymentHelper $paymentHelper,
         OrderResource $orderResource,
         \Magento\Framework\App\Config\ScopeConfigInterface $globalConfig,
-        ManagerInterface $eventManager
+        ManagerInterface $eventManager,
+        Session $customerSession
     ) {
         parent::__construct($templateContainer, $identityContainer, $senderBuilderFactory, $logger, $addressRenderer);
         $this->paymentHelper = $paymentHelper;
@@ -79,6 +81,7 @@ class OrderSender extends Sender
         $this->addressRenderer = $addressRenderer;
         $this->eventManager = $eventManager;
         $this->_objectManager = $objectManager;
+        $this->_session = $customerSession;
     }
 
     /**
@@ -133,8 +136,15 @@ class OrderSender extends Sender
           return null;
         }// end if no vendor found
 
+        // get the vendor id from the order
         $vendor_id = $result[0]['vendor_id'];
         $vendor = $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
+        $vendor_cust_id = $vendor->getCustomerId();
+
+        // get the product from the order
+      	$items = $order->getAllItems();
+    		$product = $items[0]->getProduct();
+
         $transport = [
             'order' => $order,
             'billing' => $order->getBillingAddress(),
@@ -144,7 +154,11 @@ class OrderSender extends Sender
             'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
             'seller_name' => $vendor->getName(),
             'host' => $_SERVER['HTTP_HOST'],
-            'order_id' => $order->getId()
+            'order_id' => $order->getId(),
+            'sender_id' => $vendor_cust_id,
+            'product_id' => $product->getId(),
+            'vendor_id' => $this->_session->getId(),
+            'encoded_subject' => urlencode($product->getName())
         ];
         $transport = new \Magento\Framework\DataObject($transport);
 
