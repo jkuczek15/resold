@@ -142,7 +142,9 @@ class OrderSender extends Sender
             'store' => $order->getStore(),
             'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
             'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
-            'seller_name' => $vendor->getName()
+            'seller_name' => $vendor->getName(),
+            'host' => $_SERVER['HTTP_HOST'],
+            'order_id' => $order->getId()
         ];
         $transport = new \Magento\Framework\DataObject($transport);
 

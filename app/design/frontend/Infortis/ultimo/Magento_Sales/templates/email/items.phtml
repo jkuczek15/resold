@@ -10,38 +10,16 @@
 ?>
 <?php $_order = $block->getOrder() ?>
 <?php if ($_order): ?>
-<?php
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
-        $connection = $resource->getConnection();
-        $order_number = $_order->getIncrementId();
-
-        // Get vendor by order number
-        $sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$order_number."'";
-        $result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
-
-        if(count($result) == 0){
-          return null;
-        }// end if no vendor found
-
-        $vendor_id = $result[0]['vendor_id'];
-        $vendor = $objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
-?>
     <?php $_items = $_order->getAllItems(); ?>
     <?php $_item = $_items[0]; ?>
     <table class="email-items" style="width: 93% !important">
         <thead>
             <tr>
                 <th class="item-info">
-                    <?= /* @escapeNotVerified */  __('Item: &nbsp;&nbsp; ' . $_item->getName()); ?>
+                    <?= /* @escapeNotVerified */  __('Item - ' . $_item->getName()); ?>
                 </th>
                 <th colspan=2 class="item-info">
                     <?= /* @escapeNotVerified */  __('Price'); ?>
-                </th>
-            </tr>
-            <tr>
-                <th class="item-info">
-                    <?= /* @escapeNotVerified */  __('Seller: &nbsp;' . $vendor->getName()); ?>
                 </th>
             </tr>
         </thead>
