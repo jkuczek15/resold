@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 -->
-<!--@subject {{trans "Your %store_name order confirmation" store_name=$store.getFrontendName()}} @-->
+<!--@subject {{trans "%store_name Order Confirmation #%increment_id" store_name=$store.getFrontendName() increment_id=$order.increment_id}} @-->
 <!--@vars {
 "var formattedBillingAddress|raw":"Billing Address",
 "var order.getEmailCustomerNote()":"Email Order Note",
@@ -73,10 +73,9 @@
                     {{depend order.getIsNotVirtual()}}
                     <td class="method-info">
                         <h3>{{trans "Shipping Method"}}</h3>
-                        <p>{{var order.getShippingDescription()}}</p>
-                        {{if shipping_msg}}
-                        <p>{{var shipping_msg}}</p>
-                        {{/if}}
+                        <p>Seller: {{var seller_name}}</p>
+                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/review?id={{var order_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Leave Review</strong></button></a>
+                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/review?id={{var order_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Seller</strong></button></a>
                     </td>
                     {{/depend}}
                 </tr>
@@ -85,5 +84,6 @@
         </td>
     </tr>
 </table>
+<br/><p>If you're having issues with your order, please attempt to first contact your seller. If your issue is still not resolved, you can open a dispute <a href="#">here</a>.</p>
 
 {{template config_path="design/email/footer_template"}}
