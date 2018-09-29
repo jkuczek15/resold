@@ -25,10 +25,10 @@
             <p>
                 {{trans "Thank you for your order from %store_name!" store_name=$store.getFrontendName()}}
                 {{trans "It is now %seller_name's responsibility to complete your order." seller_name=$seller_name}}
-                {{trans 'You can check your order by <a href="%account_url">logging into your account</a>.' account_url=$this.getUrl($store,'customer/account/',[_nosid:1]) |raw}}
+                {{trans 'You can check your order by' }} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">logging into your account</a>.
             </p>
             <p>
-                {{trans 'If you have questions about your order, reply to this email or contact %seller_name' seller_name=$seller_name }} <a href="mailto:%store_email">here.</a>
+                {{trans 'If you have questions about your order, reply to this email or contact %seller_name' seller_name=$seller_name }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}">here.</a>
                 {{depend store_hours}}
                     {{trans 'Our hours are <span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
                 {{/depend}}
@@ -37,7 +37,7 @@
     </tr>
     <tr class="email-summary">
         <td>
-            <h1>{{trans 'Your Order <span class="no-link">#%increment_id</span>' increment_id=$order.increment_id |raw}}</h1>
+            <h1>{{trans 'Your Order'}} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/"><span class="no-link">{{trans '#%increment_id' increment_id=$order.increment_id}}</span></a></h1>
             <p>{{trans 'Placed on <span class="no-link">%created_at</span>' created_at=$order.getCreatedAtFormatted(2) |raw}}</p>
         </td>
     </tr>
@@ -75,7 +75,7 @@
                         <h3>{{trans "Shipping Method"}}</h3>
                         <p>Seller: {{var seller_name}}</p>
                         <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/review?id={{var order_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Leave Review</strong></button></a>
-                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/review?id={{var order_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Seller</strong></button></a>
+                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Seller</strong></button></a>
                     </td>
                     {{/depend}}
                 </tr>
@@ -84,6 +84,6 @@
         </td>
     </tr>
 </table>
-<br/><p>If you're having issues with your order, please attempt to first contact your seller. If your issue is still not resolved, you can open a dispute <a href="#">here</a>.</p>
+<br/><p>If you're having issues with your order, please attempt to first contact your seller. If your issue is still not resolved, you can open a dispute <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">here</a>.</p>
 
 {{template config_path="design/email/footer_template"}}

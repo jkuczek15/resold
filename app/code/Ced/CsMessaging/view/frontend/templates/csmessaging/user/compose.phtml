@@ -25,7 +25,6 @@
 
 </style>
 <?php
-
 $product_id = $this->getRequest()->getParam('product_id');
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
