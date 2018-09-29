@@ -73,7 +73,7 @@
                     </td>
                 </tr>
             <?php endif ?>
-            <?php echo $block->getChildHtml('order_totals') ?>
+            <?php echo str_replace('Grand Total', 'Total', $block->getChildHtml('order_totals')) ?>
             </tfoot>
         </table>
     </div>

@@ -24,7 +24,7 @@
             </tr>
         </thead>
         <tbody>
-          <?= $block->getChildHtml('order_totals') ?>
+          <?= str_replace('Grand Total', 'Total', $block->getChildHtml('order_totals')) ?>
         </tbody>
     </table>
     <?php if ($this->helper('Magento\GiftMessage\Helper\Message')->isMessagesAllowed('order', $_order, $_order->getStore()) && $_order->getGiftMessageId()): ?>
