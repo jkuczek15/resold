@@ -11,6 +11,21 @@
 <?php echo $block->getChildHtml('info');?>
 <?php if ($_orders && count($_orders)): ?>
     <div class="table-wrapper orders-history">
+      <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <div class="control">
+            <div class="ck-button blue-background checked-button">
+              <label style="cursor: pointer;">
+                <input checked class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="bought"> <span style="margin-left: 0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>Bought</strong></span>
+              </label>
+            </div>
+            <div class="ck-button unchecked-button">
+              <label style="cursor: pointer;">
+                  <input class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
+              </label>
+            </div>
+          </div>
+        </div><br class="mobile-only" /><br class="mobile-only" />
         <table class="data table table-order-items history" id="my-orders-table">
             <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Orders') ?></caption>
             <thead>
@@ -76,6 +91,13 @@
   .actions {
     text-align: center;
   }
+  .control {
+    float: right;
+    margin-top: -4em;
+  }
+  .mobile-only {
+    display: none;
+  }
 }
 .limiter {
   display: none;
@@ -83,4 +105,73 @@
 .action.back {
   display: none !important;
 }
+.ck-button {
+  margin:4px;
+  background-color:#EFEFEF;
+  border-radius: 4px;
+  border:1px solid #D0D0D0;
+  overflow:auto;
+  float:left;
+  padding: 6px;
+}
+
+.ck-button:hover {
+    background: #3CBBD8;
+}
+
+.ck-button label {
+    float:left;
+    width: 6.0em;
+}
+
+.ck-button label span {
+    text-align:center;
+    padding: 3px 0px 3px;
+    display: block;
+}
+
+.ck-button label input {
+    position:absolute;
+}
+
+.ck-button input:checked + span {
+    color:#fff;
+}
+.blue-background {
+  background: #3CBBD8;
+}
+@media (max-width: 575.98px) {
+  .checked-button:hover {
+    background: #3CBBD8 !important;
+    color: white;
+  }
+  .unchecked-button:hover {
+    background-color: #EFEFEF !important;
+    color: black;
+  }
+  .account .page-main, .cms-privacy-policy .page-main {
+    padding-top: 0;
+  }
+  .account .page.messages {
+    margin-bottom: 0;
+  }
+  .control {
+      margin-left: -1.3em
+  }
+}
 </style>
+<script>
+require(['jquery'], ($) => {
+  let prevChecked = $('#bought');
+   $('.bought_sold').click(function(){
+     let checked = $(this).closest('.ck-button');
+     checked.removeClass('unchecked-button');
+     checked.addClass('blue-background').addClass('checked-button');
+
+     let unchecked = $(prevChecked).closest('.ck-button');
+     unchecked.removeClass('checked-button');
+     unchecked.removeClass('blue-background').removeClass('checked-button');
+     prevChecked = $(this);
+   });
+});
+</script>
