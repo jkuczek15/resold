@@ -6,6 +6,10 @@
 
 // @codingStandardsIgnoreFile
 
+$type = $this->getRequest()->getParam('type');
+if($type != 'sold'){
+  $type = 'bought';
+}// end if
 ?>
 <?php $_orders = $block->getOrders(); ?>
 <?php echo $block->getChildHtml('info');?>
@@ -13,15 +17,15 @@
     <div class="table-wrapper orders-history">
       <div class="col-md-8"></div>
         <div class="col-md-4">
-          <div class="control">
-            <div class="ck-button blue-background checked-button">
+          <div class="control custom">
+            <div class="ck-button <?= $type == 'bought' ? 'blue-background checked-button' : 'unchecked-button' ?>">
               <label style="cursor: pointer;">
-                <input checked class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="bought"> <span style="margin-left: 0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>Bought</strong></span>
+                <input <?= $type == 'bought' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="bought"> <span style="margin-left: 0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>Bought</strong></span>
               </label>
             </div>
-            <div class="ck-button unchecked-button">
+            <div class="ck-button <?= $type == 'sold' ? 'blue-background checked-button' : 'unchecked-button' ?>">
               <label style="cursor: pointer;">
-                  <input class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
+                  <input <?= $type == 'sold' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
               </label>
             </div>
           </div>
@@ -91,7 +95,7 @@
   .actions {
     text-align: center;
   }
-  .control {
+  .custom {
     float: right;
     margin-top: -4em;
   }
@@ -155,23 +159,22 @@
   .account .page.messages {
     margin-bottom: 0;
   }
-  .control {
+  .custom {
       margin-left: -1.3em
   }
 }
 </style>
 <script>
 require(['jquery'], ($) => {
-  let prevChecked = $('#bought');
    $('.bought_sold').click(function(){
      let checked = $(this).closest('.ck-button');
      checked.removeClass('unchecked-button');
      checked.addClass('blue-background').addClass('checked-button');
 
-     let unchecked = $(prevChecked).closest('.ck-button');
+     let unchecked = $('.bought_sold:not(:checked)').closest('.ck-button');
      unchecked.removeClass('checked-button');
-     unchecked.removeClass('blue-background').removeClass('checked-button');
-     prevChecked = $(this);
+     unchecked.removeClass('blue-background').addClass('unchecked-button')
+     window.location = 'https://<?= $_SERVER['HTTP_HOST'] ?>/sales/order/history?type=' + this.id;
    });
 });
 </script>
