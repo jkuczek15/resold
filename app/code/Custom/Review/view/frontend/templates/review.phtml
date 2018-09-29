@@ -13,7 +13,7 @@
 			return;
 		}
 		if($this->hasExistingReview()){
-			echo "There has already been a review submitted.";
+			echo "<div class='message info empty'><span>There has already been a review submitted.</span></div>";
 			return;
 		}
 		if($vendor->getName() == null){
