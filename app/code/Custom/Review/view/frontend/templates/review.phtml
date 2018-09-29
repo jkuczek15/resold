@@ -2,8 +2,20 @@
 		$rating_opt = $this->getRatingOption();
 		$order = $this->getOrder();
 		$items = $order->getAllItems();
-		$product_name = $items[0]->getProduct()->getName();
+		$product = $items[0]->getProduct();
+		$product_name = $product->getName();
+		$vendor = $this->getVendor();
+		$order_cust_id = $order->getCustomerId();
+		$customer_id = $this->getSession()->getId();
 
+		if($order_cust_id !== $customer_id){
+			echo 'This is not your order,';
+			return;
+		}
+		if($this->hasExistingReview()){
+			echo "There has already been a review submitted.";
+			return;
+		}
 		if($vendor->getName() == null){
 			echo 'Could not find seller or order information.';
 			return;
@@ -64,6 +76,7 @@
 								<input type="hidden" name="vendor_id" class="validate" value="<?php echo $vendor->getId(); ?>" />
 								<input type="hidden" name="customer_id" class="validate" value="<?php echo $this->getCustomerid(); ?>" />
 								<input type="hidden" name="subject" class="validate" value="<?php echo $product->getName() ?>" />
+								<input type="hidden" name="value" value="<?= $order->getId() ?>" />
             </div>
         </fieldset>
     <?php //endif ?>
