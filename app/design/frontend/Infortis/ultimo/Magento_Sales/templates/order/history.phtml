@@ -11,25 +11,26 @@ if($type != 'sold'){
   $type = 'bought';
 }// end if
 ?>
+<div class="col-md-8"></div>
+<div class="col-md-4">
+  <div class="control custom">
+    <div class="ck-button <?= $type == 'bought' ? 'blue-background checked-button' : 'unchecked-button' ?>">
+      <label style="cursor: pointer;">
+        <input <?= $type == 'bought' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="bought"> <span style="margin-left: 0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>Bought</strong></span>
+      </label>
+    </div>
+    <div class="ck-button <?= $type == 'sold' ? 'blue-background checked-button' : 'unchecked-button' ?>">
+      <label style="cursor: pointer;">
+          <input <?= $type == 'sold' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
+      </label>
+    </div>
+  </div>
+</div><br class="mobile-only" /><br class="mobile-only" />
 <?php $_orders = $block->getOrders(); ?>
 <?php echo $block->getChildHtml('info');?>
 <?php if ($_orders && count($_orders)): ?>
+
     <div class="table-wrapper orders-history">
-      <div class="col-md-8"></div>
-        <div class="col-md-4">
-          <div class="control custom">
-            <div class="ck-button <?= $type == 'bought' ? 'blue-background checked-button' : 'unchecked-button' ?>">
-              <label style="cursor: pointer;">
-                <input <?= $type == 'bought' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="bought"> <span style="margin-left: 0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>Bought</strong></span>
-              </label>
-            </div>
-            <div class="ck-button <?= $type == 'sold' ? 'blue-background checked-button' : 'unchecked-button' ?>">
-              <label style="cursor: pointer;">
-                  <input <?= $type == 'sold' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
-              </label>
-            </div>
-          </div>
-        </div><br class="mobile-only" /><br class="mobile-only" />
         <table class="data table table-order-items history" id="my-orders-table">
             <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Orders') ?></caption>
             <thead>
@@ -37,7 +38,7 @@ if($type != 'sold'){
                     <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Order #') ?></th>
                     <th scope="col" class="col date"><?php /* @escapeNotVerified */ echo __('Date') ?></th>
                     <?php /* @noEscape */ echo $block->getChildHtml('extra.column.header');?>
-                    <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Buyer') ?></th>
+                    <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __($type == 'bought' ? 'Seller' : 'Buyer') ?></th>
                     <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Item Name') ?></th>
                     <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Total') ?></th>
                     <th scope="col" class="col actions">&nbsp;</th>
@@ -46,6 +47,22 @@ if($type != 'sold'){
             <tbody>
                 <?php foreach ($_orders as $_order): ?>
                   <?php
+                  if(isset($_GET['type']) && $_GET['type'] == 'sold'){
+                    $_order = $_order->getOrder();
+                  }else{
+                    $order_number = $_order->getIncrementId();
+
+                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+                    $connection = $resource->getConnection();
+
+                    $sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+                    $result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+                    $vendor_id = $result[0]['vendor_id'];
+                    $vendor = $objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
+                  }// end if type sold
+
                   $items = $_order->getAllItems();
                   $product = $items[0]->getProduct();
                   ?>
@@ -57,13 +74,38 @@ if($type != 'sold'){
                             <?php $extra->setOrder($_order); ?>
                             <?php /* @noEscape */ echo $extra->getChildHtml() ?>
                         <?php endif; ?>
-                        <td data-th="<?php echo $block->escapeHtml(__('Buyer')) ?>" class="col shipping"><?php echo $_order->getShippingAddress() ? $block->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+                        <?php
+                        if($type == 'bought'){
+                        ?>
+                        <td data-th="<?php echo $block->escapeHtml(__('Seller')) ?>" class="col shipping"><?php echo $vendor->getName().'&nbsp;' ?></td>
+                        <?php
+                        }else{
+                          // type sold
+                          ?>
+                          <td data-th="<?php echo $block->escapeHtml(__('Buyer')) ?>" class="col shipping"><?php echo $_order->getShippingAddress() ? $block->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+                          <?php
+                        }// end if type == 'bought'
+                        ?>
                         <td data-th="<?php echo $block->escapeHtml(__('Product')) ?>" class="col item"><?php echo $product->getName() ? $block->escapeHtml($product->getName()) : '&nbsp;' ?></td>
                         <td data-th="<?php echo $block->escapeHtml(__('Total')) ?>" class="col total"><?php /* @escapeNotVerified */ echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
                         <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
+                          <?php
+                          if($type == 'bought'){
+                          ?>
                             <a href="/review?id=<?= $_order->getId() ?>" class="action view">
                                 <span><?php /* @escapeNotVerified */ echo __('Leave Review') ?></span>
-                            </a>|
+                            </a>
+                          <?php
+                          }else{
+                          ?>
+                            <a href="#" class="action view">
+                                <span><?php /* @escapeNotVerified */ echo __('Enter Tracking') ?></span>
+                            </a>
+                          <?php
+                          }// end if type == 'bought'
+                          ?>
+                            |
+
                             <a href="<?php /* @escapeNotVerified */ echo $block->getViewUrl($_order) ?>" class="action view">
                                 <span><?php /* @escapeNotVerified */ echo __('View Order') ?></span>
                             </a>
