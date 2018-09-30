@@ -48,10 +48,6 @@ class Lists extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        if (!$this->session->isLoggedIn()) {
-            $encoded_url = base64_encode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-            return $resultRedirect->setPath('customer/account/login/referer/'.$encoded_url);
-        }// end if not logged in
 
         $id = $this->getRequest()->getParam('id');
         $storeId = $this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->getStore()->getId();
