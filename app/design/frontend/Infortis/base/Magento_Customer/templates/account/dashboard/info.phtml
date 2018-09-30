@@ -8,36 +8,85 @@
 // @codingStandardsIgnoreFile
 
 /** @var \Magento\Customer\Block\Account\Dashboard\Info $block */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+$vendorId = $customerSession->getVendorId();
+$standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
+$stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
+
+$connected_to_stripe = true;
+if(count($stripe_model) == 0){
+  $connected_to_stripe = false;
+}
 ?>
-<div class="block block-dashboard-info">
-    <div class="block-title"><strong><?php echo $block->escapeHtml(__('Account Information')) ?></strong></div>
-    <div class="block-content">
-        <div class="box box-information">
-            <strong class="box-title">
-                <span><?php echo $block->escapeHtml(__('Contact Information')) ?></span>
-            </strong>
-            <div class="box-content">
-                <p>
-                    <?php echo $block->escapeHtml($block->getName()) ?><br>
-                    <?php echo $block->escapeHtml($block->getCustomer()->getEmail()) ?><br>
-                </p>
-            </div>
-            <div class="box-actions">
-                <a class="action edit" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/edit')) ?>">
-                    <span><?php echo $block->escapeHtml(__('Edit')) ?></span>
-                </a>
-                <a href="<?php echo $block->escapeUrl($block->getChangePasswordUrl()) ?>" class="action change-password">
-                    <?php echo $block->escapeHtml(__('Change Password')) ?>
-                </a>
-            </div>
-        </div>
-        <?php if ($block->isNewsletterEnabled()): ?>
-            <div class="box box-newsletter">
-            </div>
-        <?php endif; ?>
-    </div>
+<div class="row">
+<div class="col-md-6">
+  <div class="block block-dashboard-info">
+      <div class="block-title"><strong><?php echo $block->escapeHtml(__('Account Information')) ?></strong></div>
+      <div class="block-content">
+          <div class="box box-information">
+              <strong class="box-title">
+                  <span><?php echo $block->escapeHtml(__('Contact Information')) ?></span>
+              </strong>
+              <div class="box-content">
+                  <p>
+                      <?php echo $block->escapeHtml($block->getName()) ?><br>
+                      <?php echo $block->escapeHtml($block->getCustomer()->getEmail()) ?><br>
+                  </p>
+              </div>
+              <div class="box-actions">
+                  <a class="action edit" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/edit')) ?>">
+                      <span><?php echo $block->escapeHtml(__('Edit')) ?></span>
+                  </a>
+                  <a href="<?php echo $block->escapeUrl($block->getChangePasswordUrl()) ?>" class="action change-password">
+                      <?php echo $block->escapeHtml(__('Change Password')) ?>
+                  </a>
+              </div>
+          </div>
+          <?php if ($block->isNewsletterEnabled()): ?>
+              <div class="box box-newsletter">
+              </div>
+          <?php endif; ?>
+      </div>
+  </div>
 </div>
+<div class="col-md-6">
+  <a target="_blank" href="https://stripe.com/about">
+    <img class="custom-margin" width="50%" src="/pub/media/logo/default/stripe-banner.png" />
+  </a>
+<?php
+  if($connected_to_stripe){
+?><br/>
+  <a target="_blank" style="cursor: pointer; margin-left: -1.1em;" class="btn btn-primary btn-sm mobile-margin" href="https://dashboard.stripe.com"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Stripe Dashboard</strong></button></a>
+  <a target="_blank" style="cursor: pointer; margin-left: 0em;" class="btn btn-primary btn-sm" href="https://dashboard.stripe.com/payouts"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Get Paid</strong></button></a>
+<?php
+}else{
+?><br/>
+  <a style="cursor: pointer; margin-left: -1.1em;" class="btn btn-primary btn-sm mobile-margin" href="/connect-to-stripe"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Connect To Stripe</strong></button></a>
+<?php
+}// end if connected to stripe
+?>
+</div>
+</div><br/>
+
 <style>
+@media(min-width: 586px){
+    .custom-margin {
+      margin-left: -3em;
+    }
+}
+@media(max-width: 586px){
+    .custom-margin {
+      margin-left: -2em;
+    }
+    .mobile-margin {
+      margin-left: -0.5em !important;
+    }
+    .account .page-main, .cms-privacy-policy .page-main {
+      padding-top: 0;
+    }
+}
 .block.block-reviews-dashboard {
   display: none;
 }
