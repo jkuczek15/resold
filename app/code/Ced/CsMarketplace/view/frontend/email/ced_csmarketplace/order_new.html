@@ -38,7 +38,7 @@
     </tr>
     <tr class="email-summary">
         <td>
-            <h1>{{trans 'Your Order <span class="no-link">#%increment_id</span>' increment_id=$order.increment_id |raw}}</h1>
+            <h1>{{trans 'Your Order' }} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/"><span class="no-link">{{trans '#%increment_id' increment_id=$order.increment_id}}</span></a></h1>
             <p>{{trans 'Placed on <span class="no-link">%created_at</span>' created_at=$order.getCreatedAtFormatted(2) |raw}}</p>
         </td>
     </tr>
@@ -86,6 +86,6 @@
         </td>
     </tr>
 </table>
-<br/><p>If you're having issues or would like to get more information about your order, visit our<br/><a href="https://{{var host}}/help/for-sellers">For Sellers Help Documentation</a>.</p>
+<br/><p>If you're having issues or would like to get more information about your order, visit our<br/><a href="https://{{var host}}/help/for-sellers">For Sellers Help Documentation</a>. To collect your profit, access the Stripe Dashboard <a href="https://dashboard.stripe.com">here</a>.</p>
 
 {{template config_path="design/email/footer_template"}}
