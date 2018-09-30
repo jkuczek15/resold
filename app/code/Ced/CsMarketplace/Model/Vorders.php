@@ -29,14 +29,14 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
     const STATE_CANCELED   = 3;
     const STATE_REFUND     = 4;
     const STATE_REFUNDED   = 5;
-    
+
     const ORDER_NEW_STATUS=1;
     const ORDER_CANCEL_STATUS=3;
-    
+
     protected $_items = null;
-    
+
     protected static $_states;
-    
+
     protected $_eventPrefix      = 'csmarketplace_vorders';
     protected $_eventObject      = 'vorder';
     public $_vendorstatus=null;
@@ -44,7 +44,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
     protected $_dataHelper;
     protected $_aclHelper;
     protected $_objectManager;
-    
+
     /**
      * @param \Magento\Framework\Model\Context                        $context
      * @param \Magento\Framework\Registry                             $registry
@@ -79,20 +79,20 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
             $data
         );
 
-        
 
-           
+
+
     }
-    
+
     /**
      * Initialize resource model
      */
     protected function _construct()
     {
-        
+
         $this->_init('Ced\CsMarketplace\Model\ResourceModel\Vorders');
     }
-    
+
     /**
      * Retrieve vendor order states array
      *
@@ -111,7 +111,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return self::$_states;
     }
-    
+
     /**
      * Check vendor order pay action availability
      *
@@ -119,11 +119,11 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
      */
     public function canPay()
     {
-        return $this->getOrderPaymentState() == \Magento\Sales\Model\Order\Invoice::STATE_PAID 
-        && 
+        return $this->getOrderPaymentState() == \Magento\Sales\Model\Order\Invoice::STATE_PAID
+        &&
         $this->getPaymentState() == self::STATE_OPEN;
     }
-    
+
     /**
      * Check vendor order cancel action availability
      *
@@ -133,7 +133,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
     {
         return $this->getPaymentState() == self::STATE_OPEN;
     }
-    
+
     /**
      * Check vendor order refund action availability
      *
@@ -141,11 +141,11 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
      */
     public function canMakeRefund()
     {
-        return $this->getOrderPaymentState() == \Magento\Sales\Model\Order\Invoice::STATE_PAID 
-        && 
+        return $this->getOrderPaymentState() == \Magento\Sales\Model\Order\Invoice::STATE_PAID
+        &&
         $this->getPaymentState() == self::STATE_PAID;
     }
-    
+
     /**
      * Check vendor order refund action availability
      *
@@ -153,11 +153,11 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
      */
     public function canRefund()
     {
-        return $this->getOrderPaymentState() == \Magento\Sales\Model\Order\Invoice::STATE_PAID 
-        && 
+        return $this->getOrderPaymentState() == \Magento\Sales\Model\Order\Invoice::STATE_PAID
+        &&
         $this->getPaymentState() == self::STATE_REFUND;
     }
-    
+
     /**
      * Get Ordered Items associated to customer
      * params: $order Object, $vendorId int
@@ -165,19 +165,19 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
      */
     public function getItemsCollection($filterByTypes = array(), $nonChildrenOnly = false)
     {
-        
+
         $incrementId = $this->getOrderId();
         $vendorId = $this->getVendorId();
-        
+
         $order  = $this->getOrder();
-        
+
         if (is_null($this->_items)) {
-            $this->_items = 
+            $this->_items =
 
             $this->_objectManager->create('Magento\Sales\Model\ResourceModel\Order\Item\Collection')
                 ->setOrderFilter($order)
                 ->addFieldToFilter('vendor_id', $vendorId);
-            
+
             if ($filterByTypes) {
                 $this->_items->filterByTypes($filterByTypes);
             }
@@ -187,15 +187,15 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
             if ($this->getId()) {
                 foreach ($this->_items as $item) {
                     if($item->getVendorId() == $vendorId) {
-                        $item->setOrder($order); 
+                        $item->setOrder($order);
                     }
                 }
             }
         }
-        
+
         return $this->_items;
     }
-    
+
     /**
      * Get Ordered Items associated to customer
      * params: $order Object, $vendorId int
@@ -203,13 +203,12 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
      */
     public function getOrder($incrementId = false)
     {
-        if(!$incrementId) { $incrementId = $this->getOrderId(); 
+        if(!$incrementId) { $incrementId = $this->getOrderId();
         }
         $order = $this->_objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($incrementId);
         return $order;
-        
     }
-    
+
     /**
      * Get Vordered Subtotal
      * return float
@@ -223,7 +222,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $subtotal;
     }
-    
+
     /**
      * Get Vordered base Subtotal
      * return float
@@ -237,8 +236,8 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $basesubtotal;
     }
-    
-    
+
+
     /**
      * Get Vordered Grandtotal
      * return float
@@ -252,7 +251,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $grandtotal;
     }
-    
+
     /**
      * Get Vordered base Grandtotal
      * return float
@@ -266,9 +265,9 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $basegrandtotal;
     }
-    
-    
-    
+
+
+
     /**
      * Get Vordered tax
      * return float
@@ -282,7 +281,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $tax;
     }
-    
+
     /**
      * Get Vordered tax
      * return float
@@ -296,7 +295,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $tax;
     }
-    
+
     /**
      * Get Vordered Discount
      * return float
@@ -310,7 +309,7 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $discount;
     }
-    
+
     /**
      * Get Vordered Discount
      * return float
@@ -324,13 +323,13 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
         }
         return $discount;
     }
-    
+
     /**
      * Calculate the commission fee
      *
      * @return Ced_CsMarketplace_Model_Vorders
      */
-    public function collectCommission() 
+    public function collectCommission()
     {
         if ($this->getData('vendor_id') && $this->getData('base_to_global_rate') && $this->getData('order_total')) {
             $order = $this->getCurrentOrder();
@@ -351,10 +350,9 @@ class Vorders extends \Ced\CsMarketplace\Model\FlatAbstractModel
                 $this->setItemsCommission($commission['item_commission']);
             }
             $this->setOrderPaymentState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
-            
+
         }
 
         return $this;
-    }    
+    }
 }
-
