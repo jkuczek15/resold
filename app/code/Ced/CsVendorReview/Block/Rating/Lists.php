@@ -19,32 +19,50 @@
 
 namespace Ced\CsVendorReview\Block\Rating;
 
+use Magento\Customer\Model\Session;
 use Magento\Framework\Registry;
 
 class Lists extends \Magento\Framework\View\Element\Template
 {
     protected $_vendor;
-    
+
     protected $_storeManager;
-    
+
     public $_objectManager;
-    
+
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Registry $registry,
+        Session $customerSession,
         array $data = []
     ) {
-    
-        parent::__construct($context, $data);
+      parent::__construct($context, $data);
+
         $this->_coreRegistry = $registry;
         $this->_objectManager=$objectManager;
-        $reviews = $this->_objectManager->create('Ced\CsVendorReview\Model\Review')->getCollection()
-            ->addFieldToFilter('vendor_id', $this->getVendorId())
-            ->addFieldToFilter('status', 1)
-            ->setOrder('created_at', 'desc');
+        $this->_session = $customerSession;
+        if(strpos($_SERVER['REQUEST_URI'], '/review/customer') === FALSE){
+          $reviews = $this->_objectManager->create('Ced\CsVendorReview\Model\Review')->getCollection()
+              ->addFieldToFilter('vendor_id', $this->getVendorId())
+              ->addFieldToFilter('status', 1)
+              ->setOrder('created_at', 'desc');
+        }else{
+          if(isset($_GET['type']) && $_GET['type'] == 'submitted_reviews'){
+            $reviews = $this->_objectManager->create('Ced\CsVendorReview\Model\Review')->getCollection()
+              ->addFieldToFilter('customer_id', $this->_session->getCustomer()->getId())
+              ->addFieldToFilter('status', 1)
+              ->setOrder('created_at', 'desc');
+          }else{
+            $reviews = $this->_objectManager->create('Ced\CsVendorReview\Model\Review')->getCollection()
+              ->addFieldToFilter('vendor_id', $this->_session->getVendorId())
+              ->addFieldToFilter('status', 1)
+              ->setOrder('created_at', 'desc');
+          }
+        }
         $this->setReviews($reviews);
     }
+
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
@@ -72,6 +90,6 @@ class Lists extends \Magento\Framework\View\Element\Template
     }
     public function getVendorId()
     {
-        return $this->getVendor()->getId();
+      return $this->getVendor()->getId();
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+             <block class="Ced\CsMarketplace\Block\Vshops\View" name="csmarketplace_vshops_view" before="catalog.leftnav" template="Ced_CsMarketplace::vshops/view.phtml"/>
+      			 <block class="Ced\CsVendorReview\Block\Vshops\View" name="csmarketplace_vshops_view_rating" after="csmarketplace_vshops_view" template="Ced_CsVendorReview::vshops/view.phtml"/>
+            <block class="Ced\CsVendorReview\Block\Rating\Lists" name="review_customer_list" after="csmarketplace_vshops_view_rating" template="customer/list.phtml" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -17,31 +17,33 @@
  * @license   http://cedcommerce.com/license-agreement.txt
  */
 
- 
+
 namespace Ced\CsVendorReview\Block\Vshops;
 
+use Magento\Customer\Model\Session;
 use Magento\Framework\Registry;
 
 class View extends \Magento\Framework\View\Element\Template
 {
     protected $_vendor;
-    
+
     protected $_storeManager;
-    
+
     public $_objectManager;
-    
+
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Registry $registry,
+        Session $customerSession,
         array $data = []
     ) {
-    
         parent::__construct($context, $data);
         $this->_coreRegistry = $registry;
         $this->_objectManager=$objectManager;
+        $this->_session = $customerSession;
     }
-    
+
     public function isActivated()
     {
         $scopeConfig = $this->_objectManager->create('Magento\Framework\App\Config\ScopeConfigInterface');
@@ -53,23 +55,24 @@ class View extends \Magento\Framework\View\Element\Template
     }
     public function getVendor()
     {
-        if (!$this->_vendor) {
+        if (!$this->_vendor)  {
             $this->_vendor=$this->_coreRegistry->registry('current_vendor');
         }
         return $this->_vendor;
     }
-    
+
     public function getVendorRating()
     {
+
         $review_data = $this->_objectManager->create('Ced\CsVendorReview\Model\Review')->getCollection()
             ->addFieldToFilter('vendor_id', $this->getVendorId())
             ->addFieldToFilter('status', 1);
-            
+
         $rating = $this->_objectManager->create('Ced\CsVendorReview\Model\Rating')->getCollection()
             ->addFieldToSelect('rating_code');
         $count = 0;
         $rating_sum = 0;
-            
+
         $vendor_products = $this->getVendorProducts($this->getVendorId());
         if (count($vendor_products)>0) {
             $rating_sum_prod=$this->getProductRating($vendor_products);
@@ -78,7 +81,7 @@ class View extends \Magento\Framework\View\Element\Template
                 $count++;
             }
         }
-            
+
         foreach ($review_data as $key => $value) {
             foreach ($rating as $k => $val) {
                 if ($value[$val['rating_code']] > 0) {
@@ -87,7 +90,7 @@ class View extends \Magento\Framework\View\Element\Template
                 }
             }
         }
-        
+
         if ($count > 0 && $rating_sum > 0) {
             $width = $rating_sum/$count;
             return ceil($width);
@@ -100,7 +103,7 @@ class View extends \Magento\Framework\View\Element\Template
         $review_data = $this->_objectManager->create('Ced\CsVendorReview\Model\Review')->getCollection()
             ->addFieldToFilter('vendor_id', $this->getVendorId())
             ->addFieldToFilter('status', 1);
-            
+
         $rating = $this->_objectManager->create('Ced\CsVendorReview\Model\Rating')->getCollection()
             ->addFieldToSelect('rating_code')
             ->addFieldToSelect('rating_label')
@@ -115,8 +118,8 @@ class View extends \Magento\Framework\View\Element\Template
                 $rating_details['Product']['count']=1;
             }
         }
-            
-            
+
+
         foreach ($review_data as $key => $value) {
             foreach ($rating as $k => $val) {
                 if ($value[$val['rating_code']] > 0) {
@@ -133,7 +136,7 @@ class View extends \Magento\Framework\View\Element\Template
                 }
             }
         }
-        
+
         if (!empty($rating_details)) {
             return $rating_details;
         } else {
@@ -142,7 +145,11 @@ class View extends \Magento\Framework\View\Element\Template
     }
     public function getVendorId()
     {
-        return $this->getVendor()->getId();
+        if(strpos($_SERVER['REQUEST_URI'], '/review/customer') === FALSE){
+          return $this->getVendor()->getId();
+        }else{
+          return $this->_session->getVendorId();
+        }
     }
     public function getProductRating($vendor_products)
     {
