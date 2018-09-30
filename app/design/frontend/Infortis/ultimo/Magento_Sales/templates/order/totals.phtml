@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var $block \Magento\Sales\Block\Order\Totals
+ * @see \Magento\Sales\Block\Order\Totals
+ */
+$totals = $block->getTotals();
+$total = $totals['subtotal']->getValue();
+?>
+<?php foreach ($totals as $_code => $_total): ?>
+    <?php if ($_total->getBlockName()): ?>
+        <?php echo $block->getChildHtml($_total->getBlockName(), false); ?>
+    <?php else:?>
+<?php
+    if($_code == 'grand_total' && $block->isSellerEmail()){
+      $_total->setLabel('Your Profit');
+      $_total->setValue($total - ($total * 0.1));
+    }
+?>
+    <tr class="<?php /* @escapeNotVerified */ echo $_code?>">
+        <th <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?> scope="row">
+            <?php if ($_total->getStrong()):?>
+            <strong><?php echo $block->escapeHtml($_total->getLabel());?></strong>
+            <?php else:?>
+            <?php echo $block->escapeHtml($_total->getLabel());?>
+            <?php endif?>
+        </th>
+        <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> data-th="<?php echo $block->escapeHtml($_total->getLabel());?>">
+            <?php if ($_total->getStrong()):?>
+            <strong><?php /* @escapeNotVerified */ echo $block->formatValue($_total) ?></strong>
+            <?php else:?>
+            <?php /* @escapeNotVerified */ echo $block->formatValue($_total) ?>
+            <?php endif?>
+        </td>
+    </tr>
+<?php
+  if($_code == 'shipping' && $block->isSellerEmail()){
+?>
+  <tr>
+    <th>Service Fee</th>
+    <td colspan=2><?= money_format('$%i', $total * 0.1) ?></td>
+  </tr>
+<?php
+  }// end if shipping
+?>
+    <?php endif?>
+<?php endforeach?>

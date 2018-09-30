@@ -107,6 +107,10 @@ $is_seller = $vendorId == $customerVendorId;
                             <button style="float: right;" class="btn btn-primary" onclick="window.open('<?= $product->getProductUrl() ?>', '_blank'); return false;">View Listing</button>
                           </div>
                         </div>
+                    <?php
+                    if(!isset($_GET['post_sale'])){
+                    ?>
+
                         <div class="row" style="margin-bottom: 1em;">
                           <div class="col-md-2">
                             <div class="control">
@@ -144,6 +148,9 @@ $is_seller = $vendorId == $customerVendorId;
                             </div>
                           </div>
                         </div>
+                  <?php
+                }// end if post sale
+                    ?>
                         <div class="form-group">
                           <label>Message:</label>
                             <textarea id="compose-textarea" name="text_email" class="form-control" style="height: 200px;width:97%;" value=""></textarea>
