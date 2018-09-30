@@ -217,3 +217,9 @@
 .action.action-toggle{
   display: none  !important;
 }
+.payment-method-title.field.choice{
+  display: none;
+}
+.checkout-billing-address {
+  margin-top: 1em !important;
+}
