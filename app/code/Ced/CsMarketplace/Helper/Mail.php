@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * CedCommerce
  *
@@ -23,27 +23,27 @@ use Magento\Sales\Model\Order\Address\Renderer;
 
 class Mail extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    
+
     const XML_PATH_ACCOUNT_EMAIL_IDENTITY = 'ced_csmarketplace/vendor/email_identity';
     const XML_PATH_ACCOUNT_CONFIRMED_EMAIL_TEMPLATE = 'ced_csmarketplace/vendor/account_confirmed_template';
     const XML_PATH_ACCOUNT_REJECTED_EMAIL_TEMPLATE = 'ced_csmarketplace/vendor/account_rejected_template';
     const XML_PATH_ACCOUNT_DELETED_EMAIL_TEMPLATE = 'ced_csmarketplace/vendor/account_deleted_template';
-    
+
     const XML_PATH_SHOP_ENABLED_EMAIL_TEMPLATE = 'ced_csmarketplace/vendor/shop_enabled_template';
     const XML_PATH_SHOP_DISABLED_EMAIL_TEMPLATE = 'ced_csmarketplace/vendor/shop_disabled_template';
-    
+
     const XML_PATH_PRODUCT_EMAIL_IDENTITY = 'ced_vproducts/general/email_identity';
     const XML_PATH_PRODUCT_CONFIRMED_EMAIL_TEMPLATE = 'ced_vproducts/general/product_approved_template';
     const XML_PATH_PRODUCT_REJECTED_EMAIL_TEMPLATE = 'ced_vproducts/general/product_rejected_template';
     const XML_PATH_PRODUCT_DELETED_EMAIL_TEMPLATE = 'ced_vproducts/general/product_deleted_template';
-        
+
     const XML_PATH_ORDER_EMAIL_IDENTITY = 'ced_vorders/general/email_identity';
     const XML_PATH_ORDER_NEW_EMAIL_TEMPLATE = 'ced_vorders/general/order_new_template';
     const XML_PATH_ORDER_CANCEL_EMAIL_TEMPLATE = 'ced_vorders/general/order_cancel_template';
     protected $_objectManager = null;
     protected $paymentHelper;
     protected $addressRenderer;
-    
+
     public function __construct(
 		Renderer $addressRenderer,
 		PaymentHelper $paymentHelper,
@@ -72,7 +72,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                     ->getStore(null)->getStoreId()
             );
     }
-    
+
     /**
      * Can send new order notification email
      *
@@ -83,7 +83,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->getStoreConfig('ced_vorders/general/order_cancel_email_enable', $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(null)->getStoreId());
     }
-    
+
 
     /**
      * Send account status change email to vendor
@@ -97,24 +97,24 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
     public function sendAccountEmail($status, $backUrl = '', $vendor, $storeId = null)
     {
         $types = [
-            \Ced\CsMarketplace\Model\Vendor::VENDOR_APPROVED_STATUS   => self::XML_PATH_SHOP_ENABLED_EMAIL_TEMPLATE,  
+            \Ced\CsMarketplace\Model\Vendor::VENDOR_APPROVED_STATUS   => self::XML_PATH_SHOP_ENABLED_EMAIL_TEMPLATE,
             \Ced\CsMarketplace\Model\Vendor::VENDOR_DISAPPROVED_STATUS => self::XML_PATH_ACCOUNT_REJECTED_EMAIL_TEMPLATE,
             \Ced\CsMarketplace\Model\Vendor::VENDOR_DELETED_STATUS => self::XML_PATH_ACCOUNT_DELETED_EMAIL_TEMPLATE,
         ];
-        if (!isset($types[$status])) { 
+        if (!isset($types[$status])) {
             return false;
         }
         if ($storeId === null) {
             $customer = $this->_objectManager->get('Magento\Customer\Model\Customer')->load($vendor->getCustomerId());
             $storeId = $customer->getStoreId();
         }
-    
+
         $this->_sendEmailTemplate($types[$status], self::XML_PATH_ACCOUNT_EMAIL_IDENTITY,
             ['vendor' => $vendor, 'back_url' => $backUrl], $storeId
         );
         return $this;
     }
-    
+
     /**
      * Send shop enable/disable to vendor
      *
@@ -133,19 +133,19 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
         if (!isset($types[$status])) {
             return false;
         }
-    
+
         if (!$storeId) {
             $customer = $this->_objectManager->get('Magento\Customer\Model\Customer')->load($vendor->getCustomerId());
             $storeId=$customer->getStoreId();
         }
-    
+
         $this->_sendEmailTemplate(
             $types[$status], self::XML_PATH_ACCOUNT_EMAIL_IDENTITY,
             array('vendor' => $vendor, 'back_url' => $backUrl), $storeId
         );
         return $this;
     }
-    
+
     /**
      * Send order notification email to vendor
      *
@@ -153,13 +153,13 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function sendOrderEmail(\Magento\Sales\Model\Order $order,$type, $vendorId, $vorder)
     {
-        
+
         $types = array(
         \Ced\CsMarketplace\Model\Vorders::ORDER_NEW_STATUS   =>self::XML_PATH_ORDER_NEW_EMAIL_TEMPLATE,
         \Ced\CsMarketplace\Model\Vorders::ORDER_CANCEL_STATUS => self::XML_PATH_ORDER_CANCEL_EMAIL_TEMPLATE,
         );
         if (!isset($types[$type])) {
-            return; 
+            return;
         }
         $storeId = $order->getStore()->getId();
         if($type == \Ced\CsMarketplace\Model\Vorders::ORDER_NEW_STATUS) {
@@ -172,64 +172,44 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                 return;
             }
         }
-    
-        /*$vendorIds = array();
-        foreach($order->getAllItems() as $item){
-            if(!in_array($item->getVendorId(), $vendorIds)) { $vendorIds[] = $item->getVendorId(); 
-            }
-        }*/
-       /*  if($type == \Ced\CsMarketplace\Model\Vorders::ORDER_CANCEL_STATUS) {
-            // Start store emulation process
-            $storeId =$this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(null)->getId();
-            $initialEnvironmentInfo = $this->_appEmulation->startEnvironmentEmulation($storeId);
+
+        $items = $order->getAllItems();
+        $product = $items[0]->getProduct();
+
+        $vendor = $this->_objectManager->get('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
+        $vorder = $this->_objectManager->get('Ced\CsMarketplace\Model\Vorders')->loadByField(array('order_id','vendor_id'), array($order->getIncrementId(),$vendorId));
+        if($this->_objectManager->get('Magento\Framework\Registry')->registry('current_order')!='') {
+            $this->_objectManager->get('Magento\Framework\Registry')->unregister('current_order');
         }
-        
-        try {
-            // Retrieve specified view block from appropriate design package (depends on emulated store)
-            $paymentBlock = $this->_objectManager->get('Magento\Payment\Helper\Data')->getInfoBlock($order->getPayment())->setIsSecureMode(true);
-            $paymentBlock->getMethod()->setStore($storeId);
-            $paymentBlockHtml = $paymentBlock->toHtml();
-        } catch (Exception $exception) {
-            // Stop store emulation process
-            if($type == \Ced\CsMarketplace\Model\Vorders::ORDER_CANCEL_STATUS) {
-                $this->_appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo); 
-            }
-            throw $exception;
-        } */
-        
-        
-        
-        /*foreach($vendorIds as $vendorId){
-            $vendor = $this->_objectManager->get('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
-            if(!$vendor->getId()) {
-                continue;
-            }*/
-            $vendor = $this->_objectManager->get('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
-            $vorder = $this->_objectManager->get('Ced\CsMarketplace\Model\Vorders')->loadByField(array('order_id','vendor_id'), array($order->getIncrementId(),$vendorId));
-            if($this->_objectManager->get('Magento\Framework\Registry')->registry('current_order')!='') {
-                $this->_objectManager->get('Magento\Framework\Registry')->unregister('current_order'); 
-            }
-            
-            if($this->_objectManager->get('Magento\Framework\Registry')->registry('current_vorder')!='') {
-                $this->_objectManager->get('Magento\Framework\Registry')->unregister('current_vorder'); 
-            }
-            $this->_objectManager->get('Magento\Framework\Registry')->register('current_order', $order);
-            $this->_objectManager->get('Magento\Framework\Registry')->register('current_vorder', $vorder);
-                
-            $this->_sendEmailTemplate(
-                $types[$type], self::XML_PATH_ORDER_EMAIL_IDENTITY,
-                array('vendor' => $vendor,'order' => $order, 'billing' => $order->getBillingAddress(),'payment_html'=>$this->getPaymentHtml($order),'formattedShippingAddress'=>$this->getFormattedShippingAddress($order),'formattedBillingAddress'=>$this->getFormattedBillingAddress($order)), $storeId
-            );
-        //}
-        
-       /* if($type == \Ced\CsMarketplace\Model\Vorders::ORDER_CANCEL_STATUS) {
-            // Stop store emulation process
-            $this->_appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-        }*/
-    
+
+        if($this->_objectManager->get('Magento\Framework\Registry')->registry('current_vorder')!='') {
+            $this->_objectManager->get('Magento\Framework\Registry')->unregister('current_vorder');
+        }
+        $this->_objectManager->get('Magento\Framework\Registry')->register('current_order', $order);
+        $this->_objectManager->get('Magento\Framework\Registry')->register('current_vorder', $vorder);
+
+        $this->_sendEmailTemplate(
+            $types[$type], self::XML_PATH_ORDER_EMAIL_IDENTITY,
+            array('vendor' => $vendor,
+                  'order' => $order,
+                  'billing' => $order->getBillingAddress(),
+                  'payment_html' => '<strong>Stripe</strong>'.str_replace('Stripe', '', $this->getPaymentHtml($order)),
+                  'formattedShippingAddress'=>$this->getFormattedShippingAddress($order),
+                  'formattedBillingAddress'=>$this->getFormattedBillingAddress($order),
+                  'customer_name' => $order->getCustomerName(),
+                  'product_name' => $product->getName(),
+                  'host' => $_SERVER['HTTP_HOST'],
+                  'sender_id' => $order->getCustomerId(),
+                  'vendor_id' => $vendor->getCustomerId(),
+                  'product_id' => $product->getId(),
+                  'encoded_subject' => urlencode($product->getName()),
+                  'order_id' => $order->getId()
+                ),
+            $storeId
+        );
     }
-    
-    
+
+
     /**
      * Send product status change notification email to vendor
      *
@@ -238,21 +218,21 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
     public function sendProductNotificationEmail($ids,$status)
     {
         $types = array(
-        \Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS   => self::XML_PATH_PRODUCT_CONFIRMED_EMAIL_TEMPLATE,  
-        \Ced\CsMarketplace\Model\Vproducts::NOT_APPROVED_STATUS => self::XML_PATH_PRODUCT_REJECTED_EMAIL_TEMPLATE, 
+        \Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS   => self::XML_PATH_PRODUCT_CONFIRMED_EMAIL_TEMPLATE,
+        \Ced\CsMarketplace\Model\Vproducts::NOT_APPROVED_STATUS => self::XML_PATH_PRODUCT_REJECTED_EMAIL_TEMPLATE,
         \Ced\CsMarketplace\Model\Vproducts::DELETED_STATUS => self::XML_PATH_PRODUCT_DELETED_EMAIL_TEMPLATE,
         );
-        
+
         if (!isset($types[$status])) {
-            return; 
+            return;
         }
-        
+
         $vendorIds = array();
         foreach($ids as $productId){
             $vendorId=$this->_objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getVendorIdByProduct($productId);
             $vendorIds[$vendorId][] = $productId;
         }
-        
+
         foreach($vendorIds as $vendorId=>$productIds){
             $vendor = $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
             if(!$vendor->getId()) {
@@ -264,11 +244,11 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                 if($status!=\Ced\CsMarketplace\Model\Vproducts::DELETED_STATUS) {
                     $product=$this->_objectManager->create('Magento\Catalog\Model\Product')->load($productId);
                     if($product && $product->getId()) {
-                        $products[0][]=$product; 
+                        $products[0][]=$product;
                     }
                 }
                 $products[1][$productId]=$this->_objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('product_id', array('eq'=>$productId))->getFirstItem();
-            }        
+            }
             $customer = $this->_objectManager->create('Magento\Customer\Model\Customer')->load($vendor->getCustomerId());
             $storeId=$customer->getStoreId();
             $this->_sendEmailTemplate(
@@ -277,7 +257,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
             );
         }
     }
-    
+
     /**
      * Send corresponding email template
      *
@@ -289,12 +269,12 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected function _sendEmailTemplate($template, $sender, $templateParams = array(), $storeId = null)
     {
-        
+
         /*reference file vendor\magento\module-sales\Model\Order\Email\SenderBuilder.php */
         /**
-        * 
         *
-        * @var $mailer Mage_Core_Model_Email_Template_Mailer 
+        *
+        * @var $mailer Mage_Core_Model_Email_Template_Mailer
         */
         try{
             //$templateContainer=
@@ -308,7 +288,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                 'store' => $storeId
                 ]
             );
-            
+
             $transportBuilder->setTemplateVars($templateParams);
             $transportBuilder->setFrom($this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->getStoreConfig($sender, $storeId));
             $transport = $transportBuilder->getTransport();
@@ -320,8 +300,8 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
         }
         return $this;
     }
-    
-    
+
+
     protected function getPaymentHtml($order)
     {
     	 $storeId =$this->_objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(null)->getId();
@@ -336,7 +316,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
     	? null
     	: $this->addressRenderer->format($order->getShippingAddress(), 'html');
     }
-    
+
     /**
      * @param Order $order
      * @return string|null
@@ -345,21 +325,21 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
     {
     	return $this->addressRenderer->format($order->getBillingAddress(), 'html');
     }
-    
+
     /*set up a Mail functionality For Product Delete From Admin Panel*/
     public function ProductDelete($status,$vendorIds)
     {   $types = array(
-        \Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS   => self::XML_PATH_PRODUCT_CONFIRMED_EMAIL_TEMPLATE,  
-        \Ced\CsMarketplace\Model\Vproducts::NOT_APPROVED_STATUS => self::XML_PATH_PRODUCT_REJECTED_EMAIL_TEMPLATE, 
+        \Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS   => self::XML_PATH_PRODUCT_CONFIRMED_EMAIL_TEMPLATE,
+        \Ced\CsMarketplace\Model\Vproducts::NOT_APPROVED_STATUS => self::XML_PATH_PRODUCT_REJECTED_EMAIL_TEMPLATE,
         \Ced\CsMarketplace\Model\Vproducts::DELETED_STATUS => self::XML_PATH_PRODUCT_DELETED_EMAIL_TEMPLATE,
         );
 
-        foreach($vendorIds as $vendorId=>$productIds)   
+        foreach($vendorIds as $vendorId=>$productIds)
         {
 
             $vendor = $this->_objectManager->get('Ced\CsMarketplace\Model\Vendor')->load($vendorId);
             $customer = $this->_objectManager->get('Magento\Customer\Model\Customer')->load($vendor->getCustomerId());
-            $storeId=$customer->getStoreId(); 
+            $storeId=$customer->getStoreId();
             $this->_sendEmailTemplate(
                     $types[$status], self::XML_PATH_PRODUCT_EMAIL_IDENTITY,
                     array('vendor' => $vendor,'products' => $vendorIds[$vendorId]), $storeId
@@ -367,4 +347,3 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 }
-

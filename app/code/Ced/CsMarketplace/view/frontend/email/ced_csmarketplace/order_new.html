@@ -19,7 +19,7 @@
 <!--@vars {
  "layout handle=\"sales_email_order_items\" order=$order area=\"frontend\"":"Order Items Grid"
 } @-->
-<!--@subject New Order Placed@-->
+<!--@subject {{trans "Resold Order Placed #%increment_id" increment_id=$order.increment_id}} @-->
 
 {{template config_path="design/email/header_template"}}
 
@@ -28,15 +28,11 @@
         <td>
             <p class="greeting">{{trans "%vendor_name," vendor_name=$vendor.name }}</p>
             <p>
-                {{trans "Thank you for your order from"}} {{trans "%store_frontname," store_frontname=$store.getFrontendName() }}.
-                {{trans "Once your package ships we will send you a tracking number."}}
-                {{trans 'You can check your order by <a href="%account_url">logging into your account</a>.' account_url=$this.getUrl($store,'customer/account/',[_nosid:1]) |raw}}
+                {{trans "%customer_name has purchased your %product_name from Resold. It is your responsibility as the seller to complete the sale." customer_name=$customer_name product_name=$product_name}}
+                {{trans 'You can check your order by'}} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">logging into your account</a>.
             </p>
             <p>
-                {{trans 'If you have questions about your order, you can email us at <a href="mailto:%store_email">%store_email</a>' store_email=$store_email |raw}}{{depend store_phone}} {{trans 'or call us at <a href="tel:%store_phone">%store_phone</a>' store_phone=$store_phone |raw}}{{/depend}}.
-                {{depend store_hours}}
-                    {{trans 'Our hours are <span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
-                {{/depend}}
+                {{trans 'If you have questions about your order, reply to this email or contact %customer_name' customer_name=$customer_name }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
             </p>
         </td>
     </tr>
@@ -74,21 +70,22 @@
                     <td class="method-info">
                         <h3>{{trans "Payment Method"}}</h3>
                         {{var payment_html|raw}}
+                        <br/><br/>
                     </td>
                     {{depend order.getIsNotVirtual()}}
                     <td class="method-info">
                         <h3>{{trans "Shipping Method"}}</h3>
-                        <p>{{var order.getShippingDescription()}}</p>
-                        {{if shipping_msg}}
-                        <p>{{var shipping_msg}}</p>
-                        {{/if}}
+                        <p>Buyer: {{var customer_name}}</p>
+                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://dashboard.stripe.com"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Stripe Dashboard</strong></button></a>
+                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Buyer</strong></button></a>
                     </td>
                     {{/depend}}
                 </tr>
             </table>
-            {{block class='Magento\\Sales\\Block\\Order\\Email\\Items' area='frontend' template='Ced_CsMarketplace::email//orders//order.phtml' order=$order vendor=$vendor}}
+            {{layout handle="sales_email_order_items" order=$order area="frontend" seller="true"}}
         </td>
     </tr>
 </table>
+<br/><p>If you're having issues or would like to get more information about your order, visit our<br/><a href="https://{{var host}}/help/for-sellers">For Sellers Help Documentation</a>.</p>
 
 {{template config_path="design/email/footer_template"}}
