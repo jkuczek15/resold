@@ -27,7 +27,7 @@ if(isset($_SESSION['from_sell_form']) && $_SESSION['from_sell_form']){
         <strong id="block-new-customer-heading" role="heading" aria-level="2"><?php echo $block->escapeHtml(__('New Users')) ?></strong>
     </div>
     <div class="block-content" aria-labelledby="block-new-customer-heading">
-        <p><?php echo $block->escapeHtml(__('Creating an account has many benefits: check out faster, keep more than one address, track orders and more.')) ?></p>
+        <p><?php echo $block->escapeHtml(__('Creating an account has many benefits: start selling items, check out faster, manage messages and offers, easy access to Stripe, and much more.')) ?></p>
         <div class="actions-toolbar">
             <div class="primary">
                 <a href="<?php echo rtrim($block->escapeUrl($block->getCreateAccountUrl()), '/') ?>?referer=<?php echo urlencode($referer) ?>" class="action create primary"><span><?php echo $block->escapeHtml(__('Create an Account')) ?></span></a>
