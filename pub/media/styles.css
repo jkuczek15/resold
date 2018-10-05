@@ -223,3 +223,9 @@
 .checkout-billing-address {
   margin-top: 1em !important;
 }
+#billing-new-address-form > div:nth-child(3) {
+  display: none;
+}
+#billing-new-address-form > div.field:nth-child(10) {
+  display: none;
+}
