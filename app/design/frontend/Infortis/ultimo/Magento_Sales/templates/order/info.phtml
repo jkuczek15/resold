@@ -1,0 +1,89 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block \Magento\Sales\Block\Order\Info */ ?>
+<?php $_order = $block->getOrder(); ?>
+<?php
+  $items = $_order->getAllItems();
+  $product = $items[0]->getProduct();
+?>
+<?php
+$order_number = $_order->getIncrementId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+$sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+$result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+$vendor_id = $result[0]['vendor_id'];
+$vendor = $objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
+if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorId()){
+  $type = 'sold';
+}else{
+  $type = 'bought';
+}// end if
+?>
+<div class="block block-order-details-view">
+    <div class="block-title">
+        <strong><?php /* @escapeNotVerified */ echo __('Order Information') ?></strong>
+    </div>
+    <div class="block-content">
+    <?php if (!$_order->getIsVirtual()): ?>
+        <div class="box box-order-shipping-address">
+            <strong class="box-title"><span><?php /* @escapeNotVerified */ echo __('Shipping Address') ?></span></strong>
+            <div class="box-content">
+                <address><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getShippingAddress()); ?></address>
+            </div>
+        </div>
+
+        <div class="box box-order-shipping-method">
+            <strong class="box-title">
+                <span><?php /* @escapeNotVerified */ echo __('Shipping Method') ?></span>
+            </strong>
+            <br/>
+            <strong>Seller: <?= $vendor->getName() ?></strong>
+            <?php
+            if($type == 'sold'){
+            ?>
+              <br style="margin-bottom: 0.5em"/>
+              <a style="cursor: pointer;" class="btn btn-primary btn-sm" href="#"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Enter Tracking</strong></button></a>
+              <a style="cursor: pointer" class="btn btn-primary btn-sm" href="/csmessaging/frontend/customercompose?id=<?= $_order->getCustomerId() ?>&subject=<?= urlencode($product->getName()) ?>&vendor_id=<?= $customerSession->getId() ?>&product_id=<?= $product->getId() ?>&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Buyer</strong></button></a>
+            <?php
+            }else{
+?>
+              <br style="margin-bottom: 0.5em;" />
+              <a style="cursor: pointer;" class="btn btn-primary btn-sm" href="/review?id=<?= $_order->getId() ?>"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Leave Review</strong></button></a>
+              <a style="cursor: pointer" class="btn btn-primary btn-sm" href="/csmessaging/frontend/customercompose?id=<?= $vendor->getCustomerId() ?>&subject=<?= urlencode($product->getName()) ?>&vendor_id=<?= $_order->getCustomerId() ?>&product_id=<?= $product->getId() ?>&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Seller</strong></button></a>
+<?php
+            }// end if type == 'sold'
+?>
+        </div>
+    <?php endif; ?>
+
+        <div class="box box-order-billing-address">
+            <strong class="box-title">
+                <span><?php /* @escapeNotVerified */ echo __('Billing Address') ?></span>
+            </strong>
+            <div class="box-content">
+                <address><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getBillingAddress()); ?></address>
+            </div>
+        </div>
+        <div class="box box-order-billing-method">
+            <strong class="box-title">
+                <span><?php /* @escapeNotVerified */ echo __('Payment Method') ?></span>
+            </strong>
+            <div class="box-content">
+                <?php echo $block->getPaymentInfoHtml() ?>
+            </div>
+        </div>
+    </div>
+</div>
