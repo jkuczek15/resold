@@ -229,3 +229,17 @@
 #billing-new-address-form > div.field:nth-child(10) {
   display: none;
 }
+tr.totals:nth-child(2) > th:nth-child(1) > span:nth-child(2) {
+  display: none;
+}
+.data > tbody:nth-child(2) > tr:nth-child(3) > td:nth-child(1) {
+  padding-left: 4px !important;
+}
+.grandtotal > span:nth-child(1) {
+  margin-left: -4.7em;
+}
+@media(max-width: 586px) {
+  .items-in-cart {
+    margin-top: 4em;
+  }
+}
