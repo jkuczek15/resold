@@ -9,6 +9,23 @@
 
 /** @var  $block \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer */
 $_item = $block->getItem();
+
+$_order = $block->getOrder();
+$order_number = $_order->getIncrementId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+$sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+$result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorId()){
+  $type = 'sold';
+}else{
+  $type = 'bought';
+}// end if
 ?>
 <tr id="order-item-row-<?php /* @escapeNotVerified */ echo $_item->getId() ?>">
     <td class="col name" data-th="<?php echo $block->escapeHtml(__('Item Name')); ?>">
@@ -24,20 +41,14 @@ $_item = $block->getItem();
       <dl class="item-options">
         <?php if ($_options = $block->getItemOptions()): ?>
          <?php foreach ($_options as $_option) : ?>
-             <?php if (!$block->getPrintStatus()): ?>
-                 <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
-                 <dd>
-                     <?php if (isset($_formatedOptionValue['full_view'])): ?>
-                         <?php /* @escapeNotVerified */ echo $_formatedOptionValue['full_view'] ?>
-                     <?php else: ?>
-                         <?php /* @escapeNotVerified */ echo $_formatedOptionValue['value'] ?>
-                     <?php endif; ?>
+           <?php
+                if($type == 'sold'){
+                   echo $_order->getShippingAddress() ? $block->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp';
+                 }else{
+                   echo nl2br($block->escapeHtml((isset($_option['print_value']) ? $_option['print_value'] : $_option['value'])));
+                 }
+                 ?>
                  </dd>
-             <?php else: ?>
-                 <dd>
-                     <?php echo nl2br($block->escapeHtml((isset($_option['print_value']) ? $_option['print_value'] : $_option['value']))) ?>
-                 </dd>
-             <?php endif; ?>
          <?php endforeach; ?>
        <?php endif; ?>
          </dl>

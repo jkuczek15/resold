@@ -8,10 +8,26 @@
 // @codingStandardsIgnoreFile
 
 /** @var \Magento\Sales\Block\Order\Items $block */
+$_order = $block->getOrder();
+$order_number = $_order->getIncrementId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+$sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+$result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorId()){
+  $type = 'sold';
+}else{
+  $type = 'bought';
+}// end if
 ?>
     <div class="table-wrapper order-items">
-        <table class="data table table-order-items" id="my-orders-table" summary="<?php /* @escapeNotVerified */ echo __('Item Ordered') ?>">
-            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Item Ordered') ?></caption>
+        <table class="data table table-order-items" id="my-orders-table" summary="<?php /* @escapeNotVerified */ echo __('Item '.$type == 'sold' ? 'Sold' : 'Ordered') ?>">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Item '.$type == 'sold' ? 'Sold' : 'Ordered') ?></caption>
             <thead>
             <?php if($block->isPagerDisplayed()): ?>
                 <tr>
@@ -22,7 +38,17 @@
             <?php endif ?>
             <tr>
                 <th class="col name"><?php /* @escapeNotVerified */ echo __('Item Name') ?></th>
+            <?php
+              if($type == 'bought'){
+            ?>
                 <th class="col seller"><?php /* @escapeNotVerified */ echo __('Seller') ?></th>
+            <?php
+              }else{
+            ?>
+                <th class="col seller"><?php /* @escapeNotVerified */ echo __('Buyer') ?></th>
+            <?php
+          }// end if type == 'bought'
+            ?>
                 <th class="col price"><?php /* @escapeNotVerified */ echo __('Price') ?></th>
                 <th class="col qty"></th>
                 <th class="col subtotal"><?php /* @escapeNotVerified */ echo __('Subtotal') ?></th>
