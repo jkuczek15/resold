@@ -39,9 +39,17 @@
         <?php
         }
         ?>
-
 <?php
   if(count($_items) == 0){
+    if(strpos($_SERVER['REQUEST_URI'], 'csvendorreview/rating') !== FALSE){
+?>
+<style>
+.message.info.empty {
+  margin-top: 3em;
+}
+</style>
+<?php
+    }// end if
 ?>
   <div class="message info empty">
       <div><?= explode(' ', $vendor->getName())[0] ?> has no reviews yet</div>
