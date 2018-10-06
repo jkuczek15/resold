@@ -153,6 +153,7 @@ return array (
     'Mageplaza_Seo' => 1,
     'Mageplaza_Sitemap' => 1,
     'Mageplaza_Smtp' => 1,
+    'Package_CustomToolbar' => 1,
     'Potato_Compressor' => 1,
     'Swissup_Tippyjs' => 1,
     'Thai_S3' => 1,
