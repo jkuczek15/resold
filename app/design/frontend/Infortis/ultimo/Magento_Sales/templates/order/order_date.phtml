@@ -1,0 +1,35 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+$_order = $block->getOrder();
+$order_number = $_order->getIncrementId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+$sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+$result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorId()){
+  $type = 'sold';
+}else{
+  $type = 'bought';
+}// end if
+?>
+<div class="order-date">
+    <?php /* @escapeNotVerified */ echo __('<span class="label">Order Date:</span> %1', '<date>' . $block->formatDate($block->getOrder()->getCreatedAt(), \IntlDateFormatter::LONG) . '</date>') ?>
+    <?php
+    if($type == 'sold'){
+    ?>
+      <a style="cursor: pointer; margin-left: 4.4em" href="https://dashboard.stripe.com" class="btn btn-primary btn-sm" href="#"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Stripe Dashboard</strong></button></a>
+    <?php
+    }// end if type == 'sold'
+    ?>
+</div>
