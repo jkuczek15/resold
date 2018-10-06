@@ -7,6 +7,7 @@
 // @codingStandardsIgnoreFile
 
 $type = $this->getRequest()->getParam('type');
+
 if($type != 'sold'){
   $type = 'bought';
 }// end if
@@ -29,7 +30,6 @@ if($type != 'sold'){
 <?php $_orders = $block->getOrders(); ?>
 <?php echo $block->getChildHtml('info');?>
 <?php if ($_orders && count($_orders)): ?>
-
     <div class="table-wrapper orders-history">
         <table class="data table table-order-items history" id="my-orders-table">
             <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Orders') ?></caption>
@@ -64,7 +64,12 @@ if($type != 'sold'){
                   }// end if type sold
 
                   $items = $_order->getAllItems();
-                  $product = $items[0]->getProduct();
+                  if(count($items) > 0){
+                    $product = $items[0]->getProduct();
+                  }else{
+                    echo 'test';
+                  }
+
                   ?>
                     <tr>
                         <td data-th="<?php echo $block->escapeHtml(__('Order #')) ?>" class="col id"><?php /* @escapeNotVerified */ echo $_order->getRealOrderId() ?></td>
@@ -127,7 +132,7 @@ if($type != 'sold'){
         <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
     <?php endif ?>
 <?php else: ?>
-    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('You have placed no orders.'); ?></span></div>
+    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __($type == 'bought' ? 'You have not placed any orders.' : 'You currently have no items for sale. Please visit our <a href="/sell">sell</a> page to begin listing items.'); ?></span></div>
 <?php endif ?>
 <style>
 .account .table-wrapper .action {
