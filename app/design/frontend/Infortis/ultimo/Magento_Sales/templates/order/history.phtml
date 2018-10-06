@@ -64,12 +64,8 @@ if($type != 'sold'){
                   }// end if type sold
 
                   $items = $_order->getAllItems();
-                  if(count($items) > 0){
-                    $product = $items[0]->getProduct();
-                  }else{
-                    echo 'test';
-                  }
-
+                  $product = $items[0]->getProduct();
+                
                   ?>
                     <tr>
                         <td data-th="<?php echo $block->escapeHtml(__('Order #')) ?>" class="col id"><?php /* @escapeNotVerified */ echo $_order->getRealOrderId() ?></td>

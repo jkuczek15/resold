@@ -10,6 +10,23 @@
  * @var $block \Magento\Sales\Block\Order\Totals
  * @see \Magento\Sales\Block\Order\Totals
  */
+$_order = $block->getOrder();
+$order_number = $_order->getIncrementId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+$sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+$result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorId()){
+  $type = 'sold';
+}else{
+  $type = 'bought';
+}// end if
+
 $totals = $block->getTotals();
 $total = $totals['subtotal']->getValue();
 ?>
@@ -18,7 +35,7 @@ $total = $totals['subtotal']->getValue();
         <?php echo $block->getChildHtml($_total->getBlockName(), false); ?>
     <?php else:?>
 <?php
-    if($_code == 'grand_total' && $block->isSellerEmail()){
+    if($_code == 'grand_total' && ($block->isSellerEmail() || $type == 'sold')){
       $_total->setLabel('Your Profit');
       $_total->setValue($total - ($total * 0.1));
     }
@@ -47,7 +64,32 @@ $total = $totals['subtotal']->getValue();
     <td colspan=2><?= money_format('$%i', $total * 0.1) ?></td>
   </tr>
 <?php
-  }// end if shipping
+}else if($_code == 'shipping' && $type == 'sold'){
+  $_total = $prev_total;
+  $_total->setLabel('Service Fee');
+  $_total->setValue($total * 0.1);
+?>
+    <tr class="<?php /* @escapeNotVerified */ echo $_code?>">
+        <th <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?> scope="row">
+            <?php if ($_total->getStrong()):?>
+            <strong><?php echo $block->escapeHtml($_total->getLabel());?></strong>
+            <?php else:?>
+            <?php echo $block->escapeHtml($_total->getLabel());?>
+            <?php endif?>
+        </th>
+        <td <?php /* @escapeNotVerified */ echo $block->getValueProperties()?> data-th="<?php echo $block->escapeHtml($_total->getLabel());?>">
+            <?php if ($_total->getStrong()):?>
+            <strong><?php /* @escapeNotVerified */ echo $block->formatValue($_total) ?></strong>
+            <?php else:?>
+            <?php /* @escapeNotVerified */ echo $block->formatValue($_total) ?>
+            <?php endif?>
+        </td>
+    </tr>
+<?php
+}// end if shipping
+?>
+<?php
+  $prev_total = $_total;
 ?>
     <?php endif?>
 <?php endforeach?>

@@ -5,14 +5,30 @@
  */
 
 // @codingStandardsIgnoreFile
+$_order = $block->getOrder();
 
+$_order = $block->getOrder();
+$order_number = $_order->getIncrementId();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+$connection = $resource->getConnection();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+
+$sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$this->escapeQuote($order_number)."'";
+$result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorId()){
+  $type = 'sold';
+}else{
+  $type = 'bought';
+}// end if
 ?>
 <?php /** @var  $block \Magento\Sales\Block\Order\View*/?>
 <div class="order-details-items ordered">
-    <?php $_order = $block->getOrder() ?>
 
     <div class="order-title">
-        <strong><?php /* @escapeNotVerified */ echo __('Item Ordered') ?></strong>
+        <strong><?php /* @escapeNotVerified */ echo __('Item '.($type == 'sold' ? 'Sold' : 'Ordered')) ?></strong>
         <?php if ($_order->getTracksCollection()->count()) : ?>
             <?php echo $block->getChildHtml('tracking-info-link') ?>
         <?php endif; ?>
