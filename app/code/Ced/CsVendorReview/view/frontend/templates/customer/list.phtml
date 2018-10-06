@@ -59,9 +59,22 @@
 <?php
   if(count($_items) == 0){
 ?>
+<?php
+    if($type == 'submitted_reviews'){
+?>
+  <hr style="margin-top: 28px !important"/><div class="message info empty">
+      <div>You have not submitted any reviews yet.</div>
+  </div>
+    <?php
+    }else{
+?>
+  <hr style="margin-top: 28px !important"/>
   <div class="message info empty">
       <div>You have no submitted reviews yet.</div>
   </div>
+<?php
+    }
+?>
   <style>
   #horizontal-rule {
     display: none;
@@ -69,20 +82,24 @@
   .block-content {
     padding-bottom: 0 !important;
   }
+  @media(min-width: 586px){
+    .custom {
+      margin-top: -10em !important;
+    }
+  }
   </style>
 <?php
 }else{
 ?>
 <div class="block review-list" id="customer-reviews">
     <div class="block-content">
-        <div class="toolbar review-toolbar">
+        <!-- <div class="toolbar review-toolbar">
             <?php echo $block->getChildHtml('toolbar') ?>
-        </div>
+        </div> -->
         <ol class="items review-items">
         <?php foreach ($_items as $_review):?>
             <li class="item review-item" itemscope itemprop="review" itemtype="http://schema.org/Review">
                 <div class="review-title" style="font-size: 0" itemprop="name"></span><br/>
-
                 <span style="font-size: 16px"><?= $_review->getSubject() ?></span>
 
                 </div>
@@ -138,6 +155,9 @@
   .mobile-only {
     display: none;
   }
+}
+.review-item {
+  padding-top: 0;
 }
 .review-title {
   margin-top: 20px !important;

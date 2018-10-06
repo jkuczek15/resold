@@ -25,6 +25,15 @@
 	if($this->isActivated()){
 
 	$width = $this->getVendorRating();
+
+	if($width == false){
+		$detail_rating = [
+			'Quality' => ['rating' => '1', 'count' => '1'],
+			'Pricing' => ['rating' => '1', 'count' => '1'],
+			'Service' => ['rating' => '1', 'count' => '1']
+		];
+		$width = 1;
+	}
 	$url="";
 	$url = $this->getUrl('csvendorreview/rating/lists', array('id'=>$this->getVendorId()));
 ?>
@@ -41,7 +50,6 @@ if(strpos($_SERVER['REQUEST_URI'], '/review/customer') === FALSE){
 ?>
 <div class="block">
     <div class="block-content" style="padding-top: 10px; padding-bottom: 20px;	">
-				<?php if($width > 1){ ?>
 						<div class="col-md-1" style="margin-top: 0.3em;">
             	<strong><span><??><?php echo __('Average	') ?></span></strong>
 						</div>
@@ -63,10 +71,7 @@ if(strpos($_SERVER['REQUEST_URI'], '/review/customer') === FALSE){
 								 </div>
 							</div>
 						</div>
-				<?php } ?>
-
-				<?php } else {?>
-                <?php } ?>
+      <?php } ?>
     </div>
 </div>
 <?php } ?><hr style="margin-bottom: 0; margin-top: -0.3em;" id="horizontal-rule" />
