@@ -128,13 +128,16 @@ if($type != 'sold'){
         <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
     <?php endif ?>
 <?php else: ?>
-    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __($type == 'bought' ? 'You have not placed any orders.' : 'You have not sold any items. Please visit our <a href="/sell">sell</a> page to begin listing items.'); ?></span></div>
+    <br class="mobile-only" /><div class="message info empty"><span><?php /* @escapeNotVerified */ echo __($type == 'bought' ? 'You have not placed any orders.' : 'You have not sold any items. Please visit our <a href="/sell">sell</a> page to begin listing items.'); ?></span></div>
 <?php endif ?>
 <style>
 .account .table-wrapper .action {
   margin-right: 0 !important;
 }
 @media(min-width: 576px){
+  .mobile-only {
+    display: none;
+  }
   .actions {
     text-align: center;
   }
