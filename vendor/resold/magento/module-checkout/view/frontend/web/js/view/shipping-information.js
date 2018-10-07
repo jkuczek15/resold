@@ -27,7 +27,7 @@ define(
                 var shippingMethod = quote.shippingMethod();
                 var text = '&nbsp;'
                 if(shippingMethod){
-                  text = shippingMethod.carrier_title;
+                  text = shippingMethod.method_title + ' - ' + shippingMethod.carrier_title;
                 }
                 return text;
             },

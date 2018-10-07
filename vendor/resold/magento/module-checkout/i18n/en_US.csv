@@ -102,7 +102,7 @@ Items,Items
 Total:,Total:
 "Billing Address:","Billing Address:"
 "Shipping Address:","Shipping Address:"
-"Shipping Method:","Shipping Method:"
+"Shipping Method:","Delivery Method:"
 "Payment Method:","Payment Method:"
 "Date & Time:","Date & Time:"
 "Sign In","Sign In"
@@ -136,11 +136,11 @@ Remove,Remove
 "Forgot an Item?","Forgot an Item?"
 "Edit Your Cart","Edit Your Cart"
 "Ship Here","Ship Here"
-"Ship To:","Ship To:"
+"Ship To:","Buyer:"
 edit,edit
 "Shipping Address","Shipping Address"
 "New Address","New Address"
-"Shipping Methods","Shipping Methods"
+"Shipping Methods","Delivery Method"
 "Select Method","Select Method"
 "Method Title","Method Title"
 "Carrier Title","Carrier Title"
