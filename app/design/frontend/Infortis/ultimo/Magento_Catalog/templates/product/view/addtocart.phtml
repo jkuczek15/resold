@@ -240,6 +240,9 @@ if($userProduct){
 <?php
 }// end if user product
 ?>
+.cancel-button {
+  margin-right: 0.7em;
+}
 </style>
 <script>
 require(['jquery', 'Magento_Ui/js/modal/modal'], ($, modal) => {
@@ -299,6 +302,13 @@ $(document).ready(() => {
             });
           }// end if form valid
         }// end click function
+      },
+      {
+        text: $.mage.__('Cancel'),
+        class: 'cancel-button',
+        click: function () {
+          this.closeModal();
+        }
       }]
     };
 
@@ -342,6 +352,13 @@ $(document).ready(() => {
             });
           }// end if form valid
         }// end click function
+      },
+      {
+        text: $.mage.__('Cancel'),
+        class: 'cancel-button',
+        click: function () {
+          this.closeModal();
+        }
       }]
     };
     $('#product-message-button').click(() => {
