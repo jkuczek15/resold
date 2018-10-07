@@ -47,10 +47,14 @@ if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorI
 
         <div class="box box-order-shipping-method">
             <strong class="box-title">
-                <span><?php /* @escapeNotVerified */ echo __('Shipping Method') ?></span>
+                <span><?php /* @escapeNotVerified */ echo __('Delivery Method') ?></span>
             </strong>
             <br/>
-            <strong>Seller: <?= $vendor->getName() ?></strong>
+            <strong>Seller: <?= $vendor->getName() ?></strong><br/>
+            <?php
+              $parts = explode('-', $_order->getShippingDescription());
+              echo $parts[1] . ' - ' . $parts[0];
+            ?>
             <?php
             if($type == 'sold'){
             ?>
