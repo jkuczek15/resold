@@ -10,8 +10,66 @@
     $latitude = $latitude_attr->getValue();
     $longitude = $longitude_attr->getValue();
 ?>
-<div style="width: 100%; overflow: hidden; display: flex;">
-  <iframe id="mapframe" width="600" height="450" frameborder="0" style="border:0; margin-top: -110px;" src="https://www.google.com/maps/embed/v1/place?q=<?= $latitude ?>%2C%20<?= $longitude ?>&key=AIzaSyBn-qn2lVWPma_DYxAbA5_0W4NhmdaH0u8&zoom=11" allowfullscreen></iframe>
+<style>
+#map { position:relative; top:0; bottom:0; width:600px; height: 400px; overflow: hidden; }
+.marker {
+    display: block;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.4;
+}
+</style>
+<div style="display: flex;">
+  <div id='map'></div>
 </div>
+<script>
+require(['https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js', 'jquery'], (mapboxgl, $) => {
+  $(document).ready(() => {
+    mapboxgl.accessToken = 'pk.eyJ1Ijoiamt1Y3playIsImEiOiJjamxlZ2kyMzYwMnhsM3ByazM1ZWtibzllIn0.hsE3V5wLucE2wl8jdQhfTQ';
+    var geojson = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "iconSize": [115, 115],
+                'icon-opacity': 0.2
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    <?= $longitude ?>,
+                    <?= $latitude ?>
+                ]
+            }
+        }
+      ]
+    };
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+        center: [<?= $longitude ?>, <?= $latitude ?>], // starting position [lng, lat]
+        zoom: 9, // starting zoom
+        minZoom: 9
+    });
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+    // add markers to map
+    geojson.features.forEach(function(marker) {
+        // create a DOM element for the marker
+        var el = document.createElement('div');
+        el.className = 'marker';
+        el.style.backgroundImage = 'url(https://localhost/pub/media/wysiwyg/circle.png)';
+        el.style.width = marker.properties.iconSize[0] + 'px';
+        el.style.height = marker.properties.iconSize[1] + 'px';
+
+        // add marker to map
+        new mapboxgl.Marker(el).setLngLat(marker.geometry.coordinates).addTo(map);
+    });
+  });
+});
+</script>
 <?php
   }
