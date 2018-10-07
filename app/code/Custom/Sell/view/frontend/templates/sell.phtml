@@ -376,7 +376,8 @@ require([
   app.form_data.subcategory = "<?= $lowestcategory->getParentCategory()->getName() ?>";
   app.form_data.lowestcategory = "<?= $category_ids[0] ?>";
   app.form_data.condition = "<?= $product->getData('condition') ?>";
-  app.form_data.description = `<?= $product->getDescription() ?>`;
+  app.form_data.description = `<?= $product->getDescription() ?>`.replace('<br />', '');
+  
   // required for reactive service fee and your profit
   Vue.set(app.form_data, 'price', Number("<?= $product->getPrice() ?>").toFixed(2));
   let local_global = "<?= $product->getData('local_global') ?>";
