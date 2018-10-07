@@ -181,6 +181,9 @@ class Index extends \Magento\Framework\App\Action\Action
         // local product
         $_product->setCustomAttribute('latitude', $post['latitude']);
         $_product->setCustomAttribute('longitude', $post['longitude']);
+      }else{
+        $_product->setCustomAttribute('latitude', '');
+        $_product->setCustomAttribute('longitude', '');
       }// end if setting local attribute
 
       // tempory location for product images
