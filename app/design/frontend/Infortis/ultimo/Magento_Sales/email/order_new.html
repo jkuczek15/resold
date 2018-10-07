@@ -60,7 +60,7 @@
                     </td>
                     {{depend order.getIsNotVirtual()}}
                     <td class="address-details">
-                        <h3>{{trans "Shipping Info"}}</h3>
+                        <h3>{{trans "Buyer"}}</h3>
                         <p>{{var formattedShippingAddress|raw}}</p>
                     </td>
                     {{/depend}}
@@ -73,10 +73,12 @@
                     </td>
                     {{depend order.getIsNotVirtual()}}
                     <td class="method-info">
-                        <h3>{{trans "Shipping Method"}}</h3>
-                        <p>Seller: <strong>{{var seller_name}}</strong></p>
+                        <h3>{{trans "Delivery Method"}}</h3>
+                        <p><strong>Seller: {{var seller_name}}</strong><br/>
+                        {{trans "%description" description=$order.getShippingDescription()}}<br/>
                         <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/review?id={{var order_id}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Leave Review</strong></button></a>
                         <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Seller</strong></button></a>
+                        </p>
                     </td>
                     {{/depend}}
                 </tr>
