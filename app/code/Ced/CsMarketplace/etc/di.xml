@@ -20,14 +20,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Config\Model\Config" type="Ced\CsMarketplace\Model\Adminhtml\Config\Data" />
     <preference for="Magento\Store\Model\Store" type="Ced\CsMarketplace\Model\Core\Store" />
-	<preference for="Magento\Config\Model\Config\SchemaLocator" type="Ced\CsMarketplace\Model\Config\SchemaLocator" /> 
+	<preference for="Magento\Config\Model\Config\SchemaLocator" type="Ced\CsMarketplace\Model\Config\SchemaLocator" />
     <type name="Magento\Theme\Model\View\Design">
 		<arguments>
 			<argument name="themes" xsi:type="array">
 				<item name="frontend" xsi:type="string">Ced/ced</item>
 			</argument>
 		</arguments>
-	</type> 
+	</type>
 	<type name="Magento\Eav\Model\Entity\AttributeCache">
         <arguments>
             <argument name="unsupportedTypes" xsi:type="array">
@@ -40,5 +40,8 @@
     </type>
     <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
         <plugin name="set_vendor_id_to_order_item" type="Ced\CsMarketplace\Plugin\SetVendorIdInOrderItem" sortOrder="10" disabled="false" />
+    </type>
+    <type name="Magento\Shipping\Model\Shipping">
+        <plugin name="set_shipping_method_for_product" type="Ced\CsMarketplace\Plugin\SetShippingMethodForProduct" sortOrder="10" disabled="false" />
     </type>
 </config>

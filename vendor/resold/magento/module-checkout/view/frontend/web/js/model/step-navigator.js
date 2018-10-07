@@ -113,7 +113,7 @@ define(
                         element.isVisible(true);
                         bodyElem.animate({scrollTop: $('#' + code).offset().top}, 0, function () {
                             if(code == 'shipping'){
-                              window.location = window.checkoutConfig.checkoutUrl;
+                              window.location = window.checkoutConfig.checkoutUrl + "#";
                             }else{
                               window.location = window.checkoutConfig.checkoutUrl + "#" + code;
                             }
