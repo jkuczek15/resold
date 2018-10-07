@@ -113,7 +113,7 @@ class History extends \Magento\Framework\View\Element\Template
           // type sold
           $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
           $collection = $objectManager->get('Ced\CsMarketplace\Model\Vorders')->getCollection();
-          $collection->addFieldToFilter('vendor_id', $this->_customerSession->getVendorId());
+          $collection->addFieldToFilter('vendor_id', $this->_customerSession->getVendorId())->setOrder('created_at', 'desc');
           $this->orders = $collection;
         }// end if type == 'bought'
 
