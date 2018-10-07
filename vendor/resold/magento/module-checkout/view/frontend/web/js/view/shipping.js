@@ -264,7 +264,7 @@ define(
                     emailValidationResult = customer.isLoggedIn();
 
                 if (!quote.shippingMethod()) {
-                    this.errorValidationMessage($t('Please specify a shipping method.'));
+                    this.errorValidationMessage($t('Please select a delivery method.'));
 
                     return false;
                 }
