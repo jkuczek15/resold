@@ -11,12 +11,11 @@
     $longitude = $longitude_attr->getValue();
 ?>
 <style>
-#map { position:relative; top:0; bottom:0; width:600px; height: 400px; overflow: hidden; }
+#map { position:relative; top:0; bottom:0; width:600px; height: 400px; }
 .marker {
     display: block;
     border: none;
     border-radius: 50%;
-    cursor: pointer;
     padding: 0;
     opacity: 0.4;
 }
@@ -52,10 +51,10 @@ require(['https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js', 'jque
         style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
         center: [<?= $longitude ?>, <?= $latitude ?>], // starting position [lng, lat]
         zoom: 9, // starting zoom
-        minZoom: 9
+        minZoom: 9,
+        maxZoom: 9,
+        interactive: false
     });
-    // Add zoom and rotation controls to the map.
-    map.addControl(new mapboxgl.NavigationControl());
     // add markers to map
     geojson.features.forEach(function(marker) {
         // create a DOM element for the marker
