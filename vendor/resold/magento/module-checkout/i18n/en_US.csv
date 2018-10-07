@@ -138,9 +138,9 @@ Remove,Remove
 "Ship Here","Ship Here"
 "Ship To:","Buyer:"
 edit,edit
-"Shipping Address","Shipping Address"
+"Shipping Address","Address:"
 "New Address","New Address"
-"Shipping Methods","Delivery Method"
+"Shipping Methods","Delivery Method:"
 "Select Method","Select Method"
 "Method Title","Method Title"
 "Carrier Title","Carrier Title"
