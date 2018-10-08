@@ -245,6 +245,9 @@ tr.totals:nth-child(2) > th:nth-child(1) > span:nth-child(2) {
   .account .page-main, .cms-privacy-policy .page-main {
     padding-top: 0px !important;
   }
+  .columns {
+    padding-top: 0px !important;
+  }
 }
 div.checkout-shipping-method > div:nth-child(1) {
     margin-bottom: 0 !important;
