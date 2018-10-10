@@ -1,0 +1,41 @@
+<?php
+/**
+* Report a Listing
+*/
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+// retreive the seller's product data
+$product_id = $_GET['id'];
+$_product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
+
+if($_product->getName() == null){
+  echo 'Listing not found.';
+  return;
+}// end if product is null
+
+?>
+<form method="post" action="/api/report">
+  <input type="hidden" name="product_id" value="<?= $_product->getId() ?>" />
+  <div class="row">
+    <div class="col-md-6">
+      <span>Item: <a href="<?= $_product->getProductUrl() ?>"><strong><?= $_product->getName() ?></strong></a></span>
+    </div>
+  </div><br/>
+  <div class="row">
+    <div class="col-md-6 field review-field-text required">
+        <label for="review_field" class="label"><span><?php /* @escapeNotVerified */ echo __('Report:') ?></span></label>
+        <div class="control">
+            <textarea name="comment" id="comment" cols="5" rows="3" required></textarea>
+        </div>
+    </div>
+  </div><br/>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="primary actions-primary">
+          <a target="_blank" href="<?= $_product->getProductUrl() ?>"><button type="button" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('View Listing') ?></span></button></a>
+          <button style="float: right" type="submit" class="action submit primary"><span><?php /* @escapeNotVerified */ echo __('Submit') ?></span></button>
+      </div>
+    </div>
+  </div>
+</form>
