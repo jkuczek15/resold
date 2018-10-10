@@ -1,0 +1,23 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans "Reported Listing - %item" item=$data.item}} @-->
+<!--@vars {
+"var data.comment":"Comment",
+"var data.email":"Sender Email",
+"var data.name":"Sender Name",
+"var data.telephone":"Sender Telephone"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+{{trans "Item: %item" item=$data.item}}
+<br/>
+{{trans "Report: %comment" comment=$data.comment}}<br/><br/>
+
+<a style="cursor: pointer" class="btn btn-primary btn-sm" href="{{trans "%url" url=$data.productUrl}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>View Listing</strong></button></a>
+
+{{template config_path="design/email/footer_template"}}

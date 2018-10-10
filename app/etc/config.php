@@ -12,6 +12,7 @@ return array (
     'Ced_CsVendorReview' => 1,
     'Custom_Admin' => 1,
     'Custom_Api' => 1,
+    'Custom_Report' => 1,
     'Custom_Review' => 1,
     'Custom_Sell' => 1,
     'Magento_Eav' => 1,
