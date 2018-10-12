@@ -34,11 +34,11 @@
                 </div>
                 <div class="review-details">
                     <p class="review-author">
-                        <span class="review-details-label"><?php /* @escapeNotVerified */ echo __('Review by')?></span>
+                        <span class="review-details-label"><?php /* @escapeNotVerified */ echo __('Comment by:')?></span>
                         <strong class="review-details-value" itemprop="author"><?php echo $block->escapeHtml($_review->getNickname()) ?></strong>
                     </p>
                     <p class="review-date">
-                        <span class="review-details-label"><?php /* @escapeNotVerified */ echo __('Posted on') ?></span>
+                        <span class="review-details-label"><?php /* @escapeNotVerified */ echo __('Posted on:') ?></span>
                         <time class="review-details-value" itemprop="datePublished" datetime="<?php /* @escapeNotVerified */ echo $block->formatDate($_review->getCreatedAt(), $format) ?>"><?php /* @escapeNotVerified */ echo $block->formatDate($_review->getCreatedAt(), $format) ?></time>
                     </p>
                 </div>
