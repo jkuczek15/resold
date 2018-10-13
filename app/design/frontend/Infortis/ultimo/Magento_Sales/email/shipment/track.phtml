@@ -1,0 +1,25 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php $_shipment = $block->getShipment() ?>
+<?php $_order = $block->getOrder() ?>
+<?php if ($_shipment && $_order && $_shipment->getAllTracks()): ?>
+<?php foreach ($_shipment->getAllTracks() as $_item): ?>
+    <tr>
+        <td class="address-details">
+            <h3>Shipped By</h3>
+            <p><?= $block->escapeHtml($_item->getTitle()) ?></p>
+        </td>
+        <td class="address-details">
+            <h3>Tracking Number</h3>
+            <p><?= $block->escapeHtml($_item->getNumber()) ?></p>
+        </td>
+    </tr>
+<?php endforeach ?>
+<?php endif ?>

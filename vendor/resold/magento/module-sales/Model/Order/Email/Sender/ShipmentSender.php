@@ -143,7 +143,8 @@ class ShipmentSender extends Sender
                 'seller_name' => $vendor->getName(),
                 'store' => $order->getStore(),
                 'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
-                'formattedBillingAddress' => $this->getFormattedBillingAddress($order)
+                'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
+                'encoded_subject' => urlencode($product->getName())
             ];
             $transportObject = new DataObject($transport);
 
