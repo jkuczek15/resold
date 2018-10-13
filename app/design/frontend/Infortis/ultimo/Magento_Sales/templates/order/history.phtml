@@ -99,7 +99,7 @@ if($type != 'sold'){
                           <?php
                           }else{
                           ?>
-                            <a href="#" class="action view">
+                            <a href="/tracking?id=<?= $_order->getId() ?>" class="action view">
                                 <span><?php /* @escapeNotVerified */ echo __('Enter Tracking') ?></span>
                             </a>
                           <?php

@@ -15,6 +15,7 @@ return array (
     'Custom_Report' => 1,
     'Custom_Review' => 1,
     'Custom_Sell' => 1,
+    'Custom_Tracking' => 1,
     'Magento_Eav' => 1,
     'Infortis_Infortis' => 1,
     'Infortis_Brands' => 1,
