@@ -236,7 +236,7 @@ tr.totals:nth-child(2) > th:nth-child(1) > span:nth-child(2) {
   padding-left: 4px !important;
 }
 .grandtotal > span:nth-child(1) {
-  margin-left: -4.7em;
+  margin-left: -4em;
 }
 @media(max-width: 586px) {
   .items-in-cart {
@@ -255,4 +255,7 @@ div.checkout-shipping-method > div:nth-child(1) {
 }
 .col-method {
   padding-left: 3em;
+}
+.action-auth-toggle {
+  display: none;
 }

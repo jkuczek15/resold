@@ -10,6 +10,12 @@
 		$customer_id = $this->getSession()->getId();
 		$customer = $objectManager->create('Magento\Customer\Model\Customer')->load($order_cust_id);
 
+		if($order_cust_id == null){
+				$billing_address = $order->getBillingAddress();
+				$customer_name = $billing_address->getFirstname() . ' ' . $billing_address->getLastname();
+		}else{
+			$customer_name = $customer->getName();
+		}
 		if($customer_id !== $vendor->getCustomerId()){
 			echo 'This is not your order.';
 			return;
@@ -40,7 +46,7 @@
 <form action="/api/tracking" class="tracking-form" method="post" id="tracking-form" data-role="order-tracking-form" data-bind="scope: 'review-form'">
 		<input type="hidden" name="order_id" value="<?= $order->getId() ?>" />
     <fieldset class="fieldset review-fieldset" data-hasrequired="<?php __('* Required Fields'); ?>">
-        <legend class="legend review-legend"><span><?php /* @escapeNotVerified */ echo __("Send Tracking To: &nbsp;&nbsp;<span style='font-weight: bold'>".$customer->getName()."</span>"); ?></span></legend><br />
+        <legend class="legend review-legend"><span><?php /* @escapeNotVerified */ echo __("Send Tracking To: &nbsp;&nbsp;<span style='font-weight: bold'>".$customer_name."</span>"); ?></span></legend><br />
 				<legend class="legend review-legend"><span><?php /* @escapeNotVerified */ echo __("Item Name: &nbsp;&nbsp;<span style='font-weight: bold'>".$product->getName()."</span>"); ?></span></legend><br />
         <div class="field review-field-text required">
             <label style="text-align: left;" for="review_field" class="label"><span><?php /* @escapeNotVerified */ echo __('Tracking Number:') ?></span></label>

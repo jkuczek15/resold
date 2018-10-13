@@ -67,12 +67,13 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        if (!$this->session->isLoggedIn()) {
-            $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-            return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($url));
-        }
+
         if(!isset($_GET['id']) || $_GET['id'] == null){
           return $resultRedirect->setPath('/');
+        }
+        if (!$this->session->isLoggedIn()) {
+            $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '?id=' .$_GET['id'];
+            return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($url));
         }
         // GET request
         return $this->resultPageFactory->create();
