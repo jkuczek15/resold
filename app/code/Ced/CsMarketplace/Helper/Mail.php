@@ -188,6 +188,12 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_objectManager->get('Magento\Framework\Registry')->register('current_order', $order);
         $this->_objectManager->get('Magento\Framework\Registry')->register('current_vorder', $vorder);
 
+        $customer_name = $order->getCustomerName();
+        $isGuest = $customer_name == 'Guest';
+        if($isGuest){
+            $billing_address = $order->getBillingAddress();
+            $customer_name = $billing_address->getFirstname() . ' ' . $billing_address->getLastname();
+        }
         $this->_sendEmailTemplate(
             $types[$type], self::XML_PATH_ORDER_EMAIL_IDENTITY,
             array('vendor' => $vendor,
@@ -196,14 +202,15 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                   'payment_html' => '<strong>Stripe</strong>'.str_replace('Stripe', '', $this->getPaymentHtml($order)),
                   'formattedShippingAddress'=>$this->getFormattedShippingAddress($order),
                   'formattedBillingAddress'=>$this->getFormattedBillingAddress($order),
-                  'customer_name' => $order->getCustomerName(),
+                  'customer_name' => $customer_name,
                   'product_name' => $product->getName(),
                   'host' => $_SERVER['HTTP_HOST'],
                   'sender_id' => $order->getCustomerId(),
                   'vendor_id' => $vendor->getCustomerId(),
                   'product_id' => $product->getId(),
                   'encoded_subject' => urlencode($product->getName()),
-                  'order_id' => $order->getId()
+                  'order_id' => $order->getId(),
+                  'isGuest' => $isGuest
                 ),
             $storeId
         );

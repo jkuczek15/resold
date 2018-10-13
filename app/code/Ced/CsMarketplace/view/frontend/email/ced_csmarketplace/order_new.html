@@ -32,7 +32,8 @@
                 {{trans 'You can check your order by'}} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">logging into your account</a>.
             </p>
             <p>
-                {{trans 'If you have questions about your order, reply to this email or contact %customer_name' customer_name=$customer_name }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
+                {{trans 'If you have any questions about your order, reply to this email' }}{{if isGuest}}.{{else}} {{trans 'or contact %customer_name' customer_name=$customer_name }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
+                {{/if}}
             </p>
         </td>
     </tr>
@@ -78,7 +79,10 @@
                         <p><strong>Seller: {{trans "%vendor_name" vendor_name=$vendor.name }}</strong><br/>
                         {{trans "%description" description=$order.getShippingDescription()}}<br/>
                         <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/tracking?id={{var order.getId()}}"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Enter Tracking</strong></button></a>
-                        <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Buyer</strong></button></a>
+                        {{if isGuest}}
+                        {{else}}
+                          <a style="cursor: pointer" class="btn btn-primary btn-sm" href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Buyer</strong></button></a>
+                        {{/if}}
                         </p>
                     </td>
                     {{/depend}}
