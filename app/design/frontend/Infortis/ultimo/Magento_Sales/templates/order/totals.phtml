@@ -27,6 +27,10 @@ if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorI
   $type = 'bought';
 }// end if
 
+if(strpos($_SERVER['REQUEST_URI'], '/tracking') !== FALSE){
+  $type = 'bought';
+}// end if tracking
+
 $totals = $block->getTotals();
 $total = $totals['subtotal']->getValue();
 ?>

@@ -59,7 +59,7 @@ if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorI
             if($type == 'sold'){
             ?>
               <br style="margin-bottom: 0.5em"/>
-              <a style="cursor: pointer;" class="btn btn-primary btn-sm" href="#"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Enter Tracking</strong></button></a>
+              <a style="cursor: pointer;" class="btn btn-primary btn-sm" href="/tracking?id=<?= $_order->getId() ?>"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Enter Tracking</strong></button></a>
               <a style="cursor: pointer" class="btn btn-primary btn-sm" href="/csmessaging/frontend/customercompose?id=<?= $_order->getCustomerId() ?>&subject=<?= urlencode($product->getName()) ?>&vendor_id=<?= $customerSession->getId() ?>&product_id=<?= $product->getId() ?>&post_sale=true"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Contact Buyer</strong></button></a>
             <?php
             }else{
