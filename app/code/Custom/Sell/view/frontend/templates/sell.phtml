@@ -349,7 +349,7 @@ require([
       },
       computed: {
         serviceFee: function () {
-          let num = this.form_data.price * 0.1;
+          let num = (this.form_data.price * 0.099) + 0.3;
           if(isNaN(num)){
             return '$0.00'
           }else{
@@ -357,7 +357,7 @@ require([
           }
         },
         yourProfit: function(){
-          let num = this.form_data.price - (this.form_data.price * 0.1);
+          let num = this.form_data.price - (this.form_data.price * 0.099 + 0.3);
           if(isNaN(num)){
             return '$0.00';
           }else{
