@@ -41,7 +41,8 @@ $total = $totals['subtotal']->getValue();
 <?php
     if($_code == 'grand_total' && ($block->isSellerEmail() || $type == 'sold')){
       $_total->setLabel('Your Profit');
-      $_total->setValue($total - (($total * 0.099) + 0.3));
+      $num = $total - (($total * 0.099) + 0.3); 
+      $_total->setValue(floor($num * 100) / 100);
     }
 ?>
     <tr class="<?php /* @escapeNotVerified */ echo $_code?>">
