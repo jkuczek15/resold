@@ -71,8 +71,9 @@ class Index extends \Magento\Framework\App\Action\Action
           return $resultRedirect->setPath('/');
         }
         if (!$this->session->isLoggedIn()) {
-            $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] . '?id=' .$_GET['id'];
-            return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($url));
+            $url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            $encoded = str_replace('/', '-', base64_encode($url));
+            return $resultRedirect->setPath('customer/account/login/referer/'.$encoded);
         }
         // GET request
         return $this->resultPageFactory->create();
