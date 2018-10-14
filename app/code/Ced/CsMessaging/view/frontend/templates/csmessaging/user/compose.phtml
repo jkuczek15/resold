@@ -273,7 +273,9 @@ require([
         var vendor_subject = $("#vendor_subject").val();
         var vendorremail = $("#vendor_data").val();
         var vendorId = '<?php echo $vendor_id; ?>';
-        var is_offer = document.getElementById('is_offer').checked;
+        var offerObj = document.getElementById('is_offer');
+        var is_offer = offerObj == null ? false : offerObj.checked;
+
         if (!text) {
             alert('Message cannot be empty.');
         }else if(is_offer){
