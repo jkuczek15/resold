@@ -131,6 +131,17 @@ class Delete extends \Magento\Customer\Controller\AbstractAccount
             /**When perform delete operation, magento check isSecureArea is true/false.*/
             $this->registry->register('isSecureArea', true, true);
             $this->_customerSession->logout();
+            $vendor_id = $this->_customerSession->getVendorId();
+
+            if($vendor_id != null){
+              // delete the vendor's stripe account if they have one
+              $resource = $this->_objectManager->get('Magento\Framework\App\ResourceConnection');
+              $connection = $resource->getConnection();
+            }
+
+            // delete vendors stripe account link
+            $sql = "DELETE FROM ced_csstripe_standalone_acc WHERE vendor_id = '".$vendor_id."'";
+            $result = $connection->query($sql);
             $this->_customerRepository->deleteById($customerId);
 
             /** event anonymise & delete customer after delete account*/
