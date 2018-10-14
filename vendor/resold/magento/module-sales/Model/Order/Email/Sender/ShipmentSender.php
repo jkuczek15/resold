@@ -158,7 +158,11 @@ class ShipmentSender extends Sender
 
             $this->templateContainer->setTemplateVars($transportObject->getData());
 
-            if ($this->checkAndSend($order)) {
+            $from = [
+              'name' => $vendor->getName(),
+              'email' => $vendor->getEmail()
+            ];
+            if ($this->checkAndSend($order, $from)) {
                 $shipment->setEmailSent(true);
                 $this->shipmentResource->saveAttribute($shipment, ['send_email', 'email_sent']);
                 return true;

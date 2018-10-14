@@ -104,7 +104,12 @@ class OrderSender extends Sender
         $order->setSendEmail(true);
 
         if (!$this->globalConfig->getValue('sales_email/general/async_sending') || $forceSyncMode) {
-            if ($this->checkAndSend($order)) {
+            $seller = $this->getVendor($order);
+            $from = [
+              'name' => $seller->getName(),
+              'email' => $seller->getEmail()
+            ];
+            if ($this->checkAndSend($order, $from)) {
                 $order->setEmailSent(true);
                 $this->orderResource->saveAttribute($order, ['send_email', 'email_sent']);
                 return true;
@@ -114,6 +119,24 @@ class OrderSender extends Sender
         $this->orderResource->saveAttribute($order, 'send_email');
 
         return false;
+    }
+
+    public function getVendor($order)
+    {
+      $resource = $this->_objectManager->get('Magento\Framework\App\ResourceConnection');
+      $connection = $resource->getConnection();
+      $order_number = $order->getIncrementId();
+
+      // Get vendor by order number
+      $sql = "SELECT vendor_id FROM ced_csmarketplace_vendor_sales_order WHERE order_id =  '".$order_number."'";
+      $result = $connection->fetchAll($sql); // gives associated array, table fields as key in array.
+
+      if(count($result) == 0){
+        return null;
+      }// end if no vendor found
+
+      $vendor_id = $result[0]['vendor_id'];
+      return $this->_objectManager->create('Ced\CsMarketplace\Model\Vendor')->load($vendor_id);
     }
 
     /**

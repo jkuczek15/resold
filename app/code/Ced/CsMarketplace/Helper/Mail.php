@@ -189,10 +189,12 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_objectManager->get('Magento\Framework\Registry')->register('current_vorder', $vorder);
 
         $customer_name = $order->getCustomerName();
+        $customer_email = $order->getCustomerEmail();
         $isGuest = $customer_name == 'Guest';
         if($isGuest){
             $billing_address = $order->getBillingAddress();
             $customer_name = $billing_address->getFirstname() . ' ' . $billing_address->getLastname();
+            $customer_email = $billing_address->getEmail();
         }
         $this->_sendEmailTemplate(
             $types[$type], self::XML_PATH_ORDER_EMAIL_IDENTITY,
@@ -212,7 +214,9 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                   'order_id' => $order->getId(),
                   'isGuest' => $isGuest
                 ),
-            $storeId
+            $storeId,
+            $customer_name,
+            $customer_email
         );
     }
 
@@ -274,7 +278,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
      * @param  int|null $storeId
      * @return Mage_Customer_Model_Customer
      */
-    protected function _sendEmailTemplate($template, $sender, $templateParams = array(), $storeId = null)
+    protected function _sendEmailTemplate($template, $sender, $templateParams = array(), $storeId = null, $customer_name = null, $customer_email = null)
     {
 
         /*reference file vendor\magento\module-sales\Model\Order\Email\SenderBuilder.php */
@@ -297,7 +301,11 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
             );
 
             $transportBuilder->setTemplateVars($templateParams);
-            $transportBuilder->setFrom($this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->getStoreConfig($sender, $storeId));
+            $transportBuilder->setFrom([
+              'name' => $customer_name,
+              'email' => $customer_email
+            ]);
+
             $transport = $transportBuilder->getTransport();
             $transport->sendMessage();
         }
