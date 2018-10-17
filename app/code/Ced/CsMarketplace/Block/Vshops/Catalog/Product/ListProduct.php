@@ -97,7 +97,6 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                     ->addAttributeToFilter('entity_id', ['in'=>$products])
                     ->addStoreFilter($this->getCurrentStoreId())
                     ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
-                    ->addAttributeToFilter('visibility', 4)
                     ->addAttributeToSort('date', 'desc');
 
             if (isset($name_filter)) {
