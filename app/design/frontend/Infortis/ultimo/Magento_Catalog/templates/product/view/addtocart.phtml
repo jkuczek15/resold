@@ -18,26 +18,65 @@ $customer = $model->create('Magento\Customer\Model\Session');
 $sessionId = $customer->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
 
+// check if the item is sold
+$categoryIds = $_product->getCategoryIds();
+$sold = empty($categoryIds);
+$order = null;
+
 // whether this is the current seller's product
+$can_view_order = true;
+if($sold){
+  $orderFactory = $model->create('Magento\Sales\Model\ResourceModel\Order\CollectionFactory');
+  $orderCollection = $orderFactory->create();
+  $orderCollection->getSelect()
+            ->join(
+                'sales_order_item',
+                'main_table.entity_id = sales_order_item.order_id'
+            )->where('product_id = '.$_product->getId());
+
+  $orderCollection->getSelect()->group('main_table.entity_id');
+  $order = $orderCollection->getFirstItem();
+  $can_view_order = $block->canView($order);
+}
 $userProduct = $sessionId == $VendorId;
 if($userProduct){
-  $buttonTitle = __('Edit');
-  $buttonHtml = '<button type="submit"
-                    title="'.$buttonTitle.'"
-                    class="action primary tocart product-edit custom-button"
-                    style="float: left; margin-bottom: 0.3em; width: 100%; cursor: pointer;"
-                    id="product-addtocart">
-                    <span>'.$buttonTitle.'</span>
-                </button>';
+  if($sold){
+    $class = 'view-order';
+    $buttonTitle = __('View Order');
+  }else{
+    $class = 'product-edit';
+    $buttonTitle = __('Edit');
+  }
+  if($can_view_order){
+    $buttonHtml = '<button type="submit"
+                      title="'.$buttonTitle.'"
+                      class="action primary tocart '.$class.' custom-button"
+                      style="float: left; margin-bottom: 0.3em; width: 100%; cursor: pointer;"
+                      id="product-addtocart">
+                      <span>'.$buttonTitle.'</span>
+                  </button>';
+  }else{
+    $buttonHtml = '';
+  }
 }else{
-  $buttonTitle = __('Purchase');
-  $buttonHtml = '<button type="submit"
-                    title="'.$buttonTitle.'"
-                    class="action primary tocart"
-                    style="float: left; margin-bottom: 0.3em; width: 75%; cursor: pointer;"
-                    id="product-addtocart">
-                    <span>'.$buttonTitle.'</span>
-                </button>';
+  if($sold){
+    $class = 'view-order';
+    $buttonTitle = __('View Order');
+  }else{
+    $class = '';
+    $buttonTitle = __('Purchase');
+  }
+  if($can_view_order){
+    $buttonHtml = '<button type="submit"
+                      title="'.$buttonTitle.'"
+                      class="action primary tocart '.$class.'"
+                      style="float: left; margin-bottom: 0.3em; width: 75%; cursor: pointer;"
+                      id="product-addtocart">
+                      <span>'.$buttonTitle.'</span>
+                  </button>';
+  }else{
+    $buttonHtml = '';
+  }
 }
 
 $resource = $model->get('Magento\Framework\App\ResourceConnection');
@@ -70,12 +109,22 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
         <div class="actions">
             <?php echo $buttonHtml ?>
 <?php if (!$userProduct): ?>
+  <?php
+  if ($sold):
+    $title = 'Leave Review';
+    $id = 'leave-review-button';
+  else:
+    $title = 'Send Offer';
+    $id = 'product-offer-button';
+  endif;
+  if($can_view_order):
+?>
               <a href="#"
                     title=""
                     class="action primary custom-button"
                     style="float: left; margin-bottom: 0.3em; width: 75%; cursor: pointer;"
-                    id="product-offer-button">
-                    <span>Send Offer</span>
+                    id="<?= $id ?>">
+                    <span><?= $title ?></span>
               </a>
               <a href="#"
                     title=""
@@ -84,8 +133,19 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
                     id="product-message-button">
                     <span>Contact Seller</span>
               </a>
+  <?php endif; ?>
 <?php endif; ?>
 <?php if ($userProduct): ?>
+  <?php if ($sold): ?>
+            <a href="https://dashboard.stripe.com/payouts"
+                    title=""
+                    target="_blank"
+                    class="action primary custom-button product-stripe"
+                    style="float: left; margin-bottom: 0.3em; width: 100%; cursor: pointer;"
+                    id="product-stripe-button">
+                    <span>Stripe Dashboard</span>
+              </a>
+    <?php else: ?>
               <a href="#"
                     title=""
                     class="action primary custom-button product-delete"
@@ -93,6 +153,7 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
                     id="product-delete-button">
                     <span>Delete</span>
               </a>
+  <?php endif; ?>
 <?php endif; ?>
             <?php echo $block->getChildHtml('', true) ?>
         </div>
@@ -266,6 +327,20 @@ $(document).ready(() => {
       window.location = '/sell?id=<?= $_product->getId(); ?>';
     });
 
+<?php
+  if($sold && $order != null){
+?>
+    $('.view-order').click((e) => {
+      e.preventDefault();
+      window.location = '/sales/order/view/order_id/<?= $order->getId() ?>/';
+    });
+    $('#leave-review-button').click((e) => {
+      e.preventDefault();
+      window.location = '/review?id=<?= $order->getId() ?>';
+    });
+<?php
+  }// end if sold
+?>
     $('.product-delete').click(() => {
       var deleteOptions = {
         type: 'popup',
