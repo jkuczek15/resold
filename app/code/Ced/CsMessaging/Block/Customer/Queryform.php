@@ -250,7 +250,7 @@ class Queryform extends \Magento\Framework\View\Element\Template
                 'Magento\Theme\Block\Html\Pager',
                 'pager.identify.next.prev'
             );
-            $pager->setLimit(5)
+            $pager->setLimit(25)
                 ->setShowAmounts(false)
                 ->setCollection($this->getCollection());
             $this->setChild('pager', $pager);
