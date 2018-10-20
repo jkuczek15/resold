@@ -23,13 +23,14 @@ $_productCollection = $block->getLoadedProductCollection();
 $helper_data = $this->helper('Ced\CsMarketplace\Helper\Data');
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $vendor = $this->getVendor();
+$type = $this->getRequest()->getParam('type');
+$customer_account = strpos($_SERVER['REQUEST_URI'], 'vendor_shop') === FALSE;
+
+if($type != 'sold'){
+  $type = 'for-sale';
+}// end if
 ?>
-<?php if($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
-<?php if (!$_productCollection->count()): ?>
-    <div class="message info empty">
-        <div>You currently have no items for sale. Please visit our <a href="/sell">sell</a> page to begin listing items.</div>
-    </div>
-<?php else: ?>
+<div class="col-md-8">
 <?php
 if($vendor != null){
 ?>
@@ -37,6 +38,42 @@ if($vendor != null){
 <?php
 }// end if vendor is not null
 ?>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <div class="control custom custom-button-group">
+      <div class="ck-button <?= $type == 'for-sale' ? 'blue-background checked-button' : 'unchecked-button' ?> for-sale-button">
+        <label style="cursor: pointer;">
+          <input <?= $type == 'for-sale' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="for-sale"> <span style="margin-left: 1em; margin-right: 1.5em width: 100%">&nbsp;<strong>For Sale</strong></span>
+        </label>
+      </div>
+      <div class="ck-button <?= $type == 'sold' ? 'blue-background checked-button' : 'unchecked-button' ?>">
+        <label style="cursor: pointer;">
+            <input <?= $type == 'sold' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<br class="mobile-only" /><br class="mobile-only" />
+<?php if($this->helper('Ced\CsMarketplace\Helper\Acl')->isEnabled()) { ?>
+<?php if (!$_productCollection->count()): ?>
+    <?php
+      if($type == 'for-sale' && $vendor != null){
+?>
+    <div class="message info empty">
+        <div><?= $vendor->getName() ?> has no items for sale.</div>
+    </div>
+<?php
+      }else{
+?>
+    <div class="message info empty">
+        <div>You currently have no items for sale. Please visit our <a href="/sell">sell</a> page to begin listing items.</div>
+    </div>
+<?php
+      }
+    ?>
+<?php else: ?>
     <?php echo $block->getAdditionalHtml() ?>
     <?php
     if ($block->getMode() == 'grid') {
@@ -65,7 +102,13 @@ if($vendor != null){
         ?>
         <ol class="products list items product-items">
             <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+            <?php
+            $count = 0;
+            ?>
             <?php foreach ($_productCollection as $_product): ?>
+                <?php
+                if(($type == 'sold' && empty($_product->getCategoryIds()) || ($type == 'for-sale' && !empty($_product->getCategoryIds())))){
+                ?>
                 <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
                 <div class="product-item-info" data-container="product-grid">
                     <?php
@@ -90,11 +133,31 @@ if($vendor != null){
                         <?php echo $block->getProductDetailsHtml($_product); ?>
                     </div>
                 </div>
+                <?php
+                $count++;
+                }// end if display product
+                ?>
               <?php echo($iterator == count($_productCollection)+1) ? '</li>' : '' ?>
             <?php endforeach; ?>
         </ol>
     </div>
-    <?php if (!$block->isRedirectToCartEnabled()) : ?>
+    <?php
+    if($type == 'sold' && $count == 0){
+      if($vendor != null){
+    ?>
+    <div class="message info empty">
+        <div><?= $vendor->getName() ?> has not sold any items.</div>
+    </div>
+    <?php
+      }else {
+    ?>
+    <div class="message info empty">
+        <div>You have not sold any items. Please visit our <a href="/sell">sell</a> page to begin listing items.</div>
+    </div>
+    <?php
+      }
+    }// end if type sold and no products
+      if (!$block->isRedirectToCartEnabled()) : ?>
         <script type="text/x-magento-init">
         {
             "[data-role=tocart-form], .form.map.checkout": {
@@ -107,6 +170,84 @@ if($vendor != null){
 <?php } ?>
 
 <style>
+@media(min-width: 576px){
+  .mobile-only {
+    display: none;
+  }
+<?php
+  if($customer_account){
+?>
+  .custom-button-group {
+    margin-top: -4.5em !important;
+    margin-left: -1em;
+  }
+<?php
+}else{
+?>
+  .custom-button-group {
+    margin-left: 1.2em;
+  }
+<?php
+}// end if not vendor shop
+?>
+}
+.ck-button {
+  margin:4px;
+  background-color:#EFEFEF;
+  border-radius: 4px;
+  border:1px solid #D0D0D0;
+  overflow:auto;
+  float:left;
+  padding: 6px;
+}
+
+.ck-button:hover {
+    background: #3CBBD8;
+}
+
+.ck-button label {
+    float:left;
+    width: 6.0em;
+}
+
+.ck-button label span {
+    text-align:center;
+    padding: 3px 0px 3px;
+    display: block;
+}
+
+.ck-button label input {
+    position:absolute;
+}
+
+.ck-button input:checked + span {
+    color:#fff;
+}
+.blue-background {
+  background: #3CBBD8;
+}
+@media (max-width: 575.98px) {
+  .checked-button:hover {
+    background: #3CBBD8 !important;
+    color: white;
+  }
+  .ck-button {
+    margin-top: -1em;
+  }
+  <?php
+  if(!$customer_account){
+?>
+  .for-sale-button {
+    margin-left: 1em;
+  }
+<?php
+  }// end if customer account
+  ?>
+  .unchecked-button:hover {
+    background-color: #EFEFEF !important;
+    color: black;
+  }
+}
 <?php
 if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
  ?>
@@ -150,3 +291,20 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
   padding-bottom: 1.7em;
 }
 </style>
+<script>
+require(['jquery'], ($) => {
+   $('.bought_sold').click(function(){
+     let checked = $(this).closest('.ck-button');
+     checked.removeClass('unchecked-button');
+     checked.addClass('blue-background').addClass('checked-button');
+
+     let unchecked = $('.bought_sold:not(:checked)').closest('.ck-button');
+     unchecked.removeClass('checked-button');
+     unchecked.removeClass('blue-background').addClass('unchecked-button');
+<?php
+     $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
+?>
+     window.location = 'https://<?= $_SERVER['HTTP_HOST'] . $uri_parts[0] ?>?type=' + this.id;
+   });
+});
+</script>
