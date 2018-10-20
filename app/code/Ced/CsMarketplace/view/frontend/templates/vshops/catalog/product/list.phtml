@@ -156,6 +156,21 @@ if($vendor != null){
     </div>
     <?php
       }
+    }else if($type == 'for-sale' && $count == 0){
+      // type for sale
+      if($vendor != null){
+    ?>
+    <div class="message info empty">
+        <div><?= $vendor->getName() ?> has no items for sale.</div>
+    </div>
+    <?php
+      }else {
+    ?>
+    <div class="message info empty">
+        <div>You have not sold any items. Please visit our <a href="/sell">sell</a> page to begin listing items.</div>
+    </div>
+  <?php
+      }// end if vendor
     }// end if type sold and no products
       if (!$block->isRedirectToCartEnabled()) : ?>
         <script type="text/x-magento-init">
