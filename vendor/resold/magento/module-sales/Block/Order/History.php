@@ -132,7 +132,8 @@ class History extends \Magento\Framework\View\Element\Template
                 'sales.order.history.pager'
             )->setCollection(
                 $this->getOrders()
-            );
+            )->setLimit(25);
+
             $this->setChild('pager', $pager);
             $this->getOrders()->load();
         }
