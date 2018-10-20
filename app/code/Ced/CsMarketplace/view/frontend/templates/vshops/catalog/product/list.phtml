@@ -86,7 +86,6 @@ if($vendor != null){
                                 <?php /* @escapeNotVerified */ echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
                             </a>
                         </strong>
-                        <?php echo $block->getReviewsSummaryHtml($_product, $templateType); ?>
                         <?php /* @escapeNotVerified */ echo $block->getProductPrice($_product) ?>
                         <?php echo $block->getProductDetailsHtml($_product); ?>
                     </div>
@@ -143,5 +142,10 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
 }
 .product-item-info {
   padding-bottom: 1.7em;
+}
+.products.products-grid .products .product-item {
+  margin-right: 1em !important;
+  margin-left: 1em !important;
+  margin-bottom: 0em !important;
 }
 </style>
