@@ -116,7 +116,13 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
 <?php
 }// end if vendor shop page
 ?>
-@media (min-width: 575.98px) {.products.products-grid .products .product-item {margin-right: 2em;}}
+@media (min-width: 575.98px) {
+  .products.products-grid .products .product-item {
+    margin-right: 1em;
+    margin-left: 1em;
+    margin-bottom: 0em;
+  }
+}
 .toolbar-amount {
   margin-top: 0.5em;
 }
@@ -142,10 +148,5 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
 }
 .product-item-info {
   padding-bottom: 1.7em;
-}
-.products.products-grid .products .product-item {
-  margin-right: 1em !important;
-  margin-left: 1em !important;
-  margin-bottom: 0em !important;
 }
 </style>
