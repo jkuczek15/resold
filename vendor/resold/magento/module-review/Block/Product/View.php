@@ -57,6 +57,7 @@ class View extends \Magento\Catalog\Block\Product\View
         ProductRepositoryInterface $productRepository,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         \Magento\Review\Model\ResourceModel\Review\CollectionFactory $collectionFactory,
+        \Magento\Sales\Model\Order\Config $orderConfig,
         array $data = []
     ) {
         $this->_reviewsColFactory = $collectionFactory;
@@ -71,6 +72,7 @@ class View extends \Magento\Catalog\Block\Product\View
             $customerSession,
             $productRepository,
             $priceCurrency,
+            $orderConfig,
             $data
         );
     }
