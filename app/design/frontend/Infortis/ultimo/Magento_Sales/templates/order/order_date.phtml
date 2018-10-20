@@ -7,6 +7,8 @@
 // @codingStandardsIgnoreFile
 
 $_order = $block->getOrder();
+$orderItems = $_order->getAllItems();
+$orderProduct = $orderItems[0];
 $order_number = $_order->getIncrementId();
 
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -28,8 +30,59 @@ if(count($result) > 0 && $result[0]['vendor_id'] == $customerSession->getVendorI
     <?php
     if($type == 'sold'){
     ?>
-      <a style="cursor: pointer; margin-left: 4.4em" href="https://dashboard.stripe.com" class="btn btn-primary btn-sm" href="#"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Stripe Dashboard</strong></button></a>
+      <br style="display: none;" class="mobile-only" />
+      <a style="cursor: pointer;" href="https://dashboard.stripe.com/payouts" class="btn btn-primary btn-sm stripe-link" href="#"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>Stripe Dashboard</strong></button></a>
     <?php
     }// end if type == 'sold'
     ?>
+    <?php
+    if($type != 'sold'){
+    ?>
+    <br style="display: none;" class="mobile-only" />
+    <?php
+    }
+    ?>
+    <a style="cursor: pointer;" href="/catalog/product/view/id/<?= $orderProduct->getProductId() ?>" class="btn btn-primary btn-sm view-listing" href="#"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 5px 8px; text-align: center; text-decoration: none; display: inline-block; font-size: 12px;"><strong>View Listing</strong></button></a>
 </div>
+<?php
+  if($type != 'sold'){
+?>
+<style>
+.order-links {
+  margin-top: -1.3em;
+}
+@media(min-width: 576px){
+  .view-listing {
+    margin-left: 3.8em !important;
+  }
+}
+@media(max-width: 576px){
+  .col.qty {
+    display: none !important;
+  }
+  .mobile-only {
+    display: block !important;
+  }
+}
+</style>
+<?php
+}else{
+?>
+<style>
+@media(max-width: 576px){
+  .col.qty {
+    display: none !important;
+  }
+  .mobile-only {
+    display: block !important;
+  }
+}
+@media(min-width: 576px){
+  .stripe-link {
+    margin-left: 3.8em !important;
+  }
+}
+</style>
+<?php
+}// end if type not sold
+?>
