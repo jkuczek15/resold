@@ -245,7 +245,7 @@ require(['jquery'], ($) => {
      checked.removeClass('unchecked-button');
      checked.addClass('blue-background').addClass('checked-button');
 
-     let unchecked = $('.bought_sold:not(:checked)').closest('.ck-button');
+     let unchecked = $('.review_type:not(:checked)').closest('.ck-button');
      unchecked.removeClass('checked-button');
      unchecked.removeClass('blue-background').addClass('unchecked-button')
      window.location = 'https://<?= $_SERVER['HTTP_HOST'] ?>/review/customer?type=' + this.id;
