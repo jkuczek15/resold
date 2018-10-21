@@ -126,6 +126,7 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
   border-color: #db3b21;
   color: #ffffff;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+  float: right;
 }
 .limiter {
   display: none;
@@ -146,6 +147,9 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
   .page-main {
     padding-top: 0px !important;
   }
+}
+.cancel-button {
+  margin-right: 0.7em;
 }
 </style>
 <script>
@@ -168,6 +172,13 @@ require([
               window.location.reload();
             });
           }// end click function
+        },
+        {
+          text: $.mage.__('Cancel'),
+          class: 'cancel-button',
+          click: function () {
+            this.closeModal();
+          }
         }]
       };
       var popup = modal(deleteOptions, $('#delete-message-modal'));
