@@ -18,7 +18,7 @@
         </td>
         <td class="address-details">
             <h3>Tracking Number</h3>
-            <p><?= $block->escapeHtml($_item->getNumber()) ?></p>
+            <p><a href="https://www.parcelmonitor.com/en/track-it-online/?pParcelIds=<?= $block->escapeHtml($_item->getNumber()) ?>"><span onmouseover='this.style.color="#5bd2ec"' onmouseout='this.style.color="#aaa"' style="color: #aaa;"><?= $block->escapeHtml($_item->getNumber()) ?></span></a></p>
         </td>
     </tr>
 <?php endforeach ?>
