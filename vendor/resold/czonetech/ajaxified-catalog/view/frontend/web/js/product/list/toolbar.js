@@ -155,14 +155,7 @@ define([
         },
 
         updateContent: function (content) {
-            $('html, body').animate(
-                {
-                    scrollTop: $(this.options.productsToolbarControl+":first").offset().top
-                },
-                100,
-                'swing',
-                this._updateContent(content)
-            );
+          this._updateContent(content)
         },
 
         updatePlace: function(longitude, latitude, paramData){
