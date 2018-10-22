@@ -12,8 +12,9 @@ $vendorId = $vendorProduct->getVendorId();
 $customerVendorId = $this->getSession()->getVendorId();
 $is_seller = $vendorId == $customerVendorId;
 
-$originalDate = $chat->getTime();
-$newDate = date("F d, Y g:i A", strtotime($originalDate));
+$originalTime = $chat->getTime();
+$originalDate = $chat->getDate();
+$newDate = date("F d, Y ", strtotime($originalDate)) . date("g:i A", strtotime($originalTime));
 $messages = $this->getinboxcollection();
 $adminInboxCount = $this->_messagingHelper->getCustomerInboxCountForAdmin();
 $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();

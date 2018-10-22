@@ -90,7 +90,8 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
                                                  ?>
                                                 </td>
                                                 <td class="mailbox-attachment"></td>
-                                                <td class="mailbox-date"><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo date("F d, Y g:i A", strtotime($value['time'])) ?></a></td>
+                                                <td class="mailbox-date"><a href="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/read?id=<?php echo $value['chat_id'] ?>"><?php echo date("F d, Y ", strtotime($value['date'])) . date("g:i A", strtotime($value['time']))
+                                                ?></a></td>
                                                 <td><span data-id="<?= $value['chat_id'] ?>" style="cursor: pointer;" class="fa fa-trash delete-message"></span></td>
                                             </tr>
                                         <?php endforeach ?>
