@@ -115,6 +115,10 @@ define([
               }
             }// end if search not null
 
+            if(paramData == undefined){
+              let urlParts = window.location.href.split('?');
+              url = urlParts[0];
+            }
             if (typeof history.replaceState === 'function') {
                 history.replaceState(null, null, url);
             }
@@ -146,7 +150,6 @@ define([
                     .replaceWith(content.products_list)
                 ;
             }
-
             if(content.filters){
                 $(this.options.layeredNavigationFilterBlock).replaceWith(content.filters)
             }
