@@ -20,12 +20,15 @@ hr {
 .action.sorter-action {
   display: none;
 }
+.tocart {
+  display: none !important;
+}
 </style>
 <?php
+$latitude = isset($_GET['latitude']) ? $_GET['latitude'] : '';
+$longitude = isset($_GET['longitude']) ? $_GET['longitude'] : '';
 if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQUEST_URI'], 'catalogsearch') === FALSE){
   $local_global = isset($_GET['local_global']) ? $_GET['local_global'] : '';
-  $latitude = isset($_GET['latitude']) ? $_GET['latitude'] : '';
-  $longitude = isset($_GET['longitude']) ? $_GET['longitude'] : '';
   $price = isset($_GET['price']) ? $_GET['price'] : '';
   $condition = isset($_GET['condition']) ? $_GET['condition'] : '';
 ?>
@@ -469,9 +472,30 @@ require([
             }
           });
       }
+
+      let latitude = '<?= $latitude ?>';
+      let longitude = '<?= $longitude ?>';
       if($('#local_global').val() == 'Y' && sessionStorage.place != undefined){
         $('#location-city').html(`- 50 miles from ${sessionStorage.place}`);
-      }
+      }else if(latitude != '' && longitude != ''){
+        let api_key = 'pk.eyJ1Ijoiamt1Y3playIsImEiOiJjamxlZ2kyMzYwMnhsM3ByazM1ZWtibzllIn0.hsE3V5wLucE2wl8jdQhfTQ';
+        let mapbox_url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${api_key}`;
+
+        $.get(mapbox_url, (data) => {
+            if(data && data.features && data.features.length > 0){
+                let place = '';
+                for(let feature of data.features){
+                    if(feature.place_type.includes("place")){
+                      place = feature.place_name;
+                      break;
+                    }// end if place type is place
+                }// end for loop over features
+
+                $('#location-city').html(`- 50 miles from ${place}`);
+                sessionStorage.place = place;
+            }
+        });
+      }// end if local
     });
 });
 </script>
