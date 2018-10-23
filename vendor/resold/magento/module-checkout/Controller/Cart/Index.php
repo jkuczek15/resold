@@ -52,7 +52,7 @@ class Index extends \Magento\Checkout\Controller\Cart
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('Thank you for your purchase.'));
+        $resultPage->getConfig()->getTitle()->set(__('Thank you for using Resold.'));
         return $resultPage;
     }
 }
