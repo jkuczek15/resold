@@ -61,6 +61,11 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
     $collectionSize = $_productCollection->count();
 ?>
 <?php if (!$collectionSize): ?>
+    <style>
+.page-products .columns {
+  padding-top: 0px;
+}
+    </style>
     <div class="message info empty"><div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection.') ?></div></div>
 <?php else: ?>
     <?php
