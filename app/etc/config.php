@@ -3,6 +3,7 @@ return array (
   'modules' => 
   array (
     'ADM_QuickDevBar' => 1,
+    'Absolute_CacheBust' => 1,
     'Apptrian_FacebookPixel' => 1,
     'Magento_Store' => 1,
     'Magento_Directory' => 1,
