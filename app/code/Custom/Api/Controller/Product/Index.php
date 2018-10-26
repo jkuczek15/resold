@@ -226,6 +226,26 @@ class Index extends \Magento\Framework\App\Action\Action
       // save the product to the database
       $_product->save();
 
+      // add product to elastic search index
+      $request_url = "https://search-resold-es-iy75wommvnfqf5hf7p6w7ej2sq.us-west-2.es.amazonaws.com/products/_doc/".$product_id;
+      $search_data = json_encode([
+        'name' => $_product->getName(),
+        'title_description' => $post['title_description'],
+        'sku' => $_product->getSku()
+      ]);
+
+      $ch = curl_init($request_url);
+      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $search_data);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          'Content-Type: application/json'
+      ));
+      $response = curl_exec($ch);
+      $response =  json_decode($response);
+      curl_close($ch);
+
+      // link the product to the seller
       if($product_id === null){
         // creating a new product and linking it to the seller
         // save a vendor product with the seller
