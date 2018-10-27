@@ -77,13 +77,14 @@
 								<input type="hidden" name="customer_id" class="validate" value="<?php echo $this->getCustomerid(); ?>" />
 								<input type="hidden" name="subject" class="validate" value="<?php echo $product->getName() ?>" />
 								<input type="hidden" name="value" value="<?= $order->getId() ?>" />
+						    <?php echo $this->getBlockHtml('formkey') ?>
             </div>
         </fieldset>
     <?php //endif ?>
         <div class="field review-field-text required">
             <label for="review_field" class="label"><span><?php /* @escapeNotVerified */ echo __('Review') ?></span></label>
             <div class="control">
-                <textarea name="review" id="review" cols="5" rows="3" data-validate="{required:true}" data-bind="value: review().detail"></textarea>
+                <textarea name="review" id="review" cols="5" rows="3" data-validate="{required:true, maxlength: 1000 }" data-bind="value: review().detail"></textarea>
             </div>
         </div>
     </fieldset>

@@ -22,6 +22,7 @@ namespace Ced\CsVendorReview\Controller\Rating;
 use Magento\Framework\App\Action\Context;
 use Magento\Customer\Model\Session;
 use Ced\CsVendorReview\Model\Review;
+use \Magento\Framework\Controller\Result\JsonFactory;
 
 class Post extends \Magento\Framework\App\Action\Action
 {
@@ -35,15 +36,27 @@ class Post extends \Magento\Framework\App\Action\Action
         Review $model,
         Session $customerSession,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+        JsonFactory $resultJsonFactory,
+        \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         array $data = [])
     {
         $this->model=$model;
         $this->session = $customerSession;
         $this->_customerRepositoryInterface = $customerRepositoryInterface;
+        $this->formKeyValidator = $formKeyValidator;
+        $this->resultJsonFactory = $resultJsonFactory;
         parent::__construct($context);
     }
     public function execute()
     {
+        ####################################
+        // REQUEST AND USER VALIDATON
+        ###################################
+        // Ensure valid request and protect against CSRF
+        if (!$this->formKeyValidator->validate($this->getRequest())) {
+          return $this->resultJsonFactory->create()->setData(['error' => 'Invalid Request.']);
+        }// end if valid request
+
         $data = $this->getRequest()->getParams();
         if ($data) {
             $scopeConfig = $this->_objectManager->create('Magento\Framework\App\Config\ScopeConfigInterface');

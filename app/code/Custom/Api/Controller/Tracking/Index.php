@@ -60,6 +60,7 @@ class Index extends \Magento\Framework\App\Action\Action
         JsonFactory $resultJsonFactory,
         \Magento\Sales\Model\Order\Shipment\TrackFactory $trackFactory,
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+        \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     )
     {
@@ -68,6 +69,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->_transportBuilder = $transportBuilder;
         $this->trackFactory = $trackFactory;
         $this->scopeConfig = $scopeConfig;
+        $this->formKeyValidator = $formKeyValidator;
         parent::__construct($context);
     }
 
@@ -79,6 +81,13 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
       $resultRedirect = $this->resultRedirectFactory->create();
+      ####################################
+      // REQUEST AND USER VALIDATON
+      ###################################
+      // Ensure valid request and protect against CSRF
+      if (!$this->formKeyValidator->validate($this->getRequest())) {
+        return $this->resultJsonFactory->create()->setData(['error' => 'Invalid Request.']);
+      }// end if valid request
 
       // Ensure POST request
       $post = $this->getRequest()->getPostValue();
