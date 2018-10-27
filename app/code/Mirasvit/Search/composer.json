@@ -1,0 +1,22 @@
+{
+  "name": "mirasvit/module-search",
+  "description": "Search",
+  "require": {
+    "magento/framework": "100.1.*|100.2.*|101.0.*",
+    "mirasvit/module-core": ">=1.2.69",
+    "mirasvit/module-search-mysql": "1.0.*"
+  },
+  "type": "magento2-module",
+  "version": "1.0.100",
+  "license": [
+    "proprietary"
+  ],
+  "autoload": {
+    "files": [
+      "src/Search/registration.php"
+    ],
+    "psr-4": {
+      "Mirasvit\\Search\\": "src/Search"
+    }
+  }
+}
