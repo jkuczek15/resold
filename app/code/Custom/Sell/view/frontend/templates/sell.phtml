@@ -369,12 +369,15 @@ require([
 
 <?php
   if($mode === "Edit"){
+
+    $parent = $lowestcategory->getParentCategory();
+    $grandparent = $parent->getParentCategory();
 ?>
   app.form_data.name = "<?= $product->getName() ?>";
   app.form_data.title_description = "<?= $product->getData('title_description'); ?>";
-  app.form_data.category = "<?= $lowestcategory->getParentCategory()->getParentCategory()->getName() ?>";
-  app.form_data.subcategory = "<?= $lowestcategory->getParentCategory()->getName() ?>";
-  app.form_data.lowestcategory = "<?= $category_ids[0] ?>";
+  app.form_data.category = "<?= $grandparent->getName() == "Default Root" ? $parent->getName() : $grandparent->getName() ?>";
+  app.form_data.subcategory = "<?= $grandparent->getName() == "Default Root" ? $lowestcategory->getName() : $parent->getName() ?>";
+  app.form_data.lowestcategory = "<?= $grandparent->getName() == "Default Root" ? "" : $category_ids[0] ?>";
   app.form_data.condition = "<?= $product->getData('condition') ?>";
   app.form_data.description = `<?= $product->getDescription() ?>`;
 
@@ -543,11 +546,17 @@ require([
         app.subcategories = app.categories[app.form_data.category];
 
         if(app.form_data.subcategory != null){
-          app.lowestcategories = app.subcategories[app.form_data.subcategory];
           $('.subcategory').show();
+          <?php
+          if($mode == "Edit" && $grandparent->getName() != "Default Root"){
+          ?>
+          app.lowestcategories = app.subcategories[app.form_data.subcategory];
           if(app.form_data.lowestcategory != null){
               $('.lowestcategory').show();
           }// end if lowest category set
+          <?php
+          }// end if grandparent
+          ?>
         }// end if subcategory set
       }// end if category set
     });
