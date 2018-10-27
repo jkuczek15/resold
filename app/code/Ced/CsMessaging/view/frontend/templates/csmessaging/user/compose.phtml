@@ -56,6 +56,27 @@ $is_seller = $vendorId == $customerVendorId;
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            <div class="left-sidebar-wrap mobile-custom">
+                <div class="box box-solid" style="margin-top: -2em;">
+                    <div class="box-body no-padding" style="display: table; margin: 0 auto;">
+                        <ul style="list-style: none; min-width: 578px" class="nav nav-pills nav-stacked">
+                            <!-- <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/frontend/customercompose'); ?>"
+                                   class="btn btn-block margin-bottom compose-tab"><?php echo __('Compose') ?></a>
+                            </li> -->
+                            <li style="display: inline"><a
+                                        href="<?php echo $this->getUrl('csmessaging/frontend/inbox'); ?>"><i class="fa fa-inbox"></i><?php echo __(' Inbox'); ?>
+                                    <span class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
+                                            echo '(';
+                                            echo $vendorInboxCount;
+                                            echo ')';
+                                        } ?></span></a></li>
+                            <li class="active" style="display: inline"><a href="<?php echo $this->getUrl('csmessaging/frontend/sent'); ?>">
+                                   <i class="sent-mail-tab fa fa-envelope-o"></i> Sent</a></li>
+                        </ul>
+                    </div>
+                </div>
+              </div>
             <div class="left-sidebar-wrap">
                 <div class="box-header with-border box-folder">
                     <h3 class="box-title"><?php echo __('Folders') ?></h3>
@@ -100,10 +121,10 @@ $is_seller = $vendorId == $customerVendorId;
                           <div class="col-xs-2">
                             Item:
                           </div>
-                          <div class="col-xs-4">
+                          <div class="col-xs-5">
                             <strong><a target="_blank" href="<?= $product->getProductUrl() ?>"><?= $subject ?></a></strong>
                           </div>
-                          <div class="col-xs-6">
+                          <div class="col-xs-5">
                             <button style="float: right;" class="btn btn-primary" onclick="window.open('<?= $product->getProductUrl() ?>', '_blank'); return false;">View Listing</button>
                           </div>
                         </div>
@@ -152,7 +173,7 @@ $is_seller = $vendorId == $customerVendorId;
                 }// end if post sale
                     ?>
                         <div class="form-group">
-                          <label>Message:</label>
+                          <label id="message-text">Message:</label>
                             <textarea id="compose-textarea" name="text_email" class="form-control" style="height: 200px;width:97%;" value=""></textarea>
                         </div>
                         <div class="box-footer">
@@ -233,6 +254,22 @@ table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table
     width: 30%;
     margin-right: 20em;
   }
+  .left-sidebar-wrap {
+    display: none;
+  }
+  .right-sidebar-wrap {
+    float: left;
+    width: 100%;
+  }
+  .mobile-custom {
+    display: block !important;
+  }
+  .row .col-xs-2, .row .col-md-7, .row .col-md-3 {
+    padding-left: 1.4em;
+  }
+  #message-text {
+    padding-left: 0.3em;
+  }
 }
 @media(min-width: 578px){
   .offer-price-text {
@@ -240,6 +277,9 @@ table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table
   }
   .custom-break {
     display: none;
+  }
+  .mobile-custom {
+    display: none !important;
   }
 }
 </style>
