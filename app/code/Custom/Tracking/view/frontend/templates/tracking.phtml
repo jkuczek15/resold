@@ -44,6 +44,7 @@
 <div class="block-content">
 	<?php if ($this->getSession() != null && $this->getSession()->isLoggedIn()){ ?>
 <form action="/api/tracking" class="tracking-form" method="post" id="tracking-form" data-role="order-tracking-form" data-bind="scope: 'review-form'">
+    <?php echo $this->getBlockHtml('formkey') ?>
 		<input type="hidden" name="order_id" value="<?= $order->getId() ?>" />
     <fieldset class="fieldset review-fieldset" data-hasrequired="<?php __('* Required Fields'); ?>">
         <legend class="legend review-legend"><span><?php /* @escapeNotVerified */ echo __("Send Tracking To: &nbsp;&nbsp;<span style='font-weight: bold'>".$customer_name."</span>"); ?></span></legend><br />
@@ -51,7 +52,7 @@
         <div class="field review-field-text required">
             <label style="text-align: left;" for="review_field" class="label"><span><?php /* @escapeNotVerified */ echo __('Tracking Number:') ?></span></label>
             <div class="control">
-                <input pattern="([A-z0-9À-ž\s]){5,}" type="text" name="tracking_number" id="tracking_number" style="width: 45%" required minlength="5" data-bind="value: review().detail" />
+                <input pattern="([A-z0-9À-ž\s]){5,}" type="text" name="tracking_number" id="tracking_number" style="width: 45%" required minlength="5" maxlength="100" data-bind="value: review().detail" />
             </div>
         </div>
     </fieldset>
