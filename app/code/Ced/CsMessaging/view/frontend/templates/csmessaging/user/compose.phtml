@@ -117,6 +117,7 @@ $is_seller = $vendorId == $customerVendorId;
                           <input type="hidden" value="<?php echo $customer->getId() ?>" name="vendor_id" />
                           <input type="hidden" name="email_subject" value="<?= $subject ?>" />
                           <input type="hidden" name="product_id" value="<?= $product_id ?>" />
+                          <?php echo $this->getBlockHtml('formkey') ?>
                         <div class="row">
                           <div class="col-xs-2">
                             Item:

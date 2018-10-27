@@ -91,7 +91,8 @@ class Savechat extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
-        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
+        \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
     ) {
 
           $this->resultJsonFactory = $resultJsonFactory;
@@ -109,6 +110,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $this->date = $date;
         $this->_storeManager = $storeManager;
         $this->_customerRepositoryInterface = $customerRepositoryInterface;
+        $this->formKeyValidator = $formKeyValidator;
         parent::__construct($context);
         //     $this->resultJsonFactory = $this->_objectManager->create('Magento\Framework\Controller\Result\JsonFactory');
     }
@@ -121,6 +123,14 @@ class Savechat extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        ####################################
+        // REQUEST AND USER VALIDATON
+        ###################################
+        // Ensure valid request and protect against CSRF
+        if (!$this->formKeyValidator->validate($this->getRequest())) {
+          return $this->resultJsonFactory->create()->setData(['error' => 'Invalid Request.']);
+        }// end if valid request
+
         date_default_timezone_set("America/Chicago");
         // get request data
     	  $data = $this->getRequest()->getPostValue();
