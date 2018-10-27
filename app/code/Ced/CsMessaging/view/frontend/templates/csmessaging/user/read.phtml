@@ -116,7 +116,7 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
                           <div class="row">
                             <div class="col-xs-8">
                               <a target="_blank" href="<?= $product->getProductUrl() ?>">
-                                <h3><?php echo $chat->getSubject(); ?>
+                                <h3 id="subject-line"><?php echo $chat->getSubject(); ?>
                               </a>
                             </h3>
                           </div>
@@ -219,8 +219,11 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
   .mobile-custom {
     display: block !important;
   }
-  .mailbox-read-time {
-    padding-left: 0.2em;
+  .mailbox-read-time, .mailbox-read-message {
+    padding-left: 1em !important;
+  }
+  #subject-line {
+    padding-left: 0.4em !important;
   }
   .btn.btn-box-tool {
     width: 100%;
