@@ -47,6 +47,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="latitude" id="latitude" value="" />
     <input type="hidden" name="longitude" id="longitude" value="" />
+    <?php echo $this->getBlockHtml('formkey') ?>
 <?php
   if($mode === "Edit"){
 ?>
