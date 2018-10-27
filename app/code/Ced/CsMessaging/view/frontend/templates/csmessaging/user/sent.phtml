@@ -25,6 +25,27 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            <div class="left-sidebar-wrap mobile-custom">
+                <div class="box box-solid" style="margin-top: -2em;">
+                    <div class="box-body no-padding" style="display: table; margin: 0 auto;">
+                        <ul style="list-style: none; min-width: 578px" class="nav nav-pills nav-stacked">
+                            <!-- <li>
+                                <a href="<?php echo $this->getUrl('csmessaging/frontend/customercompose'); ?>"
+                                   class="btn btn-block margin-bottom compose-tab"><?php echo __('Compose') ?></a>
+                            </li> -->
+                            <li style="display: inline"><a
+                                        href="<?php echo $this->getUrl('csmessaging/frontend/inbox'); ?>"><i class="fa fa-inbox"></i><?php echo __(' Inbox'); ?>
+                                    <span class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
+                                            echo '(';
+                                            echo $vendorInboxCount;
+                                            echo ')';
+                                        } ?></span></a></li>
+                            <li class="active" style="display: inline"><a href="<?php echo $this->getUrl('csmessaging/frontend/sent'); ?>">
+                                   <i class="sent-mail-tab fa fa-envelope-o"></i> Sent</a></li>
+                        </ul>
+                    </div>
+                </div>
+              </div>
             <div class="left-sidebar-wrap">
                 <div class="box-header with-border box-folder">
                     <h3 class="box-title">Folders</h3>
@@ -147,6 +168,21 @@ $vendorInboxCount = $this->_messagingHelper->getCustomerInboxCountForVendor();
   }
   .page-main {
     padding-top: 0px !important;
+  }
+  .left-sidebar-wrap {
+    display: none;
+  }
+  .right-sidebar-wrap {
+    float: left;
+    width: 100%;
+  }
+  .mobile-custom {
+    display: block !important;
+  }
+}
+@media (min-width: 575.98px) {
+  .mobile-custom {
+    display: none !important;
   }
 }
 .cancel-button {
