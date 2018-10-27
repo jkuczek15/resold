@@ -1,3 +1,11 @@
 .menu-wrapper .logo .logo-img {
   width: auto !important;
 }
+.mirasvit-logo {
+    background-image: none !important;
+    background-size: 0 !important;
+    padding-left: 0px !important;
+}
+.submenu-group-title > span::after {
+  background-image: none !important;
+}
