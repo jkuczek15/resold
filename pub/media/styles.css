@@ -262,3 +262,6 @@ div.checkout-shipping-method > div:nth-child(1) {
 .action-auth-toggle {
   display: none;
 }
+body.searchautocomplete__active .block-search {
+  width: 100% !important;
+}
