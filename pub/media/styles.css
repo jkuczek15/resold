@@ -266,5 +266,5 @@ body.searchautocomplete__active .block-search {
   width: 100% !important;
 }
 #block-search {
-  z-index: -99999999;
+  z-index: 0;
 }
