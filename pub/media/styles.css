@@ -265,3 +265,6 @@ div.checkout-shipping-method > div:nth-child(1) {
 body.searchautocomplete__active .block-search {
   width: 100% !important;
 }
+#block-search {
+  z-index: -99999999;
+}
