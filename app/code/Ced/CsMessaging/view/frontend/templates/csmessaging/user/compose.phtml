@@ -64,14 +64,14 @@ $is_seller = $vendorId == $customerVendorId;
                                 <a href="<?php echo $this->getUrl('csmessaging/frontend/customercompose'); ?>"
                                    class="btn btn-block margin-bottom compose-tab"><?php echo __('Compose') ?></a>
                             </li> -->
-                            <li style="display: inline"><a
+                            <li class="active" style="display: inline"><a
                                         href="<?php echo $this->getUrl('csmessaging/frontend/inbox'); ?>"><i class="fa fa-inbox"></i><?php echo __(' Inbox'); ?>
                                     <span class="label label-primary pull-right"><?php if ($vendorInboxCount > 0) {
                                             echo '(';
                                             echo $vendorInboxCount;
                                             echo ')';
                                         } ?></span></a></li>
-                            <li class="active" style="display: inline"><a href="<?php echo $this->getUrl('csmessaging/frontend/sent'); ?>">
+                            <li style="display: inline"><a href="<?php echo $this->getUrl('csmessaging/frontend/sent'); ?>">
                                    <i class="sent-mail-tab fa fa-envelope-o"></i> Sent</a></li>
                         </ul>
                     </div>
@@ -252,7 +252,6 @@ table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table
     padding-top: 0px !important;
   }
   .ck-button {
-    width: 30%;
     margin-right: 20em;
   }
   .left-sidebar-wrap {
