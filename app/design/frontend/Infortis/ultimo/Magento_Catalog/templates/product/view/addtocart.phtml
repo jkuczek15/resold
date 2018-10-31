@@ -186,6 +186,7 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
     <input type="hidden" id="vendor_id" value="<?= $VendorId ?>" />
     <input type="hidden" id="seller_cust_id" value="<?= $seller_cust_id ?>" />
     <input type="hidden" id="sent_to_vendor" value="Y" />
+    <?php echo $this->getBlockHtml('formkey') ?>
     <div class="row" style="margin-bottom: 1em">
       <div class="col-md-2">
         <strong>Item:</strong>
@@ -396,7 +397,8 @@ $(document).ready(() => {
               'seller_cust_id': $('#seller_cust_id').val(),
               'email_subject': $('#email_subject').val(),
               'text_email': $('#text_email_contact_seller').val(),
-              'product_id': '<?= $_product->getId() ?>'
+              'product_id': '<?= $_product->getId() ?>',
+              'form_key': $('[name="form_key"]').val()
             };
             $.post('/csmessaging/frontend/savechat', data, (response) => {
               $('#text_email_contact_seller').val('');
@@ -445,7 +447,8 @@ $(document).ready(() => {
               'text_email': message,
               'offer_price': offer_price,
               'is_offer': 'Y',
-              'product_id': '<?= $_product->getId() ?>'
+              'product_id': '<?= $_product->getId() ?>',
+              'form_key': $('[name="form_key"]').val()
             };
             $.post('/csmessaging/frontend/savechat', data, (response) => {
               $('#text_email_offer').val('');
