@@ -78,4 +78,20 @@
 .count {
   display: none;
 }
+.right-override {
+  right: inherit !important;
+}
 </style>
+<script>
+require([
+    'jquery'
+], function ($) {
+    if($('.message.info.empty').length){
+      $('.filter-title > strong:nth-child(1)').hide();
+    }
+    if(!$('.block-subtitle.filter-subtitle').length){
+      $('.filter-title').hide();
+      $('.sorter').addClass('right-override');
+    }
+});
+</script>
