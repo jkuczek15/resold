@@ -1,1 +1,16 @@
-sudo chmod -R 777 /var/www/html
+#!/usr/bin/env bash
+
+# Grant correct permissions to all web files
+sudo chmod -R 674 /var/www/html
+
+# Grant write permissions to cache files
+sudo chmod -R 677 /var/www/html/var
+
+# Remove execute permissions from all files
+sudo chmod -R -x+X * /var/www/html
+
+# Make the Magento command line tool executable
+sudo chmod u+x /var/www/html/bin/magento
+
+# Grant execute permissions to all scripts
+sudo chmod +x /var/www/html/scripts/*
