@@ -15,7 +15,7 @@ if($_product->getName() == null){
 }// end if product is null
 
 ?>
-<form method="post" action="/api/report">
+<form method="post" action="/api/report" id="report-listing">
   <input type="hidden" name="product_id" value="<?= $_product->getId() ?>" />
   <div class="row">
     <div class="col-md-6">

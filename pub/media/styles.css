@@ -268,3 +268,6 @@ body.searchautocomplete__active .block-search {
 #block-search {
   z-index: 0;
 }
+#contact-form > .fieldset > .field:not(.choice) > .control {
+  width: 55%;
+}
