@@ -110,6 +110,7 @@ $is_seller = $vendorId == $customerVendorId;
                     </div>
                     <!-- /.box-header -->
                     <form method="post"
+                          id="reply-form"
                           action="<?php echo $this->getUrl();//Mage::getBaseUrl()?>csmessaging/frontend/savechat"
                           enctype="multipart/form-data">
                           <input type="hidden" name="sent_to_vendor" value="1" />
