@@ -9,3 +9,9 @@
 .submenu-group-title > span::after {
   background-image: none !important;
 }
+.msp-security-suite-logo-config {
+  display: none !important;
+}
+.msp-security-suite-logo-config + span {
+  padding-left: 0 !important;
+}
