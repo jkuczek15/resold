@@ -1,0 +1,108 @@
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+#row_prgdpr_consent_checkboxes_checkboxes table tbody tr {
+    display: none;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes table tbody.loaded tr {
+    display: table-row;
+}
+
+table #row_prgdpr_consent_checkboxes_checkboxes table.data-grid {
+    width: 800px;
+    min-width: 800px;
+}
+
+/* General DataGrid styles */
+
+#row_prgdpr_consent_checkboxes_checkboxes .admin__data-grid-wrap {
+    padding-top: 0;
+    margin-bottom: 0;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes .messages {
+    display: none;
+}
+
+table #row_prgdpr_consent_checkboxes_checkboxes table td {
+    padding: 10px;
+}
+
+table #row_prgdpr_consent_checkboxes_checkboxes table td button+button {
+    display: none;
+}
+
+table #row_prgdpr_consent_checkboxes_checkboxes table td:last-child {
+    width: 110px;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes .data-grid {
+    margin-bottom: 10px;
+}
+
+table.data-grid tbody tr td.prgdpr-removalstatus-column span.data-grid-cell-content {
+    border: solid 1px #514943;
+    display: block;
+    font-weight: bold;
+    line-height: 17px;
+    padding: 0 3px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+table.data-grid tbody tr td.prgdpr-removalstatus-column span.data-grid-cell-content.gdpr-status-completed {
+    background: #d0e5a9 none repeat scroll 0 0;
+    border-color: #5b8116;
+    color: #185b00;
+}
+
+table.data-grid tbody tr td.prgdpr-removalstatus-column span.data-grid-cell-content.gdpr-status-cancelled {
+    background: #f9d4d4 none repeat scroll 0 0;
+    border-color: #e22626;
+    color: #e22626;
+}
+
+table.data-grid tbody tr td.prgdpr-removalstatus-column span.data-grid-cell-content.gdpr-status-pending {
+    background: #fdf0d5 none repeat scroll 0 0;
+    border-color: #6f4400;
+    color: #6f4400;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes td {
+    background: none;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes tr:nth-child(4n),
+#row_prgdpr_consent_checkboxes_checkboxes tr:nth-child(4n-1) {
+    background: #f1f1f1;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes tr:nth-child(2n+1):nth-child(n+2) td {
+    border-top: 2px solid #6d6560;
+}
+
+.prgdpr-geoip-title {
+    font-weight: 700;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes .chosen-choices {
+    margin: 0;
+}
+
+#row_prgdpr_consent_checkboxes_checkboxes tr:nth-child(2n+1) td:last-child {
+    border-bottom: 1px solid #d6d6d6;
+}

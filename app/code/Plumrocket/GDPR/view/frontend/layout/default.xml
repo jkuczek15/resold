@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- This code is adding the support of Porto theme -->
+    <update handle="prgdpr_porto"/>
+    <head>
+        <css src="Plumrocket_GDPR::css/prgdpr.css"/>
+        <css src="Plumrocket_GDPR::css/prgdpr-custom.css"/>
+    </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="Plumrocket\GDPR\Block\Gtm" name="google_tagmanager" as="google_tagmanager" template="Plumrocket_GDPR::gtm.phtml" ifconfig="prgdpr/general/enabled"/>
+            <block class="Magento\Framework\View\Element\Template" name="consent_checkboxes_popups" template="Plumrocket_GDPR::consent-popups-load.phtml" ifconfig="prgdpr/general/enabled"/>
+        </referenceContainer>
+
+        <referenceBlock name="cookie_notices">
+            <action method="setTemplate" ifconfig="prgdpr/general/enabled">
+                <argument name="template" xsi:type="string">Plumrocket_GDPR::cookies-notices-load.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceContainer name="footer">
+            <block class="Magento\Newsletter\Block\Subscribe" name="form.subscribe" as="subscribe" before="-" template="Magento_Newsletter::subscribe.phtml" ifconfig="prgdpr/general/enabled"/>
+        </referenceContainer>
+        <referenceBlock name="form.subscribe">
+            <action method="setTemplate" ifconfig="prgdpr/general/enabled">
+                <argument name="template" xsi:type="string">Plumrocket_GDPR::newsletter/subscribe.phtml</argument>
+            </action>
+            <block class="Magento\Framework\View\Element\Template" name="prgdpr_newsletter_checkbox" template="Plumrocket_GDPR::consent-checkboxes-load.phtml" ifconfig="prgdpr/general/enabled">
+                <arguments>
+                    <argument name="prgdprPage" xsi:type="string">newsletter</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

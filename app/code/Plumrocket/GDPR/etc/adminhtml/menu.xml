@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add module="Plumrocket_GDPR" parent="Plumrocket_Base::elements" id="Plumrocket_GDPR::prgdpr" resource="Plumrocket_GDPR::prgdpr" title="GDPR" translate="title" sortOrder="3766028"/>
+        <add module="Plumrocket_GDPR" parent="Plumrocket_GDPR::prgdpr" id="Plumrocket_GDPR::consentslog" resource="Plumrocket_GDPR::consentslog" action="prgdpr/consentslog/index" title="Consent Log" translate="title" sortOrder="10"/>
+        <add module="Plumrocket_GDPR" parent="Plumrocket_GDPR::prgdpr" id="Plumrocket_GDPR::downloadslog" resource="Plumrocket_GDPR::downloadslog" action="prgdpr/downloadslog/index" title="Downloads Log" translate="title" sortOrder="20"/>
+        <add module="Plumrocket_GDPR" parent="Plumrocket_GDPR::prgdpr" id="Plumrocket_GDPR::removalrequests" resource="Plumrocket_GDPR::removalrequests" action="prgdpr/removalrequests/index" title="Data Removal Requests" translate="title" sortOrder="30"/>
+        <add module="Plumrocket_GDPR" parent="Plumrocket_GDPR::prgdpr" id="Plumrocket_GDPR::configuration" resource="Plumrocket_GDPR::configuration" action="adminhtml/system_config/edit/section/prgdpr" title="Configuration" translate="title" sortOrder="40"/>
+    </menu>
+</config>

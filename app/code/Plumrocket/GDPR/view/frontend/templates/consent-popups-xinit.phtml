@@ -1,0 +1,70 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+// @codingStandardsIgnoreFile
+
+$popups = $this->getData('popups');
+$notifys = $this->getData('notifys');
+
+if (empty($popups) && empty($notifys)) {
+    return;
+}
+
+?>
+
+<?php if (!empty($notifys)) { ?>
+    <?php $notifysJson = json_encode(array_values($notifys)); ?>
+    <div data-bind="scope: 'prgdpr-consent-notifys-scope'" class="prgdpr-consent-notifys-block">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "prgdpr-consent-notifys-scope": {
+                            "component": "Plumrocket_GDPR/js/view/consent-notifys",
+                            "notifys": <?= /* @noEscape */ $notifysJson ?>
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<?php } ?>
+
+<?php if (!empty($popups)) { ?>
+    <?php $popupsJson = json_encode(array_values($popups)); ?>
+    <div data-bind="scope: 'prgdpr-consent-popup-scope'" class="prgdpr-consent-popup-block">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "prgdpr-consent-popup-scope": {
+                            "component": "Plumrocket_GDPR/js/view/consent-popup",
+                            "popups": <?= /* @noEscape */ $popupsJson ?>
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<?php } ?>
+

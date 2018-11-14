@@ -1,0 +1,60 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Cookie\Block\Html\Notices $block */
+$declineButtonLabel = $block->escapeHtml($block->getData('cookie_decline_button_label'));
+$acceptButtonLabel = $block->escapeHtml($block->getData('cookie_accept_button_label'));
+?>
+<div role="alertdialog"
+     tabindex="-1"
+     class="prgdpr-notice message global cookie"
+     id="notice-cookie-block"
+     style="display: none;">
+    <div role="document" class="content prgdpr-notice__content" tabindex="0">
+        <?= $block->getData('cookie_notice_text') ?>
+        <div class="actions prgdpr-notice__actions">
+            <?php if (! empty($declineButtonLabel)) : ?>
+                <button id="btn-cookie-decline" class="action decline prgdpr-notice__button">
+                    <span><?= $declineButtonLabel ?></span>
+                </button>
+            <?php endif ?>
+            <button id="btn-cookie-allow" class="action allow primary prgdpr-notice__button">
+                <span><?= $acceptButtonLabel ?></span>
+            </button>
+        </div>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#notice-cookie-block": {
+            "Plumrocket_GDPR/js/cookies/notices": {
+                "cookieAllowButtonSelector": "#btn-cookie-allow",
+                "cookieDeclineButtonSelector": "#btn-cookie-decline",
+                "cookieName": "<?= /* @noEscape */ \Magento\Cookie\Helper\Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>",
+                "cookieNameDecline": "<?= /* @noEscape */ \Plumrocket\GDPR\Helper\Data::IS_USER_DECLINE_SAVE_COOKIE ?>",
+                "cookieValue": <?= /* @noEscape */ $this->helper(\Magento\Cookie\Helper\Cookie::class)->getAcceptedSaveCookiesWebsiteIds() ?>,
+                "cookieLifetime": <?= /* @noEscape */ $this->helper(\Magento\Cookie\Helper\Cookie::class)->getCookieRestrictionLifetime() ?>,
+                "allowedCookieName": "<?= /* @noEscape */ \Plumrocket\GDPR\Helper\Data::LAST_ALLOW_COOKIE_NAME ?>",
+                "declinedCookieName": "<?= /* @noEscape */ \Plumrocket\GDPR\Helper\Data::LAST_DECLINE_COOKIE_NAME ?>",
+                "noCookiesUrl": "<?= $block->escapeUrl($block->getUrl('cookie/index/noCookies')) ?>",
+                "logActionForAllowCookies": "<?= $block->getUrl('prgdpr/cookiesnotices/log') ?>"
+            }
+        }
+    }
+</script>

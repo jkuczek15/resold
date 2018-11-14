@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Plumrocket_GDPR::js/cms/page/edit/gdpr.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Plumrocket\GDPR\Block\Adminhtml\Cms\Page\Edit\Tab\Gdpr\Revision\History\GridFix" name="prgdpr_revision_history_grid"/>
+            <block class="Magento\Backend\Block\Template" name="prgdpr_revision_history_manager_init" template="Plumrocket_GDPR::revision-history-manager-x-init.phtml" ifconfig="prgdpr/general/enabled"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,42 @@
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<div data-role="prgdpr-consent-popups" class="prgdpr-consent-popups">
+    <!-- ko foreach: popups -->
+    <div data-bind="
+            attr: {'id': 'prgdpr-consent-popups-modal-'+$parent.getPopupId(consentId)}, 
+            afterRender: function(element, data) {$parent.initModal(element, data)}" style="display: none">
+        <!-- ko if: cms_page -->
+        <div class="prgdpr-consent-content-actions">
+            <a class="prgdpr-print-link" href="#" data-bind="
+                    attr: {'data-contentid': 'prgdpr-print-content-'+$parent.getPopupId(consentId)}, 
+                    click: function(data, event) {$parent.printContent(data, event)}">
+                <span data-bind="i18n: 'Print'"></span>
+            </a>
+        </div>
+        <div class="prgdpr-consent-popups-item-content" data-bind="
+                attr: {'id': 'prgdpr-print-content-'+$parent.getPopupId(consentId)}, 
+                html: cms_page.content">
+        </div>
+        <!-- /ko -->
+        <!-- ko ifnot: cms_page -->
+        <div class="prgdpr-consent-popups-item-content" data-bind="html: checkbox_label"></div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>

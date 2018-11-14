@@ -15,3 +15,7 @@
 .msp-security-suite-logo-config + span {
   padding-left: 0 !important;
 }
+div.config-nav-block:nth-child(3) > div:nth-child(1) > strong:nth-child(1) > div:nth-child(1) {
+  padding-left: 0px !important;
+  background: none !important;
+}
