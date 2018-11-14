@@ -1,0 +1,72 @@
+"Please install %1 in order to enable this GeoIP method.","Please install %1 in order to enable this GeoIP method."
+"Open in","Open in"
+"Google Maps","Google Maps"
+"Please Note!","Please Note!"
+"You must enable at least one GeoIP Lookup 
+                    method for this extension to function properly.
+                ","You must enable at least one GeoIP Lookup 
+                    method for this extension to function properly.
+                "
+"We recommend to enable 2 or more GeoIP 
+                methods below to provide the most accurate GeoLocation results.
+            ","We recommend to enable 2 or more GeoIP 
+                methods below to provide the most accurate GeoLocation results.
+            "
+"GeoIP Database Update","GeoIP Database Update"
+"You have the latest %1 GeoIP Database available on our server. 
+                    Please check back later for the updates.","You have the latest %1 GeoIP Database available on our server. 
+                    Please check back later for the updates."
+"Not Installed","Not Installed"
+"Installed v%1 on %2","Installed v%1 on %2"
+"Installed on %1","Installed on %1"
+"Download in Progress...","Download in Progress..."
+"Installation in Progress...","Installation in Progress..."
+"Importing GeoIP Database... ","Importing GeoIP Database... "
+Done!,Done!
+"Data Import Error","Data Import Error"
+"GeoIP CSV Files Missing:","GeoIP CSV Files Missing:"
+"We couldn't find %1 CSV files in 'media/prgeoiplookup' folder.
+                    \nPlease read our online manual for more info about manual installation method.","We couldn't find %1 CSV files in 'media/prgeoiplookup' folder.
+                    \nPlease read our online manual for more info about manual installation method."
+"No records found","No records found"
+Continent,Continent
+"Continent Code","Continent Code"
+Country,Country
+"Country Code","Country Code"
+City,City
+"Postal Code","Postal Code"
+"Time Zone","Time Zone"
+"Is In European Union","Is In European Union"
+Latitude,Latitude
+Longitude,Longitude
+"Metro Code","Metro Code"
+"Subdivision 1 Iso Code","Subdivision 1 Iso Code"
+"Subdivision 1 Name","Subdivision 1 Name"
+"Subdivision 2 Iso Code","Subdivision 2 Iso Code"
+"Subdivision 2 Name","Subdivision 2 Name"
+"Database Name","Database Name"
+"Automatic Installation","Automatic Installation"
+"Manual Installation","Manual Installation"
+"GeoIP Lookup","GeoIP Lookup"
+General,General
+"Enable Extension","Enable Extension"
+"Serial Key","Serial Key"
+"Your can find <strong>Serial Key</strong> in your account at <a target=""_blank"" href=""https://store.plumrocket.com/downloadable/customer/products/"">store.plumrocket.com</a>. For manual <a target=""_blank"" href=""http://wiki.plumrocket.com/wiki/License_Installation"">click here</a>.","Your can find <strong>Serial Key</strong> in your account at <a target=""_blank"" href=""https://store.plumrocket.com/downloadable/customer/products/"">store.plumrocket.com</a>. For manual <a target=""_blank"" href=""http://wiki.plumrocket.com/wiki/License_Installation"">click here</a>."
+Services,Services
+"Maxmind GeoIP Database","Maxmind GeoIP Database"
+"Enable Maxmind GeoIP","Enable Maxmind GeoIP"
+"Database Status","Database Status"
+"Installation Method","Installation Method"
+"Install Database","Install Database"
+"IpToCountry GeoIP Database","IpToCountry GeoIP Database"
+"Enable IpToCountry GeoIP","Enable IpToCountry GeoIP"
+"Geoip.Nekudo.Com - Free GeoIP API","Geoip.Nekudo.Com - Free GeoIP API"
+"Enable Free GeoIP API","Enable Free GeoIP API"
+"Test Connection","Test Connection"
+"GeoIP Lookup Test","GeoIP Lookup Test"
+"IP Address","IP Address"
+"Enter IP address to test GeoIP Lookup. Your own IP address is automatically populated in this field.","Enter IP address to test GeoIP Lookup. Your own IP address is automatically populated in this field."
+"Test GeoIP Lookup","Test GeoIP Lookup"
+"IP Geolocation Information","IP Geolocation Information"
+"View Location on Map","View Location on Map"
+"REST API","REST API"

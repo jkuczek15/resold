@@ -1,0 +1,54 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Newsletter\Block\Subscribe $block */
+?>
+<?php
+$_helper = $this->helper('Smartwave\Porto\Helper\Data');
+
+$title = $_helper->getConfig('porto_settings/footer/footer_newsletter_title');//"Be the First to Know";
+$sub_title = $_helper->getConfig('porto_settings/footer/footer_newsletter_text');//"Get all the latest information on Events,<br>Sales and Offers. Sign up for newsletter today.";
+?>
+<div class="block newsletter">
+    <div class="block-title"><strong><?php echo __($title); ?></strong></div>
+    <div class="content">
+        <p><?php echo __($sub_title); ?></p>
+        <label for="footer_newsletter"><?php echo __('Enter your email address') ?></label>
+        <form class="form subscribe"
+              novalidate
+              action="<?php echo $block->getFormActionUrl() ?>"
+              method="post"
+              data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+              id="newsletter-validate-detail">
+            <div class="field newsletter">
+                <label class="label" for="footer_newsletter"><span><?php echo __('Sign Up for Our Newsletter:') ?></span></label>
+                <div class="control">
+                    <input name="email" type="email" id="footer_newsletter"
+                           data-validate="{required:true, 'validate-email':true}"/>
+                </div>
+            </div>
+            <?= $block->getChildHtml('prgdpr_porto_footer_newsletter') ?>
+            <div class="actions">
+                <button class="action subscribe primary" title="<?php echo __('Subscribe') ?>" type="submit">
+                    <span><?php echo __('Subscribe') ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

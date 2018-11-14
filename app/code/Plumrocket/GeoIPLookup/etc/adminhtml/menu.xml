@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GeoIPLookup
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add module="Plumrocket_GeoIPLookup" parent="Plumrocket_Base::elements" id="Plumrocket_GeoIPLookup::prgeoiplookup" resource="Plumrocket_GeoIPLookup::prgeoiplookup" title="GeoIP Lookup" sortOrder="3786959"/>
+        <add module="Plumrocket_GeoIPLookup" parent="Plumrocket_GeoIPLookup::prgeoiplookup" id="Plumrocket_GeoIPLookup::configuration" resource="Plumrocket_GeoIPLookup::configuration" action="adminhtml/system_config/edit/section/prgeoiplookup" title="Configuration" sortOrder="100"/>
+    </menu>
+</config>

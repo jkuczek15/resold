@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="prgdpr_validate-consents" type="Plumrocket\GDPR\Plugin\Magento\Checkout\Validation"/>
+    </type>
+    <type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
+        <plugin name="prgdpr_validate-guest-consents" type="Plumrocket\GDPR\Plugin\Magento\Checkout\GuestValidation"/>
+    </type>
+    <type name="Magento\Contact\Controller\Index\Post">
+        <plugin name="prgdpr_save-consents-contact_us" type="Plumrocket\GDPR\Plugin\Magento\Contact\Controller\Index\PostPlugin"/>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="prgdpr_downloadslog_listing_data_source" xsi:type="string">Plumrocket\GDPR\Model\ResourceModel\ExportLog\Grid\Collection</item>
+                <item name="prgdpr_removalrequests_listing_data_source" xsi:type="string">Plumrocket\GDPR\Model\ResourceModel\RemovalRequests\Grid\Collection</item>
+                <item name="prgdpr_consentslog_listing_data_source" xsi:type="string">Plumrocket\GDPR\Model\ResourceModel\ConsentsLog\Grid\Collection</item>
+                <item name="prgdpr_revision_history_listing_data_source" xsi:type="string">Plumrocket\GDPR\Model\ResourceModel\Revision\History\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+
+    <type name="Plumrocket\GDPR\Model\Account\Processor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="prgdpr_Plumrocket_SocialLoginPro" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\Plumrocket\SocialLoginPro</item>
+                <item name="prgdpr_Plumrocket_SocialLoginFree" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\Plumrocket\SocialLoginFree</item>
+                <item name="Plumrocket_GDPR" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Consents_Log</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\Plumrocket\Gdpr</item>
+                </item>
+                <item name="Magento_Review" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Reviews</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerReviews</item>
+                </item>
+                <item name="Magento_Wishlist" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Wishlist</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerWishlist</item>
+                </item>
+                <item name="Magento_Quote" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Cart_Information</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerQuote</item>
+                </item>
+                <item name="Magento_Catalog" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Compare_Products</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerCompare</item>
+                </item>
+                <item name="Magento_ProductAlert" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Price_and_Stock_alerts</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerAlerts</item>
+                </item>
+                <item name="customer_orders" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Order_Information</item>
+                    <item name="module_name" xsi:type="string">Magento_Sales</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerOrders</item>
+                </item>
+                <item name="customer_order_items" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Order_Items</item>
+                    <item name="module_name" xsi:type="string">Magento_Sales</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerOrderItems</item>
+                </item>
+                <item name="customer_addresses" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Customer_Address</item>
+                    <item name="module_name" xsi:type="string">Magento_Customer</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerAddresses</item>
+                </item>
+                <item name="customer_data" xsi:type="array">
+                    <item name="export_file_name" xsi:type="string">Customer_Information</item>
+                    <item name="module_name" xsi:type="string">Magento_Customer</item>
+                    <item name="processor" xsi:type="object">Plumrocket\GDPR\Model\Account\Processors\CustomerData</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\Plumrocket\Gdpr">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="consent_id" xsi:type="string">Consent ID</item>
+                <item name="created_at" xsi:type="string">Date of Consent</item>
+                <item name="website" xsi:type="string">Website</item>
+                <item name="customer_ip" xsi:type="string">IP</item>
+                <item name="label" xsi:type="string">Consent Label</item>
+                <item name="cms_page" xsi:type="string">CMS Page</item>
+                <item name="version" xsi:type="string">Version</item>
+            </argument>
+            <argument name="dataAnonymize" xsi:type="array">
+                <item name="customer_ip" xsi:type="string">anonymousString</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\Plumrocket\SocialLoginPro">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="type" xsi:type="string">Network</item>
+                <item name="user_id" xsi:type="string">User Id</item>
+                <item name="image" xsi:type="string">Account Photo Url</item>
+                <item name="additional" xsi:type="string">Additional Data</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\Plumrocket\SocialLoginFree">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="type" xsi:type="string">Network</item>
+                <item name="user_id" xsi:type="string">User Id</item>
+                <item name="image" xsi:type="string">Account Photo Url</item>
+                <item name="additional" xsi:type="string">Additional Data</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerAlerts">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="type" xsi:type="string">Alert Type</item>
+                <item name="product_name" xsi:type="string">Product Name</item>
+                <item name="product_sku" xsi:type="string">Product Sku</item>
+                <item name="add_date" xsi:type="string">Add Date</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerOrderItems">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="increment_id" xsi:type="string">Order #</item>
+                <item name="name" xsi:type="string">Name</item>
+                <item name="sku" xsi:type="string">Sku</item>
+                <item name="product_options" xsi:type="string">Options</item>
+                <item name="price" xsi:type="string">Price</item>
+                <item name="qty_ordered" xsi:type="string">Qty</item>
+                <item name="row_total" xsi:type="string">Total</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerOrders">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="increment_id" xsi:type="string">Order #</item>
+                <item name="created_at" xsi:type="string">Created At</item>
+                <item name="store_name" xsi:type="string">Store Name</item>
+                <item name="shipping_description" xsi:type="string">Shipping Method</item>
+                <item name="payment_method" xsi:type="string">Payment Method</item>
+                <item name="grand_total" xsi:type="string">Total</item>
+                <item name="billing_adddress" xsi:type="string">Billing Adddress</item>
+                <item name="shipping_adddress" xsi:type="string">Shipping Adddress</item>
+                <item name="customer_email" xsi:type="string">Email</item>
+                <item name="customer_firstname" xsi:type="string">First Name</item>
+                <item name="customer_lastname" xsi:type="string">Last Name</item>
+                <item name="customer_middlename" xsi:type="string">Middle Name/Initial</item>
+                <item name="customer_prefix" xsi:type="string">Name Prefix</item>
+                <item name="customer_suffix" xsi:type="string">Name Suffix</item>
+                <item name="customer_gender" xsi:type="string">Gender</item>
+                <item name="customer_dob" xsi:type="string">Date of Birth</item>
+                <item name="customer_taxvat" xsi:type="string">Tax/VAT Number</item>
+                <item name="remote_ip" xsi:type="string">IP</item>
+            </argument>
+            <argument name="dataAnonymize" xsi:type="array">
+                <item name="customer_dob" xsi:type="null"/>
+                <item name="customer_email" xsi:type="string">anonymousEmail</item>
+                <item name="customer_firstname" xsi:type="string">anonymousString</item>
+                <item name="customer_lastname" xsi:type="string">anonymousString</item>
+                <item name="customer_middlename" xsi:type="null"/>
+                <item name="customer_prefix" xsi:type="null"/>
+                <item name="customer_suffix" xsi:type="null"/>
+                <item name="customer_taxvat" xsi:type="null"/>
+                <item name="remote_ip" xsi:type="null"/>
+                <item name="customer_gender" xsi:type="null"/>
+                <item name="customer_is_guest" xsi:type="number">1</item>
+                <item name="customer_id" xsi:type="null"/>
+                <item name="customer_group_id" xsi:type="number">0</item>
+            </argument>
+            <argument name="dataAnonymizeAddresses" xsi:type="array">
+                <item name="postcode" xsi:type="string">anonymousString</item>
+                <item name="firstname" xsi:type="string">anonymousString</item>
+                <item name="lastname" xsi:type="string">anonymousString</item>
+                <item name="street" xsi:type="string">anonymousString</item>
+                <item name="city" xsi:type="string">anonymousString</item>
+                <item name="telephone" xsi:type="string">anonymousString</item>
+                <item name="email" xsi:type="string">anonymousEmail</item>
+                <item name="fax" xsi:type="null"/>
+                <item name="prefix" xsi:type="null"/>
+                <item name="middlename" xsi:type="null"/>
+                <item name="suffix" xsi:type="null"/>
+                <item name="company" xsi:type="null"/>
+                <item name="vat_id" xsi:type="null"/>
+            </argument>
+            <argument name="dataAnonymizeGrids" xsi:type="array">
+                <item name="shipping_name" xsi:type="string">anonymousString</item>
+                <item name="billing_name" xsi:type="string">anonymousString</item>
+                <item name="billing_address" xsi:type="string">anonymousString</item>
+                <item name="shipping_address" xsi:type="string">anonymousString</item>
+                <item name="customer_email" xsi:type="string">anonymousString</item>
+                <item name="customer_name" xsi:type="string">anonymousString</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerData">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="prefix" xsi:type="string">Name Prefix</item>
+                <item name="firstname" xsi:type="string">First Name</item>
+                <item name="middlename" xsi:type="string">Middle Name/Initial</item>
+                <item name="lastname" xsi:type="string">Last Name</item>
+                <item name="suffix" xsi:type="string">Name Suffix</item>
+                <item name="email" xsi:type="string">Email</item>
+                <item name="dob" xsi:type="string">Date of Birth</item>
+                <item name="gender" xsi:type="string">Gender</item>
+                <item name="newsletter_subscribe" xsi:type="string">Subscribed to Newsletter</item>
+                <item name="taxvat" xsi:type="string">Tax/VAT Number</item>
+                <item name="created_at" xsi:type="string">Created At</item>
+                <item name="updated_at" xsi:type="string">Updated At</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerAddresses">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="prefix" xsi:type="string">Name Prefix</item>
+                <item name="firstname" xsi:type="string">First Name</item>
+                <item name="middlename" xsi:type="string">Middle Name/Initial</item>
+                <item name="lastname" xsi:type="string">Last Name</item>
+                <item name="suffix" xsi:type="string">Name Suffix</item>
+                <item name="company" xsi:type="string">Company</item>
+                <item name="street" xsi:type="string">Street Address</item>
+                <item name="city" xsi:type="string">City</item>
+                <item name="country_id" xsi:type="string">Country</item>
+                <item name="region" xsi:type="string">State/Province</item>
+                <item name="postcode" xsi:type="string">Zip/Postal Code</item>
+                <item name="telephone" xsi:type="string">Phone Number</item>
+                <item name="fax" xsi:type="string">Fax</item>
+                <item name="vat_id" xsi:type="string">VAT Number</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerReviews">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="product" xsi:type="string">Product (SKU)</item>
+                <item name="nickname" xsi:type="string">Nickname</item>
+                <item name="title" xsi:type="string">Summary</item>
+                <item name="detail" xsi:type="string">Review</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerWishlist">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="product" xsi:type="string">Product (SKU)</item>
+                <item name="qty" xsi:type="string">Quantity</item>
+                <item name="description" xsi:type="string">Description</item>
+                <item name="added_at" xsi:type="string">Added At</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerQuote">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="name" xsi:type="string">Product Name</item>
+                <item name="sku" xsi:type="string">Product Sku</item>
+                <item name="price" xsi:type="string">Price</item>
+                <item name="qty" xsi:type="string">Quantity</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Plumrocket\GDPR\Model\Account\Processors\CustomerCompare">
+        <arguments>
+            <argument name="dataExport" xsi:type="array">
+                <item name="name" xsi:type="string">Product Name</item>
+                <item name="sku" xsi:type="string">Product Sku</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

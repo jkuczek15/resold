@@ -1,0 +1,216 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GeoIPLookup
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="prgeoiplookup" translate="label" type="text" sortOrder="3786959" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>GeoIP Lookup</label>
+            <tab>plumrocket</tab>
+            <resource>Plumrocket_GeoIPLookup::configuration</resource>
+
+            <!-- Begin of GENERAL group  -->
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <attribute type="expanded">1</attribute>
+                <field id="version" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Form\Version</frontend_model>
+                </field>
+                <field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Extension</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="serial" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Serial Key</label>
+                    <frontend_model>Plumrocket\Base\Block\Adminhtml\System\Config\Form\Serial</frontend_model>
+                    <comment><![CDATA[
+                        Your can find <strong>Serial Key</strong> in your account at <a target="_blank" href="https://store.plumrocket.com/downloadable/customer/products/">store.plumrocket.com</a>. For manual <a target="_blank" href="http://wiki.plumrocket.com/wiki/License_Installation">click here</a>.
+                    ]]></comment>
+                    <hint>GeoIPLookup</hint>
+                </field>
+            </group>
+            <!-- End GENERAL -->
+
+            <!-- Begin of METHODS group  -->
+            <group id="methods" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Services</label>
+                <attribute type="expanded">1</attribute>
+                <field id="notice" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Notice</frontend_model>
+                </field>
+                <!-- Begin of MAXMAINDGEOIP group  -->
+                <group id="maxmindgeoip" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maxmind GeoIP Database</label>
+                    <field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Maxmind GeoIP</label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Enable</frontend_model>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="status" translate="label" type="note" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Database Status</label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Status</frontend_model>
+                    </field>
+                    <field id="install_method" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Installation Method</label>
+                        <source_model>Plumrocket\GeoIPLookup\Model\System\Config\Source\Installmethods</source_model>
+                        <comment><![CDATA[
+                            <span id="maxmind_comment"></span>
+                            <script type='text/javascript'>
+                                require([
+                                    'jquery',
+                                    'mage/translate'
+                                ], function ($) {
+                                     setCommentMaxmind = function(installMethodMaxmind) {
+                                         var comment = $.mage.__("Automatically download Maxmind GeoIP database from Plumrocket servers and import data to your Magento. This database includes country, state, city, postal code, time zone, locale, latitude and longtitude. The installation may take around 15-20 minutes. Make sure to have 200 Mb of free space on your web server and Magento database for this Geo IP Lookup method.");
+                                         if (installMethodMaxmind) {
+                                            var imValue = installMethodMaxmind.val();
+                                            if (imValue == "manual") {
+                                                comment = $.mage.__('Manually upload your own copy of Maxmind GeoIP database to webserver and then press "Install Database" to import data. This database includes country, state, city, postal code, time zone, locale, latitude and longtitude. The installation may take around 20 minutes. Make sure to have 200 Mb of free space on your web server and Magento database for this Geo IP Lookup method. Please <a href="%s" target="_blank">click here</a> for manual installation instructions.');
+                                            }
+                                            var maxmindComment = $("#maxmind_comment");
+                                            if (maxmindComment) {
+                                                comment = comment.replace("%s", "http://wiki.plumrocket.com/Magento_Extensions");
+                                                maxmindComment.html(comment);
+                                            }
+                                         }
+                                     };
+                                     var installMethodMaxmind = $("#prgeoiplookup_methods_maxmindgeoip_install_method");
+                                     setCommentMaxmind(installMethodMaxmind);
+                                     installMethodMaxmind.on('change', function(){
+                                          setCommentMaxmind(installMethodMaxmind);
+                                     });
+                                });
+                            </script>
+                        ]]>
+                        </comment>
+                    </field>
+                    <field id="install" translate="button_label" type="button" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <button_label>Install Database</button_label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Buttons\Install</frontend_model>
+                    </field>
+                </group>
+                <!-- End MAXMAINDGEOIP -->
+
+                <!-- Begin of IPTOCOUNTRY group  -->
+                <group id="iptocountry" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>IpToCountry GeoIP Database</label>
+                    <field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable IpToCountry GeoIP</label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Enable</frontend_model>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="status" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Database Status</label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Status</frontend_model>
+                    </field>
+                    <field id="install_method" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Installation Method</label>
+                        <source_model>Plumrocket\GeoIPLookup\Model\System\Config\Source\Installmethods</source_model>
+                        <comment><![CDATA[
+                            <span id="iptocountry_comment"></span>
+                            <script type='text/javascript'>
+                                require([
+                                    'jquery',
+                                    'mage/translate'
+                                ], function ($) {
+                                     setComment = function(installMethod) {
+                                         var comment = $.mage.__("Automatically download IpToCountry GeoIP database from Plumrocket servers and import data to your Magento. This database includes only country list. The installation may take around 3 minutes. Make sure to have 15 Mb of free space on your web server and Magento database for this Geo IP Lookup method.");
+                                         if (installMethod) {
+                                            var imValue = installMethod.val();
+                                            if (imValue == "manual") {
+                                                comment = $.mage.__('Manually upload your own copy of IpToCountry GeoIP database to webserver and then press "Install Database" to import data. This database includes only country list. The installation may take around 5 minutes. Make sure to have 15 Mb of free space on your web server and Magento database for this Geo IP Lookup method. Please <a target="_blank" href="%s">click here</a> for manual installation instructions.');
+                                            }
+                                            var ipToCoComment = $("#iptocountry_comment");
+                                            if (ipToCoComment) {
+                                                comment = comment.replace("%s", "http://wiki.plumrocket.com/Magento_Extensions");
+                                                ipToCoComment.html(comment);
+                                            }
+                                         }
+                                     };
+                                     var installMethod = $("#prgeoiplookup_methods_iptocountry_install_method");
+                                     setComment(installMethod);
+                                     installMethod.on('change', function(){
+                                          setComment(installMethod);
+                                     });
+                                });
+                            </script>
+                        ]]></comment>
+                    </field>
+                    <field id="install" translate="button_label" type="button" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <button_label>Install Database</button_label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Buttons\Install</frontend_model>
+                    </field>
+                </group>
+                <!-- End IPTOCOUNTRY -->
+
+                <!-- Begin of NEKUDOGEOIP group  -->
+                <group id="nekudogeoip" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Geoip.Nekudo.Com - Free GeoIP API</label>
+                    <field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable Free GeoIP API</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment><![CDATA[
+                                The Free API is provided by:
+                                <a target="_blank" href="https://geoip.nekudo.com">https://geoip.nekudo.com</a>.
+                                Limits: The API follows a fair use policy.
+                                There are no limits by default but if the service is abused your IP may get blocked.
+                        ]]></comment>
+                    </field>
+                    <field id="connection_test" translate="button_label" type="button" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <button_label>Test Connection</button_label>
+                        <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Buttons\Connection</frontend_model>
+                    </field>
+                </group>
+                <!-- End NEKUDOGEOIP -->
+            </group>
+            <!-- End METHODS -->
+
+            <!-- Begin of GEOIPTEST group  -->
+            <group id="geoiptest" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>GeoIP Lookup Test</label>
+                <field id="ip_address" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>IP Address</label>
+                    <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Test\Ipaddress</frontend_model>
+                    <comment><![CDATA[
+                            Enter IP address to test GeoIP Lookup. Your own IP address is automatically populated in this field.
+                        ]]></comment>
+                </field>
+                <field id="test_geoip_lookup" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Test GeoIP Lookup</label>
+                    <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Test\Button</frontend_model>
+                </field>
+                <field id="geoinfo" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>IP Geolocation Information</label>
+                </field>
+                <field id="location_on_map" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>View Location on Map</label>
+                    <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Test\Map</frontend_model>
+                </field>
+                <field id="rest_ip" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>REST API</label>
+                    <frontend_model>Plumrocket\GeoIPLookup\Block\Adminhtml\System\Config\Data\Test\Api</frontend_model>
+                    <comment><![CDATA[
+                           Read more about REST API and other methods of retrieving GeoIP data in our <a target="_blank" href="http://wiki.plumrocket.com/Magento_GeoIP_Lookup_Extension_v1.x">developer's guide</a>
+                        ]]></comment>
+                </field>
+            </group>
+            <!-- End GEOIPTEST -->
+
+        </section>
+    </system>
+</config>

@@ -1,0 +1,58 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+// @codingStandardsIgnoreFile
+
+use Plumrocket\GDPR\Helper\Checkboxes;
+
+/**
+ * @var $helper \Plumrocket\GDPR\Helper\Checkboxes
+ */
+$helper = $this->helper(Checkboxes::class);
+$prgdprPage = $this->getData('prgdprPage');
+$componentName = $this->getData('componentName');
+
+$checkboxes = $helper->getCheckboxes($prgdprPage);
+
+if (empty($checkboxes)) {
+    return;
+}
+
+$scope = ! empty($componentName)
+    ? ($componentName . '-scope')
+    : 'prgdpr-scope-' . rand(1000, 9999);
+$checkboxesJson = json_encode(array_values($checkboxes));
+?>
+
+<div data-bind="scope: '<?= $scope ?>'" class="prgdpr-consent-checkboxes-block">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "<?= $scope ?>": {
+                        "component": "Plumrocket_GDPR/js/view/consent-checkbox",
+                        "checkboxes": <?= /* @noEscape */ $checkboxesJson ?>,
+                        "isVisible": true
+                    }
+                }
+            }
+        }
+    }
+</script>

@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="buttons" xsi:type="array">
+            <item name="gdpr_save_and_continue" xsi:type="string">Plumrocket\GDPR\Block\Adminhtml\Cms\Page\Edit\SaveAndContinueButton</item>
+            <item name="gdpr_save" xsi:type="string">Plumrocket\GDPR\Block\Adminhtml\Cms\Page\Edit\SaveButton</item>
+        </item>
+    </argument>
+    <fieldset name="general">
+        <field name="original_enable_revisions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="dataScope" xsi:type="string">revision.original_enable_revisions</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
+                    <item name="label" xsi:type="string">Enable Revision(Original)</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </field>
+        <field name="original_document_version">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="dataScope" xsi:type="string">revision.original_document_version</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
+                    <item name="label" xsi:type="string">Doc Version(Original)</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </field>
+        <field name="original_content">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="dataScope" xsi:type="string">revision.original_content</item>
+                    <item name="formElement" xsi:type="string">textarea</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
+                    <item name="label" xsi:type="string">Content(Original)</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <fieldset name="prgdpr_settings" class="Plumrocket\GDPR\Ui\Component\Form\Cms\Page\Edit\PrgdprSettingsFieldset">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="label" xsi:type="string" translate="true">GDPR Settings</item>
+                <item name="sortOrder" xsi:type="number">100</item>
+            </item>
+        </argument>
+        <fieldset name="prgdpr_revisions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="collapsible" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Revisions</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+            <field name="enable_revisions">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">boolean</item>
+                        <item name="label" xsi:type="string" translate="true">Enable Revisions</item>
+                        <item name="source" xsi:type="string">page</item>
+                        <item name="sortOrder" xsi:type="number">10</item>
+                        <item name="dataScope" xsi:type="string">revision.enable_revisions</item>
+                        <item name="formElement" xsi:type="string">checkbox</item>
+                        <item name="prefer" xsi:type="string">toggle</item>
+                        <item name="valueMap" xsi:type="array">
+                            <item name="true" xsi:type="number">1</item>
+                            <item name="false" xsi:type="number">0</item>
+                        </item>
+                        <item name="default" xsi:type="number">0</item>
+                    </item>
+                </argument>
+            </field>
+            <field name="document_version">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="source" xsi:type="string">page</item>
+                        <item name="dataScope" xsi:type="string">revision.document_version</item>
+                        <item name="label" xsi:type="string" translate="true">Document Version</item>
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="placeholder" xsi:type="string" translate="true">1.0</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">ns = ${ $.ns }, index = enable_revisions:checked</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="notify_via_popup">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">page</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="dataScope" xsi:type="string">revision.notify_via_popup</item>
+                        <item name="label" xsi:type="string" translate="true">Notify All Customers via Popup</item>
+                        <item name="notice" xsi:type="string" translate="true">If enabled, this option will display popup notification to all customers upon successful login. This is useful when asking customers to agree to the updated version of the "Privacy Policy", TOS, Cookie Policy or any other agreement.</item>
+                        <item name="sortOrder" xsi:type="number">30</item>
+                        <item name="default" xsi:type="number">0</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="component" xsi:type="string">Plumrocket_GDPR/js/form/element/cms/page/edit/notify-via-popup</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">ns = ${ $.ns }, index = enable_revisions:checked</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="popup_content">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string">Popup Content</item>
+                        <item name="wysiwyg" xsi:type="boolean">true</item>
+                        <item name="formElement" xsi:type="string">wysiwyg</item>
+                        <item name="component" xsi:type="string">Plumrocket_GDPR/js/form/element/cms/page/edit/popup-content</item>
+                        <item name="source" xsi:type="string">page</item>
+                        <item name="dataScope" xsi:type="string">revision.popup_content</item>
+                        <item name="default" xsi:type="string"><![CDATA[
+                            <h1>Privacy Policy</h1>
+                            <p>We’ve updated our Privacy Policy, which disclose what personal information we have, and how we use it in accordance with new privacy laws.</p>
+                            <p>By clicking on "I Agree" below you are agreeing to the updated <a href="#" target="_blank">Privacy Policy</a>.</p>
+                            ]]>
+                        </item>
+                        <item name="additionalClasses" xsi:type="string">admin__field-wide</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">false</item>
+                        </item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">ns = ${ $.ns }, index = enable_revisions:checked</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+        <fieldset name="prgdpr_revision_history">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="collapsible" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Revision History</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+            <container name="prgdpr_revision_history_container">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">20</item>
+                    </item>
+                </argument>
+                <htmlContent name="html_content">
+                    <argument name="block" xsi:type="object">Plumrocket\GDPR\Block\Adminhtml\Cms\Page\Edit\Tab\Gdpr\Revision\History\Grid</argument>
+                </htmlContent>
+            </container>
+        </fieldset>
+    </fieldset>
+</form>

@@ -1,0 +1,63 @@
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<div data-role="prgdpr-consent-checkboxes">
+    <div class="prgdpr-consent-checkboxes" data-bind="visible: isVisible">
+        <!-- ko foreach: checkboxes -->
+        <div class="prgdpr-consent-checkbox required">
+            <!-- ko if: is_required -->
+            <input type="checkbox" class="required-entry" data-bind="attr: {
+                        'id': $parent.getCheckboxId($parentContext, consentId),
+                        'name': 'consent[' + consentId + ']',
+                        'value': consentId
+                    }" data-validate="{required:true}" />
+            <!-- /ko -->
+            <!-- ko ifnot: is_required -->
+            <input type="checkbox" class="" data-bind="attr: {
+                        'id': $parent.getCheckboxId($parentContext, consentId),
+                        'name': 'consent[' + consentId + ']',
+                        'value': consentId
+                    }" data-validate="{required:false}" />
+            <!-- /ko -->
+            <label data-bind="attr: {'for': $parent.getCheckboxId($parentContext, consentId)}">
+                <span bindHtml="checkboxLabel"></span>
+            </label>
+            <!-- ko if: cms_page -->
+            <div data-bind="
+                    attr: {
+                        'id': 'prgdpr-consent-checkboxes-modal-'+$parent.getCheckboxId($parentContext, consentId),
+                        'data-checkboxid': $parent.getCheckboxId($parentContext, consentId)
+                    }, 
+                    afterRender: function(element, data) {$parent.initModal(element, data)}" style="display: none">
+                <div class="prgdpr-consent-content-actions">
+                    <a href="#" data-bind="
+                        attr: {'data-contentid': 'prgdpr-print-content-'+$parent.getCheckboxId($parentContext, consentId)}, 
+                        click: function(data, event) {$parent.printContent(data, event)}">
+                        <span data-bind="i18n: 'Print'"></span>
+                    </a>
+                </div>
+                <div class="prgdpr-consent-checkboxes-item-content" data-bind="
+                    attr: {'id': 'prgdpr-print-content-'+$parent.getCheckboxId($parentContext, consentId)}, 
+                    html: cms_page.content">
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+    </div>
+</div>

@@ -1,0 +1,2 @@
+For installation Instructions please read our online documentation: 
+http://wiki.plumrocket.com/Magento_2_GDPR_v1.x_Installation

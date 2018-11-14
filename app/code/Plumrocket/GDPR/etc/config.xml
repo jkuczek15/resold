@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <prgdpr>
+            <general>
+                <enable>0</enable>
+                <serial></serial>
+            </general>
+            <removal_settings>
+                <anonymization_key>Deleted</anonymization_key>
+            </removal_settings>
+            <cookie_consent>
+                <notice_text><![CDATA[<p>This website requires cookies to provide all of its features. For more information on what data is contained in the cookies, please see our <a href="{{store url="privacy-policy-cookie-restriction-mode"}}" target="_blank">Cookie Policy</a> page. To accept cookies from this site, please click the Accept button below.</p>]]></notice_text>
+                <button_label>Accept</button_label>
+                <decline_button_label></decline_button_label>
+                <geoip_restriction>all</geoip_restriction>
+            </cookie_consent>
+            <consent_checkboxes>
+                <checkboxes><![CDATA[{"_TMPNAME_":{"page_type":"","checkbox_label":"I agree to the <a href=\"{{url}}\" class=\"pr-inpopup\">Privacy Policy<\/a>","page_id":"0"}}]]></checkboxes>
+            </consent_checkboxes>
+            <email>
+                <sender_name>Support Team</sender_name>
+                <sender_email>gdpr-support@example.com</sender_email>
+                <download_confirmation_template>prgdpr_email_download_confirmation_template</download_confirmation_template>
+                <removal_request_template>prgdpr_email_removal_request_template</removal_request_template>
+            </email>
+        </prgdpr>
+    </default>
+</config>

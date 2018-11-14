@@ -1,0 +1,40 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2015 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+// @codingStandardsIgnoreFile
+
+use Plumrocket\GDPR\Helper\Data;
+
+/** @var \Plumrocket\GDPR\Block\Gtm $block */
+/** @var \Plumrocket\GDPR\Helper\Data $helper */
+$helper = $this->helper(Data::class);
+?>
+
+<!-- Google Tag Manager -->
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Plumrocket_GDPR/js/gtm": {
+            "isCookieRestrictionModeEnabled": <?= (int)$block->isCookieRestrictionModeEnabled() ?>,
+            "currentWebsite": <?= (int)$block->getCurrentWebsiteId() ?>,
+            "cookieName": "<?= /* @escapeNotVerified */ \Magento\Cookie\Helper\Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>",
+            "containerId": "<?= $helper->getGtmContainerId() ?>"
+        }
+    }
+}
+</script>
+<!-- End Google Tag Manager -->

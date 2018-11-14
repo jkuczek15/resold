@@ -1,0 +1,216 @@
+<?php
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+/** @var \Plumrocket\GDPR\Block\Account\Delete $block */
+// @codingStandardsIgnoreFile
+
+// sec
+$redirectTimeOut = 30;
+/** @var \Plumrocket\GDPR\Helper\Data $helper */
+$helper = $this->helper(Plumrocket\GDPR\Helper\Data::class);
+?>
+
+<p><?php echo __('You’re about to start the process of deleting your account. It will be automatically removed within 24 hours after we receive your request.'); ?></p>
+
+<br />
+<br />
+
+<h2><?php echo __('What else you should know'); ?></h2>
+<ul>
+    <li><?php echo __("You can restore your account within 24 hours by logging in before your account is deleted permanently."); ?></li>
+    <li><?php echo __("You won't have access to your account or any information you've added to your account after it's deleted from our store."); ?></li>
+    <li><?php echo __("You may want to <a href='%1'>download</a> a copy of your data before you close your account with us.", $block->escapeUrl($block->getUrl('prgdpr/account/export'))); ?></li>
+    <li><?php echo __("If you have pending orders, they have to be completed or canceled before your account can be deleted."); ?></li>
+</ul>
+
+<div class="actions-toolbar prgdpr__actions-toolbar">
+    <div class="prgdpr__primary-btn prgdpr__btns primary">
+        <button type="button" class="action submit primary delete" id="show-delete-modal">
+            <span><?php echo $block->escapeHtml(__('Delete My Account')); ?></span>
+        </button>
+    </div>
+    <div class="prgdpr__secondary-btn prgdpr__btns secondary">
+        <button class="action submit" type="button" id="cancel-delete">
+            <span><?php echo $block->escapeHtml(__('Cancel')); ?></span>
+        </button>
+    </div>
+</div>
+
+<div id="prgdpr-delete-modal" style="display:none;">
+    <p><?php echo $block->escapeHtml(__('Please re-enter your store password to download your data.')); ?></p>
+    <form class="form form-edit-account" action="<?php echo $block->getDeleteAction(); ?>" method="post" id="form-delete" data-hasrequired="<?php echo $block->escapeHtml(__('* Required Fields')) ?>" autocomplete="off">
+        <fieldset class="prgdpr__fieldset fieldset" data-container="delete-account">
+            <?php echo $block->getBlockHtml('formkey'); ?>
+
+            <div class="prgdpr__password-wrap field password current required">
+                <input class="prgdpr__input input-text" type="password" name="password" id="password" data-validate="{required:true}" autocomplete="off"/>
+
+                <label class="prgdpr__label label" for="password">
+                    <span><?php echo $block->escapeHtml(__('Password')); ?></span>
+                </label>
+                <a class="forgot" href="<?php echo $block->escapeUrl($block->getForgotPasswordPageUrl()); ?>"><?php echo $block->escapeHtml(__("Forgot your password?")); ?></a>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+
+<div id="prgdpr-deleted-modal" style="display:none;">
+    <h2><?php echo $block->escapeHtml(__('Your account will be permanently deleted in 24 hours!')); ?></h2>
+    <p><?php echo __('If you change your mind you can reactivate by <a href="%1">logging in</a> before your account is deleted permanently.', $block->escapeUrl($block->getUrl('customer/account/login'))); ?></p>
+
+    <b class="prgdpr-info-title"><?php echo __('YOU ARE NOW LOGGED OUT'); ?></b>
+    <hr />
+    <p class="has-prgdpr-countdown"><?php echo __('You have logged out and will be redirected to our homepage in <b>%1</b> seconds.', $redirectTimeOut); ?></p>
+    <button style="float: right" onclick="location.replace('<?= $this->getBaseUrl() ?>')"><?= __('Go to Homepage') ?></button>
+</div>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal',
+        'mage/storage'
+    ], function ($, modal, storage) {
+        'use strict';
+
+        var redirectTimeOut = parseInt('<?= $redirectTimeOut ?>') * 1000;
+        var dataForm = $('#form-delete'),
+            ignore = null;
+
+        dataForm
+            .submit(function(){
+                submitDataForm();
+                return false;
+            })
+            .mage('validation', {ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'})
+            .find('input:text')
+            .attr('autocomplete', 'off');
+
+        var startCountDown = function () {
+            window.prgdprRedirectTimeOut = parseInt('<?= $redirectTimeOut ?>');
+            window.prgdprCountDownInterval = setInterval(function () {
+                if (window.prgdprRedirectTimeOut <= 1) {
+                    clearInterval(window.prgdprCountDownInterval);
+                }
+                window.prgdprRedirectTimeOut--;
+                $('.has-prgdpr-countdown b').html(window.prgdprRedirectTimeOut);
+            }, 1000);
+        };
+
+        var submitDataForm = function(){
+            if (dataForm.validation('isValid')) {
+                var sendData = {};
+                dataForm.serializeArray().forEach(function (entry) {
+                    sendData[entry.name] = entry.value;
+                });
+
+                deleteModal.closeModal();
+                $('body').loader('show');
+                $('#show-delete-modal').attr('disabled', true);
+
+                storage.post(
+                    dataForm.attr('action'),
+                    JSON.stringify(sendData),
+                    false
+                ).done(function (response) {
+                    deletedModal.modal.find('header .action-close').remove();
+                    deletedModal.openModal();
+                    startCountDown();
+                    setTimeout(function(){
+                        location.replace('<?php echo $this->getBaseUrl(); ?>');
+                    }, redirectTimeOut);
+                }).fail(function () {
+                    location.reload();
+                }).always(function () {
+                    $('body').loader('hide');
+                    $('#show-delete-modal').attr('disabled', false);
+                });
+            }
+        };
+
+        var deleteOptions = {
+            type: 'popup',
+            modalClass: 'prgdpr-account-modal',
+            responsive: true,
+            innerScroll: true,
+            focus: '#form-delete #password',
+            title: $.mage.__('Delete Account'),
+            buttons: [
+                {
+                    text: $.mage.__('Cancel'),
+                    click: function () {
+                        this.closeModal();
+                    }
+                },
+                {
+                    text: $.mage.__('Delete Account'),
+                    class: 'action delete primary',
+                    click: function () {
+                        submitDataForm();
+                    }
+                }
+            ],
+            opened: function($Event) {
+                $('#prgdpr-delete-modal').find('input[name=password]').val('');
+            }
+        };
+
+        var deleteModal = modal(deleteOptions, $('#prgdpr-delete-modal'));
+
+        var deletedOptions = {
+            type: 'popup',
+            modalClass: 'prgdpr-account-modal deleted-modal',
+            responsive: true,
+            innerScroll: true,
+            title: '',
+            buttons: [],
+            keyEventHandlers: {
+                escapeKey: function () {
+                    return false;
+                }
+            }
+        };
+
+        var deletedModal = modal(deletedOptions, $('#prgdpr-deleted-modal'));
+
+        $('#show-delete-modal').on({
+            click: function () {
+                deleteModal.openModal();
+            }
+        });
+
+        $('#cancel-delete').on({
+            click: function () {
+                location.href = '<?php echo $block->escapeUrl($block->goBackUrl()) ?>';
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    var input = document.querySelector("#password");
+    var label = document.querySelector(".prgdpr__label[for='password']");
+
+    input.onfocus = function() {
+        label.classList.add("prgdpr__label--active");
+    };
+
+    input.onblur = function(){
+        if (input.value == false && input.value != "0") {
+            label.classList.remove("prgdpr__label--active");
+        }
+    };
+</script>

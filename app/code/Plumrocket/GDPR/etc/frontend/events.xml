@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="layout_load_before">
+        <observer name="prgdpr_add_body_class" instance="Plumrocket\GDPR\Observer\AddClassToBody"/>
+    </event>
+    <event name="customer_login">
+        <observer name="prgdpr_customer_login" instance="Plumrocket\GDPR\Observer\CustomerLogin"/>
+    </event>
+    <event name="customer_register_success">
+        <observer name="prgdpr_customer_register_success" instance="Plumrocket\GDPR\Observer\CustomerRegisterSuccess"/>
+    </event>
+    <event name="controller_action_predispatch_newsletter_subscriber_new">
+        <observer name="prgdpr_validate_consent_checkboxes" instance="Plumrocket\GDPR\Observer\ValidateConsentsObserver"/>
+    </event>
+    <event name="controller_action_predispatch_newsletter_manage_save">
+        <observer name="prgdpr_validate_consent_checkboxes" instance="Plumrocket\GDPR\Observer\ValidateConsentsObserver"/>
+    </event>
+    <event name="controller_action_predispatch_contact_index_post">
+        <observer name="prgdpr_validate_consent_checkboxes" instance="Plumrocket\GDPR\Observer\ValidateConsentsObserver"/>
+    </event>
+    <event name="newsletter_subscriber_save_after">
+        <observer name="prgdpr_subscriber_consents" instance="Plumrocket\GDPR\Observer\NewsletterSubscriberSaveAfterObserver"/>
+    </event>
+</config>

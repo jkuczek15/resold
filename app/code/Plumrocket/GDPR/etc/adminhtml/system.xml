@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_GDPR
+ * @copyright   Copyright (c) 2018 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
+    <system>
+        <section id="prgdpr" translate="label" type="text" sortOrder="3766028" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>GDPR</label>
+            <tab>plumrocket</tab>
+            <resource>Plumrocket_GDPR::configuration</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <attribute type="expanded">1</attribute>
+                <field id="version" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Plumrocket\GDPR\Block\Adminhtml\System\Config\Form\Version</frontend_model>
+                </field>
+                <field id="enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Extension</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="serial" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Plumrocket\Base\Block\Adminhtml\System\Config\Form\Serial</frontend_model>
+                    <label>Serial Key</label>
+                    <hint>GDPR</hint>
+                </field>
+            </group>
+            <group id="dashboard" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Privacy Center Dashboard</label>
+                <depends>
+                    <field id="*/*/general/enabled">1</field>
+                </depends>
+
+                <field id="privacy_policy_page" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Privacy Policy Page</label>
+                    <source_model>Plumrocket\GDPR\Model\Config\Source\Pages</source_model>
+                    <comment>Please select Privacy Policy from the list of CMS Pages.</comment>
+                </field>
+
+                <field id="cookie_policy_page" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cookie Policy Page</label>
+                    <source_model>Plumrocket\GDPR\Model\Config\Source\Pages</source_model>
+                    <comment>Please select Cookie Policy from the list of CMS Pages.</comment>
+                </field>
+
+                <field id="protection_officer_email" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data Protection Officer Email</label>
+                    <comment>Email address of the Data Protection Officer or department within your company. You can enter more than one email address separating them by commas.</comment>
+                </field>
+            </group>
+            <group id="removal_settings" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Account Removal Settings</label>
+                <depends>
+                    <field id="*/*/general/enabled">1</field>
+                </depends>
+
+                <field id="anonymization_key" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Anonymization Key</label>
+                    <comment>All personal data that cannot be deleted, will be anonymized (such as order billing info, emails, etc).</comment>
+                </field>
+            </group>
+            <!--Begin of GDPR Email Settings -->
+            <group id="email" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>GDPR Email Settings</label>
+                <!--<depends>-->
+                <!--<field id="*/*/general/enabled">1</field>-->
+                <!--</depends>-->
+                <field id="sender_name" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sender Name</label>
+                    <comment></comment>
+                </field>
+                <field id="sender_email" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sender Email</label>
+                    <comment></comment>
+                </field>
+                <field id="download_confirmation_template" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Download Confirmation Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <comment>This email is sent when account data was successfully downloaded</comment>
+                </field>
+                <field id="removal_request_template" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Removal Requested Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <comment>This email is sent when account is scheduled for removal</comment>
+                </field>
+            </group>
+            <group id="consent_checkboxes" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Consent Checkboxes</label>
+                <depends>
+                    <field id="*/*/general/enabled">1</field>
+                </depends>
+
+                <field id="checkboxes" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Consent Checkbox</label>
+                    <frontend_model>Plumrocket\GDPR\Block\Adminhtml\System\Config\Form\Checkboxes</frontend_model>
+                    <backend_model>Plumrocket\GDPR\Model\Backend\Checkboxes</backend_model>
+                    <!--<comment>Add checkboxes (such as "I agree to the Privacy Policy" or "I agree to the TOS") in multiple locations of your store. You can also add consent checkboxes manually using our [developer's guide]. All customers who agreed to these policies can be tracked via [consent log].</comment>-->
+                </field>
+            </group>
+            <group id="cookie_consent" translate="label" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cookie Consent Notice</label>
+                <depends>
+                    <field id="*/*/general/enabled">1</field>
+                </depends>
+                <field id="config_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Cookie Restriction Mode</label>
+                    <frontend_model>Plumrocket\GDPR\Block\Adminhtml\System\Config\Form\Cookie</frontend_model>
+                </field>
+                <field id="notice_text" type="editor" sortOrder="20" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Notice Text</label>
+                    <frontend_model>Plumrocket\Base\Block\Adminhtml\System\Config\Form\Editor</frontend_model>
+                </field>
+                <field id="button_label" type="text" sortOrder="30" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Accept Button Label</label>
+                    <comment><![CDATA[Enter here "Allow Cookies", "Accept", etc.]]></comment>
+                </field>
+                <field id="decline_button_label" type="text" sortOrder="35" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Decline Button Label</label>
+                    <comment><![CDATA[Leave this field empty to hide the "Decline Cookies" button]]></comment>
+                </field>
+                <field id="geoip_restriction" translate="label comment" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Geo Targeting</label>
+                    <source_model>Plumrocket\GDPR\Model\Config\Source\GeoIPRestrictions</source_model>
+                    <frontend_model>Plumrocket\GDPR\Block\Adminhtml\System\Config\Form\MultiSelect</frontend_model>
+                    <frontend_class>geoip-select-with-chosen</frontend_class>
+                    <comment>Show cookie notice only to visitors from the selected list of countries.</comment>
+                </field>
+            </group>
+            <group id="gtm" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Tag Manager Settings</label>
+                <depends>
+                    <field id="*/*/general/enabled">1</field>
+                </depends>
+                <field id="enabled" type="select" sortOrder="10" translate="label" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="container_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Container Id</label>
+                    <comment>Enter your container ID formatted as "GTM-XXXXXX".</comment>
+                    <depends>
+                        <field id="*/*/enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
