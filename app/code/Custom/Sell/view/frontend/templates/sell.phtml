@@ -177,6 +177,12 @@ if(isset($_GET['id']) && $_GET['id'] != null)
                 <textarea placeholder="Enter Details..." class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="5" data-validate="{required:true, maxlength: 2000}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
             </div>
         </div>
+        <div class="field description">
+            <label class="label" for="comment"><span></span></label>
+            <div class="control">
+                <input type="checkbox" name="terms-checkbox" id="terms-checkbox" /> I agree to the <a target="_blank" class="blue-link" href="/terms">Resold Terms of Service</a>, <a target="_blank" class="blue-link" href="/privacy-policy">Privacy Policy</a>, and <a target="_blank" class="blue-link" href="/cookies-policy">Cookie Policy</a>.
+            </div>
+        </div>
         <?php echo $block->getChildHtml('form.additional.info'); ?>
     </fieldset>
     <div class="actions-toolbar">
@@ -408,6 +414,11 @@ require([
 
         if(app.image_paths.length == 0){
           alert("You must upload at least one image.");
+          return false;
+        }// end if no images selected
+
+        if(!$('#terms-checkbox').is(":checked")){
+          alert("You must agree to the Resold Terms of Service in order to list your item for sale.");
           return false;
         }// end if no images selected
 

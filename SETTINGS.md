@@ -15,13 +15,14 @@
 #  - AWS
 #     Host: mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com
 #     User: admin
-#     Pass: XVnCdgKh5QQtcBymMNGBD3tUs6SMVTbp34fxv8Ty
+#     Pass: HjBu4a7RdxnwBzfKvqAQp5Xp22665T8tP2sLP8m6
 #  - Local
 #     Host: localhost
 #     User: root
 #     Pass: Rootroot$
 #
 # Backend URL: https://server-domain/stm
+# support@resold.us password: ShootTheMoon$
 #
 # Things might not work as expected, just bear with it.
 ##########################################################

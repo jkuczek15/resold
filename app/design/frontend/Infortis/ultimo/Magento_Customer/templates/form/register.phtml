@@ -151,7 +151,7 @@
 
         </div>
         <div class="field confirmation required">
-            <label for="password-confirmation" class="label"><span><?php echo $block->escapeHtml(__('Confirm Password')) ?></span></label>
+            <label style="" for="password-confirmation" class="label"><span><?php echo $block->escapeHtml(__('Confirm Password')) ?></span></label>
             <div class="control">
                 <input type="password" name="password_confirmation" title="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('Confirm Password')) ?>" id="password-confirmation" class="input-text" data-validate="{required:true, equalTo:'#password'}" autocomplete="off">
             </div>
@@ -160,14 +160,22 @@
     </fieldset>
     <div class="actions-toolbar">
         <div class="primary">
-            <button type="submit" class="action submit primary" title="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('Create an Account')) ?>"><span><?php echo $block->escapeHtml(__('Create an Account')) ?></span></button>
+            <button type="submit" class="action submit primary" title="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('Create an Account')) ?>"><span><?php echo $block->escapeHtml(__('Create an Account')) ?></span></button><br/>
         </div>
         <div class="secondary">
             <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php echo $block->escapeHtml(__('Back')) ?></span></a>
         </div>
+        <br/><br/><br/>
+        <span style="float: left">
+          By clicking "Sign Up", you agree to the <a target="_blank" class="blue-link" href="/terms">Resold Terms of Service</a>, <a target="_blank" class="blue-link" href="/privacy-policy">Privacy Policy</a>, and <a target="_blank" class="blue-link" href="/cookies-policy">Cookie Policy</a>.
+        </span>
     </div>
 </form>
 <style>
+.fieldset > .field.required > .label::after, .fieldset > .fields > .field.required > .label::after, .fieldset > .field._required > .label::after, .fieldset > .fields > .field._required > .label::after {
+  margin: 0 0 0 4px !important
+}
+</style>
 <script>
 require([
     'jquery',
