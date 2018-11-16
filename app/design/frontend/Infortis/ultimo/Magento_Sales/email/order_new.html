@@ -28,7 +28,7 @@
                 {{trans 'You can check your order by' }} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">logging into your account</a>.
             </p>
             <p>
-                {{trans 'If you have questions about your order, reply to this email or contact %seller_name' seller_name=$seller_name }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
+                {{trans 'If you have questions about your order, create an email thread with %seller_name' seller_name=$seller_name }} <a href="mailto:{{var seller_email}}?subject={{var product_name}}">here</a> or send a message <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
                 {{depend store_hours}}
                     {{trans 'Our hours are <span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
                 {{/depend}}

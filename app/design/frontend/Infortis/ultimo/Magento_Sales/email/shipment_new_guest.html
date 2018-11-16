@@ -25,7 +25,7 @@
         <td>
             <p class="greeting">{{trans "%name," name=$billing.getName()}}</p>
             <p>
-                {{trans 'If you have any questions about your order, reply to this email. Your tracking information is below. Thank you again.' }}
+                {{trans 'If you have any questions about your order, create an email thread with %seller_name' seller_name=$seller_name }} <a href="mailto:{{var seller_email}}?subject={{var product_name}}">here.</a> Your tracking information is below. Thank you again. 
                 {{depend store_hours}}
                     {{trans 'Our hours are <span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
                 {{/depend}}

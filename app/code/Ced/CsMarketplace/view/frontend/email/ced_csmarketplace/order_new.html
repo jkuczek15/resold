@@ -32,7 +32,7 @@
                 {{trans 'You can check your order by'}} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">logging into your account</a>.
             </p>
             <p>
-                {{trans 'If you have any questions about your order, reply to this email' }}{{if isGuest}}.{{else}} {{trans 'or contact %customer_name' customer_name=$customer_name }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
+                {{trans 'If you have any questions about your order, create an email thread with %customer_name ' customer_name=$customer_name }}<a href="mailto:{{var customer_email}}?subject={{var product_name}}">here</a>{{if isGuest}}.{{else}} {{trans 'or send a message' }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
                 {{/if}}
             </p>
         </td>

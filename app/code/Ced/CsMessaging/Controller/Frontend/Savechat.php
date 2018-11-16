@@ -219,6 +219,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                 $data['subject'] = $subject;
                 $data['encoded_subject'] = urlencode($subject);
                 $data['sender_name'] = $sender_name;
+                $data['sender_email'] = $sender_email;
                 $data['is_offer'] = $is_offer;
                 $data['offer_price'] = $offer_price;
                 $data['product_url'] = $product->getProductUrl();
@@ -241,7 +242,7 @@ class Savechat extends \Magento\Framework\App\Action\Action
                       ->setTemplateVars($data)
                       ->setFrom([
                           'name' => $sender_name,
-                          'email' => $sender_email
+                          'email' => 'messages@resold.us'
                           ])
                       ->addTo($receiver_email, $receiver_name);
                 try {
