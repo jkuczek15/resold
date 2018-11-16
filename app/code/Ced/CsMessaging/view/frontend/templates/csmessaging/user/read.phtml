@@ -241,6 +241,12 @@ $formatted_price = trim(money_format('%(#10n', $product->getPrice()));
     display: none !important;
   }
 }
+.accept-button {
+  float: right;
+}
+.cancel-button {
+  margin-right: 0.7em;
+}
 </style>
 
 <script>
@@ -275,7 +281,15 @@ require([
             $('#message-form').submit();
           });
       }// end click function
-    }]
+    },
+    {
+      text: $.mage.__('Cancel'),
+      class: 'cancel-button',
+      click: function () {
+        this.closeModal();
+      }
+    }
+  ]
   };
   var popup = modal(acceptOptions, $('#accept-offer-modal'));
   $('#accept-offer-modal').modal('openModal');
