@@ -179,9 +179,9 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         </div>
         <div class="field description">
             <label class="label" for="comment"><span></span></label>
-            <div class="control">
+            <label class="control">
                 <input type="checkbox" name="terms-checkbox" id="terms-checkbox" /> I agree to the <a target="_blank" class="blue-link" href="/terms">Resold Terms of Service</a>, <a target="_blank" class="blue-link" href="/privacy-policy">Privacy Policy</a>, and <a target="_blank" class="blue-link" href="/cookie-policy">Cookie Policy</a>.
-            </div>
+            </label>
         </div>
         <?php echo $block->getChildHtml('form.additional.info'); ?>
     </fieldset>
