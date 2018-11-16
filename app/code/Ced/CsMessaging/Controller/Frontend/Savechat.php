@@ -123,11 +123,13 @@ class Savechat extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $accept_offer = $this->getRequest()->getPost('accept_offer');
         ####################################
         // REQUEST AND USER VALIDATON
         ###################################
         // Ensure valid request and protect against CSRF
-        if (!$this->formKeyValidator->validate($this->getRequest())) {
+        if (!$this->formKeyValidator->validate($this->getRequest()) && !$accept_offer) {
           return $this->resultJsonFactory->create()->setData(['error' => 'Invalid Request.']);
         }// end if valid request
 
@@ -142,7 +144,6 @@ class Savechat extends \Magento\Framework\App\Action\Action
         $reply = $this->getRequest()->getPost('reply');
         $product_id = $this->getRequest()->getPost('product_id');
         $seller_cust_id = $this->getRequest()->getPost('seller_cust_id');
-        $accept_offer = $this->getRequest()->getPost('accept_offer');
         $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product_id);
 
         // determine if this is the seller
