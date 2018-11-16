@@ -153,7 +153,6 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function sendOrderEmail(\Magento\Sales\Model\Order $order,$type, $vendorId, $vorder)
     {
-
         $types = array(
         \Ced\CsMarketplace\Model\Vorders::ORDER_NEW_STATUS   =>self::XML_PATH_ORDER_NEW_EMAIL_TEMPLATE,
         \Ced\CsMarketplace\Model\Vorders::ORDER_CANCEL_STATUS => self::XML_PATH_ORDER_CANCEL_EMAIL_TEMPLATE,
@@ -205,6 +204,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                   'formattedShippingAddress'=>$this->getFormattedShippingAddress($order),
                   'formattedBillingAddress'=>$this->getFormattedBillingAddress($order),
                   'customer_name' => $customer_name,
+                  'customer_email' => $customer_email,
                   'product_name' => $product->getName(),
                   'host' => $_SERVER['HTTP_HOST'],
                   'sender_id' => $order->getCustomerId(),
@@ -216,7 +216,7 @@ class Mail extends \Magento\Framework\App\Helper\AbstractHelper
                 ),
             $storeId,
             $customer_name,
-            $customer_email
+            'orders@resold.us'
         );
     }
 

@@ -141,10 +141,12 @@ class ShipmentSender extends Sender
                 'product_id' => $product->getId(),
                 'vendor_id' => $this->_session->getId(),
                 'seller_name' => $vendor->getName(),
+                'seller_email' => $vendor->getEmail(),
                 'store' => $order->getStore(),
                 'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
                 'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
-                'encoded_subject' => urlencode($product->getName())
+                'encoded_subject' => urlencode($product->getName()),
+                'product_name' => $product->getName()
             ];
             $transportObject = new DataObject($transport);
 
@@ -160,7 +162,7 @@ class ShipmentSender extends Sender
 
             $from = [
               'name' => $vendor->getName(),
-              'email' => $vendor->getEmail()
+              'email' => 'orders@resold.us'
             ];
             if ($this->checkAndSend($order, $from)) {
                 $shipment->setEmailSent(true);

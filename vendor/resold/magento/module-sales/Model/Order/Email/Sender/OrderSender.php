@@ -107,7 +107,7 @@ class OrderSender extends Sender
             $seller = $this->getVendor($order);
             $from = [
               'name' => $seller->getName(),
-              'email' => $seller->getEmail()
+              'email' => 'orders@resold.us'
             ];
             if ($this->checkAndSend($order, $from)) {
                 $order->setEmailSent(true);
@@ -176,12 +176,14 @@ class OrderSender extends Sender
             'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
             'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
             'seller_name' => $vendor->getName(),
+            'seller_email' => $vendor->getEmail(),
             'host' => $_SERVER['HTTP_HOST'],
             'order_id' => $order->getId(),
             'sender_id' => $vendor_cust_id,
             'product_id' => $product->getId(),
             'vendor_id' => $this->_session->getId(),
-            'encoded_subject' => urlencode($product->getName())
+            'encoded_subject' => urlencode($product->getName()),
+            'product_name' => $product->getName()
         ];
         $transport = new \Magento\Framework\DataObject($transport);
 
