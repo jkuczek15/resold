@@ -27,6 +27,7 @@ atlassian*
 /Ultimo-Guide.pdf
 !/pub/media/wysiwyg/*
 
+/phpserver/pub/*
 /pub/media/*.*
 !/pub/media/.htaccess
 /pub/media/catalog/*
