@@ -123,7 +123,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
       // price validation
       $price = $post['price'];
-      if(!is_numeric($price) || $price < 20){
+      if(!is_numeric($price) || $price < 2){
         return $this->resultJsonFactory->create()->setData(['error' => 'Price must be an integer greater than 20.']);
       }// end if invalid price
 
