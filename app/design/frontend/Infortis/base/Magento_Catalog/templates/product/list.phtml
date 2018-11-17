@@ -66,7 +66,7 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
   padding-top: 0px;
 }
     </style>
-    <div class="message info empty"><div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection.') ?></div></div>
+    <div class="message info empty"><div><?php /* @escapeNotVerified */ echo __('We can\'t find products matching the selection. Click <a href="/sell">here</a> to begin selling.') ?></div></div>
 <?php else: ?>
     <?php
     // Hide toolbar
