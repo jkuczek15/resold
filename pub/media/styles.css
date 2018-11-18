@@ -249,6 +249,11 @@ tr.totals:nth-child(2) > th:nth-child(1) > span:nth-child(2) {
     margin-left: 0.8em;
   }
 }
+@media(min-width: 586px){
+  #contact-form > .fieldset > .field:not(.choice) > .control {
+    width: 55%;
+  }
+}
 div.checkout-shipping-method > div:nth-child(1) {
     margin-bottom: 0 !important;
 }
@@ -267,7 +272,4 @@ body.searchautocomplete__active .block-search {
 }
 #block-search {
   z-index: 0;
-}
-#contact-form > .fieldset > .field:not(.choice) > .control {
-  width: 55%;
 }
