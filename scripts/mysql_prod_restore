@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+host=$1
+
+if [[ -n "$host" ]]; then
+  # Perform a mysql dump of prod database cluster and store on the web server
+  ssh -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host" "mysqldump -h resold-db.cluster-czqsdryzxcba.us-west-2.rds.amazonaws.com -u admin -p MagentoQuickstartDB > ~/prod-dump.sql"
+
+  # Transfer the dump file to our local machine
+  scp -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host":~/prod-dump.sql ~/prod-dump.sql
+
+  # Restore our local database
+  mysql -h localhost -u root -p MagentoQuickstartDB < ~/prod-dump.sql
+
+  # Remove the production dump from the web server file system
+  ssh -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host" "rm -rf ~/prod-dump.sql"
+
+  # Remove the production dump from the local machine file system
+  rm -rf ~/prod-dump.sql
+
+  # Run the local after install after a successful restore
+  /var/www/html/scripts/local_after_install
+else
+    echo "Please provide the web server host in order to perform production mysql dump."
+fi
