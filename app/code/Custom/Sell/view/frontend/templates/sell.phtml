@@ -22,8 +22,12 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     $vendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 
     // when editing a product, get latitude and longitude
-    $product_latitude = $product->getCustomAttribute('latitude')->getValue();
-    $product_longitude = $product->getCustomAttribute('longitude')->getValue();
+    $product_latitude = $product->getCustomAttribute('latitude');
+    $product_longitude = $product->getCustomAttribute('longitude');
+
+    // null check latitude/longitude
+    $product_latitude = $product_latitude != null ? $product_latitude->getValue() : '';
+    $product_longitude = $product_longitude != null ? $product_longitude->getValue() : '';
 
     // validation, make sure this product was created by the signed in user
     if($vendorProduct->getVendorId() !== $block->getVendorId()){
