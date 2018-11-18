@@ -21,6 +21,10 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     $productSku = $product->getSku();
     $vendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 
+    // when editing a product, get latitude and longitude
+    $product_latitude = $product->getCustomAttribute('latitude')->getValue();
+    $product_longitude = $product->getCustomAttribute('longitude')->getValue();
+
     // validation, make sure this product was created by the signed in user
     if($vendorProduct->getVendorId() !== $block->getVendorId()){
       echo "You do not have access to view this page.";
@@ -45,8 +49,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
  <strong><span id="error-text"></span></strong>
 </div>
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
-    <input type="hidden" name="latitude" id="latitude" value="" />
-    <input type="hidden" name="longitude" id="longitude" value="" />
+    <input type="hidden" name="latitude" id="latitude" value="<?= $product_latitude ?>" />
+    <input type="hidden" name="longitude" id="longitude" value="<?= $product_longitude ?>" />
     <?php echo $this->getBlockHtml('formkey') ?>
 <?php
   if($mode === "Edit"){
