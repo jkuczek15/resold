@@ -26,13 +26,13 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action
 {
-   
+
     protected $resultPageFactory;
 
-    
+
     protected $resultPage;
 
-    
+
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory
@@ -66,7 +66,7 @@ class Index extends Action
      */
     protected function reviewAcl()
     {
-        
+
         switch ($this->getRequest()->getActionName()) {
             default:
                 return $this->_authorization->isAllowed('Ced_CsVendorReview::manage_review');
@@ -75,10 +75,10 @@ class Index extends Action
     }
     public function execute()
     {
-        
+
         $this->resultPage = $this->resultPageFactory->create();
         $this->resultPage->setActiveMenu('Ced_Review::review');
-        $this->resultPage ->getConfig()->getTitle()->set((__('Manage Vendor Review')));
+        $this->resultPage ->getConfig()->getTitle()->set((__('Manage Seller Reviews')));
         return $this->resultPage;
     }
 }

@@ -98,8 +98,8 @@ class Main extends Generic implements TabInterface
             'select',
             [
                 'name' => 'receiver',
-                'label' => __('Select Vendor'),
-                'title' => __('Select Vendor'),
+                'label' => __('Select Seller'),
+                'title' => __('Select Seller'),
                 'options' => $vArray,
                 'required' => true,
                 'disabled' => $isElementDisabled
@@ -135,8 +135,8 @@ class Main extends Generic implements TabInterface
                 'checkboxes',
                 [
                     'name' => 'ismailsent',
-                    'label' => __('Email this message to Vendor'),
-                    'title' => __('Email this message to Vendor'),
+                    'label' => __('Email this message to Seller'),
+                    'title' => __('Email this message to Seller'),
                     'disabled' => $isElementDisabled,
                     'values' => [['value' => '1', 'label' => __('Yes')]],
                 ]
