@@ -21,9 +21,9 @@
     <system>
         <section id="ced_csmarketplace">
             <group id="csmessaging" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Vendor Chat</label>
+                <label>Seller Chat</label>
                 <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enable Vendor Chat Addon</label>
+                    <label>Enable Seller Chat Addon</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="admin_send_mail" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -31,7 +31,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="vendor_send_mail" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Allow Vendor To Send Email</label>
+                    <label>Allow Seller To Send Email</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="customer_send_mail" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">

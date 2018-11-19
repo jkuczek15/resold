@@ -97,8 +97,8 @@ class Tabs extends \Magento\Backend\Block\Widget\Tabs
         }
 
         $this->addTab('Vendor_Inbox', array(
-            'label'     => __('Vendor Inbox '.$vmessage),
-            'title'     => __('Vendor Inbox'),
+            'label'     => __('Seller Inbox '.$vmessage),
+            'title'     => __('Seller Inbox'),
             'content'   => $this->getLayout()->createBlock('Ced\CsMessaging\Block\Adminhtml\Message\Inbox\Edit\Tab\Main')->toHtml(),
         ));
         $this->addTab('Customer_Inbox', array(
