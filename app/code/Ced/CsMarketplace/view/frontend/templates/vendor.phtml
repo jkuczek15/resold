@@ -28,6 +28,8 @@ $productSku = $block->getProduct()->getSku();
 $VendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku',$productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 $sessionId = $model->create('Magento\Customer\Model\Session')->getVendorId();
 $VendorId = $VendorProduct->getVendorId();
+$userProduct = $sessionId == $VendorId;
+$latitude = $_product->getCustomAttribute('latitude');
 
 // get vendor rating
 $review_data = $model->create('Ced\CsVendorReview\Model\Review')->getCollection()->addFieldToFilter('vendor_id', $VendorId)->addFieldToFilter('status', 1);
@@ -67,8 +69,6 @@ if ($count > 0 && $rating_sum > 0) {
 } else {
     $width = 0;
 }
-
-
 
 $array = array('name');
 $vendorModel = $model->create('Ced\CsMarketplace\Model\Vendor')->getCollection()->addAttributeToSelect(array('public_name'))->addAttributeToFilter('entity_id',$VendorId)->toArray();
@@ -110,6 +110,20 @@ require(['jquery'], ($) => {
 
     // social media buttons
     $('.price-container').append(`
+
+<?php
+  if($userProduct && $latitude != null){
+?>
+			<div class="row">
+				<div class="col-xs-1" style="padding-left: 0;" id="social1"></div>
+				<div class="col-xs-1" style="padding-left: 0;" id="social6"></div>
+        <div class="col-xs-7" style="float: right; padding-left: 1.9em; padding-right: 0.6em; margin-top: -2em;" id="social3">
+          <a id="craigslist-link" target="_blank" href="https://post.craigslist.org">Post on craigslist</a>
+        </div>
+      </div>
+<?php
+  }
+?>
 			<div class="row">
 				<div class="col-xs-5" style="padding-left: 0;" id="social1"></div>
 				<div class="col-xs-1" style="padding-left: 0;" id="social6"></div>
@@ -145,18 +159,27 @@ require(['jquery'], ($) => {
 				</div>
 			</div>`);
   });
+
+  $(document).on('click', '#craigslist-link', function() {
+    copyToClipboard(true);
+    return false;
+  });
 });
 
-const copyToClipboard = () => {
+const copyToClipboard = (redirect) => {
   const el = document.createElement('textarea');
   el.value = 'https://<?= $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>';
   document.body.appendChild(el);
   el.select();
   document.execCommand('copy');
   document.body.removeChild(el);
-  alert("Successfully copied link to clipboard.");
+  if(redirect){
+    alert("You will be redirected to craigslist to post your item. Please include the copied Resold URL in your craigslist post to allow online payment.");
+    window.open('https://post.craigslist.org');
+  }else{
+    alert("Successfully copied link to clipboard.");
+  }
 };
-
 </script>
 <style>
 .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
@@ -186,6 +209,9 @@ const copyToClipboard = () => {
   }
 }
 @media (max-width: 575.98px) {
+  #craigslist-link {
+    margin-left: -2em;
+  }
   .stripe-container {
     display: none;
 		margin-left: 2.3em;
