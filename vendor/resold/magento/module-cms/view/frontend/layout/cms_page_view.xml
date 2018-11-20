@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+      <meta property="og:url" content="https://resold.us/" />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content="Resold" />
+      <meta property="og:description" content="Resold is a cashless peer-to-peer e-commerce marketplace for users to buy and sell valued items locally or globally" />
+      <meta property="og:image" content="https://s3-us-west-2.amazonaws.com/resold-photos/logo/default/FB_List+an+item+in+3+simple+steps2.jpg" />
+      <meta property="fb:app_id" content="459353637836730" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Cms\Block\Page" name="cms_page"/>
+        </referenceContainer>
+    </body>
+</page>
