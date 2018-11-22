@@ -15,6 +15,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Search\Model\QueryFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use PHPHtmlParser\Dom;
 
 class Result
 {
@@ -62,7 +63,8 @@ class Result
         QueryFactory $queryFactory,
         Resolver $layerResolver,
         JsonFactory $resultJsonFactory,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        Dom $dom
     ) {
         $this->_storeManager = $storeManager;
         $this->_queryFactory = $queryFactory;
@@ -70,6 +72,7 @@ class Result
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->_resultPageFactory = $resultPageFactory;
         $this->_objectManager = $objectManager;
+        $this->dom = $dom;
     }
 
     public function aroundExecute(\Magento\CatalogSearch\Controller\Result\Index $subject, \Closure
@@ -99,14 +102,34 @@ class Result
                     }
                 }
 
+                // parse the DOM to remove filter options text
                 $this->_objectManager->get('Magento\CatalogSearch\Helper\Data')->checkNotes();
                 $layout = $this->_resultPageFactory->create()->getLayout();
                 $resultsBlockHtml = $layout->getBlock('search.result')->toHtml();
                 $leftNavBlockHtml = $layout->getBlock('catalogsearch.leftnav')->toHtml();
 
+                $this->dom = new Dom;
+                $this->dom->load($leftNavBlockHtml);
+                $filter_options = $this->dom->find('.filter-options')[0];
+                $filter_text = $filter_options->innerHtml;
+
+                if(trim($filter_text) == ''){
+                  $filter_options_title = $this->dom->find('.filter-title')[0];
+                  $filter_options_subtitle = $this->dom->find('.filter-subtitle')[0];
+                  $filter_options_title->delete();
+                  $filter_options_subtitle->delete();
+                  unset($filter_options_title);
+                  unset($filter_options_subtitle);
+                }// end if no more filter options to apply
+
+                // use output buffering to capture html output
+                ob_start();
+                echo $this->dom;
+                $filter_html = ob_get_clean();
+
                 return $this->_resultJsonFactory->create()->setData(['success' => true, 'html' => [
                     'products_list' => $resultsBlockHtml,
-                    'filters' => $leftNavBlockHtml
+                    'filters' => $filter_html
                 ]]);
                 return $data;
             } else {
