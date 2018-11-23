@@ -73,7 +73,9 @@ class Index extends \Magento\Framework\App\Action\Action
         if (!$this->session->isLoggedIn()) {
             $_SESSION['from_sell_form'] = true;
             $sell_url = 'https://'.$_SERVER['HTTP_HOST'].'/sell';
-            return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($sell_url));
+            // return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($sell_url));
+
+            return $resultRedirect->setPath('customer/account/create?referer='.urlencode($sell_url));
         }
 
         // check to make sure the user has authenticated with stripe
