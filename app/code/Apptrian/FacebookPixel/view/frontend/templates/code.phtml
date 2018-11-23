@@ -34,7 +34,7 @@ fbq('track', 'PageView');
 <?php
 $productData = $block->getProductData();
 if ($productData !== null) : ?>
-fbq('track', 'ViewContent', {
+fbq('track', 'ViewProduct', {
     content_name: '<?php echo $block
         ->escapeHtml($productData['content_name']) ?>',
     content_ids: ['<?php echo $block
@@ -63,7 +63,7 @@ if (typeof jQuery != 'undefined') {
     || $action == 'catalogsearch_advanced_result') : ?>
 fbq('track', 'Search');
 <?php elseif ($action == 'customer_account_create') : ?>
-fbq('track', 'CompleteRegistration');
+fbq('track', 'ViewSignUpForm');
 <?php elseif ($action == 'checkout_index_index'
     || $action == 'onepagecheckout_index_index'
     || $action == 'onestepcheckout_index_index'
