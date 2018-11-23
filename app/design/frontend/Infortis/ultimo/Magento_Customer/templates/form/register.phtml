@@ -14,9 +14,8 @@
  * @var \Magento\Customer\Block\Form\Register $block
  */
 ?>
-<?php echo $block->getChildHtml('form_fields_before')?>
 <?php /* Extensions placeholder */ ?>
-<?php echo $block->getChildHtml('customer.form.register.extra')?>
+<span id="additional-text">You must create an account to begin selling on Resold. If you already have an account, <a class="blue-link" href="/customer/account/login/referer/<?= base64_encode($_GET['referer']) ?>">click here</a> to login.</span><br/><br/>
 <form class="form create account form-create-account" action="<?php echo $block->escapeUrl($block->getPostActionUrl()) ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off">
     <?php /* @noEscape */ echo $block->getBlockHtml('formkey'); ?>
     <input type="hidden" name="referer" value="<?php echo isset($_GET['referer']) ? $_GET['referer'] : '' ?>" />
@@ -174,6 +173,19 @@
 <style>
 .fieldset > .field.required > .label::after, .fieldset > .fields > .field.required > .label::after, .fieldset > .field._required > .label::after, .fieldset > .fields > .field._required > .label::after {
   margin: 0 0 0 4px !important
+}
+.page-title {
+  margin-bottom: 1rem;
+}
+@media(min-width: 576px){
+  #additional-text {
+    margin-left: 0.3em;
+  }
+}
+@media(max-width: 576px){
+  .page-title {
+    margin-left: -0.1em;
+  }
 }
 </style>
 <script>

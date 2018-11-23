@@ -485,7 +485,8 @@ $(document).ready(() => {
 <?php
   }else{
 ?>
-    let login_uri = $('.authorization-link a:first')[0].href;
+    // let login_uri = $('.authorization-link a:first')[0].href;
+    let login_uri = '/customer/account/create?referer=<?= urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>';
     window.location = login_uri;
 <?php
   }// end if customer is logged in
@@ -501,7 +502,8 @@ $(document).ready(() => {
 <?php
   }else{
 ?>
-    let login_uri = $('.authorization-link a:first')[0].href;
+    // let login_uri = $('.authorization-link a:first')[0].href;
+    let login_uri = '/customer/account/create?referer=<?= urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>';
     window.location = login_uri;
 <?php
   }// end if customer is logged in
