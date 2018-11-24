@@ -27,6 +27,7 @@ atlassian*
 /Ultimo-Guide.pdf
 !/pub/media/wysiwyg/*
 
+/chatbot/node_modules/*
 /phpserver/pub/*
 /pub/media/*.*
 !/pub/media/.htaccess
