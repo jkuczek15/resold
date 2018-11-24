@@ -45,7 +45,8 @@
         "msp/shield": "^2.1",
         "msp/nospam": "^1.3",
         "msp/adminrestriction": "^1.3",
-        "paquettg/php-html-parser": "^1.7"
+        "paquettg/php-html-parser": "^1.7",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.0",
