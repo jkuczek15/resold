@@ -371,19 +371,28 @@ require([
       },
       computed: {
         serviceFee: function () {
-          let num = (this.form_data.price * 0.099) + 0.3;
-          if(isNaN(num)){
+          let stripe_fee = this.form_data.price * 0.029 + 0.3;
+          let resold_fee = this.form_data.price * 0.07;
+
+          if(!isNaN(resold_fee) && resold_fee > 35){
+            resold_fee = 35;
+          }// end if resold fee is a number and greater than 35
+
+          if(isNaN(resold_fee) || isNaN(stripe_fee)){
             return '$0.00'
           }else{
-            return '$'+Number(num).toFixed(2);
+            let total_fee = stripe_fee + resold_fee;
+            return '$'+Number(total_fee).toFixed(2);
           }
         },
         yourProfit: function(){
-          let num = this.form_data.price - (this.form_data.price * 0.099 + 0.3);
-          if(isNaN(num)){
+          let fee = Number(this.serviceFee.replace(/[^0-9.-]+/g,""));
+          let profit = this.form_data.price - fee;
+
+          if(isNaN(profit)){
             return '$0.00';
           }else{
-            return '$'+Number(num).toFixed(2);
+            return '$'+Number(profit).toFixed(2);
           }
         }
       }
