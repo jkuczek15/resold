@@ -35,7 +35,7 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
 <div id="block-search" class="block block-search search-wrapper" style="width: 100%">
     <div class="block block-title"><strong>Search</strong></div>
     <div class="block block-content">
-        <form class="form minisearch" id="search_mini_form" action="<?= $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING'] ?>" method="get">
+        <form class="form minisearch" id="search_mini_form2" action="<?= $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING'] ?>" method="get">
             <input type="hidden" id="local_global" name="local_global" value="<?= $local_global ?>" />
             <input type="hidden" id="latitude" name="latitude" value="<?= $latitude ?>" />
             <input type="hidden" id="longitude" name="longitude" value="<?= $longitude ?>" />
@@ -43,12 +43,12 @@ if((!isset($_REQUEST['ajax']) || $_REQUEST['ajax'] != 1) && strpos($_SERVER['REQ
             <input type="hidden" id="condition" name="condition" value="<?= $condition ?>" />
             <div class="field search">
               <div class="control">
-                <input value="<?= isset($_GET['qc']) ? $_GET['qc'] : '' ?>" style="border-color: #ddd" id="search" name="qc" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
+                <input value="<?= isset($_GET['qc']) ? $_GET['qc'] : '' ?>" style="border-color: #ddd" id="search2" name="qc" value="" placeholder="Search <?= $block->getLayer()->getCurrentCategory()->getName() ?>..." class="input-text" maxlength="128" role="combobox" aria-haspopup="false" aria-autocomplete="both" autocomplete="off" type="text">
                 <div id="search_autocomplete" class="search-autocomplete" style="display: none;"></div>
               </div>
             </div>
             <div class="actions">
-              <button id="action-search" type="submit" title="Search" class="action search">
+              <button id="action-search2" type="submit" title="Search" class="action search">
                   <span class="icon ic ic-search ib ib-square ib-hover"></span>
               </button>
             </div>

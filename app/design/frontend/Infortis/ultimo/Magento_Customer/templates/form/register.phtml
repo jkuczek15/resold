@@ -13,12 +13,17 @@
  *
  * @var \Magento\Customer\Block\Form\Register $block
  */
+$referer = '';
+if(isset($_GET['referer']) && $_GET['referer'] != null){
+  $referer = $_GET['referer'];
+}// end if referer set in the query string
+$_SESSION['social_login_redirect_url'] = $referer;
 ?>
 <?php /* Extensions placeholder */ ?>
 <span id="additional-text">You must create an account to begin selling on Resold. If you already have an account, <a class="blue-link" href="/customer/account/login/referer/<?= base64_encode($_GET['referer']) ?>">click here</a> to login.</span><br/><br/>
 <form class="form create account form-create-account" action="<?php echo $block->escapeUrl($block->getPostActionUrl()) ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off">
     <?php /* @noEscape */ echo $block->getBlockHtml('formkey'); ?>
-    <input type="hidden" name="referer" value="<?php echo isset($_GET['referer']) ? $_GET['referer'] : '' ?>" />
+    <input type="hidden" name="referer" value="<?php echo $referer; ?>" />
     <fieldset class="fieldset create info">
         <legend class="legend"><span><?php echo $block->escapeHtml(__('Personal Information')) ?></span></legend><br>
         <input type="hidden" name="success_url" value="<?php echo $block->escapeUrl($block->getSuccessUrl()) ?>">
@@ -164,7 +169,10 @@
         <div class="secondary">
             <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php echo $block->escapeHtml(__('Back')) ?></span></a>
         </div>
-        <br/><br/><br/>
+        <br />
+        <div class="desktop-only">
+          <br/><br/>
+        </div>
         <span style="float: left">
           By clicking "Sign Up", you agree to the <a target="_blank" class="blue-link" href="/terms">Resold Terms of Service</a>, <a target="_blank" class="blue-link" href="/privacy-policy">Privacy Policy</a>, and <a target="_blank" class="blue-link" href="/cookie-policy">Cookie Policy</a>.
         </span>
@@ -181,13 +189,28 @@
   #additional-text {
     margin-left: 0.3em;
   }
+  .block.social-login-authentication-channel.account-social-login {
+    margin-bottom: 20px;
+  }
+  .block-content {
+    text-align: left !important;
+  }
 }
 @media(max-width: 576px){
   .page-title {
     margin-left: -0.1em;
   }
+  .desktop-only {
+    display: none;
+  }
   #password-strength-meter-container {
     z-index: 0;
+  }
+  .block.social-login-authentication-channel.account-social-login {
+    margin-bottom: 100px;
+  }
+  .actions-toolbar {
+    float: left;
   }
 }
 </style>

@@ -25,11 +25,12 @@ $dataPostParam = str_replace('\/logout', '/listings', $dataPostParam);
 $href = str_replace('/logout', '/listings', $block->getLinkAttributes());
 
 if(strpos($href, 'login') !== FALSE){
-  $href = "href='/customer/account/create?referer=".urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) . "'";
+  // $href = "href='/customer/account/create?referer=".urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) . "'";
+  $href = '';
 }
 ?>
 <li class="authorization-link" data-label="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('or')); ?>">
-    <a <?php /* @noEscape */ echo $href; ?>>
+    <a style="cursor: pointer" class="social-login" <?= $href ?>>
         <?php echo $label; ?>
     </a>
 </li>

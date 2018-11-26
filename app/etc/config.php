@@ -163,6 +163,7 @@ return array (
     'Mageplaza_Seo' => 1,
     'Mageplaza_Sitemap' => 1,
     'Mageplaza_Smtp' => 1,
+    'Mageplaza_SocialLogin' => 1,
     'Mirasvit_Core' => 1,
     'Mirasvit_Misspell' => 1,
     'Mirasvit_Report' => 1,
