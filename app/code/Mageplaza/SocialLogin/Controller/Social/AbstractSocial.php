@@ -263,7 +263,6 @@ abstract class AbstractSocial extends Action
         if ($customer && $customer->getId()) {
             $this->session->setCustomerAsLoggedIn($customer);
             $this->session->regenerateId();
-
             $vendor =  $this->vendor->loadByCustomerId($customer->getId());
             if($vendor){
               // set the vendor id
@@ -272,7 +271,19 @@ abstract class AbstractSocial extends Action
 
             if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
                 $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-                $metadata->setPath('/');
+                $referralUrl = $this->_redirect->getRefererUrl();
+                $url = '/';
+
+                if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null){
+                  $url = $_SERVER['HTTP_REFERER'];
+                }else if($referralUrl != null){
+                  $url = $referralUrl;
+                }else if(isset($_SESSION['social_login_redirect_url']) && $_SESSION['social_login_redirect_url'] != null){
+                  $url = $_SESSION['social_login_redirect_url'];
+                  unset($_SESSION['social_login_redirect_url']);
+                }// end if http referer is set
+
+                $metadata->setPath($url);
                 $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
             }
         }
