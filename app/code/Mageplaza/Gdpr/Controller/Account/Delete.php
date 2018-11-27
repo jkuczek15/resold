@@ -141,9 +141,10 @@ class Delete extends \Magento\Customer\Controller\AbstractAccount
               // delete vendors stripe account link
               $sql = "DELETE FROM ced_csstripe_standalone_acc WHERE vendor_id = '".$vendor_id."'";
               $result = $connection->query($sql);
-              $this->_customerRepository->deleteById($customerId);
             }
 
+            $this->_customerRepository->deleteById($customerId);
+          
             /** event anonymise & delete customer after delete account*/
             $this->_eventManager->dispatch('anonymise_account_after_delete', ['customer' => $customer]);
 
