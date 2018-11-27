@@ -128,7 +128,7 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
               </a>
               <a href="#"
                     title=""
-                    class="action primary custom-button contact-seller"
+                    class="action primary custom-button contact-seller social-login"
                     style="float: left; width: 75%; cursor: pointer;"
                     id="product-message-button">
                     <span>Contact Seller</span>
@@ -244,13 +244,16 @@ if(count($result) > 0 && isset($result[0]['value']) && $result[0]['value'] != nu
 </script>
 <?php endif; ?>
 <style>
+.fa, .far, .fas {
+    font-family: "FontAwesome" !important;
+}
 div.qty {
   display: none !important;
 }
 .product-info-main .box-tocart .action.tocart, .product-options-bottom .box-tocart .action.tocart, .bundle-options-container .box-tocart .action.tocart, .product-info-main .box-tocart .action.instant-purchase, .product-options-bottom .box-tocart .action.instant-purchase, .bundle-options-container .box-tocart .action.instant-purchase {
   min-width: 179px;
 }
-.field > .label {
+.field:not(.email,.password) > .label {
   text-align: left !important;
   width: 20.8% !important;
 }
@@ -485,9 +488,7 @@ $(document).ready(() => {
 <?php
   }else{
 ?>
-    // let login_uri = $('.authorization-link a:first')[0].href;
-    let login_uri = '/customer/account/create?referer=<?= urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>';
-    window.location = login_uri;
+    $('.sign-in-link').click();
 <?php
   }// end if customer is logged in
 ?>
@@ -502,9 +503,7 @@ $(document).ready(() => {
 <?php
   }else{
 ?>
-    // let login_uri = $('.authorization-link a:first')[0].href;
-    let login_uri = '/customer/account/create?referer=<?= urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>';
-    window.location = login_uri;
+    $('.sign-in-link').click();
 <?php
   }// end if customer is logged in
 ?>

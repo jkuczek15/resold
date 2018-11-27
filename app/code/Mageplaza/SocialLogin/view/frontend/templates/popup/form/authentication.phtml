@@ -60,12 +60,12 @@
                             </button>
                         </div>
                         <div class="secondary">
-                          <a class="action remind" style="cursor: pointer" onclick="window.location ='/customer/account/forgotpassword'"><span><?php echo __('Forgot Your Password') ?></span></a>
+                          <a style="cursor: pointer" onclick="window.location = '/customer/account/create?referer=<?= urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>'"><?php echo __('Create an account') ?></a>
                         </div>
                     </div>
                     <div class="actions-toolbar">
                         <div class="primary">
-                          <a style="cursor: pointer" onclick="window.location = '/customer/account/create?referer=<?= urlencode('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) ?>'"><?php echo __('Create an account') ?></a>
+                          <a class="action remind" style="cursor: pointer" onclick="window.location ='/customer/account/forgotpassword'"><span><?php echo __('Forgot Your Password') ?></span></a>
                         </div>
                     </div>
                 </fieldset>
