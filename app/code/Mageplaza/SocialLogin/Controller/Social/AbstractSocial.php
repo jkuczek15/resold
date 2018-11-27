@@ -216,13 +216,23 @@ abstract class AbstractSocial extends Action
     {
         $url = $this->_url->getUrl('sell');
 
-        $referralUrl = $this->_redirect->getRefererUrl();
-        if($referralUrl != null){
-          $url = $this->_url->getUrl($referralUrl);
-        }else if(isset($_SESSION['social_login_redirect_url']) && $_SESSION['social_login_redirect_url'] != null){
-          $url = $this->_url->getUrl($_SESSION['social_login_redirect_url']);
-          unset($_SESSION['social_login_redirect_url']);
-        }// end if http referer is set
+        if ($this->_request->getParam('authen') == 'popup') {
+            $url = $this->_url->getUrl('checkout');
+        } else {
+            $requestedRedirect = $this->accountRedirect->getRedirectCookie();
+            if ($requestedRedirect) {
+                $url = $this->_redirect->success($requestedRedirect);
+                $this->accountRedirect->clearRedirectCookie();
+            }else{
+              $referralUrl = $this->_redirect->getRefererUrl();
+              if($referralUrl != null){
+                $url = $this->_url->getUrl($referralUrl);
+              }else if(isset($_SESSION['social_login_redirect_url']) && $_SESSION['social_login_redirect_url'] != null){
+                $url = $this->_url->getUrl($_SESSION['social_login_redirect_url']);
+                unset($_SESSION['social_login_redirect_url']);
+              }// end if http referer is set
+            }
+        }
 
         return $url;
     }
