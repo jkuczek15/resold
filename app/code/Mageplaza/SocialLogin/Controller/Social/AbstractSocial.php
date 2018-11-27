@@ -227,11 +227,13 @@ abstract class AbstractSocial extends Action
               $referralUrl = $this->_redirect->getRefererUrl();
               if($referralUrl != null){
                 $url = $this->_url->getUrl($referralUrl);
+              }else if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != null){
+                $url = $this->_url->getUrl($_SERVER['HTTP_REFERER']);
               }else if(isset($_SESSION['social_login_redirect_url']) && $_SESSION['social_login_redirect_url'] != null){
                 $url = $this->_url->getUrl($_SESSION['social_login_redirect_url']);
                 unset($_SESSION['social_login_redirect_url']);
               }// end if http referer is set
-            }
+            }// end if requested redirect
         }
 
         return $url;
