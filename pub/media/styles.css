@@ -210,6 +210,14 @@
 #search::placeholder {
     color: #3f3c3c;
 }
+
+#search2 {
+  border-color: #9b9494 !important;
+}
+
+#search2::placeholder {
+    color: #3f3c3c;
+}
 .payment-option-content {
   display: none !important;
 }
