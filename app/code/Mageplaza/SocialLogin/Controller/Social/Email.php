@@ -31,6 +31,7 @@ use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\SocialLogin\Helper\Social as SocialHelper;
 use Mageplaza\SocialLogin\Model\Social;
+use Ced\CsMarketplace\Model\Vendor;
 
 /**
  * Class AbstractSocial
@@ -72,13 +73,14 @@ class Email extends AbstractSocial
         AccountRedirect $accountRedirect,
         RawFactory $resultRawFactory,
         JsonFactory $resultJsonFactory,
-        CustomerFactory $customerFactory
+        CustomerFactory $customerFactory,
+        Vendor $vendor
     )
     {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->customerFactory   = $customerFactory;
 
-        parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory);
+        parent::__construct($context, $storeManager, $accountManager, $apiHelper, $apiObject, $customerSession, $accountRedirect, $resultRawFactory, $vendor);
     }
 
     /**
