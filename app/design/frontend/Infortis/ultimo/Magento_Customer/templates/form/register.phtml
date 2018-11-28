@@ -185,15 +185,15 @@ $_SESSION['social_login_redirect_url'] = $referer;
 .page-title {
   margin-bottom: 1rem;
 }
+.block-content {
+  text-align: left !important;
+}
 @media(min-width: 576px){
   #additional-text {
     margin-left: 0.3em;
   }
   .block.social-login-authentication-channel.account-social-login {
     margin-bottom: 20px;
-  }
-  .block-content {
-    text-align: left !important;
   }
 }
 @media(max-width: 576px){
@@ -206,11 +206,8 @@ $_SESSION['social_login_redirect_url'] = $referer;
   #password-strength-meter-container {
     z-index: 0;
   }
-  .block.social-login-authentication-channel.account-social-login {
-    margin-bottom: 100px;
-  }
-  .actions-toolbar {
-    float: left;
+  .block, .block-banners, .block-banners-inline {
+    margin-bottom: 10px;
   }
 }
 </style>
