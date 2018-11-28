@@ -5,6 +5,7 @@
 ?>
 <?php
     //TODO: replace all $this with $block
+    $_SESSION['social_login_redirect_url'] = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
     $theme = $block->getHelperTheme();
     $helperHeader = $block->getHelperHeader();
     $connectorMenu = $block->getHelperConnectorMenu();
