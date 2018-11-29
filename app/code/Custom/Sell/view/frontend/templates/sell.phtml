@@ -193,8 +193,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
                 <span class="buttons" style="float: left;">
                   <input type="checkbox" name="terms-checkbox" id="terms-checkbox" style="display: inline-block;"/>
                 </span>
-                <span style="overflow: hidden">
-                  I agree to the <a target="_blank" class="blue-link" href="/terms">Resold Terms of Service</a>, <a target="_blank" class="blue-link" href="/privacy-policy">Privacy Policy</a>, and <a target="_blank" class="blue-link" href="/cookie-policy">Cookie Policy</a>.
+                <span style="overflow: hidden;">
+                  I accept Resold's <a target="_blank" class="blue-link" href="/terms">Terms of Service</a> and <a target="_blank" class="blue-link" href="/privacy-policy">Privacy <span class="policy-text">Policy</span></a>.
                 </span>
             </label>
         </div>
@@ -210,6 +210,11 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     </div>
 </form>
 <style>
+@media(max-width: 400px){
+  .policy-text {
+    margin-left: 1.45em;
+  }
+}
 .page-title-wrapper {
   display: none;
 }
