@@ -167,7 +167,7 @@ $_SESSION['social_login_redirect_url'] = $referer;
             <button type="submit" class="action submit primary" title="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('Create an Account')) ?>"><span><?php echo $block->escapeHtml(__('Create an Account')) ?></span></button><br/>
         </div>
         <div class="secondary">
-            <a class="action back" href="<?php echo $block->escapeUrl($block->getBackUrl()) ?>"><span><?php echo $block->escapeHtml(__('Back')) ?></span></a>
+            <a class="action back" href="<?php echo $referer; ?>"><span><?php echo $block->escapeHtml(__('Back')) ?></span></a>
         </div>
         <br />
         <div class="desktop-only">
