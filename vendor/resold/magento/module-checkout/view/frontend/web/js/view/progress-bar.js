@@ -30,6 +30,7 @@ define(
             },
 
             sortItems: function(itemOne, itemTwo) {
+                itemOne.title = "Information";
                 return stepNavigator.sortItems(itemOne, itemTwo);
             },
 
