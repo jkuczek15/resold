@@ -60,11 +60,6 @@ class Index extends \Magento\Framework\App\Action\Action
       ####################################
       // REQUEST AND USER VALIDATON
       ###################################
-      // Ensure valid request and protect against CSRF
-      if (!$this->formKeyValidator->validate($this->getRequest())) {
-        return $this->resultJsonFactory->create()->setData(['error' => 'Invalid Request.']);
-      }// end if valid request
-
       // Ensure user is logged in
       if (!$this->session->isLoggedIn()) {
         return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);

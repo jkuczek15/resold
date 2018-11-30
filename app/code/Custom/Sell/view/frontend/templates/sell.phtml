@@ -99,7 +99,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
           <div class="col-md-3 service-fee">
             <div class="control" style="margin-top: 0.5em">
               <strong class="label" style="padding-right: 15px">
-                <span data-toggle="tooltip" title="Service Fee: 7% <br/> Stripe Fee: 2.9% + $0.30" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                <span data-toggle="tooltip" title="Resold Fee: 5.6% <br/> Stripe Fee: 2.9% + $0.30" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
                   <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
                 <?php /* @escapeNotVerified */ echo __('Service Fee') ?>
@@ -387,10 +387,10 @@ require([
       computed: {
         serviceFee: function () {
           let stripe_fee = this.form_data.price * 0.029 + 0.3;
-          let resold_fee = this.form_data.price * 0.07;
+          let resold_fee = this.form_data.price * 0.056;
 
-          if(!isNaN(resold_fee) && resold_fee > 35){
-            resold_fee = 35;
+          if(!isNaN(resold_fee) && resold_fee > 50){
+            resold_fee = 50;
           }// end if resold fee is a number and greater than 35
 
           if(isNaN(resold_fee) || isNaN(stripe_fee)){
@@ -404,7 +404,7 @@ require([
           let fee = Number(this.serviceFee.replace(/[^0-9.-]+/g,""));
           let profit = this.form_data.price - fee;
 
-          if(isNaN(profit)){
+          if(isNaN(profit) || profit < 0){
             return '$0.00';
           }else{
             return '$'+Number(profit).toFixed(2);
