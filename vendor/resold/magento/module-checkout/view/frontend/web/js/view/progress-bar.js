@@ -30,7 +30,13 @@ define(
             },
 
             sortItems: function(itemOne, itemTwo) {
-                itemOne.title = "Information";
+                if(itemOne.code == 'shipping'){
+                  itemOne.title = "Information";
+                  itemTwo.title = "Review & Payment";
+                }else{
+                  itemOne.title = "Review & Payment";
+                  itemTwo.title = "Information";
+                }
                 return stepNavigator.sortItems(itemOne, itemTwo);
             },
 
