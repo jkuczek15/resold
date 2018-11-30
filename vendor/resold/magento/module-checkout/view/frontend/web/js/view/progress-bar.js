@@ -31,6 +31,7 @@ define(
 
             sortItems: function(itemOne, itemTwo) {
                 itemOne.title = "Information";
+                itemTwo.title = "Review & Payment";
                 return stepNavigator.sortItems(itemOne, itemTwo);
             },
 
