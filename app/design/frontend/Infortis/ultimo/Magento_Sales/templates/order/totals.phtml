@@ -39,10 +39,17 @@ $total = $totals['subtotal']->getValue();
         <?php echo $block->getChildHtml($_total->getBlockName(), false); ?>
     <?php else:?>
 <?php
+    $stripe_fee = ($total * 0.029) + 0.3;
+    $resold_fee = ($total * 0.056);
+    if($resold_fee > 50){
+      $resold_fee = 50;
+    }
+    $service_fee = $stripe_fee + $resold_fee;
+
     if($_code == 'grand_total' && ($block->isSellerEmail() || $type == 'sold')){
       $_total->setLabel('Your Profit');
-      $num = $total - (($total * 0.099) + 0.3); 
-      $_total->setValue(floor($num * 100) / 100);
+      $profit = $total - $service_fee;
+      $_total->setValue(floor($profit * 100) / 100);
     }
 ?>
     <tr class="<?php /* @escapeNotVerified */ echo $_code?>">
@@ -66,13 +73,13 @@ $total = $totals['subtotal']->getValue();
 ?>
   <tr>
     <th>Service Fee</th>
-    <td colspan=2><?= money_format('$%i', ($total * 0.099) + 0.3) ?></td>
+    <td colspan=2><?= money_format('$%i', $service_fee) ?></td  >
   </tr>
 <?php
 }else if($_code == 'shipping' && $type == 'sold'){
   $_total = $prev_total;
   $_total->setLabel('Service Fee');
-  $_total->setValue(($total * 0.099) + 0.3);
+  $_total->setValue($service_fee);
 ?>
     <tr class="<?php /* @escapeNotVerified */ echo $_code?>">
         <th <?php /* @escapeNotVerified */ echo $block->getLabelProperties()?> scope="row">
