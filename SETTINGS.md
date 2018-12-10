@@ -22,7 +22,8 @@
 #     Pass: Rootroot$
 #
 # Backend URL: https://server-domain/stm
-# support@resold.us password: ShootTheMoon$
+# support@resold.us
+# password: ShootTheMoon$
 #
 # Things might not work as expected, just bear with it.
 ##########################################################
