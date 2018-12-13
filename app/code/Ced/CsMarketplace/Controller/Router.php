@@ -59,9 +59,10 @@ class Router implements \Magento\Framework\App\RouterInterface
     public function match(\Magento\Framework\App\RequestInterface $request)
     {
         $identifier = trim($request->getPathInfo(), '/');
-        $custom_suffix = $this->_objectManager->get('Ced\CsMarketplace\Helper\Data')
-                              ->getStoreConfig('ced_vseo/general/marketplace_url_suffix');
-        $suffix = $custom_suffix ? $custom_suffix : \Ced\CsMarketplace\Model\Vendor::VENDOR_SHOP_URL_SUFFIX;
+        // $custom_suffix = $this->_objectManager->get('Ced\CsMarketplace\Helper\Data')
+        //                       ->getStoreConfig('ced_vseo/general/marketplace_url_suffix');
+        // $suffix = $custom_suffix ? $custom_suffix : \Ced\CsMarketplace\Model\Vendor::VENDOR_SHOP_URL_SUFFIX;
+        $suffix = 'vendor_shop';
         $url_path = 'vendor_shop/';
         if($this->_objectManager->get('Magento\Framework\Module\Manager')->isEnabled('Ced_CsSeoSuite') && $this->_objectManager->get('Ced\CsSeoSuite\Helper\Data')->isEnabled()){
             $url_path = $this->_objectManager->get('Ced\CsMarketplace\Helper\Data')->getStoreConfig('ced_vseo/general/marketplace_url_key').'/';
@@ -70,10 +71,10 @@ class Router implements \Magento\Framework\App\RouterInterface
             $urls = explode('/', $identifier);
             $url = explode($suffix, end($urls));
             $request->setModuleName('market')->setControllerName('vshops')->setActionName('view')->setParam('shop_url', $url[0]);
-            $request->setAlias(\Magento\Framework\Url::REWRITE_REQUEST_PATH_ALIAS, $identifier);
+            //$request->setAlias(\Magento\Framework\Url::REWRITE_REQUEST_PATH_ALIAS, $identifier);
             return ;
         }
 
     }
-    
+
 }

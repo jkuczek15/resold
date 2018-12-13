@@ -52,6 +52,7 @@ class View extends \Magento\Framework\App\Action\Action
         }
 
         $shopUrl = $this->getRequest()->getParam('shop_url');
+
         if (!strlen($shopUrl)) {
             return false;
         }
