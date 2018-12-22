@@ -14,3 +14,6 @@ sudo chmod u+x /var/www/html/bin/magento
 
 # Grant execute permissions to all scripts
 sudo chmod +x /var/www/html/scripts/*
+
+# Grant all permissions to potato compressor cache folders
+sudo chmod -R 777 /var/www/html/var/cache /var/www/html/var/tmp /var/www/html/var/page_cache /var/www/html/pub/static
