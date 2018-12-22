@@ -25,7 +25,7 @@
 # support@resold.us
 # password: ShootTheMoon$
 #
-# Things might not work as expected, just bear with it.
+# Things might not work as expected, just bear with it
 ##########################################################
 ##########################################################
 ##########################################################
