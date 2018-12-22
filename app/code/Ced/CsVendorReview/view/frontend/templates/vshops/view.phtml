@@ -40,7 +40,7 @@
 <?php
 if(strpos($_SERVER['REQUEST_URI'], '/review/customer') === FALSE){
 ?>
-<h1>Reviews for <?= $vendor->getName() ?><a href="<?= $vendor->getVendorShopUrl() ?>"><button style="margin-left: 2em;" class="btn btn-primary">View Store</button></a></h1>
+<h1>Reviews for <?= $vendor->getName() ?><a href="<?= str_replace('.html', '', $vendor->getVendorShopUrl()) ?>"><button style="margin-left: 2em;" class="btn btn-primary">View Store</button></a></h1>
 <?php
 }else{
 ?>
