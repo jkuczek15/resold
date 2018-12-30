@@ -61,12 +61,6 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-      // FIXME: Before launch lockdown API using the code below
-      // if (!$this->session->isLoggedIn()) {
-      //   $resultRedirect = $this->resultRedirectFactory->create();
-      //   return $resultRedirect->setPath('market/account/login');
-      // }
-
       $result = [];
       $categories = $this->getStoreCategories();
 
