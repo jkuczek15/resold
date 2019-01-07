@@ -79,12 +79,13 @@ class Import extends \Magento\Framework\App\Action\Action
       $search_query = isset($_GET['q']) ? $_GET['q'] : null;
       $pages = isset($_GET['pages']) ? $_GET['pages'] : 1;
       $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : null;
+      $override_price = isset($_GET['price']) ? $_GET['price'] : null;
 
       if($search_query == null && $product_id == null)
       {
         echo "Please provide a search query (q parameter) or an item number (product_id parameter).<br/><br/>";
         echo "Examples: <ul><li>/api/product/import?q=laptop</li><li>/api/product/import?product_id=B07KCM4TCS</li></ul>";
-        echo "Optionally provide a number of pages to import, example: <ul><li>/api/product/import?q=laptop&pages=5";
+        echo "Optionally provide a number of pages to import or a price to override, Examples: <ul><li>/api/product/import?q=laptop&pages=5</li><li>/api/product/import?product_id=B07H9PN1KF&price=9</li></ul>";
         exit;
       }// end if no search query provided
 
@@ -130,12 +131,22 @@ class Import extends \Magento\Framework\App\Action\Action
           $all_category_id = 105;
           $sku = 'amz-'.$product_details['product_id'];
           $price = sprintf("%.2f", $product_details['price'] / 100);
-          $price = ceil($price + ($price * 0.06) + 1);
 
+          if($override_price != null){
+            $price = $override_price;
+          }else if($price == 0){
+            echo "Could not find a price for the specified product.";
+            exit;
+          }else{
+            // round the price up and add our fees
+            $price = ceil($price + ($price * 0.06) + 1);
+          }// end if no price provided
+          
           $product_description = '';
-          if($product_details['product_description'] != null)
-          {
+          if(isset($product_details['product_description']) && $product_details['product_description'] != null){
             $product_description = $product_details['product_description'];
+          }else if(isset($product_details['feature_bullets']) && $product_details['feature_bullets'] != null){
+            $product_description = implode ('<br/>', $product_details['feature_bullets']);
           }// end if product description is not null
 
           // create the Magento product
