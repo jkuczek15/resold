@@ -6,6 +6,8 @@ $new_attr_id = 227;
 $all_category_id = 105;
 $product_latitude = '';
 $product_longitude = '';
+$is_amazon = false;
+
 if(isset($_GET['id']) && $_GET['id'] != null)
 {
     $product_id = $_GET['id'];
@@ -21,6 +23,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     $model = \Magento\Framework\App\ObjectManager::getInstance();
     $product = $model->create('Magento\Catalog\Model\Product')->load($product_id);
     $productSku = $product->getSku();
+    $code = substr($productSku, 0, 3);
+    $is_amazon = $code == 'amz';
     $vendorProduct = $model->create('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('sku', $productSku)->addFieldToFilter('check_status',['nin'=>3])->getFirstItem();
 
     // when editing a product, get latitude and longitude
@@ -39,7 +43,12 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 
     // list of category ids for product
     $category_ids = array_values(array_diff($product->getCategoryIds(), [$all_category_id]));
-    $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($category_ids[0]);
+
+    if(count($category_ids) == 0){
+      $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($all_category_id);
+    }else{
+      $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($category_ids[0]);
+    }// end if this item we're editing doesn't have any categories
 }else
 {
   $product_id = null;
@@ -69,7 +78,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Item Name') ?></span></label>
             <div class="control">
-                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Item Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 24}" v-model="form_data.name" placeholder="Enter an Item Name..."/>
+                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Item Name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: <?= $is_amazon ? '1000' : '24' ?>}" v-model="form_data.name" placeholder="Enter an Item Name..."/>
             </div>
         </div>
         <div class="field title_description">
@@ -416,14 +425,19 @@ require([
 <?php
   if($mode === "Edit"){
 
-    $parent = $lowestcategory->getParentCategory();
-    $grandparent = $parent->getParentCategory();
+    if(count($category_ids) > 0){
+      // this product has categories
+      $parent = $lowestcategory->getParentCategory();
+      $grandparent = $parent->getParentCategory();
 ?>
-  app.form_data.name = "<?= $product->getName() ?>";
+      app.form_data.category = "<?= $grandparent->getName() == "Default Root" ? $parent->getName() : $grandparent->getName() ?>";
+      app.form_data.subcategory = "<?= $grandparent->getName() == "Default Root" ? $lowestcategory->getName() : $parent->getName() ?>";
+      app.form_data.lowestcategory = "<?= $grandparent->getName() == "Default Root" ? "" : $category_ids[0] ?>";
+<?php
+    }// end if this product has categories
+?>
+  app.form_data.name = `<?= $product->getName() ?>`;
   app.form_data.title_description = "<?= $product->getData('title_description'); ?>";
-  app.form_data.category = "<?= $grandparent->getName() == "Default Root" ? $parent->getName() : $grandparent->getName() ?>";
-  app.form_data.subcategory = "<?= $grandparent->getName() == "Default Root" ? $lowestcategory->getName() : $parent->getName() ?>";
-  app.form_data.lowestcategory = "<?= $grandparent->getName() == "Default Root" ? "" : $category_ids[0] ?>";
   app.form_data.condition = "<?= $product->getData('condition') ?>";
   app.form_data.description = `<?= $product->getDescription() ?>`;
 
@@ -599,7 +613,7 @@ require([
         if(app.form_data.subcategory != null){
           $('.subcategory').show();
           <?php
-          if($mode == "Edit" && $grandparent->getName() != "Default Root"){
+          if($mode == "Edit" && count($category_ids) > 0 && $grandparent->getName() != "Default Root"){
           ?>
           app.lowestcategories = app.subcategories[app.form_data.subcategory];
           if(app.form_data.lowestcategory != null){

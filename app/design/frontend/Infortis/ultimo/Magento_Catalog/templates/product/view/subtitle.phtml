@@ -1,4 +1,13 @@
+
+<?php
+$sku = $block->getProduct()->getSku();
+$code = substr($sku, 0, 3);
+if($code != 'amz'){
+?>
 <h4><?php /* @escapeNotVerified */ echo $block->getProduct()->getResource()->getAttribute('title_description')->getFrontend()->getValue($block->getProduct()); ?></h4>
+<?php
+}// end if not an amazon listing
+?>
 <style>
 h1 {
   margin-bottom: 1rem !important;
