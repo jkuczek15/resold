@@ -59,25 +59,28 @@ class Form extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      $resultRedirect = $this->resultRedirectFactory->create();
       $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       ####################################
       // REQUEST AND USER VALIDATON
       ###################################
       // Ensure user is logged in
       if (!$this->session->isLoggedIn()) {
-        return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to import items.']);
+          $url = 'https://'.$_SERVER['HTTP_HOST'].'/api/product/form';
+          return $resultRedirect->setPath('customer/account/create?referer='.urlencode($url));
       }// end if user not logged in
-
-      // Ensure user is a seller
-      if($this->session->getVendorId() == null){
-        return $this->resultJsonFactory->create()->setData(['error' => 'Your account must be connected to Stripe to import items.']);
-      }// end if vendor id not set
 
       $email = $this->session->getCustomer()->getEmail();
       $valid_emails = ['joe.kuczek@gmail.com', 'joe@resold.us', 'justinspecht3@gmail.com', 'justin@resold.us', 'dunderwager@gmail.com'];
       if(!in_array($email, $valid_emails)){
         return $this->resultJsonFactory->create()->setData(['error' => 'You do not have access to view this form.']);
       }// end if email not in list of valid emails
+
+      // Ensure user is a seller
+      if($this->session->getVendorId() == null){
+        $url = 'https://'.$_SERVER['HTTP_HOST'].'/connect-to-stripe';
+        return $resultRedirect->setPath('customer/account/create?referer='.urlencode($url));
+      }// end if vendor id not set
 
       return $this->resultPageFactory->create();
     }// end function execute
