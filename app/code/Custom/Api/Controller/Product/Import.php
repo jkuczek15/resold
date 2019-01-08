@@ -108,7 +108,7 @@ class Import extends \Magento\Framework\App\Action\Action
       }// end if page parameter not null
 
       // execute the command in the background
-      $output = shell_exec('cd /var/www/html/jobs && ' . $command .' > /dev/null 2>/dev/null &');
+      exec('cd /var/www/html/jobs && ' . $command .' > /dev/null 2>&1 &');
 
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
     }// end function execute
