@@ -19,4 +19,4 @@ sudo chmod +x /var/www/html/scripts/*
 sudo chmod -R 777 /var/www/html/var/cache /var/www/html/var/tmp /var/www/html/var/page_cache /var/www/html/pub/static
 
 # Grant all permissions to the tmp directory
-sudo chmod -R 777 /var/www/html/pub/media/tmp
+sudo chmod -R 777 /var/www/html/pub/media/tmp /var/www/html/pub/media/catalog
