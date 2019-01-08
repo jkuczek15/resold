@@ -1,4 +1,4 @@
-<?php 
+<?php
  /**
  * CedCommerce
  *
@@ -50,7 +50,7 @@ public function __construct(
         \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
         AttributeValueFactory $customAttributeFactory,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,        
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
        parent::__construct($storeManager, $context, $objectInterface, $registry, $extensionFactory, $customAttributeFactory);
@@ -60,19 +60,19 @@ public function __construct(
 	 */
 	 public function isProductApprovalRequired(){
 		$storeManager = $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface');
-		$scopeConfig = $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');		
+		$scopeConfig = $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
 		return $scopeConfig->getValue('ced_vproducts/general/confirmation','store',$storeManager->getStore()->getId());
 	}
 
-	public function saveProduct($mode) {
-		
+	public function saveProduct($mode, $override_vendor_id = null) {
+
 		$storeManager = $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface');
 		$scopeConfig = $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
 	   if(!$scopeConfig->getValue('ced_csmarketplace/general/ced_vproduct_activation', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)){
 			return parent::saveProduct($mode);
-			
+
 		}
-		
+
 		$register = $this->_objectManager->get('\Magento\Framework\Registry');
 		if($scopeConfig->getValue('ced_csmarketplace/general/ced_vproduct_activation','store',$storeManager->getStore()->getId())){
 			$product=array();
@@ -85,7 +85,7 @@ public function __construct(
 			 * Relate Product data
 			 * @params int mode,int $productId,array $productData
 			 */
-			$vproductModel = $this->processPostSave($mode,$product,$productData);
+			$vproductModel = $this->processPostSave($mode,$product,$productData,$override_vendor_id);
 
 		}
 		return $this;
@@ -95,17 +95,17 @@ public function __construct(
 	 * @params $mode,int $productId,array $productData
 	 */
 
-	public function processPostSave($mode,$product,$productData){
-		
-		
+	public function processPostSave($mode,$product,$productData,$override_vendor_id = null){
+
+
 		$storeManager = $this->_objectManager->get('Magento\Store\Model\StoreManagerInterface');
 		$scopeConfig = $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
 		if(!$scopeConfig->getValue('ced_csmarketplace/general/ced_vproduct_activation', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)){
-			
-			return parent::processPostSave($mode,$product,$productData);
-			
+
+			return parent::processPostSave($mode,$product,$productData,$override_vendor_id);
+
 		}
-		
+
 		$stockRegistry = $this->_objectManager->get('Magento\CatalogInventory\Api\StockRegistryInterface');
 		$stockitem = $stockRegistry->getStockItem(
 									$product->getId(),
@@ -113,22 +113,25 @@ public function __construct(
 								);
 		$qty = $stockitem->getQty();
 		$is_in_stock = $stockitem->getIsInStock();
-		
+
 		$productId = $product->getId();
 		 $websiteIds='';
         if(isset($productData['product']['website_ids'])) {
-            $websiteIds=implode(",", $productData['product']['website_ids']); 
+            $websiteIds=implode(",", $productData['product']['website_ids']);
         }
         else if($this->_registry->registry('ced_csmarketplace_current_website')!='') {
-            $websiteIds=$this->_registry->registry('ced_csmarketplace_current_website'); 
+            $websiteIds=$this->_registry->registry('ced_csmarketplace_current_website');
         }
-        else { 
-            $websiteIds=implode(",", $product->getWebsiteIds()); 
+        else {
+            $websiteIds=implode(",", $product->getWebsiteIds());
         }
 		$storeId = $storeManager->getStore()->getId();
-		
+
 		$vendorId = $this->_objectManager->get('Ced\CsMarketplace\Model\Session')->getVendorId();
-		
+		if($override_vendor_id != null){
+			$vendorId = $override_vendor_id;
+		}
+
 		switch($mode) {
 			case self::NEW_PRODUCT_MODE:
 										$vproductsModel = $this->_objectManager->create('Ced\CsMarketplace\Model\Vproducts');
@@ -149,15 +152,15 @@ public function __construct(
 										$vproductsModel->setQty($qty);
 										$vproductsModel->setIsInStock($is_in_stock);
 										$vproductsModel->setWebsiteId($websiteIds);
-										
+
 										return $vproductsModel->save();
-										
+
 			case self::EDIT_PRODUCT_MODE:
 
 									$model=$this->loadByField(array('product_id'),array($product->getId()));
-									
+
 									if($model && $model->getId()){
-										
+
 										$model->setData('type',$product->getTypeId());
 										$model->setPrice($product->getPrice());
 										$model->setSpecialPrice($product->getSpecialPrice());
@@ -169,7 +172,7 @@ public function __construct(
 										$model->setQty($qty);
 										$model->setIsInStock($is_in_stock);
 										$model->setWebsiteId($websiteIds);
-										return $model->save ();									
+										return $model->save ();
 									}
 		}
 		return $this;
@@ -185,7 +188,6 @@ public function __construct(
 											 ->getWebsiteIds($this->_objectManager->get('Ced\CsMarketplace\Model\Session')->getVendorId());
 			return $webisteIds;
 	}
-	
-	
-}
 
+
+}
