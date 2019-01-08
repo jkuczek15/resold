@@ -1,0 +1,78 @@
+<p>Please provide a search query or a product ID. Optionally provide a number of pages to import or a price to override.</p>
+<hr />
+<form method="post" id="import_form" action="/api/product/import">
+  <fieldset class="fieldset" id="app">
+    <div class="field name">
+        <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Search Query') ?></span></label>
+        <div class="control">
+            <input class="form-input" name="q" id="q" class="input-text" type="text" />
+        </div>
+    </div>
+    <div class="field name">
+        <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Product ID') ?></span></label>
+        <div class="control">
+            <input class="form-input" name="product_id" id="product_id" class="input-text" type="text" />
+        </div>
+    </div>
+    <div class="field name">
+        <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Price') ?></span></label>
+        <div class="control">
+            <input class="form-input" name="price" id="price" class="input-text" type="text" />
+        </div>
+    </div>
+    <div class="field name">
+        <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Pages') ?></span></label>
+        <div class="control">
+            <input class="form-input" name="pages" id="pages" class="input-text" type="text" />
+        </div>
+    </div>
+  </fieldset>
+  <div class="actions-toolbar">
+      <div class="primary">
+          <input type="hidden" name="hideit" id="hideit" value="" />
+          <button type="submit" id="submit" title="<?php /* @escapeNotVerified */ echo __('Submit') ?>" class="action submit primary" disabled>
+              <span><?php /* @escapeNotVerified */ echo __('Submit') ?></span>
+          </button>
+      </div>
+  </div>
+</form>
+
+<style>
+@media (min-width: 576px) {
+  .form-input {
+    width: 70% !important;
+  }
+}
+</style>
+<script>
+require([
+    "jquery",
+    "mage/mage",
+    "mage/validation",
+    "vue",
+    "fine-uploader",
+    "tippy"
+], ($, mage, validation) => {
+  $('#submit').prop('disabled', false);
+  $('#import_form').submit(function() {
+      // submit the sell form via ajax
+      $.ajax({
+        data: new FormData($(this)[0]),
+        processData: false,
+        contentType: false,
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        showLoader: true,
+        cache: true,
+        success: function(data){
+          if(data['success'] == 'Y'){
+            alert(`Successfully imported ${data['products']} product(s).`)
+          }else{
+            alert('There was an error processing your request. Please check required fields.');
+          }
+        }
+      });
+      return false;
+  });
+});
+</script>

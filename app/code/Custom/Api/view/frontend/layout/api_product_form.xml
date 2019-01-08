@@ -1,0 +1,7 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+          <block class="Custom\Api\Block\Form" name="import_form" template="Custom_Api::form.phtml" before="-" />
+        </referenceContainer>
+    </body>
+</page>
