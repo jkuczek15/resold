@@ -70,23 +70,25 @@ class Import extends \Magento\Framework\App\Action\Action
         return $this->resultJsonFactory->create()->setData(['error' => 'Your account must be connected to Stripe to import items.']);
       }// end if vendor id not set
 
+      $email = $this->session->getCustomer()->getEmail();
+      $valid_emails = ['joe.kuczek@gmail.com', 'joe@resold.us', 'justinspecht3@gmail.com', 'justin@resold.us', 'dunderwager@gmail.com'];
+      if(!in_array($email, $valid_emails)){
+        return $this->resultJsonFactory->create()->setData(['error' => 'You do not have access to import products.']);
+      }// end if email not in list of valid emails
+
       // Set our time zone to Chicago
       date_default_timezone_set('America/Chicago');
 
       ####################################
       // RETREIVE PRODUCTS FROM AMAZON
       ###################################
-      $search_query = isset($_GET['q']) ? $_GET['q'] : null;
-      $pages = isset($_GET['pages']) ? $_GET['pages'] : 1;
-      $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : null;
-      $override_price = isset($_GET['price']) ? $_GET['price'] : null;
+      $search_query = isset($_POST['q']) ? $_POST['q'] : null;
+      $pages = isset($_POST['pages']) ? $_POST['pages'] : 1;
+      $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : null;
+      $override_price = isset($_POST['price']) ? $_POST['price'] : null;
 
-      if($search_query == null && $product_id == null)
-      {
-        echo "Please provide a search query (q parameter) or an item number (product_id parameter).<br/><br/>";
-        echo "Examples: <ul><li>/api/product/import?q=laptop</li><li>/api/product/import?product_id=B07KCM4TCS</li></ul>";
-        echo "Optionally provide a number of pages to import or a price to override, Examples: <ul><li>/api/product/import?q=laptop&pages=5</li><li>/api/product/import?product_id=B07H9PN1KF&price=9</li></ul>";
-        exit;
+      if($search_query == null && $product_id == null){
+        return $this->resultJsonFactory->create()->setData(['error' => 'Please provide a search query or product ID.']);
       }// end if no search query provided
 
       // initialize CURL parameters
@@ -141,7 +143,7 @@ class Import extends \Magento\Framework\App\Action\Action
             // round the price up and add our fees
             $price = ceil($price + ($price * 0.06) + 1);
           }// end if no price provided
-          
+
           $product_description = '';
           if(isset($product_details['product_description']) && $product_details['product_description'] != null){
             $product_description = $product_details['product_description'];
@@ -219,8 +221,7 @@ class Import extends \Magento\Framework\App\Action\Action
 
       }while($page++ < $pages);
 
-      // on success, redirect user to their listing page
-      echo "Successfully imported $products_imported product(s).";
+      return $this->resultJsonFactory->create()->setData(['success' => 'Y', 'products' => $products_imported]);
     }// end function execute
 
     /**
