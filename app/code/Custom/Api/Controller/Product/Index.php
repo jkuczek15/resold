@@ -118,7 +118,10 @@ class Index extends \Magento\Framework\App\Action\Action
 
       // price validation
       $price = $post['price'];
-      if(!is_numeric($price) || $price < 20){
+
+      // determine whether we need to skip price validation
+      $skip_price_validation = $product_id != null && substr($_product->getSku(), 0, 3) == 'amz';
+      if(!$skip_price_validation && (!is_numeric($price) || $price < 20)){
         return $this->resultJsonFactory->create()->setData(['error' => 'Price must be an integer greater than 20.']);
       }// end if invalid price
 
