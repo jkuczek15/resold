@@ -90,10 +90,10 @@ class Import extends \Magento\Framework\App\Action\Action
 
       if($product_id != null){
         // product ID mode
-        $command = 'php ./import_products.php -p ' . $product_id;
+        $command = 'nohup php ./import_products.php -p ' . $product_id;
       }else{
         // search query mode
-        $command = 'php ./import_products.php -s ' . $search_query;
+        $command = 'nohup php ./import_products.php -s ' . $search_query;
       }// end if product ID not null
 
       // add the vendor ID as a parameter for our job
