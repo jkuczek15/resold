@@ -1,0 +1,16 @@
+@facebook-icons-admin__font-name-path: '@{baseDir}Ced_Facebook/fonts/facebook';
+@facebook-icons-admin__font-name : 'CedFacebook';
+.lib-font-face(
+  @family-name:@facebook-icons-admin__font-name,
+  @font-path: @facebook-icons-admin__font-name-path,
+  @font-weight: normal,
+  @font-style: normal
+);
+.admin__menu .item-facebook.parent.level-0 > a:before {
+  font-family: @facebook-icons-admin__font-name;
+  content: "\e900";
+  display: block;
+  font-family: "CedFacebook";
+  font-size: 3rem;
+  height: 3rem;
+}
