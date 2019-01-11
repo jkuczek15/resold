@@ -11,6 +11,7 @@ return array (
     'Ced_CsProduct' => 1,
     'Ced_CsStripePayment' => 1,
     'Ced_CsVendorReview' => 1,
+    'Ced_Facebook' => 1,
     'Custom_Admin' => 1,
     'Custom_Api' => 1,
     'Custom_Report' => 1,
