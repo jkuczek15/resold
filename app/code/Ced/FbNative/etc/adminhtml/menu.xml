@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ced_FbNative::FbNative"
+             title="FbNative"
+             module="Ced_FbNative"
+             sortOrder="25"
+             resource="Ced_FbNative::FbNative"
+        />
+        <add id="Ced_FbNative::product"
+             title="Products"
+             module="Ced_FbNative"
+             sortOrder="10"
+             parent="Ced_FbNative::FbNative"
+             action="fbnative/product/index"
+             resource="Ced_FbNative::product"
+        />
+        <add id="Ced_FbNative::config"
+             title="Configuration"
+             module="Ced_FbNative"
+             sortOrder="10"
+             parent="Ced_FbNative::FbNative"
+             action="adminhtml/system_config/edit/section/fbnativeconfiguration"
+             resource="Ced_FbNative::product"
+        />
+    </menu>
+</config>
