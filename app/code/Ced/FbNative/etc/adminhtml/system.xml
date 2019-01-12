@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement (EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_Fbnative
+ * @author 		CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CedCommerce (http://cedcommerce.com/)
+ * @license      http://cedcommerce.com/license-agreement.txt
+ */
+
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Backend/etc/system_file.xsd">
+    <system>
+        <tab id="cedcommerce" translate="label" sortOrder="1">
+            <label>Cedcommerce</label>
+        </tab>
+        <!-- section start for General Tab in Cedcommerce section -->
+        <section id="ced_general" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label> General Setting</label>
+            <tab>cedcommerce</tab>
+            <resource>Ced_FbNative::system_config</resource>
+            <group id="feed_group" translate="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Notifications</label>
+                <field id="feeds" translate="label" type="multiselect" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>I'd like to be informed by CedCommerce about:</label>
+                    <source_model>Ced\FbNative\Model\Source\Update\Type</source_model>
+                </field>
+            </group>
+            <group id="extensions_groups" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>CedCommerce Extensions Store</label>
+                <field id="extensions" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Ced\FbNative\Block\Cedcommerce\Store</frontend_model>
+                </field>
+            </group>
+        </section>
+        <!-- section start for General Tab in Cedcommerce section -->
+
+        <!-- section start for FbNative Configuration Tab in Cedcommerce section -->
+        <section id="fbnativeconfiguration" translate="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label> FbNative Configuration</label>
+            <tab>cedcommerce</tab>
+            <resource>Ced_Fbnative::system_config</resource>
+            <!-- FbNative Api Settings START -->
+            <group id="fbnativesetting" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Store Settings</label>
+                <!--<field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>-->
+                <field id="fbnative_storeid" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Select Store</label>
+                    <source_model>Magento\Config\Model\Config\Source\Store</source_model>
+                </field>
+            </group>
+            <!--END Fbnative Api Settings -->
+
+            <!-- Product Global Settings START -->
+            <group id="productinfo_map" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Product Global Settings</label>
+                <comment>Please set the global settings for Facebook</comment>
+                <field id="fbnative_product_price" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>FbNative Product Price</label>
+                    <source_model>Ced\FbNative\Model\Source\Selprice</source_model>
+                    <comment><![CDATA[Select to send a different product price to <b>Facebook.com</b>]]></comment>
+                </field>
+                <field id="fbnative_fix_price" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modify by Fix Price</label>
+                    <validate>required-entry validate-number</validate>
+                    <depends>
+                        <field id="fbnative_product_price" separator=",">plus_fixed,min_fixed</field>
+                    </depends>
+                </field>
+                <field id="fbnative_percentage_price" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modify by Percenctage Price</label>
+                    <validate>required-entry validate-number</validate>
+                    <comment><![CDATA[Numeric value Required for <b>Add/subtract % on Magento price</b> 5 for Example: Magento price +/- 5% of Magento price.<b>]]></comment>
+                    <depends>
+                        <field id="fbnative_product_price" separator=",">plus_per,min_per</field>
+                    </depends>
+                </field>
+                <field id="fbnative_different_price" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map Price Attribute</label>
+                    <validate>required-entry</validate>
+                    <comment><![CDATA[<b>Attribute Code Required in case of <b>Custom Fixed Price</b>]]></comment>
+                    <depends>
+                        <field id="fbnative_product_price">differ</field>
+                    </depends>
+                </field>
+                <field id="fbnative_mapping" translate="label" sortOrder="18" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Mapping</label>
+                    <frontend_model>Ced\FbNative\Block\Adminhtml\Form\Field\Fbsetting</frontend_model>
+                    <backend_model>Ced\FbNative\Model\System\Config\Backend\Fbsetting</backend_model>
+                </field>
+            </group>
+            <!--END Product Global Settings -->
+            <!-- FbNative Cron's START -->
+            <group id="fbnative_cron_settings" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>FbNative Cron's</label>
+                <field id="product_cron" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Cron</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <comment>Product Fetch Cron </comment>
+                </field>
+            </group>
+            <!-- END FbNative Cron's -->
+        </section>
+    </system>
+</config>
