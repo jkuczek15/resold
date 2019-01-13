@@ -207,9 +207,28 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
         $url = $baseUrl.'pub/media/catalog/product';
         $productdata = $product->getData();
+        $s3base = 'https://s3-us-west-2.amazonaws.com/resold-photos/catalog/product';
 
         $_product = $this->_productRepository->getById($product->getId());
         $product_url = $_product->getUrlModel()->getUrl($_product);
+
+        // get the products image URL
+        $images = $product->getMediaGalleryImages();
+        $image = $images->getFirstItem();
+        $firstImageUrl = $image->getFile();
+
+        $additionalImages = '';
+        foreach($images as $image)
+        {
+          $additionalImageUrl = $image->getFile();
+          if($additionalImageUrl != $firstImageUrl)
+          {
+            $additionalImages .= $s3base . $additionalImageUrl . ',';
+          }// end if not the first image
+        }// end foreach loop over images
+
+        // remove the last comma
+        $additionalImages = rtrim($additionalImages, ',');
 
         // get the product condition
         $new_attr_id = 235;
@@ -231,7 +250,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $default[2] = $product->getSku();
         $default[3] = $product->getSku();
         $default[4] = $product->getSku();
-        $default['image_link'] = isset($productdata['small_image']) ? $url.$productdata['small_image'] : $url;
+        $default['image_link'] = $s3base . $firstImageUrl;
+        $default['additional_image_link'] = $additionalImages;
         $default['availability'] =  $product->isInStock() ? 'In Stock' : 'Out of Stock';
         $default['productType'] = $product->getTypeId();
 
