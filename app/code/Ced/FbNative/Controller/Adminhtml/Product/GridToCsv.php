@@ -123,6 +123,7 @@ class GridToCsv extends \Magento\Catalog\Controller\Adminhtml\Product
         }
         array_push($data, 'id');
         array_push($data, 'image_link');
+        array_push($data, 'additional_image_link');
         array_push($data, 'availability');
        // array_push($data, 'sale_price');
         array_push($data, 'product_type');
