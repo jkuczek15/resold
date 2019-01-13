@@ -59,7 +59,7 @@ class FbAttributes implements \Magento\Framework\Option\ArrayInterface
             ],
             [
                 'label' => 'Condition',
-                'value' =>'condition'
+                'value' =>'facebook_condition'
             ],
             [
                 'label' => 'Google Product Category',

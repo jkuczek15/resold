@@ -27,43 +27,43 @@ class UpgradeData implements UpgradeDataInterface
     {
         $setup->startSetup();
 
-        if (version_compare($context->getVersion(), '1.0.4', '<')) {
+        // if (version_compare($context->getVersion(), '1.0.4', '<')) {
             $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
+            // $eavSetup->addAttribute(
+            //     \Magento\Catalog\Model\Product::ENTITY, 'is_facebook',
+            //     [
+            //         'group' => 'isFacebook',
+            //         'type' => 'text',
+            //         'frontend' => '',
+            //         'label' => 'Is Facebook',
+            //         'input' => 'boolean',
+            //         'source' => 'Magento\Eav\Model\Entity\Attribute\Source\Table',
+            //         'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+            //         'visible' => true,
+            //         'required' => false,
+            //         'user_defined' => true,
+            //         'default' => '',
+            //         'searchable' => true,
+            //         'filterable' => true,
+            //         'comparable' => true,
+            //         'visible_on_front' => true,
+            //         'used_in_product_listing' => true,
+            //         'unique' => false,
+            //         'wysiwyg_enabled' => true,
+            //         'is_html_allowed_on_front' => true,
+            //         'option' => ['values' => ['Yes', 'No']]
+            //     ]
+            // );
             $eavSetup->addAttribute(
-                \Magento\Catalog\Model\Product::ENTITY, 'is_facebook',
-                [
-                    'group' => 'isFacebook',
-                    'type' => 'text',
-                    'frontend' => '',
-                    'label' => 'Is Facebook',
-                    'input' => 'boolean',
-                    'source' => 'Magento\Eav\Model\Entity\Attribute\Source\Table',
-                    'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-                    'visible' => true,
-                    'required' => false,
-                    'user_defined' => true,
-                    'default' => '',
-                    'searchable' => true,
-                    'filterable' => true,
-                    'comparable' => true,
-                    'visible_on_front' => true,
-                    'used_in_product_listing' => true,
-                    'unique' => false,
-                    'wysiwyg_enabled' => true,
-                    'is_html_allowed_on_front' => true,
-                    'option' => ['values' => ['Yes', 'No']]
-                ]
-            );
-            $eavSetup->addAttribute(
-                \Magento\Catalog\Model\Product::ENTITY, 'condition',
+                \Magento\Catalog\Model\Product::ENTITY, 'facebook_condition',
                 [
                     'group' => 'isFacebook',
                     'type' => 'varchar',
                     'frontend' => '',
-                    'label' => 'Condition',
+                    'label' => 'Facebook Condition',
                     'input' => 'select',
-                    'source' => 'Ced\FbNative\Model\Source\FbAttribute\Condition',
+                    'source' => 'Ced\FbNative\Model\Source\FbAttribute\FacebookCondition',
                     'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                     'visible' => true,
                     'required' => false,
@@ -79,28 +79,28 @@ class UpgradeData implements UpgradeDataInterface
                     'is_html_allowed_on_front' => true
                 ]
             );
-            $eavSetup->addAttribute(
-                \Magento\Catalog\Model\Product::ENTITY, 'product_brand',
-                [
-                    'group' => 'isFacebook',
-                    'type' => 'text',
-                    'frontend' => '',
-                    'label' => 'Brand',
-                    'input' => 'text',
-                    'visible' => true,
-                    'required' => false,
-                    'user_defined' => true,
-                    'default' => '',
-                    'searchable' => true,
-                    'filterable' => true,
-                    'comparable' => true,
-                    'visible_on_front' => false,
-                    'used_in_product_listing' => true,
-                    'unique' => false,
-                    'wysiwyg_enabled' => true,
-                    'is_html_allowed_on_front' => true
-                ]
-            );
-        }
+            // $eavSetup->addAttribute(
+            //     \Magento\Catalog\Model\Product::ENTITY, 'product_brand',
+            //     [
+            //         'group' => 'isFacebook',
+            //         'type' => 'text',
+            //         'frontend' => '',
+            //         'label' => 'Brand',
+            //         'input' => 'text',
+            //         'visible' => true,
+            //         'required' => false,
+            //         'user_defined' => true,
+            //         'default' => '',
+            //         'searchable' => true,
+            //         'filterable' => true,
+            //         'comparable' => true,
+            //         'visible_on_front' => false,
+            //         'used_in_product_listing' => true,
+            //         'unique' => false,
+            //         'wysiwyg_enabled' => true,
+            //         'is_html_allowed_on_front' => true
+            //     ]
+            // );
+        // }
     }
 }
