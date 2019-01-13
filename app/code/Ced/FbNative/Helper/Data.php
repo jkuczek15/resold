@@ -218,9 +218,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         if($condition_id == $new_attr_id){
           $condition = 'New';
         }else if($condition_id == $new_attr_id+1){
-          $condition = 'Like New';
+          $condition = 'Refurbished';
         }else if($condition_id == $new_attr_id+2){
-          $condition = 'Good';
+          $condition = 'Refurbished';
         }else if($condition_id == $new_attr_id+3){
           $condition = 'Used';
         }
@@ -241,7 +241,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $default['price'] = isset($productdata['price']) ? 'USD '.$product->getPrice() : 'USD 49';
         }
-        $default['brand'] = $product->getMetaKeyword();
+        $default['brand'] = 'Resold';
         $default['description'] = isset($productdata['description']) ? $productdata['description'] : '';
 
         $default['link'] = $product_url;
