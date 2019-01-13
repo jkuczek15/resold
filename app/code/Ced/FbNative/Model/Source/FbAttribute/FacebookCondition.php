@@ -18,7 +18,7 @@
 
 namespace Ced\FbNative\Model\Source\FbAttribute;
 
-class Condition extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
+class FacebookCondition extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
 
     /**
