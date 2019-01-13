@@ -111,6 +111,9 @@ class GridToCsv extends \Magento\Catalog\Controller\Adminhtml\Product
         $resultRedirect = $this->resultRedirectFactory->create();
         if($mappedAttr) {
             foreach ($mappedAttr as $key => $value) {
+                if(strpos('facebook_condition', $key) !== FALSE){
+                  $key = 'condition';
+                }
                 $data[] = $key;
             }
         } else {
@@ -119,8 +122,6 @@ class GridToCsv extends \Magento\Catalog\Controller\Adminhtml\Product
             return $resultRedirect;
         }
         array_push($data, 'id');
-        array_push($data, 'offer_id');
-        array_push($data, 'channel');
         array_push($data, 'image_link');
         array_push($data, 'availability');
        // array_push($data, 'sale_price');
@@ -165,9 +166,10 @@ class GridToCsv extends \Magento\Catalog\Controller\Adminhtml\Product
                 }
 
                 $default = $this->dataHelper->defaultMappingAttribute($product);
-                $mappedData = array_merge($mappedData, $default);
-                //echo "<pre>";
-                //var_dump($mappedData);
+                $mappedData = $default;
+                // echo "<pre>";
+                // var_dump($mappedData);
+                // exit;
                 fputcsv($fp, $mappedData);
             }
         }

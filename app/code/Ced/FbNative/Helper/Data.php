@@ -84,7 +84,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         StoreManager $storeManager,
         CollectionFactory $collectionFactory,
         RedirectFactory $resultRedirectFactory,
-        Manager $manager
+        Manager $manager,
+        \Magento\Catalog\Model\ProductRepository $productRepository
     )
     {
         parent::__construct($context);
@@ -98,6 +99,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->resultRedirectFactory = $resultRedirectFactory;
         $this->objectManager = $objectManager;
         $this->messageManager = $manager;
+        $this->_productRepository = $productRepository;
     }
 
     /**
@@ -155,7 +157,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                     if($magentoAttr == 'google_product_category' && $attrValue == '') {
                         $attrValue = '632';
                     }
-                    
+
                     if(is_array($attrValue)) {
                         $mappedData[$fbAttr] = $attrValue[0];
                     } else {
@@ -205,14 +207,34 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
         $url = $baseUrl.'pub/media/catalog/product';
         $productdata = $product->getData();
+
+        $_product = $this->_productRepository->getById($product->getId());
+        $product_url = $_product->getUrlModel()->getUrl($_product);
+
+        // get the product condition
+        $new_attr_id = 235;
+        $condition_id = $product->getCustomAttribute('condition')->getValue();
+
+        if($condition_id == $new_attr_id){
+          $condition = 'New';
+        }else if($condition_id == $new_attr_id+1){
+          $condition = 'Like New';
+        }else if($condition_id == $new_attr_id+2){
+          $condition = 'Good';
+        }else if($condition_id == $new_attr_id+3){
+          $condition = 'Used';
+        }
+
         $default = [];
-        $default['id'] = 'facebook_ads_'.$product->getId();
-        $default['offer_id'] = 'facebook_ads_'.$product->getId();
-        $default['channel'] = 'online';
+        $default[0] = $product->getName();
+        $default[1] = $condition;
+        $default[2] = $product->getSku();
+        $default[3] = $product->getSku();
+        $default[4] = $product->getSku();
         $default['image_link'] = isset($productdata['small_image']) ? $url.$productdata['small_image'] : $url;
         $default['availability'] =  $product->isInStock() ? 'In Stock' : 'Out of Stock';
-       // $default['sale_price'] = isset($product['special_price']) ? 'USD '.$product['special_price'] : '' ;
         $default['productType'] = $product->getTypeId();
+
         if($product->getTypeId()=='configurable') {
             $child = $product->getTypeInstance()->getUsedProducts($product);
             $default['price'] = 'USD '.$child[0]->getPrice();
@@ -221,11 +243,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         }
         $default['brand'] = $product->getMetaKeyword();
         $default['description'] = isset($productdata['description']) ? $productdata['description'] : '';
-        /*$baseUrl.$productdata['url_key']*/
-        /*$product->getProductUrl()*/
-        $default['link'] = isset($productdata['url_key']) ? $baseUrl.$productdata['url_key'].'.html'/*$product->getProductUrl()*/ : '';
-        $confProduct = $objectManager->create('Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable')
-            ->getParentIdsByChild($product->getId());
+
+        $default['link'] = $product_url;
+        $confProduct = $objectManager->create('Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable')->getParentIdsByChild($product->getId());
         if($confProduct) {
             $default['item_group_id'] = $confProduct[0];
         } else {
