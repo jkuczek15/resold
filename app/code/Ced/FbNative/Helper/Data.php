@@ -245,11 +245,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         $default = [];
-        $default[0] = $product->getName();
-        $default[1] = $condition;
-        $default[2] = $product->getSku();
-        $default[3] = $product->getSku();
-        $default[4] = $product->getSku();
+        $default['title'] = $product->getName();
+        $default['condition'] = $condition;
+        $default['id'] = $product->getSku();
         $default['image_link'] = $s3base . $firstImageUrl;
         $default['additional_image_link'] = $additionalImages;
         $default['inventory'] = '1';
