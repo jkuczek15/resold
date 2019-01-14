@@ -252,6 +252,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $default[4] = $product->getSku();
         $default['image_link'] = $s3base . $firstImageUrl;
         $default['additional_image_link'] = $additionalImages;
+        $default['inventory'] = '1';
         $default['availability'] =  $product->isInStock() ? 'In Stock' : 'Out of Stock';
         $default['productType'] = $product->getTypeId();
 
