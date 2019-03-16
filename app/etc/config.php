@@ -179,6 +179,7 @@ return array (
     'Plumrocket_GDPR' => 0,
     'Plumrocket_GeoIPLookup' => 0,
     'Potato_Compressor' => 1,
+    'RedChamps_NotificationBar' => 1,
     'Swissup_Tippyjs' => 1,
     'Thai_S3' => 1,
     'Zorn_OptionalTelephone' => 1,
