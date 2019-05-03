@@ -3,7 +3,7 @@ host=$1
 
 if [[ -n "$host" ]]; then
   # Perform a mysql dump of prod database cluster and store on the web server
-  ssh -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host" "mysqldump -h resold-db.cluster-czqsdryzxcba.us-west-2.rds.amazonaws.com -u admin -p MagentoQuickstartDB > ~/prod-dump.sql"
+  ssh -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host" "mysqldump -h mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com -u admin -p MagentoQuickstartDB > ~/prod-dump.sql"
 
   # Transfer the dump file to our local machine
   scp -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host":~/prod-dump.sql ~/prod-dump.sql
