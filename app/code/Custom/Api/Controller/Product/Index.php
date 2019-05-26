@@ -150,8 +150,8 @@ class Index extends \Magento\Framework\App\Action\Action
 
       // determine whether we need to skip price validation
       $skip_price_validation = $product_id != null && substr($_product->getSku(), 0, 3) == 'amz';
-      if(!$skip_price_validation && (!is_numeric($price) || $price < 20)){
-        return $this->resultJsonFactory->create()->setData(['error' => 'Price must be an integer greater than 20.']);
+      if(!$skip_price_validation && (!is_numeric($price) || $price < 5)){
+        return $this->resultJsonFactory->create()->setData(['error' => 'Price must be an integer greater than 5.']);
       }// end if invalid price
 
       // location validation
