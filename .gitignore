@@ -59,3 +59,8 @@ robots.txt
 /vendor/*
 !/vendor/resold
 !/vendor/.htaccess
+
+/android/.gradle/*
+/android/.idea/*
+/android/build/*
+/android/app/normal/*
