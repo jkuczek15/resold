@@ -1,0 +1,18 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans "Connect your %store_name account with Stripe" store_name=$store.getFrontendName()}} @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+<p class="greeting">{{var name}},</p>
+<p>Thank you for listing your first item on Resold. Your items won't be visible for sale until you connect your Resold account with Stripe by clicking the button below. If you need more information please visit our <a class="blue-link" target="_blank" href="https://{{var host}}/help/for-sellers/how-do-i-connect-my-account-with-stripe">Help</a> section.</p>
+<a style="cursor: pointer" class="btn btn-primary" href="https://{{var host}}/api/stripe/connect"><button style="cursor: pointer; background-color: #41B8EA; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;"><strong>Connect to Stripe</strong></a>
+
+{{template config_path="design/email/footer_template"}}

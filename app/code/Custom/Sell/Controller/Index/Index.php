@@ -51,13 +51,16 @@ class Index extends \Magento\Framework\App\Action\Action
         UrlFactory $urlFactory,
         Manager $moduleManager,
         VendorFactory $Vendor,
-        Data $datahelper
+        Data $datahelper,
+        \Magento\Catalog\Block\Product\Context $productContext
     )
     {
         $this->session = $customerSession;
         $this->resultPageFactory = $resultPageFactory;
         $this->vendor = $Vendor;
         $this->helper = $datahelper;
+        $this->_coreRegistry = $productContext->getRegistry();
+        $this->_storeManager = $productContext->getStoreManager();
         parent::__construct($context);
     }
 
@@ -74,7 +77,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $_SESSION['from_sell_form'] = true;
             $sell_url = 'https://'.$_SERVER['HTTP_HOST'].'/sell';
             return $resultRedirect->setPath('customer/account/create?referer='.urlencode($sell_url));
-        }
+        }// end if the user is not logged in
 
         // check to make sure the user has authenticated with stripe
         // this means the vendor id should be non-null
@@ -86,10 +89,39 @@ class Index extends \Magento\Framework\App\Action\Action
         if(isset($_GET['code']) && count($stripe_model) == 0){
           // stripe authentication code was passed, authenticate the user
           $this->stripeAuth($_GET['code']);
-        }else if(count($stripe_model) == 0){
-          // check to see if connected to stripe
-          return $resultRedirect->setPath('connect-to-stripe');
-        }
+
+          // enable the user's products
+          $vendor = $this->_coreRegistry->registry('current_vendor');
+          if($vendor != null){
+            $vendorId = $vendor->getId();
+          }else{
+            $vendorId = $this->session->getVendorId();
+          }
+
+          $collection = $this->_objectManager->create('Ced\CsMarketplace\Model\Vproducts')->getVendorProducts(\Ced\CsMarketplace\Model\Vproducts::APPROVED_STATUS, $vendorId == null ? -1 : $vendorId);
+          $products = [];
+          foreach ($collection as $productData) {
+              array_push($products, $productData->getProductId());
+          }// end foreach over product data
+
+          // enable the user's products
+          $cedProductcollection = $this->_objectManager->create('Magento\Catalog\Model\Product')->getCollection()
+                ->addAttributeToSelect($this->_objectManager->get('Magento\Catalog\Model\Config')->getProductAttributes())
+                ->addAttributeToFilter('entity_id', ['in' => $products])
+                ->addStoreFilter($this->getCurrentStoreId())
+                ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED)
+                ->addAttributeToSort('date', 'desc');
+
+          foreach($cedProductcollection as $product)
+          {
+            $product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+            $product->save();
+          }// end foreach loop updating products to enabled
+
+          // redirect the listing page
+          $this->messageManager->addSuccess('Your items are now live for sale on Resold.');
+          return $resultRedirect->setPath('customer/account/listings');
+        }// end if stripe authentication code was passed and the user is not signed up with stripe
 
         // GET request
         return $this->resultPageFactory->create();
@@ -139,31 +171,6 @@ class Index extends \Magento\Framework\App\Action\Action
           $resp = json_decode(curl_exec($req), true);
           curl_close($req);
 
-          // create a mew vendor account
-          $vendorModel = $this->vendor->create();
-          $customer = $this->session->getCustomer();
-          try {
-            $vendor = $vendorModel->setCustomer($customer)->register([
-              'public_name' => $customer->getFirstname().' '.$customer->getLastname(),
-              'shop_url' => uniqid()
-            ]);
-            $vendor->setGroup('general');
-            if (!$vendor->getErrors()) {
-                $vendor->save();
-                $this->session->setVendorId($vendor->getId());
-                $this->messageManager->addSuccessMessage(__('You have successfully signed up as a seller on Resold.'));
-            } elseif ($vendor->getErrors()) {
-                foreach ($vendor->getErrors() as $error) {
-                    $this->session->addError($error);
-                }
-                $this->session->setFormData($vendor);
-            } else {
-                $this->session->addError(__('Your application has been denied'));
-            }
-          } catch (\Exception $e) {
-              $this->helper->logException($e);
-          }
-
           $vendorId = $this->session->getVendorId();
           $model = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone');
           $model1 = $model->load($vendorId, 'vendor_id')->getData();
@@ -172,6 +179,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $data = array('access_token'=>$resp['access_token'],'refresh_token'=>$resp['refresh_token'],'token_type'=>$resp['token_type'],
             'stripe_publishable_key'=>$resp['stripe_publishable_key'],'stripe_user_id'=>$resp['stripe_user_id'],
             'scope'=>$resp['scope']);
+
 
             $id = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone')->load($vendorId,'vendor_id')->getId();
             $model = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone')->load($id);
@@ -218,6 +226,11 @@ class Index extends \Magento\Framework\App\Action\Action
             'client_id' => $clientId
         );
       }
+    }
+
+    public function getCurrentStoreId()
+    {
+        return $this->_storeManager->getStore()->getId();
     }
 
     protected function _getSession()

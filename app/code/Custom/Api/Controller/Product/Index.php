@@ -18,6 +18,7 @@ namespace Custom\Api\Controller\Product;
 use Magento\Customer\Model\Session;
 use \Magento\Framework\App\Action\Context;
 use \Magento\Framework\Controller\Result\JsonFactory;
+use Ced\CsMarketplace\Model\VendorFactory;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -39,13 +40,19 @@ class Index extends \Magento\Framework\App\Action\Action
         Session $customerSession,
         JsonFactory $resultJsonFactory,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        VendorFactory $Vendor,
+        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+        \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
     )
     {
         $this->session = $customerSession;
         $this->resultJsonFactory = $resultJsonFactory;
         $this->_categoryFactory = $categoryFactory;
         $this->formKeyValidator = $formKeyValidator;
+        $this->vendor = $Vendor;
+        $this->_transportBuilder = $transportBuilder;
+        $this->inlineTranslation = $inlineTranslation;
         parent::__construct($context);
     }
 
@@ -67,7 +74,29 @@ class Index extends \Magento\Framework\App\Action\Action
 
       // Ensure user is a seller
       if($this->session->getVendorId() == null){
-        return $this->resultJsonFactory->create()->setData(['error' => 'Your account must be connected to Stripe to sell items.']);
+        // create a mew vendor/seller account
+        $vendorModel = $this->vendor->create();
+        $customer = $this->session->getCustomer();
+        try {
+          $vendor = $vendorModel->setCustomer($customer)->register([
+            'public_name' => $customer->getFirstname().' '.$customer->getLastname(),
+            'shop_url' => uniqid()
+          ]);
+          $vendor->setGroup('general');
+          if (!$vendor->getErrors()) {
+              $vendor->save();
+              $this->session->setVendorId($vendor->getId());
+          } elseif ($vendor->getErrors()) {
+              foreach ($vendor->getErrors() as $error) {
+                  $this->session->addError($error);
+              }
+              $this->session->setFormData($vendor);
+          } else {
+              $this->session->addError(__('Your application has been denied'));
+          }
+        } catch (\Exception $e) {
+            $this->helper->logException($e);
+        }// end try-catch creating a new vendor account
       }// end if vendor id not set
 
       // Ensure POST request
@@ -180,6 +209,48 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setCustomAttribute('title_description', $post['title_description']);
       $_product->setCustomAttribute('condition', $post['condition']);
       $_product->setCustomAttribute('local_global', $local_global);
+
+      // check to make sure the user has authenticated with stripe
+      // this means the vendor id should be non-null
+      $vendorId = $this->session->getVendorId();
+      $standalone = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone');
+      $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
+
+      if(count($stripe_model) == 0){
+        // check to see if connected to stripe
+        // the user hasn't connected to stripe yet
+        $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED);
+        $customer = $this->session->getCustomer();
+
+        try {
+          // send an email to the user letting them know they need to connect to stripe
+          $this->inlineTranslation->suspend();
+          // send the customer an email telling them to connect with stripe
+          $sender = [
+            'name' => 'Resold',
+            'email' => 'support@resold.us'
+          ];
+
+          $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+          $transport = $this->_transportBuilder
+            ->setTemplateIdentifier('connect_to_stripe_template') // this code we have mentioned in the email_templates.xml
+            ->setTemplateOptions([
+              'area' => \Magento\Framework\App\Area::AREA_FRONTEND, // this is using frontend area to get the template file
+              'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
+          ])
+          ->setTemplateVars(['host' => $_SERVER['HTTP_HOST'], 'name' => $customer->getName() ])
+          ->setFrom($sender)
+          ->addTo($customer->getEmail())
+          ->getTransport();
+
+          $transport->sendMessage();
+          $this->inlineTranslation->resume();
+        }
+        catch(\Exception $e)
+        {
+          $this->inlineTranslation->resume();
+        }// end try catch
+      }// end if user hasn't connected to Stripe
 
       // set the location attribute
       if(strpos($local_global, $local_id) !== FALSE && isset($post['latitude']) && $post['latitude'] != null && isset($post['longitude']) && $post['longitude'] != null){
