@@ -20,11 +20,13 @@ use Magento\Framework\App\Action\Action;
 
 // @codingStandardsIgnoreFile
 $_productCollection = $block->getLoadedProductCollection();
+
 $helper_data = $this->helper('Ced\CsMarketplace\Helper\Data');
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $vendor = $this->getVendor();
 $type = $this->getRequest()->getParam('type');
 $customer_account = strpos($_SERVER['REQUEST_URI'], 'vendor_shop') === FALSE;
+$stripe_connected = $this->isStripeConnected();
 
 if($type != 'sold'){
   $type = 'for-sale';
@@ -40,7 +42,20 @@ if($vendor != null){
 ?>
 </div>
 <div class="row">
-  <div class="col-md-4">
+  <?php
+  if(!$stripe_connected){
+  ?>
+  <div class="col-md-9">
+    <div class="control custom custom-button-group">
+      <div class="ck-button-semi">
+        <button class="connect-button-list" type="button" data-role="action"><span>Connect to Stripe</span></button>
+      </div>
+    </div>
+  </div>
+  <?php
+  }// end if stripe connected
+  ?>
+  <div class="col-md-3">
     <div class="control custom custom-button-group">
       <div class="ck-button <?= $type == 'for-sale' ? 'blue-background checked-button' : 'unchecked-button' ?> for-sale-button">
         <label style="cursor: pointer;">
@@ -115,6 +130,7 @@ if($vendor != null){
             ?>
             <?php foreach ($_productCollection as $_product): ?>
                 <?php
+                $product_status = $_product->getStatus();
                 if(($type == 'sold' && empty($_product->getCategoryIds()) || ($type == 'for-sale' && !empty($_product->getCategoryIds())))){
                 ?>
                 <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="item product product-item">' : '</li><li class="item product product-item">' ?>
@@ -126,7 +142,7 @@ if($vendor != null){
                             . 'top:' . $productImage->getHeight() . 'px;"';
                     }
                     ?>
-                    <a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product photo product-item-photo" tabindex="-1">
+                    <a style="<?= $product_status == 2 ? 'opacity: 0.42' : ''?>" href="<?= $product_status == 2 ? '#' : $_product->getProductUrl() ?>" class="product photo product-item-photo <?= $product_status == 2 ? 'disabled-product' : ''?>" tabindex="-1">
                         <?php echo $productImage->toHtml(); ?>
                     </a>
                     <div class="product details product-item-details">
@@ -199,6 +215,13 @@ if($vendor != null){
     <?php endif; ?>
 <?php endif; ?>
 <?php } ?>
+<div style="display: none" id="connect-to-stripe-modal">
+  <div class="row" style="margin-bottom: 1em">
+    <div class="col-md-12" style="margin-left: 1em;">
+      <strong>Thank you for listing your first item on Resold. Your items won't be visible for sale until you connect your Resold account with Stripe by clicking the button below. If you need more information please visit our <a class="blue-link" target="_blank" href="/help/for-sellers/how-do-i-connect-my-account-with-stripe">Help</a> section.</strong>
+    </div>
+  </div>
+</div>
 
 <style>
 @media(min-width: 576px){
@@ -227,6 +250,13 @@ if($vendor != null){
   background-color:#EFEFEF;
   border-radius: 4px;
   border:1px solid #D0D0D0;
+  overflow:auto;
+  float:left;
+  padding: 6px;
+}
+
+.ck-button-semi {
+  margin:4px;
   overflow:auto;
   float:left;
   padding: 6px;
@@ -321,9 +351,53 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
 .product-item-info {
   padding-bottom: 1.7em;
 }
+.connect-button {
+  background-color: #41b8ea;
+  border-color: #db3b21;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+  float: right;
+}
+
+.connect-button-list {
+  background-color: #41b8ea;
+  border-color: #db3b21;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+}
+.cancel-button {
+  margin-right: 0.7em;
+}
 </style>
 <script>
-require(['jquery'], ($) => {
+require(['jquery', 'Magento_Ui/js/modal/modal' ], ($, modal) => {
+   $('.disabled-product').click(function(){
+      var options = {
+        type: 'popup',
+        responsive: true,
+        innerScroll: true,
+        title: 'Connect to Stripe',
+        buttons: [{
+          text: $.mage.__('Connect to Stripe'),
+          class: 'connect-button',
+          click: function () {
+            window.location = '/api/stripe/connect';
+          }// end click function
+        },
+        {
+          text: $.mage.__('Cancel'),
+          class: 'cancel-button',
+          click: function () {
+            this.closeModal();
+          }
+        }]
+      };
+      var popup = modal(options, $('#connect-to-stripe-modal'));
+      $('#connect-to-stripe-modal').modal('openModal');
+   });
+   $('.connect-button-list').click(function(){
+     window.location = '/api/stripe/connect';
+   });
    $('.bought_sold').click(function(){
      let checked = $(this).closest('.ck-button');
      checked.removeClass('unchecked-button');
