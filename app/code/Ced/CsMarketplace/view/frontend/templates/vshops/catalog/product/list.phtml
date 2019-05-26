@@ -59,12 +59,12 @@ if($vendor != null){
     <div class="control custom custom-button-group">
       <div class="ck-button <?= $type == 'for-sale' ? 'blue-background checked-button' : 'unchecked-button' ?> for-sale-button">
         <label style="cursor: pointer;">
-          <input <?= $type == 'for-sale' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="for-sale"> <span style="margin-left: 1em; margin-right: 1.5em width: 100%">&nbsp;<strong>For Sale</strong></span>
+          <input style="visibility: hidden" <?= $type == 'for-sale' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="for-sale"> <span style="margin-left: -0.1em; width: 100%">&nbsp;<strong>For Sale</strong></span>
         </label>
       </div>
       <div class="ck-button <?= $type == 'sold' ? 'blue-background checked-button' : 'unchecked-button' ?>">
-        <label style="cursor: pointer;">
-            <input <?= $type == 'sold' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
+        <label style="cursor: pointer; width: 5em">
+            <input style="visibility: hidden" <?= $type == 'sold' ? 'checked' : '' ?> class="bought_sold" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="bought_sold" id="sold" /> <span style="margin-left: -0.3em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Sold</strong></span>
         </label>
       </div>
     </div>
@@ -273,7 +273,7 @@ if($vendor != null){
 
 .ck-button label span {
     text-align:center;
-    padding: 3px 0px 3px;
+    /* padding: 3px 0px 3px; */
     display: block;
 }
 

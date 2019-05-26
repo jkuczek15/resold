@@ -101,7 +101,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
                   <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
                 <?php /* @escapeNotVerified */ echo __('Price ($)') ?>
-              </strong><input class="form-input price-input mobile-price-textbox" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: <?= $is_amazon ? 0 : 20 ?>, max: 100000, 'validate-integer': true}" v-model="form_data.price" />
+              </strong><input class="form-input price-input mobile-price-textbox" step="0.01" name="price" id="price" title="<?php /* @escapeNotVerified */ echo __('Price ($)') ?>" value='0.00' placeholder='0.00' class="input-text" type="number" data-validate="{required:true, number: true, min: <?= $is_amazon ? 0 : 5 ?>, max: 100000, 'validate-integer': true}" v-model="form_data.price" />
               <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="price_error" v-if="price_error" v-cloak>Please enter a whole number.</div>
             </div>
           </div>
@@ -179,7 +179,10 @@ if(isset($_GET['id']) && $_GET['id'] != null)
                       <input class="local_global" style="margin-left: 0.2em; margin-top: 0.3em;" type="checkbox" value="232" name="local_global[]" id="global" v-model="form_data.local_global" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong>Global</strong></span>
                   </label>
                 </div>
-                <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
+                <span v-if="local_global_error">
+                  <br/><br/><br/>
+                  <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
+                </span>
             </div>
         </div>
         <span id="mobile1" style="display: none;"><br/></span>

@@ -45,12 +45,12 @@
   <div class="control custom">
     <div class="ck-button my-reviews <?= $type == 'my_reviews' ? 'blue-background checked-button' : 'unchecked-button' ?>">
       <label style="cursor: pointer;">
-        <input <?= $type == 'my_reviews' ? 'checked' : '' ?> class="review_type" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="review_type" id="my_reviews"> <span style="margin-left: 0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>My Reviews</strong></span>
+        <input <?= $type == 'my_reviews' ? 'checked' : '' ?> class="review_type" style="margin-left: 0.2em; margin-top: 0.3em; visibility: hidden;" type="radio" value="Y" name="review_type" id="my_reviews"> <span style="margin-left: -0.3em; margin-right: 1.5em; width: 100%">&nbsp;<strong>My Reviews</strong></span>
       </label>
     </div>
     <div class="ck-button <?= $type == 'submitted_reviews' ? 'blue-background checked-button' : 'unchecked-button' ?>">
-      <label style="cursor: pointer;">
-          <input <?= $type == 'submitted_reviews' ? 'checked' : '' ?> class="review_type" style="margin-left: 0.2em; margin-top: 0.3em;" type="radio" value="Y" name="review_type" id="submitted_reviews" /> <span style="margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong style="margin-left: 0.9em">Submitted Reviews</strong></span>
+      <label style="cursor: pointer; width: 12em">
+          <input <?= $type == 'submitted_reviews' ? 'checked' : '' ?> class="review_type" style="margin-left: 0.2em; margin-top: 0.3em; visibility: hidden;" type="radio" value="Y" name="review_type" id="submitted_reviews" /> <span style="margin-left: -0.8em; margin-right: 1.5em; width: 100%; height: 100%;"> &nbsp;&nbsp;<strong style="margin-left: 0.9em">Submitted Reviews</strong></span>
       </label>
     </div>
   </div>
