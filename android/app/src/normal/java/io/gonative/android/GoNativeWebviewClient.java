@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.SslErrorHandler;
@@ -30,6 +31,7 @@ import io.gonative.android.library.AppConfig;
  */
 public class GoNativeWebviewClient extends WebViewClient{
     private static final String TAG = GoNativeWebviewClient.class.getName();
+    private static final String USER_AGENT = "Android resold-mobile";
     private UrlNavigation urlNavigation;
     private Context context;
 
@@ -49,6 +51,12 @@ public class GoNativeWebviewClient extends WebViewClient{
 
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
+        if(url.contains("google") || url.contains("Google"))
+        {
+            view.getSettings().setUserAgentString(USER_AGENT);
+        }// end if the url is a google sign in URL
+
         super.onPageStarted(view, url, favicon);
 
         urlNavigation.onPageStarted(url);
