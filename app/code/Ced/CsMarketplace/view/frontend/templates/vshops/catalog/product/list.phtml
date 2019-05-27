@@ -43,7 +43,7 @@ if($vendor != null){
 </div>
 <div class="row">
   <?php
-  if(!$stripe_connected){
+  if(!$stripe_connected && $vendor == null){
   ?>
   <div class="col-md-9">
     <div class="control custom custom-button-group">
