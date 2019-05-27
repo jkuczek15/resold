@@ -98,7 +98,7 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
             $standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
             $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
 
-            if(count($stripe_model) == 0){
+            if(count($stripe_model) == 0 && $vendor == null){
               // check to see if connected to stripe
               // the user hasn't connected to stripe yet
               $cedProductcollection = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
