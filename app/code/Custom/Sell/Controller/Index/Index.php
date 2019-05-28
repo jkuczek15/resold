@@ -52,7 +52,8 @@ class Index extends \Magento\Framework\App\Action\Action
         Manager $moduleManager,
         VendorFactory $Vendor,
         Data $datahelper,
-        \Magento\Catalog\Block\Product\Context $productContext
+        \Magento\Catalog\Block\Product\Context $productContext,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
     )
     {
         $this->session = $customerSession;
@@ -61,6 +62,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->helper = $datahelper;
         $this->_coreRegistry = $productContext->getRegistry();
         $this->_storeManager = $productContext->getStoreManager();
+        $this->customerRepository = $customerRepository;
         parent::__construct($context);
     }
 
@@ -117,6 +119,13 @@ class Index extends \Magento\Framework\App\Action\Action
             $product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
             $product->save();
           }// end foreach loop updating products to enabled
+
+          // change the user group
+          $customer = $this->session->getCustomer();
+          $customer_id = $customer->getId();
+          $customer = $this->customerRepository->getById($customer_id);
+          $customer->setGroupId(4);
+          $this->customerRepository->save($customer);
 
           // redirect the listing page
           $this->messageManager->addSuccess('Your items are now live for sale on Resold.');
@@ -179,7 +188,6 @@ class Index extends \Magento\Framework\App\Action\Action
             $data = array('access_token'=>$resp['access_token'],'refresh_token'=>$resp['refresh_token'],'token_type'=>$resp['token_type'],
             'stripe_publishable_key'=>$resp['stripe_publishable_key'],'stripe_user_id'=>$resp['stripe_user_id'],
             'scope'=>$resp['scope']);
-
 
             $id = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone')->load($vendorId,'vendor_id')->getId();
             $model = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone')->load($id);
