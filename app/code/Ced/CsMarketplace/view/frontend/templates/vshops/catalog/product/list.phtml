@@ -228,10 +228,15 @@ if($vendor != null){
   .mobile-only {
     display: none;
   }
+<?php
+  if($stripe_connected)
+  {
+?>
   .custom-col {
     margin-left: 5.5em;
   }
 <?php
+  }// end if stripe not connected
   if($customer_account){
 ?>
   .custom-button-group {

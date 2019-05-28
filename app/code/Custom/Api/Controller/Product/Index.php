@@ -43,7 +43,8 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         VendorFactory $Vendor,
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
-        \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
+        \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
     )
     {
         $this->session = $customerSession;
@@ -53,6 +54,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->vendor = $Vendor;
         $this->_transportBuilder = $transportBuilder;
         $this->inlineTranslation = $inlineTranslation;
+        $this->customerRepository = $customerRepository;
         parent::__construct($context);
     }
 
@@ -71,33 +73,6 @@ class Index extends \Magento\Framework\App\Action\Action
       if (!$this->session->isLoggedIn()) {
         return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
       }// end if user not logged in
-
-      // Ensure user is a seller
-      if($this->session->getVendorId() == null){
-        // create a mew vendor/seller account
-        $vendorModel = $this->vendor->create();
-        $customer = $this->session->getCustomer();
-        try {
-          $vendor = $vendorModel->setCustomer($customer)->register([
-            'public_name' => $customer->getFirstname().' '.$customer->getLastname(),
-            'shop_url' => uniqid()
-          ]);
-          $vendor->setGroup('general');
-          if (!$vendor->getErrors()) {
-              $vendor->save();
-              $this->session->setVendorId($vendor->getId());
-          } elseif ($vendor->getErrors()) {
-              foreach ($vendor->getErrors() as $error) {
-                  $this->session->addError($error);
-              }
-              $this->session->setFormData($vendor);
-          } else {
-              $this->session->addError(__('Your application has been denied'));
-          }
-        } catch (\Exception $e) {
-            $this->helper->logException($e);
-        }// end try-catch creating a new vendor account
-      }// end if vendor id not set
 
       // Ensure POST request
       $post = $this->getRequest()->getPostValue();
@@ -298,6 +273,40 @@ class Index extends \Magento\Framework\App\Action\Action
           }// end if file exists
         }// end if uploading a new file
       }// end foreach loop over image paths
+
+      // Ensure user is a seller
+      if($this->session->getVendorId() == null){
+        // create a mew vendor/seller account
+        $vendorModel = $this->vendor->create();
+        $customer = $this->session->getCustomer();
+
+        // change the user group
+        $customer_id = $customer->getId();
+        $customer = $this->customerRepository->getById($customer_id);
+        $customer->setGroupId(5);
+        $this->customerRepository->save($customer);
+
+        try {
+          $vendor = $vendorModel->setCustomer($customer)->register([
+            'public_name' => $customer->getFirstname().' '.$customer->getLastname(),
+            'shop_url' => uniqid()
+          ]);
+          $vendor->setGroup('general');
+          if (!$vendor->getErrors()) {
+              $vendor->save();
+              $this->session->setVendorId($vendor->getId());
+          } elseif ($vendor->getErrors()) {
+              foreach ($vendor->getErrors() as $error) {
+                  $this->session->addError($error);
+              }
+              $this->session->setFormData($vendor);
+          } else {
+              $this->session->addError(__('Your application has been denied'));
+          }
+        } catch (\Exception $e) {
+            $this->helper->logException($e);
+        }// end try-catch creating a new vendor account
+      }// end if vendor id not set
 
       // save the product to the database
       $_product->save();
