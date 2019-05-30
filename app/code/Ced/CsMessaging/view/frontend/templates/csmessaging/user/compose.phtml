@@ -323,8 +323,8 @@ require([
           var offer_price = $('#offer-price').val();
           if(offer_price.trim() == ''){
             alert("Offer price cannot be empty.");
-          }else if(offer_price < 20){
-            alert("Offer price must be greater than or equal to $20.00");
+          }else if(offer_price < 5){
+            alert("Offer price must be greater than or equal to $5.00");
           }else if(isNaN(offer_price) || offer_price % 1 != 0 ){
             alert("Offer price must be a whole number.");
 <?php
