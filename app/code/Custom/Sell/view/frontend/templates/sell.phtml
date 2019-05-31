@@ -501,6 +501,9 @@ require([
             if(data.error != undefined){
               $('#error-text').html(data.error);
               $('#error').show();
+            }else if(data.stripe_redirect == 'Y'){
+              history.pushState({}, "My Listings", "/customer/account/listings");
+              window.location = '/api/stripe/connect';
             }else if(data.success == 'Y'){
               window.location = '/customer/account/listings';
             }
