@@ -191,9 +191,11 @@ class Index extends \Magento\Framework\App\Action\Action
       $standalone = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone');
       $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
 
+      $stripe_connected = true;
       if(count($stripe_model) == 0){
         // check to see if connected to stripe
         // the user hasn't connected to stripe yet
+        $stripe_connected = false;
         $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED);
         $customer = $this->session->getCustomer();
 
@@ -220,7 +222,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
           $transport->sendMessage();
           $this->inlineTranslation->resume();
-          $this->messageManager->addWarning('Your items are not yet live. Connect your account with Stripe to start getting paid on Resold.');
+          // $this->messageManager->addWarning('Your items are not yet live. Connect your account with Stripe to start getting paid on Resold.');
         }
         catch(\Exception $e)
         {
@@ -323,6 +325,10 @@ class Index extends \Magento\Framework\App\Action\Action
           'vendor_id' => $this->session->getVendorId()
         ]);
       }// end if creating a new product
+
+      if(!$stripe_connected){
+        return $this->resultJsonFactory->create()->setData(['stripe_redirect' => 'Y']);
+      }// end if stripe not connected
 
       // on success, redirect user to their listing page
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
