@@ -56,7 +56,7 @@ class Dashboard extends \Magento\Framework\App\Action\Action
       ###################################
       // Ensure user is logged in
       if (!$this->session->isLoggedIn()) {
-        return $resultRedirect->setPath('api/stripe/connect');
+        return $resultRedirect->setPath('customer/account/create');
       }// end if user not logged in
 
       // check to make sure the user has authenticated with stripe
@@ -67,7 +67,7 @@ class Dashboard extends \Magento\Framework\App\Action\Action
 
       if(count($stripe_model) === 0){
         // check to see if connected to stripe
-        return $resultRedirect->setPath($sell_url);
+        return $resultRedirect->setPath('api/stripe/connect');
       }// end if user is already connected to stripe
 
       $stripe_id = $stripe_model['stripe_user_id'];
