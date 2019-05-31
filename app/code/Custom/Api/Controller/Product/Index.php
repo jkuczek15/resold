@@ -220,6 +220,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
           $transport->sendMessage();
           $this->inlineTranslation->resume();
+          $this->messageManager->addWarning('Your items are not yet live. Connect your account with Stripe to start getting paid on Resold.');
         }
         catch(\Exception $e)
         {
