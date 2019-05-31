@@ -132,6 +132,7 @@ class Delete extends \Magento\Customer\Controller\AbstractAccount
             $this->registry->register('isSecureArea', true, true);
             $this->_customerSession->logout();
             $vendor_id = $this->_customerSession->getVendorId();
+            $this->_customerSession->setVendorId(null);
 
             if($vendor_id != null){
               // delete the vendor's stripe account if they have one
@@ -144,7 +145,7 @@ class Delete extends \Magento\Customer\Controller\AbstractAccount
             }
 
             $this->_customerRepository->deleteById($customerId);
-          
+
             /** event anonymise & delete customer after delete account*/
             $this->_eventManager->dispatch('anonymise_account_after_delete', ['customer' => $customer]);
 

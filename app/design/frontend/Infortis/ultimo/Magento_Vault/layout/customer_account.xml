@@ -4,7 +4,7 @@
       <referenceBlock name="customer_account_navigation">
           <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-my-credit-cards-link">
               <arguments>
-                  <argument name="path" xsi:type="string">http://dashboard.stripe.com/</argument>
+                  <argument name="path" xsi:type="string">https://resold.us/api/stripe/dashboard</argument>
                   <argument name="label" xsi:type="string" translate="true">Stripe Dashboard</argument>
                    <argument name="attributes" xsi:type="array">
                     <item name="target" xsi:type="string">_blank</item>

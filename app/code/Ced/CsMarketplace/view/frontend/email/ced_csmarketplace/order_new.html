@@ -31,6 +31,7 @@
                 {{trans "%customer_name has purchased your %product_name from Resold. It is your responsibility as the seller to complete the sale." customer_name=$customer_name product_name=$product_name}}
                 {{trans 'You can check your order by'}} <a href="https://{{var host}}/sales/order/view/order_id/{{var order_id}}/">logging into your account</a>.
             </p>
+            <p>If this is your first item sold, please allow up to 5 business days for the funds to be transferred to your bank account. All future transactions will take no more than 2 business days. The funds will automatically transfer to your bank account when they become available.</p>
             <p>
                 {{trans 'If you have any questions about your order, create an email thread with %customer_name ' customer_name=$customer_name }}<a href="mailto:{{var customer_email}}?subject={{var product_name}}">here</a>{{if isGuest}}.{{else}} {{trans 'or send a message' }} <a href="https://{{var host}}/csmessaging/frontend/customercompose?id={{var sender_id}}&subject={{var encoded_subject}}&vendor_id={{var vendor_id}}&product_id={{var product_id}}&post_sale=true">here.</a>
                 {{/if}}
@@ -92,6 +93,6 @@
         </td>
     </tr>
 </table>
-<br/><p>If you're having issues or would like to get more information about your order, visit our<br/><a href="https://{{var host}}/help/for-sellers">For Sellers Help Documentation</a>. To collect your profit, access the Stripe Dashboard <a href="https://dashboard.stripe.com">here</a>.</p>
+<br/><p>If you're having issues or would like to get more information about your order, visit our<br/><a href="https://{{var host}}/help/for-sellers">For Sellers Help Documentation</a>. To collect your profit, access the Stripe Dashboard <a href="https://resold.us/api/stripe/dashboard">here</a>.</p>
 
 {{template config_path="design/email/footer_template"}}
