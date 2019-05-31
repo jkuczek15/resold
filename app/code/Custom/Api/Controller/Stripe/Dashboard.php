@@ -55,11 +55,8 @@ class Dashboard extends \Magento\Framework\App\Action\Action
       // REQUEST AND USER VALIDATON
       ###################################
       // Ensure user is logged in
-      $sell_url = 'https://'.$_SERVER['HTTP_HOST'].'/sell';
-
       if (!$this->session->isLoggedIn()) {
-        // return $resultRedirect->setPath('customer/account/login/referer/'.base64_encode($sell_url));
-        return $resultRedirect->setPath('customer/account/create?referer='.urlencode($sell_url));
+        return $resultRedirect->setPath('api/stripe/connect');
       }// end if user not logged in
 
       // check to make sure the user has authenticated with stripe
