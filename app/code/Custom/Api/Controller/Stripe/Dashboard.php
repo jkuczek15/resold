@@ -72,9 +72,6 @@ class Dashboard extends \Magento\Framework\App\Action\Action
 
       $stripe_id = $stripe_model['stripe_user_id'];
 
-      // var_dump($stripe_id);
-      // exit;
-
       // determine Stripe API mode
 			$store = $this->_objectManager->get ( 'Magento\Framework\App\Config\ScopeConfigInterface' );
   		$mode = $store->getValue ( 'payment/ced_csstripe_method_one/gateway_mode' );
