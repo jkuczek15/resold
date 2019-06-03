@@ -74,7 +74,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 <?php
 }// end if mode === "edit"
  ?>
-    <fieldset class="fieldset" id="app">
+    <fieldset class="fieldset" id="app" style="margin-bottom: 35px !important">
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Listing Title') ?></span></label>
             <div class="control">
@@ -125,7 +125,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             <label class="label" for="category_select"><span><?php /* @escapeNotVerified */ echo __('1st Category') ?></span></label>
             <div class="control">
                 <select class="form-input" name="category" id="category_select" data-validate="{required:true}" v-model="form_data.category" required>
-                  <option disabled selected value="-1">Select a category...</option>
+                  <option disabled selected value="">Select a category...</option>
                   <option v-for="(data, category) in categories" v-bind:value="category">
                   {{ category }}
                   </option>
@@ -136,7 +136,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             <label class="label" for="subcategory_select"><span><?php /* @escapeNotVerified */ echo __('2nd Category') ?></span></label>
             <div class="control">
                 <select class="form-input" name="subcategory" id="subcategory_select" data-validate="{required:true}" v-model="form_data.subcategory" required>
-                  <option disabled selected value="-1">Select a category...</option>
+                  <option disabled selected value="">Select a category...</option>
                   <option v-for="(data, subcategory) in subcategories" v-bind:value="subcategory">
                   {{ subcategory }}
                   </option>
@@ -147,7 +147,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             <label class="label" for="lowestcategory_select"><span><?php /* @escapeNotVerified */ echo __('3rd Category') ?></span></label>
             <div class="control">
                 <select class="form-input" name="lowestcategory" id="lowestcategory_select" data-validate="{required:true}" v-model="form_data.lowestcategory" required>
-                  <option disabled selected value="-1">Select a category...</option>
+                  <option disabled selected value="">Select a category...</option>
                   <option v-for="lowestcategory in lowestcategories" v-bind:value="lowestcategory.id">
                   {{ lowestcategory.name }}
                   </option>
@@ -158,7 +158,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             <label class="label" for="condition"><span><?php /* @escapeNotVerified */ echo __('Condition') ?></span></label>
             <div class="control">
                 <select class="form-input" name="condition" id="conditon" data-validate="{required:true}" v-model="form_data.condition" required>
-                  <option disabled selected value="-1">Select condition...</option>
+                  <option disabled selected value="">Select condition...</option>
                   <option value="<?= $new_attr_id ?>">New</option>
                   <option value="<?= $new_attr_id + 1 ?>">Like New</option>
                   <option value="<?= $new_attr_id + 2 ?>">Good</option>
@@ -202,7 +202,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         </div>
         <div class="field description">
             <label class="label" for="comment"><span></span></label>
-            <label class="control" style="overflow: hidden">
+            <label class="control" style="overflow: hidden; display: table-cell">
                 <span class="buttons" style="float: left;">
                   <input type="checkbox" name="terms-checkbox" id="terms-checkbox" style="display: inline-block;"/>
                 </span>
@@ -226,10 +226,16 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 select:invalid {
   color: #c2c2c2;
 }
+select option {
+  color: black;
+}
+select option:disabled {
+  color: #c2c2c2 !important;
+}
 @media(max-width: 400px){
-  .policy-text {
+  /* .policy-text {
     margin-left: 1.45em;
-  }
+  } */
 }
 .page-title-wrapper {
   display: none;
@@ -400,7 +406,7 @@ require([
         local_global_error: false,
         price_error: false,
         image_error: false,
-        form_data: {local_global: [], category: -1, subcategory: -1, lowestcategory: -1, condition: -1}
+        form_data: {local_global: [], category: "", subcategory: "", lowestcategory: "", condition: ""}
       },
       computed: {
         serviceFee: function () {
@@ -450,7 +456,6 @@ require([
   app.form_data.title_description = "<?= $product->getData('title_description'); ?>";
   app.form_data.condition = "<?= $product->getData('condition') ?>";
   app.form_data.description = `<?= $product->getDescription() ?>`;
-
 
   // strip tags from description
   var div = document.createElement("div");
@@ -621,16 +626,16 @@ require([
     $.get('/api/categories', (data) => {
       app.categories = data;
 
-      if(app.form_data.category != -1){
+      if(app.form_data.category != ""){
         app.subcategories = app.categories[app.form_data.category];
 
-        if(app.form_data.subcategory != -1){
+        if(app.form_data.subcategory != ""){
           $('.subcategory').show();
           <?php
           if($mode == "Edit" && count($category_ids) > 0 && $grandparent->getName() != "Default Root"){
           ?>
           app.lowestcategories = app.subcategories[app.form_data.subcategory];
-          if(app.form_data.lowestcategory != -1){
+          if(app.form_data.lowestcategory != ""){
               $('.lowestcategory').show();
           }// end if lowest category set
           <?php
@@ -744,8 +749,14 @@ require([
             app.local_global_error = true;
             $('#mobile1').style('display', 'none', 'important');
             return false;
-          }
-          $('#mobile1').style('display', 'block', 'important');
+          }// end if local global error
+
+          let width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+          console.log(width);
+          if(width <= 575.98){
+            $('#mobile1').style('display', 'block', 'important');
+          }// end if mobile device
+
           app.local_global_error = false;
           return true;
         }
