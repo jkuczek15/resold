@@ -181,7 +181,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
                   </label>
                 </div>
                 <span v-if="local_global_error">
-                  <span class="desktop-only"><br/><br/><br/></span>
+                  <span><br/><br/><br/></span>
                   <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="local_global_error" v-if="local_global_error" v-cloak>Please select at least one option.</div>
                 </span>
             </div>
@@ -325,9 +325,6 @@ option:disabled {
 }
 
 @media (max-width: 575.98px) {
-  .desktop-only {
-    display: none;
-  }
   #mobile1 {
     display: block !important;
   }
