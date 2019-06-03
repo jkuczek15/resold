@@ -69,5 +69,8 @@ define(
                 return (typeof this.buttonLists !== 'undefined');
             }
         });
+    }, function(error){
+      console.error(error);
+      return true;
     }
 );
