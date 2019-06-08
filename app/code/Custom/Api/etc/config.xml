@@ -10,6 +10,7 @@
      <test>
          <email>
              <connect_to_stripe>connect_to_stripe_template</connect_to_stripe>
+             <list_10_items>list_10_items_template</list_10_items>
          </email>
      </test>
 </default>
