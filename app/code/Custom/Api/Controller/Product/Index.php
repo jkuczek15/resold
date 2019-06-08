@@ -326,6 +326,49 @@ class Index extends \Magento\Framework\App\Action\Action
         ]);
       }// end if creating a new product
 
+      if($this->session->getVendorId() != null){
+        // this person is already a seller, check if they're about to sell 10 items
+        $customer = $this->session->getCustomer();
+        $vendor_products = $objectManager->get('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('vendor_id', $this->session->getVendorId());
+        $product_count = count($vendor_products);
+
+        if($product_count == 10){
+          // try to send the 10 items email
+          try {
+            // send an email to the user letting them know they need to connect to stripe
+            $this->inlineTranslation->suspend();
+
+            // send the customer an email telling them to connect with stripe
+            $sender = [
+              'name' => 'Resold',
+              'email' => 'support@resold.us'
+            ];
+
+            $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+            $transport = $this->_transportBuilder
+              ->setTemplateIdentifier('list_10_items_template') // this code we have mentioned in the email_templates.xml
+              ->setTemplateOptions([
+                'area' => \Magento\Framework\App\Area::AREA_FRONTEND, // this is using frontend area to get the template file
+                'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
+            ])
+            ->setTemplateVars(['host' => $_SERVER['HTTP_HOST'], 'name' => $customer->getName(), 'email' => $customer->getEmail() ])
+            ->setFrom($sender)
+            ->addTo('support@resold.us')
+            ->getTransport();
+
+            $transport->sendMessage();
+            $this->inlineTranslation->resume();
+            $this->messageManager->addSuccess('Thank you for listing 10 items on Resold. An email has been to sent to the Resold team to verify your eligibility for the Resold Ambassador Program.');
+          }
+          catch(\Exception $e)
+          {
+            $this->inlineTranslation->resume();
+          }// end try catch
+
+        }// end if this person has sold 10 products
+
+      }// end if this person is a seller
+
       if(!$stripe_connected){
         return $this->resultJsonFactory->create()->setData(['stripe_redirect' => 'Y']);
       }// end if stripe not connected

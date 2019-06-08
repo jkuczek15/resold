@@ -1,0 +1,18 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!--@subject {{trans "Someone has listed 10 items on %store_name" store_name=$store.getFrontendName()}} @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p class="greeting">Hello,</p>
+<p>{{var name}} (<a href="mailto: {{var email}}">{{var email}}</a>) has listed their first 10 items on Resold. Please review their items to decide whether they are deserving of the $5.</p>
+
+{{template config_path="design/email/footer_template"}}
