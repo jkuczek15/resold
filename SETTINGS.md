@@ -199,6 +199,7 @@ sudo service apache2 restart
 ##########################################################
 sudo a2enmod rewrite
 sudo service apache2 restart
+Copy .htaccess file to root directory from existing production web server
 
 # This will open a file for editing
 sudo gedit /etc/apache2/apache2.conf
@@ -241,6 +242,11 @@ myqsl> quit
 # Back to standard shell prompt
 sudo pkill mysqld
 sudo service mysql start
+
+# Restore local database from production
+./scripts/mysql_prod_restore <ec2 host>
+Enter production database password
+Enter local database password
 
 ##########################################################
 # Configure AWS SSH Keys
