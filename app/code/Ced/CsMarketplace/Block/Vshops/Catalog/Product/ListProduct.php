@@ -92,30 +92,13 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
                 array_push($products, $productData->getProductId());
             }
 
-            // check to make sure the user has authenticated with stripe
-            // this means the vendor id should be non-null
-            $vendorId = $this->session->getVendorId();
-            $standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
-            $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
-
-            if(count($stripe_model) == 0 && $vendor == null){
-              // check to see if connected to stripe
-              // the user hasn't connected to stripe yet
-              $cedProductcollection = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
+            // the user has connected to stripe
+            $cedProductcollection = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
                     ->addAttributeToSelect($objectManager->get('Magento\Catalog\Model\Config')->getProductAttributes())
                     ->addAttributeToFilter('entity_id', ['in'=>$products])
                     ->addStoreFilter($this->getCurrentStoreId())
-                    ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED)
+                    ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
                     ->addAttributeToSort('date', 'desc');
-            }else{
-              // the user has connected to stripe
-              $cedProductcollection = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
-                      ->addAttributeToSelect($objectManager->get('Magento\Catalog\Model\Config')->getProductAttributes())
-                      ->addAttributeToFilter('entity_id', ['in'=>$products])
-                      ->addStoreFilter($this->getCurrentStoreId())
-                      ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
-                      ->addAttributeToSort('date', 'desc');
-            }// end if user hasn't connected to Stripe
 
             if (isset($name_filter)) {
                 $cedProductcollection->addAttributeToSelect('*')->setOrder('entity_id', $name_filter);

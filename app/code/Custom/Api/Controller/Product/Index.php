@@ -196,7 +196,7 @@ class Index extends \Magento\Framework\App\Action\Action
         // check to see if connected to stripe
         // the user hasn't connected to stripe yet
         $stripe_connected = false;
-        $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED);
+        $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
         $customer = $this->session->getCustomer();
 
         try {
@@ -222,7 +222,6 @@ class Index extends \Magento\Framework\App\Action\Action
 
           $transport->sendMessage();
           $this->inlineTranslation->resume();
-          // $this->messageManager->addWarning('Your items are not yet live. Connect your account with Stripe to start getting paid on Resold.');
         }
         catch(\Exception $e)
         {
@@ -332,7 +331,9 @@ class Index extends \Magento\Framework\App\Action\Action
         $vendor_products = $objectManager->get('Ced\CsMarketplace\Model\Vproducts')->getCollection()->addFieldToFilter('vendor_id', $this->session->getVendorId());
         $product_count = count($vendor_products);
 
-        if($product_count == 10){
+        if($product_count == 1 && !$stripe_connected){
+          $this->messageManager->addSuccess('Thank you for listing your first item on Resold. In order to get paid, connect your account with Stripe by clicking below.');
+        }else if($product_count == 10){
           // try to send the 10 items email
           try {
             // send an email to the user letting them know they need to connect to stripe
@@ -369,9 +370,9 @@ class Index extends \Magento\Framework\App\Action\Action
 
       }// end if this person is a seller
 
-      if(!$stripe_connected){
-        return $this->resultJsonFactory->create()->setData(['stripe_redirect' => 'Y']);
-      }// end if stripe not connected
+      // if(!$stripe_connected){
+      //   return $this->resultJsonFactory->create()->setData(['stripe_redirect' => 'Y']);
+      // }// end if stripe not connected
 
       // on success, redirect user to their listing page
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);

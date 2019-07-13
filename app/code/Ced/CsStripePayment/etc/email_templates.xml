@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Email/etc/email_templates.xsd">
+  <template id="get_paid_template" label="Email Form" file="get_paid.html" type="html" module="Ced_CsStripePayment" area="frontend" />
+</config>

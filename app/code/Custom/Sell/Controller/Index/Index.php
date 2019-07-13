@@ -90,7 +90,7 @@ class Index extends \Magento\Framework\App\Action\Action
         // check for a stripe authentication code
         if(isset($_GET['code']) && count($stripe_model) == 0){
           // stripe authentication code was passed, authenticate the user
-          $this->stripeAuth($_GET['code']);
+          $stripe_user_id = $this->stripeAuth($_GET['code']);
 
           // enable the user's products
           $vendor = $this->_coreRegistry->registry('current_vendor');
@@ -106,18 +106,54 @@ class Index extends \Magento\Framework\App\Action\Action
               array_push($products, $productData->getProductId());
           }// end foreach over product data
 
-          // enable the user's products
+          // transfer money for the products that have been sold
           $cedProductcollection = $this->_objectManager->create('Magento\Catalog\Model\Product')->getCollection()
-                ->addAttributeToSelect($this->_objectManager->get('Magento\Catalog\Model\Config')->getProductAttributes())
+                ->addAttributeToSelect("*")
                 ->addAttributeToFilter('entity_id', ['in' => $products])
                 ->addStoreFilter($this->getCurrentStoreId())
-                ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED)
+                ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
                 ->addAttributeToSort('date', 'desc');
 
+          // setup Stripe
+				  $store = $this->_objectManager->get ( 'Magento\Framework\App\Config\ScopeConfigInterface' );
+					$mode = $store->getValue ( 'payment/ced_csstripe_method_one/gateway_mode' );
+					$appFee = $store->getValue ( 'payment/ced_csstripe_method_one/app_fee' );
+					$skey = "api_{$mode}_secret_key";
+					$appFee = $store->getValue ( 'payment/ced_csstripe_method_one/app_fee' );
+					\Stripe\Stripe::setApiKey ( $store->getValue ( 'payment/ced_csstripe_method_one/' . $skey ) );
+
+            // loop through the user's products
           foreach($cedProductcollection as $product)
           {
-            $product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-            $product->save();
+            // transfer money for the products that already have outstanding charges
+            $charge_id = $product->getCustomAttribute('charge_id')->getValue();
+            if($charge_id != null){
+              // create a Transfer to a connected account (later):
+              // determine the total to be used for stripe transfer
+              $total = $product->getPrice() * 100;
+
+              // determine the resold fee
+						  $resold_fee = ceil($total * ($appFee / 100));
+							if($resold_fee > 5000){
+								$resold_fee = 5000;
+							}// end if resold fee > $5
+
+              // subtract the fee from the total
+              $total -= $resold_fee;
+
+              // create the transfer
+              try {
+                $transfer = \Stripe\Transfer::create([
+                  "amount" => $total,
+                  "currency" => "USD",
+                  "destination" => $stripe_user_id,
+                  "transfer_group" => $product->getId(),
+                  "source_transaction" => $charge_id
+                ]);
+              } catch(Exception $e){
+									throw new \Magento\Framework\Exception\LocalizedException ( __ ( $e->getMessage () ) );
+              }// end try-catch
+            }// end if charge id not null
           }// end foreach loop updating products to enabled
 
           // change the user group
@@ -128,7 +164,7 @@ class Index extends \Magento\Framework\App\Action\Action
           $this->customerRepository->save($customer);
 
           // redirect the listing page
-          $this->messageManager->addSuccess('Your items are now live for sale on Resold.');
+          $this->messageManager->addSuccess('Thank you for connecting your Resold account with Stripe. You can now begin receiving payments.');
           return $resultRedirect->setPath('customer/account/listings');
         }// end if stripe authentication code was passed and the user is not signed up with stripe
 
@@ -141,6 +177,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $ob = $this->_objectManager;
       $store = $ob->get('Magento\Framework\App\Config\ScopeConfigInterface');
 
+      $stripe_user_id = '';
       if($store->getValue('payment/ced_csstripe_method_one/account_type')=='standalone'){
         // standard stripe accounts
         $TOKEN_URI = 'https://connect.stripe.com/oauth/token';
@@ -191,6 +228,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
             $id = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone')->load($vendorId,'vendor_id')->getId();
             $model = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone')->load($id);
+            $stripe_user_id = $resp['stripe_user_id'];
             try {
               $model->setData('access_token',$resp['access_token'])
               ->setData('refresh_token',$resp['refresh_token'])
@@ -201,13 +239,14 @@ class Index extends \Magento\Framework\App\Action\Action
               ->setData('vendor_id',$vendorId)
               ->save();
 
-              return;
+              return $stripe_user_id;
             } catch (\Exception $e){
               echo $e->getMessage();
             }
 
           }else{
             // save the stripe standalone API data
+            $stripe_user_id = $resp['stripe_user_id'];
             $model->setData('access_token',$resp['access_token'])
                 ->setData('refresh_token',$resp['refresh_token'])
                 ->setData('token_type',$resp['token_type'])
@@ -217,7 +256,7 @@ class Index extends \Magento\Framework\App\Action\Action
                 ->setData('vendor_id', $vendorId)
                 ->save();
 
-            return;
+            return $stripe_user_id;
           }
         }
         catch(\Exception $e){
@@ -234,6 +273,7 @@ class Index extends \Magento\Framework\App\Action\Action
             'client_id' => $clientId
         );
       }
+      return $stripe_user_id;
     }
 
     public function getCurrentStoreId()
