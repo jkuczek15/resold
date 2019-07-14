@@ -139,12 +139,13 @@ class Index extends \Magento\Framework\App\Action\Action
 							}// end if resold fee > $5
 
               // subtract the fee from the total
-              $total -= $resold_fee;
+              $stripe_fee = ceil(0.029 * $total + 30) / 100;
+              $actual_total = $total - $resold_fee - $stripe_fee;
 
               // create the transfer
               try {
                 $transfer = \Stripe\Transfer::create([
-                  "amount" => $total,
+                  "amount" => $actual_total,
                   "currency" => "USD",
                   "destination" => $stripe_user_id,
                   "transfer_group" => $product->getId(),
