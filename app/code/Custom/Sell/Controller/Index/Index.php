@@ -139,7 +139,7 @@ class Index extends \Magento\Framework\App\Action\Action
 							}// end if resold fee > $5
 
               // subtract the fee from the total
-              $stripe_fee = ceil(0.029 * $total + 30) / 100;
+              $stripe_fee = ceil(0.029 * $total + 30);
               $actual_total = $total - $resold_fee - $stripe_fee;
 
               // create the transfer
