@@ -27,6 +27,8 @@ atlassian*
 /Ultimo-Guide.pdf
 !/pub/media/wysiwyg/*
 
+puppeteer/node_modules/*
+
 /chatbot/node_modules/*
 /phpserver/pub/*
 /pub/media/*.*
