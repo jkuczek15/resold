@@ -47,18 +47,23 @@ exports.run = async (browser) => {
     await page.type('#email', setup.config.fb_email);
     await page.type('#pass', setup.config.fb_pass);
     await page.click('input[type=submit]');
-    await page.waitForNavigation();
 
-    // check if we hit the checkpoint
-    if (await page.$(setup.config.checkpoint_selector) !== null)
-    {
-      await page.waitForSelector(setup.config.checkpoint_selector);
+    // check if we hit the checkpoint or if we are logged in
+    selector = await Promise.race([
+      page.waitForSelector('#creation_hub_entrypoint'),
+      page.waitForSelector(setup.config.checkpoint_selector)
+    ]);
+    selectorDesc = selector._remoteObject.description;
+
+    // check returned value to see if we hit the checkpoint
+    if(selectorDesc.includes(setup.config.checkpoint_selector)){
+      // we hit the checkpoint
       await page.click(setup.config.checkpoint_selector);
-    }// end if we need to verify this is our account
+      await page.waitForNavigation();
+    }// end if we hit the checkpoint after logging in
 
   }else if(selectorDesc.includes(setup.config.checkpoint_selector)){
     // we are already logged in and were hit with a checkpoint
-    await page.waitForSelector(setup.config.checkpoint_selector);
     await page.click(setup.config.checkpoint_selector);
     await page.waitForNavigation();
   }// end if we need to login
@@ -114,7 +119,7 @@ exports.run = async (browser) => {
   await page.waitFor(1250);
 
   await page.click(setup.config.next_button_selector);
-  await page.waitFor(6000);
+  await page.waitFor(5000);
   await page.close();
   return 'done';
 };
