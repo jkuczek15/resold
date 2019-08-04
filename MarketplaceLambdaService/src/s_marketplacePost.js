@@ -118,6 +118,7 @@ exports.run = async (browser) => {
   await page.waitForSelector(setup.config.next_button_selector);
   await page.waitFor(1250);
 
+  // move onto the next step and finish posting
   await page.click(setup.config.next_button_selector);
   await page.waitFor(5000);
   await page.close();
