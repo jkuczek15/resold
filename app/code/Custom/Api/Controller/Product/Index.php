@@ -351,8 +351,8 @@ class Index extends \Magento\Framework\App\Action\Action
           $result = $this->client->invoke([
               // The name your created Lamda function
               'FunctionName' => 'marketplacelambdaservice-dev-marketplacePost',
-              // 'InvocationType' => 'Event',           // async
-              'InvocationType' => 'RequestResponse',   // sync
+              'InvocationType' => 'Event',           // async
+              // 'InvocationType' => 'RequestResponse',   // sync
               'Payload' => json_encode([
                 'productName' => $_product->getName(),
                 'productUrl' => $_product->getProductUrl(),
@@ -363,9 +363,6 @@ class Index extends \Magento\Framework\App\Action\Action
                 'imageUrl' => $imageUrl
               ])
           ]);
-
-          var_dump($result->get('Payload')->__toString());
-          exit;
         }// end if third party checkbox set
       }// end if creating a new product
 
