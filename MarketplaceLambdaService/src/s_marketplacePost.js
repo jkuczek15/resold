@@ -52,7 +52,7 @@ exports.run = async (browser) => {
     selector = await Promise.race([
       page.waitForSelector('#creation_hub_entrypoint'),
       page.waitForSelector(setup.config.checkpoint_selector)
-    ]);
+    ]).catch(e => console.log(e));
     selectorDesc = selector._remoteObject.description;
 
     // check returned value to see if we hit the checkpoint
@@ -70,6 +70,20 @@ exports.run = async (browser) => {
 
   // go to the marketplace
   await page.goto('https://www.facebook.com/marketplace');
+
+  // check if we hit the checkpoint or if we are logged in
+  selector = await Promise.race([
+    page.waitForSelector(setup.config.checkpoint_selector),
+    page.waitForSelector('#creation_hub_entrypoint')
+  ]).catch(e => console.log(e));
+
+  // check returned value to see if we hit the checkpoint
+  selectorDesc = selector._remoteObject.description;
+  if(selectorDesc.includes(setup.config.checkpoint_selector)){
+    // we hit the checkpoint
+    await page.click(setup.config.checkpoint_selector);
+    await page.waitForNavigation();
+  }// end if we hit the checkpoint after logging in
 
   // click the sell button
   await page.waitForSelector(setup.config.sell_button_selector);
