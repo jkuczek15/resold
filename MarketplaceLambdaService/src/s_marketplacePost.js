@@ -1,27 +1,68 @@
 const setup = require('./starter-kit/setup');
+const download = require('image-downloader');
+const fs = require('fs');
 
 module.exports.handler = async (event, context, callback) => {
   // For keeping the browser launch
   context.callbackWaitsForEmptyEventLoop = false;
   const browser = await setup.getBrowser();
   try {
-    const result = await exports.run(browser);
+    const result = await exports.run(browser, event);
     callback(null, result);
   } catch (e) {
     callback(e);
   }
 };
 
-// form parameters
-// these will be the input parameters required for submission
-let productName = 'Acoustic Guitar';
-let productUrl = 'https://resold.us/Acoustic_Guitar';
-let description = `Nice acoustic guitar used about 10 times. Can ship or meet locally. To purchase this item please visit ${productUrl}`;
-let price = '75';
-let category = 'Music';
-let location = 'South Elgin, IL';
+async function downloadImage(imageUrl) {
+  // Download to a directory and save with the original filename
+  const options = {
+    url: imageUrl,
+    dest: '/tmp'
+  };
+  try {
+    const { filename, image } = await download.image(options);
+    return filename;
+  } catch (e) {
+    console.error(e)
+  }
+}// end function downloadImage
 
-exports.run = async (browser) => {
+exports.run = async (browser, event) => {
+  // form parameters
+  // these will be the input parameters required for submission
+  let productName = event.productName;
+  let productUrl = event.productUrl;
+  let description = `${event.description} To purchase this item please visit ${productUrl}.`;
+  let price = event.price;
+  let category = event.category;
+  let location = event.location;
+
+  // test form paramters
+  // let productName = 'Acoustic Guitar';
+  // let productUrl = 'https://resold.us/acoustic_guitar';
+  // let description = `Nice Acoustic Guitar used about 5 times. To purchase this item please visit ${productUrl}.`;
+  // let price = '70';
+  // let category = 'Music';
+  // let location = 'South Elgin, Illinois';
+
+  // download the product image from AWS
+  let imageUrl = event.imageUrl;
+  // let imageUrl = 'https://s3-us-west-2.amazonaws.com/resold-photos/catalog/product/cache/image/700x700/e9c3970ab036de70892d86c6d221abfe/p/h/phpDkt8gW.jpeg';
+  let imagePath = await downloadImage(imageUrl);
+
+  // test debug print statement
+  // return {
+  //   productName,
+  //   productUrl,
+  //   description,
+  //   price,
+  //   category,
+  //   location,
+  //   imageUrl,
+  //   imagePath
+  // };
+
   // implement here
   const page = await browser.newPage();
   await page.setViewport(setup.config.viewportOptions);
@@ -115,7 +156,7 @@ exports.run = async (browser) => {
   await page.waitForSelector(setup.config.photo_selector);
   await page.click(setup.config.photo_selector);
   const photoInput = await page.$(setup.config.photo_selector);
-  await photoInput.uploadFile('./item_images/guitar.jpeg');
+  await photoInput.uploadFile(imagePath);
 
   // fill out the category
   await page.waitForSelector(setup.config.category_selector);
@@ -136,5 +177,13 @@ exports.run = async (browser) => {
   await page.click(setup.config.next_button_selector);
   await page.waitFor(5000);
   await page.close();
+
+  // delete the product image we downloaded
+  try {
+    fs.unlinkSync(imagePath)
+  } catch(err) {
+    console.error(err)
+  }// end try catch
+
   return 'done';
 };

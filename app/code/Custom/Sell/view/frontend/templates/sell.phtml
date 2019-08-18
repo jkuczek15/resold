@@ -66,6 +66,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="latitude" id="latitude" value="<?= $product_latitude ?>" />
     <input type="hidden" name="longitude" id="longitude" value="<?= $product_longitude ?>" />
+    <input type="hidden" name="location_city" id="location_city" value="" />
     <?php echo $this->getBlockHtml('formkey') ?>
 <?php
   if($mode === "Edit"){
@@ -199,6 +200,17 @@ if(isset($_GET['id']) && $_GET['id'] != null)
             <div class="control">
                 <textarea style="resize: none;" placeholder="Enter more Details..." class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true, maxlength: <?= $is_amazon ? 100000 : 2000 ?>}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
             </div>
+        </div>
+        <div class="field description">
+            <label class="label" for="comment"><span></span></label>
+            <label class="control" style="overflow: hidden; display: table-cell">
+                <span class="buttons" style="float: left;">
+                  <input type="checkbox" name="third-party-checkbox" id="third-party-checkbox" style="display: inline-block;"/>
+                </span>
+                <span style="overflow: hidden;">
+                  I would like Resold to help sell my item by listing it on other marketplaces.
+                </span>
+            </label>
         </div>
         <div class="field description">
             <label class="label" for="comment"><span></span></label>
@@ -725,6 +737,26 @@ require([
          };
          $('#latitude').val(`${pos.lat}`);
          $('#longitude').val(`${pos.lng}`);
+
+          // make a mapbox request to retreive the city
+          let api_key = 'pk.eyJ1Ijoiamt1Y3playIsImEiOiJjamxlZ2kyMzYwMnhsM3ByazM1ZWtibzllIn0.hsE3V5wLucE2wl8jdQhfTQ';
+          let mapbox_url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${pos.lng},${pos.lat}.json?access_token=${api_key}`;
+
+          $.get(mapbox_url, (data) => {
+              if(data && data.features && data.features.length > 0){
+                  let place = '';
+                  for(let feature of data.features){
+                      if(feature.place_type.includes("place")){
+                        place = feature.place_name;
+                        break;
+                      }// end if place type is place
+                  }// end for loop over features
+
+                  $('#location_city').val(place);
+                  sessionStorage.place = place;
+              }
+          });
+
          $('#submit').prop('disabled', false);
        }, function() {
          document.getElementById("local").checked = false;
