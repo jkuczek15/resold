@@ -19,6 +19,7 @@ use Magento\Customer\Model\Session;
 use \Magento\Framework\App\Action\Context;
 use \Magento\Framework\Controller\Result\JsonFactory;
 use Ced\CsMarketplace\Model\VendorFactory;
+use Aws\Lambda\LambdaClient;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -44,7 +45,8 @@ class Index extends \Magento\Framework\App\Action\Action
         VendorFactory $Vendor,
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
-        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+        \Magento\Catalog\Helper\Image $_image
     )
     {
         $this->session = $customerSession;
@@ -55,6 +57,15 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->_transportBuilder = $transportBuilder;
         $this->inlineTranslation = $inlineTranslation;
         $this->customerRepository = $customerRepository;
+        $this->image = $_image;
+        $this->client = LambdaClient::factory([
+            'version' => 'latest',
+            'region'  => 'us-east-1',
+            'credentials' => [
+                'key'    => 'AKIA2BJ6BV3GY43GQJ5G',
+                'secret' => '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'
+             ]
+        ]);
         parent::__construct($context);
     }
 
@@ -323,6 +334,39 @@ class Index extends \Magento\Framework\App\Action\Action
           'product' => $_product,
           'vendor_id' => $this->session->getVendorId()
         ]);
+
+        // check if we need to post on third-party-marketplaces
+        // only do this for local marketplaces right now
+        if(isset($post['third-party-checkbox']) && $post['third-party-checkbox'] && isset($post['latitude']) && $post['latitude'] != null && isset($post['longitude']) && $post['longitude'] != null){
+          // get the image URL for this product
+          $imageUrl = $this->image
+                    ->init($_product, 'product_base_image')
+                    ->constrainOnly(TRUE)
+                    ->keepAspectRatio(TRUE)
+                    ->keepTransparency(TRUE)
+                    ->keepFrame(FALSE)
+                    ->resize(150, 150)->getUrl();
+
+          // invoke the lambda function to post on FB marketplace
+          $result = $this->client->invoke([
+              // The name your created Lamda function
+              'FunctionName' => 'marketplacelambdaservice-dev-marketplacePost',
+              // 'InvocationType' => 'Event',           // async
+              'InvocationType' => 'RequestResponse',   // sync
+              'Payload' => json_encode([
+                'productName' => $_product->getName(),
+                'productUrl' => $_product->getProductUrl(),
+                'description' => $_product->getDescription(),
+                'price' => $_product->getPrice(),
+                'category' => $post['category'],
+                'location' => str_replace(', United States', '', $post['location_city']),
+                'imageUrl' => $imageUrl
+              ])
+          ]);
+
+          var_dump($result->get('Payload')->__toString());
+          exit;
+        }// end if third party checkbox set
       }// end if creating a new product
 
       if($this->session->getVendorId() != null){
