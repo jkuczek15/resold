@@ -34,6 +34,7 @@ return array (
     'Magento_Backend' => 1,
     'MSP_UserLockout' => 1,
     'MageHost_PerformanceDashboard' => 1,
+    'MageVision_MassEmailCustomers' => 1,
     'Magento_Indexer' => 1,
     'Magento_AdvancedPricingImportExport' => 1,
     'Magento_Authorization' => 1,
