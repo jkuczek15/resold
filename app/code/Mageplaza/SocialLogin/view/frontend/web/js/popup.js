@@ -32,6 +32,7 @@ define([
             popup: '#social-login-popup',
             popupEffect: '',
             headerLink: '.header .links, .section-item-content .header.links',
+            mainLink: '.parent-map',
             ajaxLoading: '#social-login-popup .ajax-loading',
             loadingClass: 'social-login-ajax-loading',
             errorMsgClass: 'message-error error message',
@@ -108,9 +109,44 @@ define([
          */
         initLink: function () {
             var self = this,
-                headerLink = $(this.options.headerLink);
+                headerLink = $(this.options.headerLink),
+                mainLink = $(this.options.mainLink);
 
-            var el = $('.social-login');
+            var el = $('.custom-signup');
+            el.attr('href', self.options.popup);
+            el.attr('data-effect', self.options.popupEffect);
+            el.on('click', function (event) {
+                self.showLogin();
+                event.preventDefault();
+            });
+
+            mainLink.magnificPopup({
+                delegate: 'area.custom-signup',
+                removalDelay: 500,
+                overflowY: 'auto',
+                midClick: true,
+                fixedBgPos: true,
+                fixedContentPos: true,
+                callbacks: {
+                    beforeOpen: function () {
+                        startWindowScroll = $(window).scrollTop();
+                        this.st.mainClass = this.st.el.attr('data-effect');
+                    },
+                    open: function(){
+                      if ( $('.mfp-content').height() < $(window).height() ){
+                        $('body').on('touchmove', function (e) {
+                            e.preventDefault();
+                        });
+                      }
+                    },
+                    close: function() {
+                      $(window).scrollTop(startWindowScroll);
+                      $('body').off('touchmove');
+                    }
+                }
+            });
+
+            el = $('.social-login');
             el.attr('href', self.options.popup);
             el.attr('data-effect', self.options.popupEffect);
             el.on('click', function (event) {
