@@ -26,7 +26,7 @@ class Data extends AbstractHelper
      * @var TransportBuilder
      */
     protected $transportBuilder;
-    
+
     /**
      * @var StateInterface
      */
@@ -36,7 +36,7 @@ class Data extends AbstractHelper
      * @var ModuleListInterface;
      */
     protected $moduleList;
-    
+
     /**
      * @param Context $context
      * @param TransportBuilder $transportBuilder
@@ -54,7 +54,7 @@ class Data extends AbstractHelper
         $this->moduleList = $moduleList;
         parent::__construct($context);
     }
-    
+
     /**
      * Retrieve Sender
      *
@@ -92,7 +92,7 @@ class Data extends AbstractHelper
     public function send($item)
     {
         $this->inlineTranslation->suspend();
-        
+
         if ($item instanceof \Magento\Sales\Model\Order) {
             $email = $item->getCustomerEmail();
             $orderId = $item->getIncrementId();
@@ -119,6 +119,7 @@ class Data extends AbstractHelper
         )->setTemplateVars(
             [
                 'customer_name' => $name,
+                'first_name' => explode(' ', $name)[0],
                 'customer_email' => $email,
                 'increment_id' => $orderId
             ]
