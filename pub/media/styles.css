@@ -299,6 +299,12 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
-a, button, .menu-trigger .menu-trigger-inner, .menu-trigger .menu-trigger-inner .trigger-icon .line, .opener, a > .ib, a.feature-icon-hover > .ib, .cart.table-wrapper .actions-toolbar > .action, .cart.table-wrapper .action-gift {
+button {
+  border-radius: 10px !important;
+}
+a.custom-button {
+  border-radius: 10px !important;
+}
+.header.links > li > a {
   border-radius: 10px !important;
 }
