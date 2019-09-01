@@ -18,7 +18,21 @@ $label = $block->getLabel();
 $label = str_replace('Sign In', 'Login / Signup', $label);
 
 // custom home button
-$label = str_replace('Sign Out', '<span style="font-size: 1.2em" class="ic ic-user"></span></span>', $label);
+$label = str_replace('Sign Out', '
+<div class="dropdown">
+   <span style="font-size: 1.2em" class="dropbtn ic ic-user"></span></span>
+   <div class="dropdown-content">
+     <a href="/customer/account/listings/"><span class="ic ic-list" style="margin-right: 10px"></span>Listings</a>
+     <a href="/csmessaging/frontend/inbox/"><span class="ic ic-letter" style="margin-right: 10px"></span>Messages</a>
+     <a href="/customer/account/"><span class="ic ic-user" style="margin-right: 10px"></span>Account</a>
+     <a href="/sales/order/history/"><span class="ic ic-cart" style="margin-right: 10px"></span>Orders</a>
+     <a href="/review/customer/"><span class="ic ic-edit" style="margin-right: 10px"></span>Reviews</a>
+     <a href="/customer/account/edit/"><span class="ic ic-info" style="margin-right: 10px"></span>Settings</a>
+     <a href="/api/stripe/dashboard" target="_blank"><span class="ic ic-credit" style="margin-right: 10px"></span>Stripe Dashboard</a>
+     <a href="/customer/account/logout"><span class="ic ic-arrow-left" style="margin-right: 10px"></span>Logout</a>
+   </div>
+</div>
+', $label);
 
 // redirect to the account page
 $dataPostParam = str_replace('\/logout', '/listings', $dataPostParam);
@@ -34,3 +48,66 @@ if(strpos($href, 'login') !== FALSE){
         <?php echo $label; ?>
     </a>
 </li>
+
+<style>
+/* Dropdown Button */
+.dropbtn {
+ border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+ position: relative;
+ display: inline-block;
+ z-index: 9999;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+ display: none;
+ position: absolute;
+ background-color: #ffffff;
+ min-width: 180px;
+ box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+ z-index: 1;
+ left: -60px;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+ color: black;
+ padding: 10px;
+ text-decoration: none;
+ text-align: left;
+ display: block;
+ font-size: 16px;
+}
+
+.dropdown-content a:first-child {
+  display: none !important;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f0f8ff;
+  color: #3cd7f9
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    color: #ffffff !important;
+}
+
+.authorization-link:hover {
+  background-color: #5bd2ec;
+  color: #ffffff !important;
+}
+.authorization-link {
+  border-radius: 10px;
+}
+</style>
