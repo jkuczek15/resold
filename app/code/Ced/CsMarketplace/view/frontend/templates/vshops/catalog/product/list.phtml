@@ -42,19 +42,20 @@ if($vendor != null){
 ?>
 </div>
 <div class="row">
-  <?php
-  if(!$stripe_connected && $vendor == null){
-  ?>
   <div class="col-md-9">
     <div class="control custom custom-button-group">
       <div class="ck-button-semi">
-        <button class="connect-button-list" type="button" data-role="action"><span>Connect to Stripe</span></button>
+        <button class="sell-button-list" type="button" data-role="action"><span>Sell</span></button>
+          <?php
+          if(!$stripe_connected && $vendor == null){
+          ?>
+            <button class="connect-button-list" type="button" data-role="action"><span>Connect to Stripe</span></button>
+          <?php
+          }// end if stripe connected
+          ?>
       </div>
     </div>
   </div>
-  <?php
-  }// end if stripe connected
-  ?>
   <div class="col-md-3 custom-col">
     <div class="control custom custom-button-group">
       <div class="ck-button <?= $type == 'for-sale' ? 'blue-background checked-button' : 'unchecked-button' ?> for-sale-button">
@@ -295,7 +296,20 @@ if($vendor != null){
 .blue-background {
   background: #3CBBD8;
 }
+
+@media (max-width: 420px) {
+  .ck-button {
+    float: none;
+    margin-bottom: 20px;
+  }
+  .custom-col {
+    margin-top: -10px;
+  }
+}
 @media (max-width: 575.98px) {
+  .connect-button-list,.sell-button-list {
+    margin-bottom: 10px;
+  }
   .ck-button-semi {
     margin-top: -1em;
   }
@@ -334,6 +348,9 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
     margin-right: 1em;
     margin-left: 1em;
     margin-bottom: 0em;
+  }
+  .custom-col {
+    float: right;
   }
 }
 .toolbar-amount {
@@ -376,7 +393,7 @@ if(strpos($_SERVER['REQUEST_URI'], 'vendor_shop') !== FALSE){
   float: right;
 }
 
-.connect-button-list {
+.connect-button-list,.sell-button-list {
   background-color: #41b8ea;
   border-color: #db3b21;
   color: #ffffff;
@@ -414,6 +431,9 @@ require(['jquery', 'Magento_Ui/js/modal/modal' ], ($, modal) => {
    });
    $('.connect-button-list').click(function(){
      window.location = '/api/stripe/connect';
+   });
+   $('.sell-button-list').click(function(){
+     window.location = '/sell';
    });
    $('.bought_sold').click(function(){
      let checked = $(this).closest('.ck-button');
