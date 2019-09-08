@@ -321,8 +321,44 @@ class Index extends \Magento\Framework\App\Action\Action
         }// end try-catch creating a new vendor account
       }// end if vendor id not set
 
+      // check if we need to post on third-party-marketplaces
+      // only do this for local marketplaces right now
+      $post_third_party = false;
+      if(isset($post['third-party-checkbox']) && $post['third-party-checkbox'] && isset($post['latitude']) && $post['latitude'] != null && isset($post['longitude']) && $post['longitude'] != null){
+        $post_third_party = true;
+        $_product->setCustomAttribute('list_on_third_party', 1);
+      }// end if third party checkbox set
+
       // save the product to the database
       $_product->save();
+
+      if($post_third_party){
+        // get the image URL for this product
+        $imageUrl = $this->image
+                  ->init($_product, 'product_base_image')
+                  ->constrainOnly(TRUE)
+                  ->keepAspectRatio(TRUE)
+                  ->keepTransparency(TRUE)
+                  ->keepFrame(FALSE)
+                  ->resize(150, 150)->getUrl();
+
+        // invoke the lambda function to post on FB marketplace
+        $result = $this->client->invoke([
+            // The name your created Lamda function
+            'FunctionName' => 'marketplacelambdaservice-dev-marketplacePost',
+            'InvocationType' => 'Event',           // async
+            // 'InvocationType' => 'RequestResponse',   // sync
+            'Payload' => json_encode([
+              'productName' => $_product->getName(),
+              'productUrl' => $_product->getProductUrl(),
+              'description' => $_product->getDescription(),
+              'price' => $_product->getPrice(),
+              'category' => $post['category'],
+              'location' => str_replace(', United States', '', $post['location_city']),
+              'imageUrl' => $imageUrl
+            ])
+        ]);
+      }// end if we should post on third-party marketplace
 
       // link the product to the seller
       if($product_id === null){
@@ -334,36 +370,6 @@ class Index extends \Magento\Framework\App\Action\Action
           'product' => $_product,
           'vendor_id' => $this->session->getVendorId()
         ]);
-
-        // check if we need to post on third-party-marketplaces
-        // only do this for local marketplaces right now
-        if(isset($post['third-party-checkbox']) && $post['third-party-checkbox'] && isset($post['latitude']) && $post['latitude'] != null && isset($post['longitude']) && $post['longitude'] != null){
-          // get the image URL for this product
-          $imageUrl = $this->image
-                    ->init($_product, 'product_base_image')
-                    ->constrainOnly(TRUE)
-                    ->keepAspectRatio(TRUE)
-                    ->keepTransparency(TRUE)
-                    ->keepFrame(FALSE)
-                    ->resize(150, 150)->getUrl();
-
-          // invoke the lambda function to post on FB marketplace
-          $result = $this->client->invoke([
-              // The name your created Lamda function
-              'FunctionName' => 'marketplacelambdaservice-dev-marketplacePost',
-              'InvocationType' => 'Event',           // async
-              // 'InvocationType' => 'RequestResponse',   // sync
-              'Payload' => json_encode([
-                'productName' => $_product->getName(),
-                'productUrl' => $_product->getProductUrl(),
-                'description' => $_product->getDescription(),
-                'price' => $_product->getPrice(),
-                'category' => $post['category'],
-                'location' => str_replace(', United States', '', $post['location_city']),
-                'imageUrl' => $imageUrl
-              ])
-          ]);
-        }// end if third party checkbox set
       }// end if creating a new product
 
       if($this->session->getVendorId() != null){
@@ -410,10 +416,6 @@ class Index extends \Magento\Framework\App\Action\Action
         }// end if this person has sold 10 products
 
       }// end if this person is a seller
-
-      // if(!$stripe_connected){
-      //   return $this->resultJsonFactory->create()->setData(['stripe_redirect' => 'Y']);
-      // }// end if stripe not connected
 
       // on success, redirect user to their listing page
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
