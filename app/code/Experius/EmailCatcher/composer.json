@@ -1,0 +1,23 @@
+{
+    "name": "experius/emailcatcher",
+    "description": "",
+    "license": [
+        "OSL-3.0"
+    ],
+    "authors": [
+        {
+            "name": "Derrick Heesbeen",
+            "email": "derrick@experius.nl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Experius\\EmailCatcher\\": ""
+        }
+    }
+}

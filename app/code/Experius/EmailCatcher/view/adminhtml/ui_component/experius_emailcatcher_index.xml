@@ -1,0 +1,143 @@
+<?xml version="1.0" ?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="context" xsi:type="configurableObject">
+		<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\Context</argument>
+		<argument name="namespace" xsi:type="string">experius_emailcatcher_index</argument>
+	</argument>
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">experius_emailcatcher_index.experius_emailcatcher_grid_data_source</item>
+			<item name="deps" xsi:type="string">experius_emailcatcher_index.experius_emailcatcher_grid_data_source</item>
+		</item>
+		<item name="spinner" xsi:type="string">experius_emailcatcher_columns</item>
+		<item name="buttons" xsi:type="array">
+			<item name="add" xsi:type="array">
+				<item name="name" xsi:type="string">cleanup</item>
+				<item name="label" translate="true" xsi:type="string">Run Cleanup</item>
+				<item name="url" xsi:type="string">*/*/cleanup</item>
+				<!--<item name="on_click" xsi:type="string">deleteConfirm('Are you sure you want to do this?')</item>-->
+			</item>
+		</item>
+	</argument>
+	<dataSource name="experius_emailcatcher_grid_data_source">
+		<argument name="dataProvider" xsi:type="configurableObject">
+			<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+			<argument name="name" xsi:type="string">experius_emailcatcher_grid_data_source</argument>
+			<argument name="primaryFieldName" xsi:type="string">emailcatcher_id</argument>
+			<argument name="requestFieldName" xsi:type="string">id</argument>
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+					<item name="update_url" path="mui/index/render" xsi:type="url"/>
+					<item name="storageConfig" xsi:type="array">
+						<item name="indexField" xsi:type="string">emailcatcher_id</item>
+					</item>
+				</item>
+			</argument>
+		</argument>
+	</dataSource>
+	<listingToolbar name="listing_top">
+		<argument name="data" xsi:type="array">
+			<item name="config" xsi:type="array">
+				<item name="sticky" xsi:type="boolean">true</item>
+			</item>
+		</argument>
+		<bookmark name="bookmarks"/>
+		<columnsControls name="columns_controls"/>
+		<filters name="listing_filters"/>
+		<!--<massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">-->
+			<!--<action name="forward">-->
+				<!--<settings>-->
+					<!--<url path="*/*/forward"/>-->
+					<!--<type>forward</type>-->
+					<!--<label translate="true">Forward</label>-->
+				<!--</settings>-->
+			<!--</action>-->
+			<!--<action name="delete">-->
+				<!--<settings>-->
+					<!--<confirm>-->
+						<!--<message translate="true">Delete selected items?</message>-->
+						<!--<title translate="true">Delete items</title>-->
+					<!--</confirm>-->
+					<!--<url path="*/*/massDelete"/>-->
+					<!--<type>delete</type>-->
+					<!--<label translate="true">Delete</label>-->
+				<!--</settings>-->
+			<!--</action>-->
+		<!--</massaction>-->
+		<paging name="listing_paging"/>
+	</listingToolbar>
+	<columns name="experius_emailcatcher_columns">
+		<argument name="data" xsi:type="array">
+			<item name="config" xsi:type="array">
+				<item name="childDefaults" xsi:type="array">
+					<item name="fieldAction" xsi:type="array">
+						<item name="provider" xsi:type="string">experius_emailcatcher_index.experius_emailcatcher_index.experius_emailcatcher_columns_editor</item>
+						<item name="target" xsi:type="string">startEdit</item>
+						<item name="params" xsi:type="array">
+							<item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+							<item name="1" xsi:type="boolean">true</item>
+						</item>
+					</item>
+				</item>
+			</item>
+		</argument>
+		<selectionsColumn name="ids">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="indexField" xsi:type="string">emailcatcher_id</item>
+				</item>
+			</argument>
+		</selectionsColumn>
+		<column name="emailcatcher_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">text</item>
+					<item name="sorting" xsi:type="string">desc</item>
+					<item name="label" translate="true" xsi:type="string">ID</item>
+				</item>
+			</argument>
+		</column>
+		<column name="to">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">To</item>
+				</item>
+			</argument>
+		</column>
+		<column name="from">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">From</item>
+				</item>
+			</argument>
+		</column>
+		<column name="subject">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">Subject</item>
+				</item>
+			</argument>
+		</column>
+		<column name="created_at">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">dateRange</item>
+					<item name="dataType" xsi:type="string">date</item>
+					<item name="label" translate="true" xsi:type="string">Created At</item>
+				</item>
+			</argument>
+		</column>
+		<actionsColumn class="Experius\EmailCatcher\Ui\Component\Listing\Column\EmailcatcherActions" name="actions">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="indexField" xsi:type="string">emailcatcher_id</item>
+					<item name="component" xsi:type="string">Experius_EmailCatcher/js/grid/columns/actions</item>
+				</item>
+			</argument>
+		</actionsColumn>
+	</columns>
+</listing>
