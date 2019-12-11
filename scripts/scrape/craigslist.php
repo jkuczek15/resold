@@ -1,14 +1,31 @@
 <?php
+set_time_limit(0);
+/**
+ * craigslist.php
+ *
+ * This script is used to retreive craigslist emails from different sections
+ * of the website. Most options are configurable under the config section.
+ * Be sure to run composer install + npm install to install all packages.
+ * Puppeteer is required to run Javascript and scrape emails correctly.
+ *
+ * For educational purposes only
+ * Enjoy :)
+ *
+ * Authors:
+ *   Joe Kuczek
+ *
+ * Version Rev. 1.0.0
+ */
 ######################################
 ######################################
-########## INCLUDES ##################
+############# INCLUDES ###############
 ######################################
 ######################################
 include('/var/www/html/scripts/scrape/includes/simple_html_dom.php');
 
 ######################################
 ######################################
-########## 3rd PARTY #################
+############# 3RD PARTY ##############
 ######################################
 ######################################
 include('/var/www/html/scripts/scrape/vendor/autoload.php');
@@ -17,7 +34,7 @@ use Nesk\Rialto\Data\JsFunction;
 
 ######################################
 ######################################
-########## CONFIG ####################
+############# CONFIG #################
 ######################################
 ######################################
 // output config
@@ -48,32 +65,43 @@ $reply_sleep_time = 5;
 
 ######################################
 ######################################
-########## PUPPETEER #################
+############# PUPPETEER ##############
 ######################################
 ######################################
 $puppeteer = new Puppeteer;
-$browser = $puppeteer->launch(['headless' => true]);
+$headless = true;
+$timeout = 0;
 
 ######################################
 ######################################
-########## COLLECT EMAILS ############
+############# CRAWL ##################
 ######################################
 ######################################
 // loop over the post links collecting emails
 $emails = [];
-$count = 0;
+$count = 1;
 do {
   // loop while we have pages to loop over
   try {
+    // launch a new instance of puppeteer chromium browser
+    $browser = $puppeteer->launch(['headless' => $headless, 'timeout' => $timeout]);
+
+    // scrape the initial posts links
     $posts_html = file_get_html($posts_url);
     $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
     echo 'Scraping post page '.$count.': '. $posts_url . "\r\n";
 
     foreach($post_links as $user_post_link)
     {
-      echo '.. Scraping post: '. $user_post_link . "\r\n";
-      $page = $browser->newPage();
-      $page->goto($user_post_link);
+      try {
+        echo '.. Scraping post: '. $user_post_link . "\r\n";
+        $page = $browser->newPage();
+        $page->goto($user_post_link);
+      }catch (Exception $e){
+        echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
+        $page->close();
+        continue;
+      }// end try-catch visiting a page
 
       // Click the reply button and wait for the content to load
       $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
@@ -100,11 +128,14 @@ do {
     $next_link_arr = array_filter($next_link_arr, "searchCheck");
     rsort($next_link_arr);
     $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
+
+    // close the browser
+    $browser->close();
   } catch (Exception $e){
     echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
   }// end try-catch
 
-} while($posts_url != null && ++$count <= $page_count);
+} while($posts_url != null && ++$count < $page_count);
 
 ######################################
 ######################################
@@ -121,10 +152,18 @@ fclose($fp);
 
 ######################################
 ######################################
-########## FUNCTIONS #################
+############# FUNCTIONS ##############
 ######################################
 ######################################
-// filter an array of link elements according to ignores
+/*
+* filter an array of link elements according to $regex_ignores
+* params: $links - array of of link elements
+*         $regex_ignores - array of regular expressions to filter
+*         $string_ignores - array of strings to filter
+*         $single_match - single regular expression used to filter and return a match
+*
+* returns: $return_links - filtered string array of links
+*/
 function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_match = null)
 {
   $return_links = [];
@@ -161,7 +200,12 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
   return array_unique($return_links);
 }// end function filterLinks
 
-// make a CURL request to a URL
+/*
+* make a simple CURL request to a URL
+* params: $url - url for the request
+*
+* returns: $result - curl response
+*/
 function makeRequest($url)
 {
   // CURL setup
@@ -180,7 +224,12 @@ function makeRequest($url)
   return $result;
 }// end function makeRequest
 
-// array filter function
+/*
+* function used to filter an array for 'next' page link
+* params: $element - url for the next page request
+*
+* returns: $result - true/false based on regex match
+*/
 function searchCheck($element)
 {
   return !preg_match("/https:\/\/chicago.craigslist.org/", $element);
