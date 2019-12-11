@@ -41,6 +41,7 @@ use Nesk\Rialto\Data\JsFunction;
 $output_file_path = 'csv/emails.csv';
 
 // URL configuration
+// TODO: multiple path parts + save to multiple named csv files
 $base_url = 'https://chicago.craigslist.org';
 $posts_part = '/search/vga';
 $posts_url = $base_url.$posts_part;
@@ -87,18 +88,19 @@ do {
     $browser = $puppeteer->launch(['headless' => $headless, 'timeout' => $timeout]);
 
     // scrape the initial posts links
+    echo 'Scraping post page '.$count.': '. $posts_url . "\r\n";
     $posts_html = file_get_html($posts_url);
     $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
-    echo 'Scraping post page '.$count.': '. $posts_url . "\r\n";
 
     foreach($post_links as $user_post_link)
     {
+      echo '- Scraping post: '. $user_post_link . "\r\n";
+
       try {
-        echo '.. Scraping post: '. $user_post_link . "\r\n";
         $page = $browser->newPage();
         $page->goto($user_post_link);
       }catch (Exception $e){
-        echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
+        echo 'Error visiting page: ',  $e->getMessage(), "\r\n";
         $page->close();
         continue;
       }// end try-catch visiting a page
@@ -135,7 +137,7 @@ do {
     echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
   }// end try-catch
 
-} while($posts_url != null && ++$count < $page_count);
+} while($posts_url != null && $count++ <= $page_count);
 
 ######################################
 ######################################
