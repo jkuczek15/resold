@@ -66,3 +66,7 @@ robots.txt
 /android/.idea/*
 /android/build/*
 /android/app/normal/*
+
+/scripts/scrape/node_modules/*
+/scripts/scrape/vendor/*
+/scripts/scrape/csv/*.csv
