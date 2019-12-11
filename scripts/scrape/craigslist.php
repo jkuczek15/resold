@@ -25,7 +25,7 @@ $output_file_path = 'csv/emails.csv';
 
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
-$posts_part = '/search/ela';
+$posts_part = '/search/vga';
 $posts_url = $base_url.$posts_part;
 
 // URL crawling ignores
@@ -64,41 +64,45 @@ $emails = [];
 $count = 0;
 do {
   // loop while we have pages to loop over
-  $posts_html = file_get_html($posts_url);
-  $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
-  echo $posts_url . "\r\n";
+  try {
+    $posts_html = file_get_html($posts_url);
+    $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
+    echo 'Scraping post page '.$count.': '. $posts_url . "\r\n";
 
-  foreach($post_links as $user_post_link)
-  {
-    $page = $browser->newPage();
-    $page->goto($user_post_link);
-
-    // Click the reply button and wait for the content to load
-    $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
-
-    // wait for email content to load
-    sleep($reply_sleep_time);
-
-    // evaluate the email and return the result
-    $result = $page->evaluate(JsFunction::createWithBody("
-      return {
-        email: $('.mailapp').html()
-      }"));
-
-    $page->close();
-
-    if(isset($result['email']) && $result['email'] !== null)
+    foreach($post_links as $user_post_link)
     {
-      $emails[] = $result['email'];
-    }// end if email is set
+      echo '.. Scraping post: '. $user_post_link . "\r\n";
+      $page = $browser->newPage();
+      $page->goto($user_post_link);
 
-  }// end foreach loop over post links
+      // Click the reply button and wait for the content to load
+      $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
 
-  // fetch the next link of posts
-  $next_link_arr = filterLinks($posts_html->find('a'), [], [], '/s=/');
-  $next_link_arr = array_filter($next_link_arr, "searchCheck");
-  rsort($next_link_arr);
-  $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
+      // wait for email content to load
+      sleep($reply_sleep_time);
+
+      // evaluate the email and return the result
+      $result = $page->evaluate(JsFunction::createWithBody("return { email: $('.mailapp').html() }"));
+
+      // close the puppeteer page
+      $page->close();
+
+      // check if we were able to scrape an email by evaluating javascript
+      if(isset($result['email']) && $result['email'] !== null)
+      {
+        $emails[] = $result['email'];
+      }// end if email is set
+
+    }// end foreach loop over post links
+
+    // fetch the next link of posts
+    $next_link_arr = filterLinks($posts_html->find('a'), [], [], '/s=/');
+    $next_link_arr = array_filter($next_link_arr, "searchCheck");
+    rsort($next_link_arr);
+    $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
+  } catch (Exception $e){
+    echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
+  }// end try-catch
 
 } while($posts_url != null && ++$count <= $page_count);
 
