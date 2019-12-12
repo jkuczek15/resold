@@ -5,7 +5,8 @@ set_time_limit(0);
  *
  * This script is used to retreive craigslist emails from different sections
  * of the website. Most options are configurable under the config section.
- * Be sure to run composer install + npm install to install all packages.
+ *
+ * Be sure to run "composer install" and "npm install" to install all packages.
  * Puppeteer is required to run Javascript and scrape emails correctly.
  *
  * For educational purposes only
@@ -41,10 +42,10 @@ use Nesk\Rialto\Data\JsFunction;
 $output_file_path = 'csv/emails.csv';
 
 // URL configuration
-// TODO: multiple path parts + save to multiple named csv files
 $base_url = 'https://chicago.craigslist.org';
-$posts_part = '/search/vga';
-$posts_url = $base_url.$posts_part;
+$posts_parts = [
+  '/search/sss?excats=20-22-2-25-32-18-3-12-2-9-1-14-1-2-1-10-9-7-3-1-1-1-7-1-1-1-2-1'
+];
 
 // URL crawling ignores
 $posts_regex_ignores = [
@@ -61,8 +62,8 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/'];
 
 // limits
-$page_count = 2;
-$reply_sleep_time = 5;
+$page_count = 10;
+$reply_sleep_time = 4;
 
 ######################################
 ######################################
@@ -70,8 +71,15 @@ $reply_sleep_time = 5;
 ######################################
 ######################################
 $puppeteer = new Puppeteer;
-$headless = true;
+$headless = false;
 $timeout = 0;
+
+######################################
+######################################
+############# CSV SETUP ##############
+######################################
+######################################
+$fp = fopen($output_file_path, "w");
 
 ######################################
 ######################################
@@ -79,77 +87,78 @@ $timeout = 0;
 ######################################
 ######################################
 // loop over the post links collecting emails
-$emails = [];
-$count = 1;
-do {
-  // loop while we have pages to loop over
-  try {
-    // launch a new instance of puppeteer chromium browser
-    $browser = $puppeteer->launch(['headless' => $headless, 'timeout' => $timeout]);
+foreach($posts_parts as $posts_part)
+{
+  $posts_url = $base_url.$posts_part;
+  echo 'Beginning scrape on post part:'.$posts_url."\r\n";
+  $count = 1;
 
-    // scrape the initial posts links
-    echo 'Scraping post page '.$count.': '. $posts_url . "\r\n";
-    $posts_html = file_get_html($posts_url);
-    $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
+  do {
+    // loop while we have pages to loop over
+    try {
+      // launch a new instance of puppeteer chromium browser
+      $browser = $puppeteer->launch(['headless' => $headless, 'timeout' => $timeout]);
 
-    foreach($post_links as $user_post_link)
-    {
-      echo '- Scraping post: '. $user_post_link . "\r\n";
+      // scrape the initial posts links
+      echo '- Scraping post page '.$count.': '. $posts_url . "\r\n";
+      $posts_html = file_get_html($posts_url);
+      $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
 
-      try {
-        $page = $browser->newPage();
-        $page->goto($user_post_link);
-      }catch (Exception $e){
-        echo 'Error visiting page: ',  $e->getMessage(), "\r\n";
-        $page->close();
-        continue;
-      }// end try-catch visiting a page
-
-      // Click the reply button and wait for the content to load
-      $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
-
-      // wait for email content to load
-      sleep($reply_sleep_time);
-
-      // evaluate the email and return the result
-      $result = $page->evaluate(JsFunction::createWithBody("return { email: $('.mailapp').html() }"));
-
-      // close the puppeteer page
-      $page->close();
-
-      // check if we were able to scrape an email by evaluating javascript
-      if(isset($result['email']) && $result['email'] !== null)
+      foreach($post_links as $user_post_link)
       {
-        $emails[] = $result['email'];
-      }// end if email is set
+        echo '-- Scraping post: '. $user_post_link . "\r\n";
+        try {
+          $page = $browser->newPage();
+          $page->goto($user_post_link);
+        }catch (Exception $e){
+          echo 'Error visiting page: ',  $e->getMessage(), "\r\n";
+          echo $user_post_link . "\r\n";
+          $page->close();
+          continue;
+        }// end try-catch visiting a page
 
-    }// end foreach loop over post links
+        // Click the reply button and wait for the content to load
+        $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
 
-    // fetch the next link of posts
-    $next_link_arr = filterLinks($posts_html->find('a'), [], [], '/s=/');
-    $next_link_arr = array_filter($next_link_arr, "searchCheck");
-    rsort($next_link_arr);
-    $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
+        // wait for email content to load
+        sleep($reply_sleep_time);
 
-    // close the browser
-    $browser->close();
-  } catch (Exception $e){
-    echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
-  }// end try-catch
+        // evaluate the email and return the result
+        $result = $page->evaluate(JsFunction::createWithBody("return { email: $('.mailapp').html() }"));
 
-} while($posts_url != null && $count++ <= $page_count);
+        // close the puppeteer page
+        $page->close();
+
+        // check if we were able to scrape an email by evaluating javascript
+        if(isset($result['email']) && $result['email'] !== null)
+        {
+          $email = $result['email'];
+          fputcsv($fp, [$email], "\t");
+        }// end if email is set
+
+      }// end foreach loop over post links
+
+      // fetch the next link of posts
+      $next_link_arr = filterLinks($posts_html->find('a'), [], [], '/s=/');
+      $next_link_arr = array_filter($next_link_arr, "searchCheck");
+      rsort($next_link_arr);
+      $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
+
+      // close the browser
+      $browser->close();
+    } catch (Exception $e){
+      echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
+    }// end try-catch
+
+  } while($posts_url != null && ++$count <= $page_count);
+
+}// end foreach loop over post parts
 
 ######################################
 ######################################
-########## PROCESS EMAILS ############
+########## CSV CLEANUP ###############
 ######################################
 ######################################
-// write to a csv file for now
-$emails = array_unique($emails);
-$fp = fopen($output_file_path, "w");
-foreach($emails as $email){
-    fputcsv($fp, [$email], "\t");
-}// end foreach over emails
 fclose($fp);
 
 ######################################
