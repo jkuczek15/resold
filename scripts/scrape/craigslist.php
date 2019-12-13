@@ -59,11 +59,11 @@ $posts_regex_ignores = [
   '/post./',
   '/\/\/www.craigslist.org\/about/'
 ];
-$posts_string_ignores = ['/'];
+$posts_string_ignores = ['/', ''];
 
 // limits
 $page_count = 100;
-$reply_sleep_time = 4;
+$reply_sleep_time = 1;
 
 ######################################
 ######################################
@@ -181,12 +181,7 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
   foreach($links as $element)
   {
     $link = $element->href;
-    if(filter_var($link, FILTER_VALIDATE_URL) === FALSE)
-    {
-      // check if the URL is invalid, if so ignore it
-      $ignore = true;
-    }
-    else if($single_match !== null)
+    if($single_match !== null)
     {
       $ignore = true;
       if(preg_match($single_match, $link))
