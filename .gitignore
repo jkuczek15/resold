@@ -70,3 +70,4 @@ robots.txt
 /scripts/scrape/node_modules/*
 /scripts/scrape/vendor/*
 /scripts/scrape/csv/*.csv
+/scripts/scrape/csv/Imported/*.csv

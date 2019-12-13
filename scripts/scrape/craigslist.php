@@ -44,7 +44,7 @@ $output_file_path = 'csv/emails.csv';
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
 $posts_parts = [
-  '/search/sss?excats=20-22-2-25-32-18-3-12-2-9-1-14-1-2-1-10-9-7-3-1-1-1-7-1-1-1-2-1'
+  '/search/cla'
 ];
 
 // URL crawling ignores
@@ -62,7 +62,7 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/'];
 
 // limits
-$page_count = 10;
+$page_count = 100;
 $reply_sleep_time = 4;
 
 ######################################
@@ -90,7 +90,7 @@ $fp = fopen($output_file_path, "w");
 foreach($posts_parts as $posts_part)
 {
   $posts_url = $base_url.$posts_part;
-  echo 'Beginning scrape on post part:'.$posts_url."\r\n";
+  echo 'Beginning scrape on post part: '.$posts_url."\r\n";
   $count = 1;
 
   do {
@@ -181,7 +181,12 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
   foreach($links as $element)
   {
     $link = $element->href;
-    if($single_match !== null)
+    if(filter_var($link, FILTER_VALIDATE_URL) === FALSE)
+    {
+      // check if the URL is invalid, if so ignore it
+      $ignore = true;
+    }
+    else if($single_match !== null)
     {
       $ignore = true;
       if(preg_match($single_match, $link))
