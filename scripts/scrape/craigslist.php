@@ -6,14 +6,11 @@ set_time_limit(0);
  * This script is used to retreive craigslist emails from different sections
  * of the website. Most options are configurable under the config section.
  *
- * Be sure to run "composer install" and "npm install" to install all packages.
+ * Run "composer install" and "npm install" from the root directory to install all dependencies.
  * Puppeteer is required to run Javascript and scrape emails correctly.
  *
  * For educational purposes only
  * Enjoy :)
- *
- * Authors:
- *   Joe Kuczek
  *
  * Version Rev. 1.0.0
  */
@@ -22,14 +19,14 @@ set_time_limit(0);
 ############# INCLUDES ###############
 ######################################
 ######################################
-include('/var/www/html/scripts/scrape/includes/simple_html_dom.php');
+include('includes/simple_html_dom.php');
 
 ######################################
 ######################################
 ############# 3RD PARTY ##############
 ######################################
 ######################################
-include('/var/www/html/scripts/scrape/vendor/autoload.php');
+include('vendor/autoload.php');
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
@@ -38,9 +35,6 @@ use Nesk\Rialto\Data\JsFunction;
 ############# CONFIG #################
 ######################################
 ######################################
-// output config
-$output_file_path = 'csv/emails.csv';
-
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
 $posts_parts = [
@@ -62,7 +56,7 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/', ''];
 
 // limits
-$page_count = 100;
+$page_count = 500;
 $reply_sleep_time = 1;
 
 ######################################
@@ -79,6 +73,7 @@ $timeout = 0;
 ############# CSV SETUP ##############
 ######################################
 ######################################
+$output_file_path = 'csv/emails.csv';
 $fp = fopen($output_file_path, "w");
 
 ######################################
@@ -210,30 +205,6 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
 
   return array_unique($return_links);
 }// end function filterLinks
-
-/*
-* make a simple CURL request to a URL
-* params: $url - url for the request
-*
-* returns: $result - curl response
-*/
-function makeRequest($url)
-{
-  // CURL setup
-  $curl = curl_init();
-  curl_setopt_array($curl, [
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_URL => $url
-  ]);
-
-  // Execute the request
-  $result = curl_exec($curl);
-
-  // Close request to clear up some resources
-  curl_close($curl);
-
-  return $result;
-}// end function makeRequest
 
 /*
 * function used to filter an array for 'next' page link
