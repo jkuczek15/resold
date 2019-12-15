@@ -38,7 +38,7 @@ use Nesk\Rialto\Data\JsFunction;
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
 $posts_parts = [
-  '/search/cla'
+  '/search/sya'
 ];
 
 // URL crawling ignores
@@ -57,7 +57,7 @@ $posts_string_ignores = ['/', ''];
 
 // limits
 $page_count = 500;
-$reply_sleep_time = 1;
+$reply_sleep_time = 3;
 
 ######################################
 ######################################
@@ -67,6 +67,9 @@ $reply_sleep_time = 1;
 $puppeteer = new Puppeteer;
 $headless = false;
 $timeout = 0;
+
+// launch a new instance of puppeteer chromium browser
+$browser = $puppeteer->launch(['headless' => $headless]);
 
 ######################################
 ######################################
@@ -82,6 +85,7 @@ $fp = fopen($output_file_path, "w");
 ######################################
 ######################################
 // loop over the post links collecting emails
+$scraped_urls = [];
 foreach($posts_parts as $posts_part)
 {
   $posts_url = $base_url.$posts_part;
@@ -91,8 +95,6 @@ foreach($posts_parts as $posts_part)
   do {
     // loop while we have pages to loop over
     try {
-      // launch a new instance of puppeteer chromium browser
-      $browser = $puppeteer->launch(['headless' => $headless, 'timeout' => $timeout]);
 
       // scrape the initial posts links
       echo '- Scraping post page '.$count.': '. $posts_url . "\r\n";
@@ -104,7 +106,7 @@ foreach($posts_parts as $posts_part)
         echo '-- Scraping post: '. $user_post_link . "\r\n";
         try {
           $page = $browser->newPage();
-          $page->goto($user_post_link);
+          $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
         }catch (Exception $e){
           echo 'Error visiting page: ',  $e->getMessage(), "\r\n";
           echo $user_post_link . "\r\n";
@@ -133,27 +135,29 @@ foreach($posts_parts as $posts_part)
 
       }// end foreach loop over post links
 
+      // keep track of the pages we've already scraped
+      $scraped_urls[] = $posts_url;
+
       // fetch the next link of posts
       $next_link_arr = filterLinks($posts_html->find('a'), [], [], '/s=/');
       $next_link_arr = array_filter($next_link_arr, "searchCheck");
       rsort($next_link_arr);
       $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
 
-      // close the browser
-      $browser->close();
     } catch (Exception $e){
       echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
     }// end try-catch
 
-  } while($posts_url != null && ++$count <= $page_count);
+  } while($posts_url != null && !in_array($posts_url, $scraped_urls) && ++$count <= $page_count);
 
 }// end foreach loop over post parts
 
 ######################################
 ######################################
-########## CSV CLEANUP ###############
+########## CLEANUP ###################
 ######################################
 ######################################
+$browser->close();
 fclose($fp);
 
 ######################################
