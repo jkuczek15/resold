@@ -1,32 +1,44 @@
 <?php
-set_time_limit(0);
 /**
  * craigslist.php
  *
  * This script is used to retreive craigslist emails from different sections
  * of the website. Most options are configurable under the config section.
  *
- * Run "composer install" and "npm install" from the root directory to install all dependencies.
- * Puppeteer is required to run Javascript and scrape emails correctly.
+ * The script will then run a node.js script to initiate puppeteer and send
+ * emails via gmail in the user's web browser. This is done to avoid spam detection.
  *
- * For educational purposes only
+ * Run "composer install" and "npm install" from the root directory to install all dependencies.
+ * Puppeteer is required to run Javascript and scrape emails correctly. "npm install" should also
+ * be run from the puppeteer-gmail directory
+ *
  * Enjoy :)
  *
  * Version Rev. 1.0.0
  */
 ######################################
 ######################################
+############# ENVIRONMENT ############
+######################################
+######################################
+set_time_limit(0);
+putenv("EMAIL_ACCOUNT=joe@resold.us");
+putenv("EMAIL_PASSWORD=Bigjoe3092$");
+
+######################################
+######################################
 ############# INCLUDES ###############
 ######################################
 ######################################
 include('includes/simple_html_dom.php');
+include('includes/console.php');
+include('vendor/autoload.php');
 
 ######################################
 ######################################
-############# 3RD PARTY ##############
+############# NAMESPACES #############
 ######################################
 ######################################
-include('vendor/autoload.php');
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
@@ -38,7 +50,7 @@ use Nesk\Rialto\Data\JsFunction;
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
 $posts_parts = [
-  '/search/sya'
+  '/search/cla'
 ];
 
 // URL crawling ignores
@@ -56,7 +68,7 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/', ''];
 
 // limits
-$page_count = 500;
+$page_count = 5;
 $reply_sleep_time = 3;
 
 ######################################
@@ -76,7 +88,7 @@ $browser = $puppeteer->launch(['headless' => $headless]);
 ############# CSV SETUP ##############
 ######################################
 ######################################
-$output_file_path = 'csv/emails.csv';
+$output_file_path = 'puppeteer-gmail/resources/posts-list.txt';
 $fp = fopen($output_file_path, "w");
 
 ######################################
@@ -89,50 +101,63 @@ $scraped_urls = [];
 foreach($posts_parts as $posts_part)
 {
   $posts_url = $base_url.$posts_part;
-  echo 'Beginning scrape on post part: '.$posts_url."\r\n";
   $count = 1;
-
-  do {
+  echo Console::light_blue('Beginning scrape on post part: '.$posts_url) . "\r\n";
+  do
+  {
     // loop while we have pages to loop over
-    try {
-
+    try
+    {
       // scrape the initial posts links
-      echo '- Scraping post page '.$count.': '. $posts_url . "\r\n";
+      echo Console::green('- Scraping post page '.$count.': '. $posts_url) . "\r\n";
       $posts_html = file_get_html($posts_url);
       $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
 
       foreach($post_links as $user_post_link)
       {
-        echo '-- Scraping post: '. $user_post_link . "\r\n";
-        try {
+        try
+        {
+          echo Console::cyan('-- Scraping post: '. $user_post_link) . "\r\n";
           $page = $browser->newPage();
           $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
-        }catch (Exception $e){
-          echo 'Error visiting page: ',  $e->getMessage(), "\r\n";
+
+          // Click the reply button and wait for the content to load
+          $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
+
+          // wait for email content to load
+          sleep($reply_sleep_time);
+
+          // evaluate the email and return the result
+          $result = $page->evaluate(JsFunction::createWithBody("return {
+            email: $('.mailapp').html(),
+            title: $('#titletextonly').html(),
+            price: $('.price').html(),
+            location: $('.postingtitletext > small').html(),
+            timeago: $('.timeago').html(),
+            url: window.location.href
+          }"));
+
+          // close the puppeteer page
+          $page->close();
+
+          // check if we were able to scrape an email by evaluating javascript
+          if(isset($result['email']) && $result['email'] !== null)
+          {
+            foreach($result as $key => $value)
+            {
+              $result[$key] = trim($value);
+            }
+            fputcsv($fp, $result);
+          }// end if email is set
+        }
+        catch (Exception $e)
+        {
+          echo Console::red('Error visiting page: '. $e->getMessage()) . "\r\n";
           echo $user_post_link . "\r\n";
           $page->close();
-          continue;
         }// end try-catch visiting a page
 
-        // Click the reply button and wait for the content to load
-        $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
-
-        // wait for email content to load
-        sleep($reply_sleep_time);
-
-        // evaluate the email and return the result
-        $result = $page->evaluate(JsFunction::createWithBody("return { email: $('.mailapp').html() }"));
-
-        // close the puppeteer page
-        $page->close();
-
-        // check if we were able to scrape an email by evaluating javascript
-        if(isset($result['email']) && $result['email'] !== null)
-        {
-          $email = $result['email'];
-          fputcsv($fp, [$email], "\t");
-        }// end if email is set
-
+        break 3;
       }// end foreach loop over post links
 
       // keep track of the pages we've already scraped
@@ -143,9 +168,12 @@ foreach($posts_parts as $posts_part)
       $next_link_arr = array_filter($next_link_arr, "searchCheck");
       rsort($next_link_arr);
       $posts_url = isset($next_link_arr[0]) ? $base_url.$next_link_arr[0] : null;
-
-    } catch (Exception $e){
-      echo 'Error scraping post: ',  $e->getMessage(), "\r\n";
+    }
+    catch (Exception $e)
+    {
+      echo Console::red('Error scraping post: '.  $e->getMessage()) . "\r\n";
+      $browser->close();
+      $browser = $puppeteer->launch(['headless' => $headless]);
     }// end try-catch
 
   } while($posts_url != null && !in_array($posts_url, $scraped_urls) && ++$count <= $page_count);
@@ -162,9 +190,17 @@ fclose($fp);
 
 ######################################
 ######################################
+########## SEND EMAILS ###############
+######################################
+######################################
+// passthru('node puppeteer-gmail/index.js');
+
+######################################
+######################################
 ############# FUNCTIONS ##############
 ######################################
 ######################################
+
 /*
 * filter an array of link elements according to $regex_ignores
 * params: $links - array of of link elements

@@ -1,5 +1,5 @@
 {
     "require": {
-        "nesk/puphpeteer": "^1.6"
+        "nesk/puphpeteer": "^1.6",
     }
 }
