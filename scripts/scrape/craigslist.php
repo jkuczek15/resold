@@ -156,8 +156,7 @@ foreach($posts_parts as $posts_part)
           echo $user_post_link . "\r\n";
           $page->close();
         }// end try-catch visiting a page
-
-        break 3;
+        
       }// end foreach loop over post links
 
       // keep track of the pages we've already scraped
