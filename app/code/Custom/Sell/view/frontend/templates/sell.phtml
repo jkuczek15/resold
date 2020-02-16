@@ -106,19 +106,23 @@ if(isset($_GET['id']) && $_GET['id'] != null)
               <div style="color: #e02b27; font-size: 1.2rem;" class="custom-error" id="price_error" v-if="price_error" v-cloak>Please enter a whole number.</div>
             </div>
           </div>
-          <div class="col-md-3 service-fee">
+          <!-- <div class="col-md-3 service-fee">
             <div class="control" style="margin-top: 0.5em">
               <strong class="label" style="padding-right: 15px">
-                <span data-toggle="tooltip" title="Resold Fee: 5.6% <br/> Stripe Fee: 2.9% + $0.30" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
+                <span data-toggle="tooltip" title="Resold Fee: 0% <br/> Stripe Fee: 2.9% + $0.30" style="background-color: rgb(238, 238, 238); padding-right: 0.3em; padding-left: 0.3em">
                   <span style="font-size: 0.9em;" class="fa fa-info"></span>
                 </span>
                 <?php /* @escapeNotVerified */ echo __('Service Fee') ?>
               </strong>
               <label style="width: 31% !important; color: black;" class="form-input" id="service_fee" title="<?php /* @escapeNotVerified */ echo __('Service Fee') ?>" v-html="serviceFee"></label>
             </div>
-          </div>
+          </div> -->
           <div class="col-md-3 your-profit" style="margin-top: 0.5em; ">
-            <strong class="your-profit-label"><span><?php /* @escapeNotVerified */ echo __('Your Profit') ?></span></strong>
+            <strong class="your-profit-label">
+              <span data-toggle="tooltip" title="Payment Processing Fee: 2.9% + $0.30" style="background-color: rgb(238, 238, 238); margin-right: 0.1em; padding-right: 0.3em; padding-left: 0.3em">
+                <span style="font-size: 0.9em;" class="fa fa-info"></span>
+              </span>
+              <span><?php /* @escapeNotVerified */ echo __('Your Profit') ?></span></strong>
               <label style="width: 31% !important; color: black;" class="form-input" id="your_profit" title="<?php /* @escapeNotVerified */ echo __('Your Profit') ?>" v-html="yourProfit"></label>
           </div>
         </div>
@@ -198,7 +202,7 @@ if(isset($_GET['id']) && $_GET['id'] != null)
         <div class="field description">
             <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Details') ?></span></label>
             <div class="control">
-                <textarea style="resize: none;" placeholder="Enter more Details..." class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true, maxlength: <?= $is_amazon ? 100000 : 2000 ?>}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
+                <textarea style="resize: none;" placeholder="Enter more details..." class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true, maxlength: <?= $is_amazon ? 100000 : 2000 ?>}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
             </div>
         </div>
         <div class="field description">
@@ -420,7 +424,8 @@ require([
       computed: {
         serviceFee: function () {
           let stripe_fee = this.form_data.price * 0.029 + 0.3;
-          let resold_fee = this.form_data.price * 0.056;
+          // let resold_fee = this.form_data.price * 0.056;
+          let resold_fee = 0;
 
           if(!isNaN(resold_fee) && resold_fee > 50){
             resold_fee = 50;
@@ -445,7 +450,6 @@ require([
         }
       }
     });
-
 
 <?php
   if($mode === "Edit"){
