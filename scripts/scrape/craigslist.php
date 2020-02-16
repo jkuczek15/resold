@@ -156,7 +156,7 @@ foreach($posts_parts as $posts_part)
           echo $user_post_link . "\r\n";
           $page->close();
         }// end try-catch visiting a page
-        
+
       }// end foreach loop over post links
 
       // keep track of the pages we've already scraped
@@ -199,7 +199,6 @@ fclose($fp);
 ############# FUNCTIONS ##############
 ######################################
 ######################################
-
 /*
 * filter an array of link elements according to $regex_ignores
 * params: $links - array of of link elements
