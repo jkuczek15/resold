@@ -257,12 +257,6 @@ tr.totals:nth-child(2) > th:nth-child(1) > span:nth-child(2) {
   .payment-group > div:nth-child(1) {
     margin-left: 0.8em;
   }
-  .logo {
-    display: none !important;
-  }
-  .skip-link {
-    width: 25% !important;
-  }
 }
 @media(min-width: 586px){
   #contact-form > .fieldset > .field:not(.choice) > .control {
