@@ -40,7 +40,9 @@ $total = $totals['subtotal']->getValue();
     <?php else:?>
 <?php
     $stripe_fee = ($total * 0.029) + 0.3;
-    $resold_fee = ($total * 0.056);
+    // $resold_fee = ($total * 0.056);
+    $resold_fee = 0;
+    
     if($resold_fee > 50){
       $resold_fee = 50;
     }
