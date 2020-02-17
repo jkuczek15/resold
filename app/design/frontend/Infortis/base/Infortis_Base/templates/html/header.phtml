@@ -275,43 +275,6 @@
                     <!-- Skip links -->
                     <div id="skip-links" class="skip-links-wrapper skip-links--<?php echo $skipLinksCount; ?>">
 
-                        <?php //Menu on mobile devices ?>
-                            <div id="header-nav" class="skip-content skip-content--style">
-                                <div id="nav-marker-mobile"></div>
-                            </div>
-
-                        <?php if (!empty($searchHtml)): ?>
-                            <div id="search-marker-mobile"></div>
-                            <?php echo $searchHtml; ?>
-                        <?php endif; ?>
-
-                        <?php if (!empty($accountLinksHtml)): ?>
-                            <div id="account-links-marker-mobile"></div>
-                            <?php
-                            if($mobile && $logged_in){
-                            ?>
-                                <div id="header-account" class="account-links top-links links-wrapper-separators-left skip-content skip-content--style skip-active">
-                                  <ul class="header links">
-                                    <li><a href="/customer/account/listings/">Listings</a></li>
-                                    <li class="nav item"><a href="/csmessaging/frontend/inbox/">Messages</a></li>
-                                    <li class="nav item"><a href="/customer/account/">Account</a></li>
-                                    <li class="nav item"><a href="/sales/order/history/">Orders</a></li>
-                                    <li class="nav item"><a href="/review/customer/">Reviews</a></li>
-                                    <li class="nav item"><a href="/customer/account/edit/">Settings</a></li>
-                                    <li class="nav item"><a href="/api/stripe/dashboard">Stripe Dashboard</a></li>
-                                  </ul>
-                                </div>
-                            <?php
-                          }else {
-                            echo $accountLinksHtml;
-                          }
-                            ?>
-                        <?php endif; ?>
-
-                        <?php if (!empty($compareHtml)): ?>
-                            <div id="mini-compare-marker-mobile"></div>
-                            <?php echo $compareHtml; ?>
-                        <?php endif; ?>
 
                         <div class="skip-link skip-nav">
                             <span class="icon ic ic-home" onclick="window.location = '/'"></span>
@@ -325,7 +288,7 @@
                         <?php endif; ?>
 
                         <div class="skip-link skip-nav">
-                            <span class="icon ic ic-plus" onclick="window.location = '/sell'"></span>
+                            <img src="/pub/media/wysiwyg/mini-logo.png" onclick="window.location = '/sell'" width="85%" />
                             <span class="label"><?php echo __('Sell'); ?></span>
                         </div>
 
@@ -372,6 +335,44 @@
                         <?php if (!empty($cartHtml)): ?>
                             <div id="mini-cart-marker-mobile"></div>
                             <?php echo $cartHtml; ?>
+                        <?php endif; ?>
+
+                        <?php //Menu on mobile devices ?>
+                            <div id="header-nav" class="skip-content skip-content--style">
+                                <div id="nav-marker-mobile"></div>
+                            </div>
+
+                        <?php if (!empty($searchHtml)): ?>
+                            <div id="search-marker-mobile"></div>
+                            <?php echo $searchHtml; ?>
+                        <?php endif; ?>
+
+                        <?php if (!empty($accountLinksHtml)): ?>
+                            <div id="account-links-marker-mobile"></div>
+                            <?php
+                            if($mobile && $logged_in){
+                            ?>
+                                <div id="header-account" class="account-links top-links links-wrapper-separators-left skip-content skip-content--style skip-active">
+                                  <ul class="header links">
+                                    <li><a href="/customer/account/listings/">Listings</a></li>
+                                    <li class="nav item"><a href="/csmessaging/frontend/inbox/">Messages</a></li>
+                                    <li class="nav item"><a href="/customer/account/">Account</a></li>
+                                    <li class="nav item"><a href="/sales/order/history/">Orders</a></li>
+                                    <li class="nav item"><a href="/review/customer/">Reviews</a></li>
+                                    <li class="nav item"><a href="/customer/account/edit/">Settings</a></li>
+                                    <li class="nav item"><a href="/api/stripe/dashboard">Stripe Dashboard</a></li>
+                                  </ul>
+                                </div>
+                            <?php
+                          }else {
+                            echo $accountLinksHtml;
+                          }
+                            ?>
+                        <?php endif; ?>
+
+                        <?php if (!empty($compareHtml)): ?>
+                            <div id="mini-compare-marker-mobile"></div>
+                            <?php echo $compareHtml; ?>
                         <?php endif; ?>
 
                         <div class="skip-links-clearer clearer"></div>
@@ -674,7 +675,7 @@ requirejs(['jquery', 'smartheader', 'stickyheader', 'dropdownDialog'], function(
 }
 
 @media(max-width: 586px) {
-  #header-account {
+  /* #header-account {
     margin-top: -27.9em !important;
   }
   #header-nav {
@@ -682,13 +683,13 @@ requirejs(['jquery', 'smartheader', 'stickyheader', 'dropdownDialog'], function(
   }
   #header-search {
     margin-top: -5.75em !important;
-  }
-  .header-m-primary {
+  } */
+  /* .header-m-primary {
       position: fixed;
       width: 100%;
       top: 94.5%;
       z-index: 9999999999;
-  }
+  } */
   .skip-link {
     width: 20% !important;
   }
@@ -698,12 +699,12 @@ requirejs(['jquery', 'smartheader', 'stickyheader', 'dropdownDialog'], function(
   .logo {
     display: none !important;
   }
-  .footer-copyright {
+  /* .footer-copyright {
     display: none;
   }
   .footer-bottom {
     background-color: white;
-  }
+  } */
 }
 .sticky-header .level-top > span {
   font-size: 0.89em;
