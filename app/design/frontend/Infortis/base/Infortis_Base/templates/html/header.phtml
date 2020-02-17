@@ -275,8 +275,8 @@
                     <!-- Skip links -->
                     <div id="skip-links" class="skip-links-wrapper skip-links--<?php echo $skipLinksCount; ?>">
 
-                        <div class="skip-link skip-nav">
-                            <span class="icon ic ic-home" onclick="window.location = '/'"></span>
+                        <div class="skip-link skip-nav" onclick="window.location = '/'">
+                            <span class="icon ic ic-home"></span>
                             <span class="label"><?php echo __('Home'); ?></span>
                         </div>
                         <?php if (!empty($menuHtml)): ?>
@@ -286,8 +286,8 @@
                             </div>
                         <?php endif; ?>
 
-                        <div class="skip-link skip-nav">
-                            <img src="/pub/media/wysiwyg/mini-logo.png" onclick="window.location = '/sell'" width="85%" />
+                        <div class="skip-link skip-nav" onclick="window.location = '/sell'">
+                            <img src="/pub/media/wysiwyg/mini-logo.png" width="85%" />
                             <span class="label"><?php echo __('Sell'); ?></span>
                         </div>
 
