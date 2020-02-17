@@ -308,6 +308,6 @@ a.custom-button {
 .header-m-container {
   position: fixed;
   width: 100%;
-  z-index: 999999999;
+  z-index: 20;
   margin-top: -0.4em;
 }
