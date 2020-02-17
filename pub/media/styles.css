@@ -305,3 +305,9 @@ button {
 a.custom-button {
   border-radius: 5px !important;
 }
+.header-m-container {
+  position: fixed;
+  width: 100%;
+  z-index: 999999999;
+  margin-top: -0.4em;
+}
