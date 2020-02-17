@@ -80,13 +80,13 @@ else
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Listing Title') ?></span></label>
             <div class="control">
-                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Listing Title') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: <?= $is_amazon ? '1000' : '24' ?>}" v-model="form_data.name" placeholder="Enter a listing title..."/>
+                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Listing Title') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: <?= $is_amazon ? '1000' : '24' ?>}" v-model="form_data.name" placeholder="Enter a title..."/>
             </div>
         </div>
         <div class="field title_description">
             <label class="label" for="title_description"><span><?php /* @escapeNotVerified */ echo __('Title Description') ?></span></label>
             <div class="control">
-                <input class="form-input" name="title_description" id="title_description" title="<?php /* @escapeNotVerified */ echo __('Title Description') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('title_description')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 42}" v-model="form_data.title_description" placeholder="Enter a title description..."/>
+                <input class="form-input" name="title_description" id="title_description" title="<?php /* @escapeNotVerified */ echo __('Title Description') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('title_description')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 42}" v-model="form_data.title_description" placeholder="Enter a description..."/>
             </div>
         </div>
         <div class="field price">
