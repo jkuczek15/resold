@@ -286,22 +286,22 @@ body.searchautocomplete__active .block-search {
   padding-bottom: 0px !important;
 }
 .filter-title > strong {
-  border-radius: 20px;
+  border-radius: 5px;
 }
 input {
-  border-radius: 20px !important;
+  border-radius: 5px !important;
 }
 textarea {
-  border-radius: 20px !important;
+  border-radius: 5px !important;
 }
 select {
-  border-radius: 20px !important;
+  border-radius: 5px !important;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 button {
-  border-radius: 10px !important;
+  border-radius: 5px !important;
 }
 a.custom-button {
-  border-radius: 10px !important;
+  border-radius: 5px !important;
 }
