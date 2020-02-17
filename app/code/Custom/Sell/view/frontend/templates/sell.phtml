@@ -765,7 +765,7 @@ require([
          $('#submit').prop('disabled', false);
        }, function() {
          document.getElementById("local").checked = false;
-         alert('You must give Resold access to your location to post locally. Please allow location permissions by clicking the lock in the top left corner of the browser.');
+         alert('You must give Resold access to your location to post items locally.');
          $('#submit').prop('disabled', false);
          handleLocationError(true, infoWindow, map.getCenter());
        });
