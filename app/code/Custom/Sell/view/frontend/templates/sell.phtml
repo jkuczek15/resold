@@ -49,7 +49,8 @@ if(isset($_GET['id']) && $_GET['id'] != null)
     }else{
       $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($category_ids[0]);
     }// end if this item we're editing doesn't have any categories
-}else
+}
+else
 {
   $product_id = null;
   $mode = "Create";
@@ -346,7 +347,7 @@ option:disabled {
   }
   .mobile-price {
     display: inline-block !important;
-    padding-right: 2.75em;
+    padding-right: 2.95em;
   }
   .desktop-price {
     display: none !important;
@@ -369,7 +370,7 @@ option:disabled {
     color: black;
   }
   .your-profit-label {
-    padding-right: 2.3em;
+    padding-right: 1.3em;
   }
 }
 
