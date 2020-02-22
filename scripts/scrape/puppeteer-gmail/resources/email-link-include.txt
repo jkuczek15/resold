@@ -1,1 +1,12 @@
-You should check out {url}
+You should check out {url}.
+List your item on {url}.
+Start selling on {url}.
+Sign up at {url}.
+You should check out {url} and start selling today!
+Take a look at {url} and start selling today!
+Check out {url}.
+Get started at {url},
+List your first item at {url}.
+Sign up and get paid at {url}.
+Sign up and start selling at {url}.
+Zero-fee selling starts at {url}.
