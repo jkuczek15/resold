@@ -68,7 +68,7 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/', ''];
 
 // limits
-$page_count = 5;
+$page_count = 15;
 $reply_sleep_time = 3;
 
 ######################################
