@@ -50,7 +50,7 @@ use Nesk\Rialto\Data\JsFunction;
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
 $posts_parts = [
-  '/search/sss?query=shoes&sort=rel'
+  '/search/cla'
 ];
 
 // URL crawling ignores
@@ -117,7 +117,7 @@ foreach($posts_parts as $posts_part)
         try
         {
           echo Console::cyan('-- Scraping post: '. $user_post_link) . "\r\n";
-          $page = $browser->newPage();
+          $page = $browser->pages()[0];
           $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
 
           // Click the reply button and wait for the content to load
@@ -135,9 +135,6 @@ foreach($posts_parts as $posts_part)
             timeago: $('.timeago').html(),
             url: window.location.href
           }"));
-
-          // close the puppeteer page
-          $page->close();
 
           // check if we were able to scrape an email by evaluating javascript
           if(isset($result['email']) && $result['email'] !== null)
