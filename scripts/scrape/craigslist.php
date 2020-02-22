@@ -82,7 +82,6 @@ $timeout = 0;
 // launch a new instance of puppeteer chromium browser
 $browser = $puppeteer->launch(['headless' => false]);
 
-
 ######################################
 ######################################
 ############# CSV SETUP ##############
@@ -162,7 +161,7 @@ foreach($posts_parts as $posts_part)
       // keep track of the pages we've already scraped
       $scraped_urls[] = $posts_url;
 
-      // fetch the next link of posts
+      // fetch the next page of posts
       $next_link_arr = filterLinks($posts_html->find('a'), [], [], '/s=/');
       $next_link_arr = array_filter($next_link_arr, "searchCheck");
       rsort($next_link_arr);
