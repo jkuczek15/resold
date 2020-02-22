@@ -87,7 +87,7 @@ $browser = $puppeteer->launch(['headless' => false]);
 ############# CSV SETUP ##############
 ######################################
 ######################################
-$output_file_path = 'puppeteer-gmail/resources/posts-list.txt';
+$output_file_path = 'puppeteer-gmail/db/posts-list.txt';
 $fp = fopen($output_file_path, "w");
 
 ######################################

@@ -8,7 +8,7 @@ let filter = (arr) => {
 };
 
 const posts = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/posts-list.txt`), "utf8")
+  .readFileSync(path.join(__dirname, "./", `db/posts-list.txt`), "utf8")
   .split("\n"));
 
 const emailStarters = filter(fs
