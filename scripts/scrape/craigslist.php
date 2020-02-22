@@ -50,7 +50,7 @@ use Nesk\Rialto\Data\JsFunction;
 // URL configuration
 $base_url = 'https://chicago.craigslist.org';
 $posts_parts = [
-  '/search/cla'
+  '/search/sss?query=shoes&sort=rel'
 ];
 
 // URL crawling ignores
@@ -77,11 +77,11 @@ $reply_sleep_time = 3;
 ######################################
 ######################################
 $puppeteer = new Puppeteer;
-$headless = false;
 $timeout = 0;
 
 // launch a new instance of puppeteer chromium browser
-$browser = $puppeteer->launch(['headless' => $headless]);
+$browser = $puppeteer->launch(['headless' => false]);
+
 
 ######################################
 ######################################
@@ -186,13 +186,6 @@ foreach($posts_parts as $posts_part)
 ######################################
 $browser->close();
 fclose($fp);
-
-######################################
-######################################
-########## SEND EMAILS ###############
-######################################
-######################################
-passthru('node puppeteer-gmail/index.js');
 
 ######################################
 ######################################

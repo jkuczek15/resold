@@ -9,7 +9,7 @@ let getRandom = (arr) => {
 
 let templateReplace = (phrase, key, value) => {
   if(phrase.includes(key)){
-    return phrase.replace(key, value).replace("\"", "");
+    return phrase.replace(key, value).replace(/['"]+/g, '').trim();
   }else{
     return phrase;
   }
