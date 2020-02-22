@@ -30,7 +30,7 @@ let templateReplace = (phrase, key, value) => {
     let post = config.posts[i].split(",");
 
     let email = post[0];
-    let title = post[1];
+    let title = post[1].replace(/&amp;/g, '&');
 
     let subject = getRandom(config.emailSubjects);
     let greeting = getRandom(config.emailStarters);
