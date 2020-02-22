@@ -23,7 +23,7 @@ let templateReplace = (phrase, key, value) => {
   });
 
   const lastEmailIndex = await emailSender.getLastSentEmailIndex();
-  const page = await browser.newPage();
+  const page = (await browser.pages())[0];
   await emailSender.login(page);
 
   for (let i = lastEmailIndex; i < config.posts.length; i++) {
