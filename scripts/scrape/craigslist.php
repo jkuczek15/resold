@@ -48,9 +48,9 @@ use Nesk\Rialto\Data\JsFunction;
 ######################################
 ######################################
 // URL configuration
-$base_url = 'https://chicago.craigslist.org';
-$posts_parts = [
-  '/search/cla'
+$base_url = 'https://sfbay.craigslist.org';
+$url_parts = [
+  '/search/sss?query=cell+phones&sort=rel'
 ];
 
 // URL crawling ignores
@@ -97,9 +97,9 @@ $fp = fopen($output_file_path, "w");
 ######################################
 // loop over the post links collecting emails
 $scraped_urls = [];
-foreach($posts_parts as $posts_part)
+foreach($url_parts as $url_part)
 {
-  $posts_url = $base_url.$posts_part;
+  $posts_url = $base_url.$url_part;
   $count = 1;
   echo Console::light_blue('Beginning scrape on post part: '.$posts_url) . "\r\n";
   do
@@ -241,5 +241,6 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
 */
 function searchCheck($element)
 {
-  return !preg_match("/https:\/\/chicago.craigslist.org/", $element);
+  global $base_url;
+  return !preg_match("/$base_url/", $element);
 }// end function searchCheck

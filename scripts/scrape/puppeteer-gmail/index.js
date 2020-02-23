@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer-extra");
 const emailSender = require("./email-sender");
-const config = require("./config");
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
+let config = require("./config");
 
 let getRandom = (arr) => {
   return arr[Math.floor(Math.random()*arr.length)];
@@ -22,32 +22,37 @@ let templateReplace = (phrase, key, value) => {
     timeout: 0
   });
 
-  const lastEmailIndex = await emailSender.getLastSentEmailIndex();
   const page = (await browser.pages())[0];
   await emailSender.login(page);
 
-  for (let i = lastEmailIndex; i < config.posts.length; i++) {
-    let post = config.posts[i].split(",");
+  let retry = 0;
+  while(retry++ < config.read_retries) {
+    let lastEmailIndex = await emailSender.getLastSentEmailIndex();
+    config = require('./config');
 
-    let email = post[0];
-    let title = post[1].replace(/&amp;/g, '&');
+    for (let i = lastEmailIndex; i < config.posts.length; i++) {
+      let post = config.posts[i].split(",");
 
-    let subject = getRandom(config.emailSubjects);
-    let greeting = getRandom(config.emailStarters);
-    let body = templateReplace(getRandom(config.emailBodys), "{title}", title);
-    let linkInclude = templateReplace(getRandom(config.emailLinkIncludes), "{url}", config.resold_url);
-    let closing = getRandom(config.emailClosers);
-    let name = getRandom(config.emailNames);
+      let email = post[0];
+      let title = post[1].replace(/&amp;/g, '&');
 
-    let message = `${greeting}\r\n${body} ${linkInclude}\r\n${closing}\r\n${name}`;
+      let subject = getRandom(config.emailSubjects);
+      let greeting = getRandom(config.emailStarters);
+      let body = templateReplace(getRandom(config.emailBodys), "{title}", title);
+      let linkInclude = templateReplace(getRandom(config.emailLinkIncludes), "{url}", config.resold_url);
+      let closing = getRandom(config.emailClosers);
+      let name = getRandom(config.emailNames);
 
-    await emailSender.writeNewEmail(page, {
-      index: i,
-      subject,
-      email,
-      message
-    });
-  }
+      let message = `${greeting}\r\n${body} ${linkInclude}\r\n${closing}\r\n${name}`;
+
+      await emailSender.writeNewEmail(page, {
+        index: i,
+        subject,
+        email,
+        message
+      });
+    }// end for loop over posts
+  }// end while loop for retries
 
   await browser.close();
 })();
