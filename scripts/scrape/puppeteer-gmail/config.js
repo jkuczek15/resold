@@ -36,9 +36,11 @@ const emailSubjects = filter(fs
   .split("\n"));
 
 const resold_url = "https://resold.us"
+const read_retries = 10000;
 
 module.exports = {
   resold_url,
+  read_retries,
   posts,
   emailSubjects,
   emailStarters,
