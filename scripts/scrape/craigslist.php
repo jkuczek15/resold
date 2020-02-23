@@ -242,5 +242,5 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
 function searchCheck($element)
 {
   global $base_url;
-  return !preg_match("/$base_url/", $element);
+  return !preg_match("/".str_replace('/', '\/', $base_url)."/", $element);
 }// end function searchCheck
