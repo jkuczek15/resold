@@ -73,7 +73,7 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/', ''];
 
 // limits
-$page_count = 15;
+$max_page_count = 15;
 $reply_sleep_time = 4;
 $max_images = 2;
 
@@ -116,10 +116,11 @@ chmod($base_image_path, 0777);
 ######################################
 // loop over the post links collecting emails
 $scraped_urls = [];
+$post_count = 1;
 foreach($url_parts as $url_part => $category_ids)
 {
   $posts_url = $base_url.$url_part;
-  $count = 1;
+  $page_count = 1;
   echo Console::light_blue('Beginning scrape on post part: '.$posts_url) . "\r\n";
   do
   {
@@ -127,10 +128,9 @@ foreach($url_parts as $url_part => $category_ids)
     try
     {
       // scrape the initial posts links
-      echo Console::green('- Scraping post page '.$count.': '. $posts_url) . "\r\n";
+      echo Console::green('- Scraping post page '.$page_count.': '. $posts_url) . "\r\n";
       $posts_html = file_get_html($posts_url);
       $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
-      $post_count = 1;
       foreach($post_links as $user_post_link)
       {
         try
@@ -225,7 +225,7 @@ foreach($url_parts as $url_part => $category_ids)
       $browser = $puppeteer->launch(['headless' => $headless]);
     }// end try-catch
 
-  } while($posts_url != null && !in_array($posts_url, $scraped_urls) && ++$count <= $page_count);
+  } while($posts_url != null && !in_array($posts_url, $scraped_urls) && ++$page_count <= $max_page_count);
 
 }// end foreach loop over post parts
 
