@@ -33,7 +33,7 @@ puppeteer/node_modules/*
 /phpserver/pub/*
 /pub/media/*.*
 !/pub/media/.htaccess
-/pub/media/catalog/*
+/pub/media/catalog/product/*
 !/pub/media/catalog/craigslist/*
 !/pub/media/catalog/.htaccess
 /pub/media/customer/*
