@@ -2,17 +2,15 @@
 /**
  * craigslist.php
  *
- * This script is used to retreive craigslist emails from different sections
+ * This script is used to retreive craigslist data from different sections
  * of the website. Most options are configurable under the config section.
  *
- * The script will then run a node.js script to initiate puppeteer and send
- * emails via gmail in the user's web browser. This is done to avoid spam detection.
+ * The output of the script will then be used to send emails via gmail in the user's web browser.
+ * This is done to avoid spam detection and can be found in the puppeteer-gmail folder.
  *
  * Run "composer install" and "npm install" from the root directory to install all dependencies.
  * Puppeteer is required to run Javascript and scrape emails correctly. "npm install" should also
  * be run from the puppeteer-gmail directory
- *
- * Enjoy :)
  *
  * Version Rev. 1.0.0
  */
@@ -174,6 +172,7 @@ foreach($url_parts as $url_part => $category_ids)
               deleteDir($image_folder);
             }
             mkdir($image_folder);
+            chmod($image_folder, 0777);
 
             // download images
             $images = $result['images'];
@@ -223,7 +222,6 @@ foreach($url_parts as $url_part => $category_ids)
 ########## CLEANUP ###################
 ######################################
 ######################################
-chmod('/var/www/html/pub/media/catalog/craigslist', 0777);
 $browser->close();
 fclose($fp);
 
