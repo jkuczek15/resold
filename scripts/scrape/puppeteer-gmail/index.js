@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer-extra");
 const emailSender = require("./email-sender");
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
 let config = require("./config");
+const debug = false;
 
 let getRandom = (arr) => {
   return arr[Math.floor(Math.random()*arr.length)];
@@ -34,9 +35,12 @@ let templateReplace = (phrase, key, value) => {
       let post = config.posts[i].split(",");
 
       let email = post[0];
-      email = 'joe.kuczek@gmail.com';
       let title = post[1].replace(/&amp;/g, '&');
       let queryString = post[2];
+
+      if(debug){
+        email = 'joe.kuczek@gmail.com';
+      }
 
       let subject = getRandom(config.emailSubjects);
       let greeting = getRandom(config.emailStarters);
