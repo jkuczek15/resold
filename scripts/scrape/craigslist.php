@@ -21,7 +21,7 @@
 ######################################
 set_time_limit(0);
 putenv("EMAIL_ACCOUNT=joe@resold.us");
-putenv("EMAIL_PASSWORD=Bigjoe3092$");
+putenv("EMAIL_PASSWORD=".base64_decode('Qmlnam9lMzA5MiQ='));
 
 ######################################
 ######################################
@@ -46,16 +46,16 @@ use Nesk\Rialto\Data\JsFunction;
 ######################################
 ######################################
 // URL configuration
-$base_url = 'https://sfbay.craigslist.org';
+$base_url = 'https://chicago.craigslist.org';
 
 // location configuration
-$latitude = '37.773972';
-$longitude = '-122.431297';
-$location_city = 'San Francisco';
+$latitude = '41.8781';
+$longitude = '-87.6298';
+$location_city = 'Chicago';
 
 // mapping between craigslist search url and Resold category
 $url_parts = [
-  '/search/sss?query=clothes&sort=rel' => [114]
+  '/search/sss?query=shoes&sort=rel' => [114]
 ];
 
 // URL crawling ignores
@@ -75,7 +75,7 @@ $posts_string_ignores = ['/', ''];
 // limits
 $page_count = 15;
 $reply_sleep_time = 4;
-$max_images = 10;
+$max_images = 2;
 
 ######################################
 ######################################
@@ -95,6 +95,19 @@ $browser = $puppeteer->launch(['headless' => false]);
 ######################################
 $output_file_path = 'puppeteer-gmail/db/posts-list.txt';
 $fp = fopen($output_file_path, "w");
+
+######################################
+######################################
+############# IMAGE FOLDER ###########
+######################################
+######################################
+$base_image_path = '/var/www/html/pub/media/catalog/craigslist/';
+if(file_exists($base_image_path)){
+  deleteDir($base_image_path);
+}// end if folder exists
+
+mkdir($base_image_path);
+chmod($base_image_path, 0777);
 
 ######################################
 ######################################
@@ -124,11 +137,14 @@ foreach($url_parts as $url_part => $category_ids)
         {
           echo Console::cyan('-- Scraping post: '. $user_post_link) . "\r\n";
           $page = $browser->pages()[0];
-          $user_post_link = "https://sfbay.craigslist.org/eby/clo/d/concord-authentic-brand-new-womens/7077982885.html";
           $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
 
           // Click the reply button and wait for the content to load
-          $page->hover('#thumbs > a:nth-child(2)');
+          $thumbs_selector = '#thumbs > a:nth-child(2)';
+          if($page->querySelector($thumbs_selector)){
+            $page->hover($thumbs_selector);
+          }// end if we have multiple images
+
           $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
 
           // wait for email content to load
@@ -166,11 +182,7 @@ foreach($url_parts as $url_part => $category_ids)
             $result['location_city'] = $location_city;
 
             // setup image folder
-            $image_folder = '/var/www/html/pub/media/catalog/craigslist/post-'.$post_count++.'/';
-            if(file_exists($image_folder))
-            {
-              deleteDir($image_folder);
-            }
+            $image_folder = $base_image_path.'post-'.$post_count++.'/';
             mkdir($image_folder);
             chmod($image_folder, 0777);
 

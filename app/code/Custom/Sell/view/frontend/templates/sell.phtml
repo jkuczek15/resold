@@ -563,6 +563,9 @@ require([
         // remove file inputs (causes bug on iphone)
         $('input[type="file"]').remove();
 
+        // hide the profile button while we submit
+        $('.dropbtn').hide();
+
         // append the image paths to the form
         $('<input>').attr({
           type: 'hidden',
@@ -583,10 +586,12 @@ require([
             if(data.error != undefined){
               $('#error-text').html(data.error);
               $('#error').show();
+              $('.dropbtn').show();
             }else if(data.stripe_redirect == 'Y'){
               history.pushState({}, "My Listings", "/customer/account/listings");
               window.location = '/api/stripe/connect';
             }else if(data.success == 'Y'){
+              $('.dropbtn').show();
               window.location = '/customer/account/listings';
             }
           }
