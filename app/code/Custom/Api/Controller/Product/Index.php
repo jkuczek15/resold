@@ -190,7 +190,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setAttributeSetId(4);
       $_product->setVisibility(4);
       $_product->setPrice($post['price']);
-      $_product->setDescription($post['description']);
+      $_product->setDescription(nl2br($post['description']));
       $_product->setCategoryIds([$post['lowestcategory'], $all_category_id]);
       $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
       $_product->setWebsiteIds(array(1));
