@@ -77,7 +77,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         if (!$this->session->isLoggedIn()) {
             $_SESSION['from_sell_form'] = true;
-            $sell_url = 'https://'.$_SERVER['HTTP_HOST'].'/sell';
+            $sell_url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             return $resultRedirect->setPath('customer/account/create?referer='.urlencode($sell_url));
         }// end if the user is not logged in
 
@@ -87,6 +87,9 @@ class Index extends \Magento\Framework\App\Action\Action
         $standalone = $this->_objectManager->create('Ced\CsStripePayment\Model\Standalone');
         $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
 
+        ##########################################
+        ##########################################
+        ##########################################
         // check for a stripe authentication code
         if(isset($_GET['code']) && count($stripe_model) == 0){
           // stripe authentication code was passed, authenticate the user

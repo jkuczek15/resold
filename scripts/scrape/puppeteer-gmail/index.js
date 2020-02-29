@@ -44,9 +44,9 @@ let templateReplace = (phrase, key, value) => {
       let closer = getRandom(config.emailClosers);
       let name = getRandom(config.emailNames);
 
-      let url = `${config.resold_url}/sell.php${queryString}`;
+      let url = `${config.resold_url}/sell${queryString}`;
       let message = `${greeting}\r\n${body}\r\n`;
-      let closing = `${closer}\r\n${name}`;
+      let closing = `\r\n${closer}\r\n${name}`;
 
       await emailSender.writeNewEmail(page, {
         index: i,

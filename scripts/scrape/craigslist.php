@@ -49,13 +49,15 @@ use Nesk\Rialto\Data\JsFunction;
 ######################################
 // URL configuration
 $base_url = 'https://sfbay.craigslist.org';
+
+// location configuration
+$latitude = '37.773972';
+$longitude = '-122.431297';
+$location_city = 'San Francisco';
+
+// mapping between craigslist search url and Resold category
 $url_parts = [
-  '/search/sss?query=clothes&sort=rel' =>
-  [
-    '1st' => 'Fashion',
-    '2nd' => 'Men',
-    '3rd' => 114
-  ]
+  '/search/sss?query=clothes&sort=rel' => [114]
 ];
 
 // URL crawling ignores
@@ -74,7 +76,8 @@ $posts_string_ignores = ['/', ''];
 
 // limits
 $page_count = 15;
-$reply_sleep_time = 3;
+$reply_sleep_time = 4;
+$max_images = 10;
 
 ######################################
 ######################################
@@ -102,7 +105,7 @@ $fp = fopen($output_file_path, "w");
 ######################################
 // loop over the post links collecting emails
 $scraped_urls = [];
-foreach($url_parts as $url_part => $category_map)
+foreach($url_parts as $url_part => $category_ids)
 {
   $posts_url = $base_url.$url_part;
   $count = 1;
@@ -116,7 +119,7 @@ foreach($url_parts as $url_part => $category_map)
       echo Console::green('- Scraping post page '.$count.': '. $posts_url) . "\r\n";
       $posts_html = file_get_html($posts_url);
       $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
-
+      $post_count = 1;
       foreach($post_links as $user_post_link)
       {
         try
@@ -127,13 +130,23 @@ foreach($url_parts as $url_part => $category_map)
           $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
 
           // Click the reply button and wait for the content to load
-          $result = $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
+          $page->hover('#thumbs > a:nth-child(2)');
+          $page->evaluate(JsFunction::createWithBody("$('.reply-button ').click()"));
 
           // wait for email content to load
           sleep($reply_sleep_time);
 
           // evaluate the email and return the result
-          $result = $page->evaluate(JsFunction::createWithBody("return {
+          $result = $page->evaluate(JsFunction::createWithBody("
+
+          $('.print-information.print-qrcode-container').remove();
+          let images = [$('.swipe-wrap > div > img').attr('src')];
+
+          $('.swipe-wrap > div > picture > img').each(function(index, element) {
+            images.push($(element).attr('src'));
+          });
+
+          return {
             email: $('.mailapp').html(),
             title: $('#titletextonly').html(),
             description: $('#postingbody').html(),
@@ -141,13 +154,39 @@ foreach($url_parts as $url_part => $category_map)
             price: $('.price').html(),
             location: $('.postingtitletext > small').html(),
             timeago: $('.timeago').html(),
-            url: window.location.href
+            url: window.location.href,
+            images: images
           }"));
 
           // check if we were able to scrape an email by evaluating javascript
           if(isset($result['email']) && $result['email'] !== null)
           {
-            fputcsv($fp, formatResult($result, $category_map));
+            $result['category_ids'] = $category_ids;
+            $result['post_count'] = $post_count;
+            $result['latitude'] = $latitude;
+            $result['longitude'] = $longitude;
+            $result['location_city'] = $location_city;
+
+            // setup image folder
+            $image_folder = '/var/www/html/pub/media/catalog/craigslist/post-'.$post_count++.'/';
+            if(file_exists($image_folder))
+            {
+              deleteDir($image_folder);
+            }
+            mkdir($image_folder);
+
+            // download images
+            $images = $result['images'];
+            foreach($images as $key => $image_url)
+            {
+              $image_path = $image_folder.$key.'.jpg';
+              file_put_contents($image_path, file_get_contents_curl($image_url));
+              if($key == $max_images-1) {
+                break;
+              }// end if max images reached
+            }// end foreach loop over images
+
+            fputcsv($fp, formatResult($result));
           }// end if email is set
         }
         catch (Exception $e)
@@ -184,6 +223,7 @@ foreach($url_parts as $url_part => $category_map)
 ########## CLEANUP ###################
 ######################################
 ######################################
+chmod('/var/www/html/pub/media/catalog/craigslist', 0777);
 $browser->close();
 fclose($fp);
 
@@ -240,26 +280,27 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
 /*
 * function used to format result with email and query string
 * params: $result       - result object from Puppeteer
-          $category_map - array of categories
 *
 * returns: $formattedResult
 */
-function formatResult($result, $category_map)
+function formatResult($result)
 {
   foreach($result as $key => $value)
   {
-    $result[$key] = trim($value);
+    if(!is_array($value))
+    {
+      $result[$key] = trim($value);
+    }
   }
 
-  $result['category'] = implode('-', $category_map);
   $email = $result['email'];
   $title = $result['title'];
-  unset($result['email'], $result['timeago'], $result['url']);
+  unset($result['email'], $result['timeago'], $result['url'], $result['images']);
 
   return [
     'email' => $email,
-    '$title' => $title,
-    'queryString' => '?'.http_build_query($result)
+    'title' => $title,
+    'queryString' => '?ap=1&'.http_build_query($result)
   ];
 }// end function searchCheck
 
@@ -275,6 +316,49 @@ function getValue($key, $arr)
   }
   return null;
 }// end function getValue
+
+/*
+* function to recursively delete a directory
+
+* returns: $data
+*/
+function deleteDir($dirPath)
+{
+    if (! is_dir($dirPath)) {
+        throw new InvalidArgumentException("$dirPath must be a directory");
+    }
+    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            deleteDir($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($dirPath);
+}// end function deleteDir
+
+/*
+* function to retreive data from a url
+
+* returns: $data
+*/
+function file_get_contents_curl($url)
+{
+  $ch = curl_init();
+
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_URL, $url);
+
+  $data = curl_exec($ch);
+  curl_close($ch);
+
+  return $data;
+}// end function file_get_contents_curl
 
 /*
 * function used to filter an array for 'next' page link

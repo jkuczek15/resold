@@ -114,7 +114,6 @@ class Index extends \Magento\Framework\App\Action\Action
       $required =  ['local_global',
                     'name',
                     'description',
-                    'title_description',
                     'price',
                     'lowestcategory',
                     'condition'];
@@ -130,6 +129,10 @@ class Index extends \Magento\Framework\App\Action\Action
           return $this->resultJsonFactory->create()->setData(['error' => 'Missing one or more required fields.']);
         }// end if field is not set
       }// end foreach over required fields
+
+      if(!isset($post['title_description']) || $post['title_description'] == null){
+        $post['title_description'] = '';
+      }// end if title description not set
 
       // price validation
       $price = $post['price'];
@@ -187,7 +190,7 @@ class Index extends \Magento\Framework\App\Action\Action
       $_product->setAttributeSetId(4);
       $_product->setVisibility(4);
       $_product->setPrice($post['price']);
-      $_product->setDescription(nl2br($post['description']));
+      $_product->setDescription($post['description']);
       $_product->setCategoryIds([$post['lowestcategory'], $all_category_id]);
       $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
       $_product->setWebsiteIds(array(1));
@@ -260,7 +263,7 @@ class Index extends \Magento\Framework\App\Action\Action
       {
         // create the base/primary image
         $primary_path = $mediaDir.$image_paths[0];
-        if(strpos($primary_path, "/tmp") !== FALSE)
+        if(strpos($primary_path, "/tmp") !== FALSE || strpos($primary_path, "/craigslist") !== FALSE)
         {
           if(file_exists($primary_path))
           {
@@ -277,7 +280,7 @@ class Index extends \Magento\Framework\App\Action\Action
       {
         // image will be given a new path once linked to the product
         $path = $mediaDir.$image_path;
-        if(strpos($path, "/tmp") !== FALSE)
+        if(strpos($path, "/tmp") !== FALSE || strpos($path, "/craigslist") !== FALSE)
         {
           if(file_exists($path))
           {
