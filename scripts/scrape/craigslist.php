@@ -50,7 +50,12 @@ use Nesk\Rialto\Data\JsFunction;
 // URL configuration
 $base_url = 'https://sfbay.craigslist.org';
 $url_parts = [
-  '/search/sss?query=cell+phones&sort=rel'
+  '/search/sss?query=clothes&sort=rel' =>
+  [
+    '1st' => 'Fashion',
+    '2nd' => 'Men',
+    '3rd' => 114
+  ]
 ];
 
 // URL crawling ignores
@@ -97,7 +102,7 @@ $fp = fopen($output_file_path, "w");
 ######################################
 // loop over the post links collecting emails
 $scraped_urls = [];
-foreach($url_parts as $url_part)
+foreach($url_parts as $url_part => $category_map)
 {
   $posts_url = $base_url.$url_part;
   $count = 1;
@@ -118,6 +123,7 @@ foreach($url_parts as $url_part)
         {
           echo Console::cyan('-- Scraping post: '. $user_post_link) . "\r\n";
           $page = $browser->pages()[0];
+          $user_post_link = "https://sfbay.craigslist.org/eby/clo/d/concord-authentic-brand-new-womens/7077982885.html";
           $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
 
           // Click the reply button and wait for the content to load
@@ -130,6 +136,8 @@ foreach($url_parts as $url_part)
           $result = $page->evaluate(JsFunction::createWithBody("return {
             email: $('.mailapp').html(),
             title: $('#titletextonly').html(),
+            description: $('#postingbody').html(),
+            condition: $('.attrgroup > span > b').html(),
             price: $('.price').html(),
             location: $('.postingtitletext > small').html(),
             timeago: $('.timeago').html(),
@@ -139,11 +147,7 @@ foreach($url_parts as $url_part)
           // check if we were able to scrape an email by evaluating javascript
           if(isset($result['email']) && $result['email'] !== null)
           {
-            foreach($result as $key => $value)
-            {
-              $result[$key] = trim($value);
-            }
-            fputcsv($fp, $result);
+            fputcsv($fp, formatResult($result, $category_map));
           }// end if email is set
         }
         catch (Exception $e)
@@ -232,6 +236,45 @@ function filterLinks($links, $regex_ignores = [], $string_ignores = [], $single_
 
   return array_unique($return_links);
 }// end function filterLinks
+
+/*
+* function used to format result with email and query string
+* params: $result       - result object from Puppeteer
+          $category_map - array of categories
+*
+* returns: $formattedResult
+*/
+function formatResult($result, $category_map)
+{
+  foreach($result as $key => $value)
+  {
+    $result[$key] = trim($value);
+  }
+
+  $result['category'] = implode('-', $category_map);
+  $email = $result['email'];
+  $title = $result['title'];
+  unset($result['email'], $result['timeago'], $result['url']);
+
+  return [
+    'email' => $email,
+    '$title' => $title,
+    'queryString' => '?'.http_build_query($result)
+  ];
+}// end function searchCheck
+
+/*
+* function used to safely retreive a value from an array
+
+* returns: $formattedResult
+*/
+function getValue($key, $arr)
+{
+  if(isset($arr[$key])) {
+    return $arr[$key];
+  }
+  return null;
+}// end function getValue
 
 /*
 * function used to filter an array for 'next' page link

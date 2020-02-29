@@ -34,22 +34,27 @@ let templateReplace = (phrase, key, value) => {
       let post = config.posts[i].split(",");
 
       let email = post[0];
+      email = 'joe.kuczek@gmail.com';
       let title = post[1].replace(/&amp;/g, '&');
+      let queryString = post[2];
 
       let subject = getRandom(config.emailSubjects);
       let greeting = getRandom(config.emailStarters);
       let body = templateReplace(getRandom(config.emailBodys), "{title}", title);
-      let linkInclude = templateReplace(getRandom(config.emailLinkIncludes), "{url}", config.resold_url);
-      let closing = getRandom(config.emailClosers);
+      let closer = getRandom(config.emailClosers);
       let name = getRandom(config.emailNames);
 
-      let message = `${greeting}\r\n${body} ${linkInclude}\r\n${closing}\r\n${name}`;
+      let url = `${config.resold_url}/sell.php${queryString}`;
+      let message = `${greeting}\r\n${body}\r\n`;
+      let closing = `${closer}\r\n${name}`;
 
       await emailSender.writeNewEmail(page, {
         index: i,
         subject,
         email,
-        message
+        message,
+        url,
+        closing
       });
     }// end for loop over posts
   }// end while loop for retries

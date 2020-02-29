@@ -23,10 +23,6 @@ const emailClosers = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-closers.txt`), "utf8")
   .split("\n"));
 
-const emailLinkIncludes = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-link-include.txt`), "utf8")
-  .split("\n"));
-
 const emailNames = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-closing-names.txt`), "utf8")
   .split("\n"));
@@ -45,7 +41,6 @@ module.exports = {
   emailSubjects,
   emailStarters,
   emailBodys,
-  emailLinkIncludes,
   emailClosers,
   emailNames
 };
