@@ -75,6 +75,23 @@ class Get extends \Magento\Framework\App\Action\Action
             ];
           }// end foreach loop over gallery images
 
+      }else if(isset($_GET['post_count']) && $_GET['post_count'] !== null){
+        $post_count = $_GET['post_count'];
+
+        $base_path = '/var/www/html/';
+        $image_base_path = 'pub/media/catalog/craigslist/post-'.$post_count;
+        $images = scandir($base_path.$image_base_path);
+        unset($images[0], $images[1]);
+
+        foreach($images as $count => $image_key){
+          $image_path = $image_base_path.'/'.$image_key;
+
+          $result[] = [
+              'name' => 'Image '.$count,
+              'uuid' => '/catalog/craigslist/post-'.$post_count.'/'.$count.'.jpg',
+              'thumbnailUrl' => '/'.$image_path
+          ];
+        }
       }// end if product id set
 
       // on success, redirect user to their listing page

@@ -6,7 +6,9 @@ $new_attr_id = 235;
 $all_category_id = 105;
 $product_latitude = '';
 $product_longitude = '';
+$location_city = '';
 $is_amazon = false;
+$autopost = false;
 
 if(isset($_GET['id']) && $_GET['id'] != null)
 {
@@ -50,6 +52,47 @@ if(isset($_GET['id']) && $_GET['id'] != null)
       $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($category_ids[0]);
     }// end if this item we're editing doesn't have any categories
 }
+else if(isset($_GET['ap']) && $_GET['ap'] == 1)
+{
+  ##########################################
+  ##########################################
+  ##########################################
+  // check for autopost link
+  $autopost = true;
+  $title = isset($_GET['title']) ? $_GET['title'] : null;
+  $description = isset($_GET['description']) ? $_GET['description'] : null;
+  $condition = isset($_GET['condition']) ? $_GET['condition'] : null;
+  $price = isset($_GET['price']) ? ltrim($_GET['price'], '$') : null;
+  $category_ids = isset($_GET['category_ids']) ? $_GET['category_ids'] : null;
+  $images = isset($_GET['images']) ? $_GET['images'] : null;
+  $post_count = isset($_GET['post_count']) ? $_GET['post_count'] : null;
+  $product_latitude = isset($_GET['latitude']) ? $_GET['latitude'] : '';
+  $product_longitude = isset($_GET['longitude']) ? $_GET['longitude'] : '';
+  $location_city = isset($_GET['location_city']) ? $_GET['location_city'] : '';
+
+  // some hard-coded ID's... gross
+  $condition = $condition == 'new' ? '235' : '237';
+  $all_category_id = 105;
+  $local_id = '231';
+  $global_id = '232';
+
+  // create a product based on autpost info
+  $model = \Magento\Framework\App\ObjectManager::getInstance();
+  $product = $model->create('Magento\Catalog\Model\Product');
+  $product->setName($title);
+  $product->setPrice($price);
+  $product->setDescription(nl2br(trim($description)));
+  $product->setCategoryIds([$category_ids[0], $all_category_id]);
+  $product->setCustomAttribute('condition', $condition);
+  $product->setCustomAttribute('local_global', [$local_id]);
+  $product->setCustomAttribute('latitude', $product_latitude);
+  $product->setCustomAttribute('longitude', $product_longitude);
+
+  $lowestcategory = $model->create('Magento\Catalog\Model\Category')->load($category_ids[0]);
+  $product_id = null;
+  $mode = "Create";
+  $title = "Sell";
+}
 else
 {
   $product_id = null;
@@ -67,7 +110,7 @@ else
 <form class="form" action="/api/product" method="post" id="sell_form" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
     <input type="hidden" name="latitude" id="latitude" value="<?= $product_latitude ?>" />
     <input type="hidden" name="longitude" id="longitude" value="<?= $product_longitude ?>" />
-    <input type="hidden" name="location_city" id="location_city" value="" />
+    <input type="hidden" name="location_city" id="location_city" value="<?= $location_city ?>" />
     <?php echo $this->getBlockHtml('formkey') ?>
 <?php
   if($mode === "Edit"){
@@ -80,13 +123,13 @@ else
         <div class="field name">
             <label class="label" for="name"><span><?php /* @escapeNotVerified */ echo __('Listing Title') ?></span></label>
             <div class="control">
-                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Listing Title') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: <?= $is_amazon ? '1000' : '24' ?>}" v-model="form_data.name" placeholder="Enter a title..."/>
+                <input class="form-input" name="name" id="name" title="<?php /* @escapeNotVerified */ echo __('Listing Title') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('name')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: <?= $is_amazon ? '1000' : '100' ?>}" v-model="form_data.name" placeholder="Enter a title..."/>
             </div>
         </div>
         <div class="field title_description">
             <label class="label" for="title_description"><span><?php /* @escapeNotVerified */ echo __('Title Description') ?></span></label>
             <div class="control">
-                <input class="form-input" name="title_description" id="title_description" title="<?php /* @escapeNotVerified */ echo __('Title Description') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('title_description')) ?>" class="input-text" type="text" data-validate="{required:true, maxlength: 42}" v-model="form_data.title_description" placeholder="Enter a description..."/>
+                <input class="form-input" name="title_description" id="title_description" title="<?php /* @escapeNotVerified */ echo __('Title Description') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('title_description')) ?>" class="input-text" type="text" data-validate="{maxlength: 42}" v-model="form_data.title_description" placeholder="Enter a description..."/>
             </div>
         </div>
         <div class="field price">
@@ -453,7 +496,7 @@ require([
     });
 
 <?php
-  if($mode === "Edit"){
+  if($mode === "Edit" || $autopost){
 
     if(count($category_ids) > 0){
       // this product has categories
@@ -478,7 +521,18 @@ require([
 
   // required for reactive service fee and your profit
   Vue.set(app.form_data, 'price', Number("<?= $product->getPrice() ?>").toFixed(2));
-  let local_global = "<?= $product->getData('local_global') ?>";
+
+<?php
+  if($autopost){
+?>
+  let local_global = ['<?= $local_id ?>'];
+<?php
+  }else{
+?>
+    let local_global = "<?= $product->getData('local_global') ?>";
+<?php
+  }// end if autopost
+?>
 
   if(local_global.includes("231")){
     // local
@@ -491,6 +545,7 @@ require([
 <?php
 }// end if mode == 'edit'
 ?>
+
     // sell form submission function, ensure form is valid
     $('#sell_form').submit(function(){
       if($(this).valid()){
@@ -548,7 +603,17 @@ require([
         session: {
           endpoint: "/api/Image/Get",
           params: {
-            product_id: "<?= isset($_GET['id']) ? $_GET['id'] : '' ?>"
+<?php
+if($autopost){
+?>
+              post_count: '<?= $post_count ?>'
+<?php
+}else{
+?>
+              product_id: '<?= isset($_GET['id']) ? $_GET['id'] : '' ?>'
+<?php
+}// end if autopost
+?>
           }
         },
         request: {
@@ -646,7 +711,7 @@ require([
         if(app.form_data.subcategory != ""){
           $('.subcategory').show();
           <?php
-          if($mode == "Edit" && count($category_ids) > 0 && $grandparent->getName() != "Default Root"){
+          if(($mode == "Edit" || $autopost) && count($category_ids) > 0 && $grandparent->getName() != "Default Root"){
           ?>
           app.lowestcategories = app.subcategories[app.form_data.subcategory];
           if(app.form_data.lowestcategory != ""){
@@ -710,6 +775,15 @@ require([
      }
    });
    $(document).ready(() => {
+<?php
+if($autopost){
+?>
+  $('#third-party-checkbox').prop('checked', true);
+  $('#terms-checkbox').prop('checked', true);
+  setTimeout(() => $('#submit').click(), 3000);
+<?php
+}// end if autpost
+?>
     tippy('[data-toggle="tooltip"]',{ theme: 'custom', arrow: true, animation: 'fade', allowHtml: true });
     setTimeout(() => {
       let fee = app.form_data.price * 0.1;

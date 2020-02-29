@@ -34,6 +34,7 @@ puppeteer/node_modules/*
 /pub/media/*.*
 !/pub/media/.htaccess
 /pub/media/catalog/*
+!/pub/media/catalog/craigslist/README.md
 !/pub/media/catalog/.htaccess
 /pub/media/customer/*
 !/pub/media/customer/.htaccess
