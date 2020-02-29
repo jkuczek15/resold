@@ -88,7 +88,7 @@ class Get extends \Magento\Framework\App\Action\Action
 
           $result[] = [
               'name' => 'Image '.$count,
-              'uuid' => '/catalog/craigslist/post-'.$post_count.'/'.$count.'.jpg',
+              'uuid' => '/catalog/craigslist/post-'.$post_count.'/'.$image_key,
               'thumbnailUrl' => '/'.$image_path
           ];
         }
