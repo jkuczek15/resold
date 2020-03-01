@@ -31,6 +31,10 @@ const emailSubjects = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-subjects.txt`), "utf8")
   .split("\n"));
 
+const emailLinkIncludes = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-link-includes.txt`), "utf8")
+  .split("\n"));
+
 const resold_url = "https://resold.us"
 const read_retries = 10000;
 
@@ -42,5 +46,6 @@ module.exports = {
   emailStarters,
   emailBodys,
   emailClosers,
-  emailNames
+  emailNames,
+  emailLinkIncludes
 };
