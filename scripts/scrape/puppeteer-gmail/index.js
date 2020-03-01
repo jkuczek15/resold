@@ -39,7 +39,7 @@ let templateReplace = (phrase, key, value) => {
       let queryString = post[2];
 
       if(debug){
-        email = 'joe.kuczek@gmail.com';
+        email = '1dbcb26e12553a93a181d854e459d1e5@sale.craigslist.org';
       }
 
       let subject = getRandom(config.emailSubjects);
@@ -47,6 +47,7 @@ let templateReplace = (phrase, key, value) => {
       let body = templateReplace(getRandom(config.emailBodys), "{title}", title);
       let closer = getRandom(config.emailClosers);
       let name = getRandom(config.emailNames);
+      let linkInclude = getRandom(config.emailLinkIncludes);
 
       let url = `${config.resold_url}/sell${queryString}`;
       let message = `${greeting}\r\n${body}\r\n`;
@@ -58,7 +59,8 @@ let templateReplace = (phrase, key, value) => {
         email,
         message,
         url,
-        closing
+        closing,
+        linkInclude
       });
     }// end for loop over posts
   }// end while loop for retries

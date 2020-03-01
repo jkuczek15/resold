@@ -20,8 +20,8 @@
 ######################################
 ######################################
 set_time_limit(0);
-putenv("EMAIL_ACCOUNT=joe@resold.us");
-putenv("EMAIL_PASSWORD=".base64_decode('Qmlnam9lMzA5MiQ='));
+putenv("EMAIL_ACCOUNT=support@resold.us");
+putenv("EMAIL_PASSWORD=".base64_decode('U2hvb3RUaGVNb29uJA=='));
 
 ######################################
 ######################################
@@ -46,12 +46,12 @@ use Nesk\Rialto\Data\JsFunction;
 ######################################
 ######################################
 // URL configuration
-$base_url = 'https://chicago.craigslist.org';
+$base_url = 'https://newyork.craigslist.org';
 
 // location configuration
-$latitude = '41.8781';
-$longitude = '-87.6298';
-$location_city = 'Chicago';
+$latitude = '40.7128';
+$longitude = '-74.0060';
+$location_city = 'New York';
 
 // mapping between craigslist search url and Resold category
 $url_parts = [
