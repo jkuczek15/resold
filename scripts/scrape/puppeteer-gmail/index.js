@@ -39,7 +39,7 @@ let templateReplace = (phrase, key, value) => {
       let queryString = post[2];
 
       if(debug){
-        email = '1dbcb26e12553a93a181d854e459d1e5@sale.craigslist.org';
+        email = '9078474a744337569378358006458bff@sale.craigslist.org';
       }
 
       let subject = getRandom(config.emailSubjects);
