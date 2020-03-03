@@ -20,8 +20,6 @@
 ######################################
 ######################################
 set_time_limit(0);
-putenv("EMAIL_ACCOUNT=support@resold.us");
-putenv("EMAIL_PASSWORD=".base64_decode('U2hvb3RUaGVNb29uJA=='));
 
 ######################################
 ######################################
@@ -55,7 +53,7 @@ $location_city = 'New York';
 
 // mapping between craigslist search url and Resold category
 $url_parts = [
-  '/search/sss?query=shoes&sort=rel' => [114]
+  '/search/sss?query=furniture&sort=date&postedToday=1' => [142]
 ];
 
 // URL crawling ignores

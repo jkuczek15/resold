@@ -246,7 +246,7 @@ else
         <div class="field description">
             <label class="label" for="comment"><span><?php /* @escapeNotVerified */ echo __('Details') ?></span></label>
             <div class="control">
-                <textarea style="resize: none;" placeholder="Enter more details..." class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true, maxlength: <?= $is_amazon ? 100000 : 2000 ?>}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
+                <textarea style="resize: none;" placeholder="Enter more details..." class="form-input" name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true, maxlength: <?= $is_amazon ? 100000 : 8000 ?>}" v-model="form_data.description"><?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('description')) ?></textarea>
             </div>
         </div>
         <div class="field description">
