@@ -35,6 +35,14 @@ const emailLinkIncludes = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-link-includes.txt`), "utf8")
   .split("\n"));
 
+const emailZeroFee = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-zero-fee.txt`), "utf8")
+  .split("\n"));
+
+const emailResoldZeroFee = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-resold-zero-fee.txt`), "utf8")
+  .split("\n"));
+
 const resold_url = "https://resold.us"
 const read_retries = 10000;
 
@@ -47,5 +55,7 @@ module.exports = {
   emailBodys,
   emailClosers,
   emailNames,
-  emailLinkIncludes
+  emailLinkIncludes,
+  emailZeroFee,
+  emailResoldZeroFee
 };
