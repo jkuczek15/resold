@@ -3,6 +3,7 @@ const emailSender = require("./email-sender");
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
 let config = require("./config");
 const debug = false;
+const debugEmail = '93eb7fa0513b373f8a51d3b4c4cf7869@sale.craigslist.org';
 
 let getRandom = (arr) => {
   return arr[Math.floor(Math.random()*arr.length)];
@@ -39,7 +40,7 @@ let templateReplace = (phrase, key, value) => {
       let queryString = post[2];
 
       if(debug){
-        email = '9078474a744337569378358006458bff@sale.craigslist.org';
+        email = debugEmail;
       }
 
       let subject = getRandom(config.emailSubjects);
@@ -48,9 +49,11 @@ let templateReplace = (phrase, key, value) => {
       let closer = getRandom(config.emailClosers);
       let name = getRandom(config.emailNames);
       let linkInclude = getRandom(config.emailLinkIncludes);
+      let zeroFee = getRandom(config.emailZeroFee);
+      let resoldZeroFee = getRandom(config.emailResoldZeroFee);
 
       let url = `${config.resold_url}/sell${queryString}`;
-      let message = `${greeting}\r\n${body}\r\n`;
+      let message = `${greeting}\r\n${body}\r\n${zeroFee} ${resoldZeroFee}\r\n`;
       let closing = `\r\n${closer}\r\n${name}`;
 
       await emailSender.writeNewEmail(page, {
