@@ -53,7 +53,7 @@ $location_city = 'Chicago';
 
 // mapping between craigslist search url and Resold category
 $url_parts = [
-  '/search/sss?query=furniture&sort=date&postedToday=1' => [142]
+  '/search/sss?query=shoes&sort=rel' => [73]
 ];
 
 // URL crawling ignores

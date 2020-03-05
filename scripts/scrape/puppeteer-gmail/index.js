@@ -3,7 +3,7 @@ const emailSender = require("./email-sender");
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
 let config = require("./config");
 const debug = false;
-const debugEmail = '93eb7fa0513b373f8a51d3b4c4cf7869@sale.craigslist.org';
+const debugEmail = 'b3512b1f3ed43e3cacfd0aa1a44f8219@sale.craigslist.org';
 
 let getRandom = (arr) => {
   return arr[Math.floor(Math.random()*arr.length)];
