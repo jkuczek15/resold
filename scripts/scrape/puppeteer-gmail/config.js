@@ -61,5 +61,6 @@ module.exports = {
   emailNames,
   emailLinkIncludes,
   emailZeroFee,
-  emailResoldZeroFee
+  emailResoldZeroFee,
+  emailSecureCashless
 };
