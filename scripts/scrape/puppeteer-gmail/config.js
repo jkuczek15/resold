@@ -43,6 +43,10 @@ const emailResoldZeroFee = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-resold-zero-fee.txt`), "utf8")
   .split("\n"));
 
+const emailSecureCashless = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-secure-cashless.txt`), "utf8")
+  .split("\n"));
+
 const resold_url = "https://resold.us"
 const read_retries = 10000;
 
