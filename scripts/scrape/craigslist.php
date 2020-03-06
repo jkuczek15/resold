@@ -43,13 +43,18 @@ use Nesk\Rialto\Data\JsFunction;
 ############# CONFIG #################
 ######################################
 ######################################
-// URL configuration
-$base_url = 'https://chicago.craigslist.org';
-
 // location configuration
-$latitude = '41.8781';
-$longitude = '-87.6298';
-$location_city = 'Chicago';
+// Chicago
+// $base_url = 'https://chicago.craigslist.org';
+// $latitude = '41.8781';
+// $longitude = '-87.6298';
+// $location_city = 'Chicago';
+
+// New York
+$base_url = 'https://newyork.craigslist.org';
+$latitude = '40.7128';
+$longitude = '-74.0060';
+$location_city = 'New York';
 
 // mapping between craigslist search url and Resold category
 $url_parts = [
