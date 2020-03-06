@@ -11,6 +11,10 @@ const posts = filter(fs
   .readFileSync(path.join(__dirname, "./", `db/posts-list.txt`), "utf8")
   .split("\n"));
 
+const emailAccounts = filter(fs
+  .readFileSync(path.join(__dirname, "./", `db/email-accounts.txt`), "utf8")
+  .split("\n"));
+
 const emailStarters = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-starters.txt`), "utf8")
   .split("\n"));
@@ -47,13 +51,16 @@ const emailSecureCashless = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-secure-cashless.txt`), "utf8")
   .split("\n"));
 
-const resold_url = "https://resold.us"
+const resold_url = "https://resold.us";
 const read_retries = 10000;
+const send_limit = 500;
 
 module.exports = {
   resold_url,
   read_retries,
+  send_limit,
   posts,
+  emailAccounts,
   emailSubjects,
   emailStarters,
   emailBodys,
