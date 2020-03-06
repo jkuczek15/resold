@@ -2,8 +2,10 @@ const puppeteer = require("puppeteer-extra");
 const emailSender = require("./email-sender");
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
 const chalk = require("chalk");
-const debug = true;
-const debugEmail = 'joe.kuczek@gmail.com';
+const debug = false;
+const createAccounts = false;
+const sendGrid = true;
+const debugEmail = '30ce97537b37345fb57185a697ba24e7@sale.craigslist.org';
 let config = require("./config");
 
 let getRandom = (arr) => {
@@ -19,14 +21,25 @@ let templateReplace = (phrase, key, value) => {
 };
 
 (async () => {
-  puppeteer.use(pluginStealth());
+  if(!sendGrid){
+    puppeteer.use(pluginStealth());
+  }// end if not using sendgrid
 
   let userIndex = 0;
-  let user = config.emailAccounts[userIndex];
-  let page = await emailSender.login(puppeteer, user);
-
   let retry = 0;
   let emailsSent = 0;
+  let user = config.emailAccounts[userIndex];
+
+  if(createAccounts){
+    for(let i = 0; i < config.emailAccounts.length; i++){
+      let user = config.emailAccounts[i];
+      await emailSender.createAccount(puppeteer, user);
+    }// end for loop attempting to create gmail accounts
+  }// end if we want to create the gmail accounts
+
+  if(!sendGrid){
+    let page = await emailSender.login(puppeteer, user);
+  }// end if we aren't using sendgrid
 
   // loop to retry reading from last sent email index
   while(retry++ < config.read_retries) {
@@ -69,18 +82,33 @@ let templateReplace = (phrase, key, value) => {
       let url = `${config.resold_url}/sell${queryString}`;
       let message = `${greeting}\r\n${body} ${secureCashless}\r\n${zeroFee} ${resoldZeroFee}\r\n`;
       let closing = `\r\n${closer}\r\n${name}`;
+      let html = `${greeting}
+      <br/><br/>
+      ${body} ${secureCashless}
+      <br/><br/>
+      ${zeroFee} ${resoldZeroFee}
+      <br /><br/>
+      <a href="${url}">${linkInclude}</a>
+      <br/><br/>
+      ${closer}
+      <br/><br/>
+      ${name}`;
 
       try {
-        await emailSender.writeNewEmail(page, {
-          index: i,
-          subject,
-          email,
-          message,
-          url,
-          closing,
-          linkInclude
-        });
-        emailsSent++;
+        if(sendGrid){
+          await emailSender.writeNewEmailSendGrid(i, email, subject, html);
+        }else{
+          await emailSender.writeNewEmail(page, {
+            index: i,
+            subject,
+            email,
+            message,
+            url,
+            closing,
+            linkInclude
+          });
+        }// end if using sendgrid to send emails
+        if(emailsSent++ > config.send_limit) { break; }
       } catch(err) {
         // there was an error trying to send the email
         console.log(chalk.red.inverse(`Error sending email to: ${email}. Exception is: ${err.message}`));
@@ -90,8 +118,11 @@ let templateReplace = (phrase, key, value) => {
       if(debug) { break; }
     }// end for loop over posts
 
+    if(emailsSent > config.send_limit) { break; }
     if(debug) { break; }
   }// end while loop for retries
 
-  await browser.close();
+  if(!sendGrid){
+    await browser.close();
+  }// end if not using sendgrid
 })();
