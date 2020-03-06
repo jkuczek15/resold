@@ -72,4 +72,4 @@ robots.txt
 /scripts/scrape/vendor/*
 /scripts/scrape/csv/*.csv
 /scripts/scrape/csv/Imported/*.csv
-/scripts/scrape/puppeteer-gmail/db/*
+/scripts/scrape/email-sender/db/*

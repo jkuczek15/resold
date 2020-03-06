@@ -1,0 +1,3 @@
+Todo:
+Save images to s3 bucket to avoid deployment cycle
+Support multiple locations in one pass
