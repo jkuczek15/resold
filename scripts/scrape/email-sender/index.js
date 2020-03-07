@@ -74,10 +74,8 @@ let templateReplace = (phrase, key, value) => {
       let fromName = fromParts[0];
       let fromEmail = fromParts[1];
 
-      // email contents
+      // build one-click url
       let url = `${config.resold_url}/sell${queryString}`;
-      let message = `${greeting}\r\n${body}\r\n`;
-      let closing = `\r\n${closer}\r\n${fromName}`;
 
       try {
         if(config.sendGrid){
@@ -92,6 +90,8 @@ let templateReplace = (phrase, key, value) => {
           ${fromName}`;
           await emailSender.writeNewEmailSendGrid(i, email, fromEmail, fromName, subject, html, config.useSMTPRelay);
         }else{
+          let message = `${greeting}\r\n${body}\r\n`;
+          let closing = `\r\n${closer}\r\n${fromName}`;
           await emailSender.writeNewEmail(page, {
             index: i,
             subject,
