@@ -45,7 +45,7 @@ let templateReplace = (phrase, key, value) => {
     // loop over all craigslist posts
     for (let i = lastEmailIndex; i < config.posts.length; i++) {
       // check if we've reached our gmail send limit for this account
-      if(emailsSent+1 == config.send_limit){
+      if(!config.sendGrid && emailsSent+1 == config.send_limit){
         // close the browser and login with a new account
         await page.close();
         user = config.emailAccounts[++userIndex];
@@ -68,21 +68,29 @@ let templateReplace = (phrase, key, value) => {
       let greeting = getRandom(config.emailStarters);
       let body = templateReplace(getRandom(config.emailBodys), "{title}", title);
       let closer = getRandom(config.emailClosers);
-      let name = getRandom(config.emailNames);
       let linkInclude = getRandom(config.emailLinkIncludes);
-      let zeroFee = getRandom(config.emailZeroFee);
-      let resoldZeroFee = getRandom(config.emailResoldZeroFee);
-      let secureCashless = getRandom(config.emailSecureCashless);
+      let fromUser = getRandom(config.emailFrom);
+      let fromParts = fromUser.split(',');
+      let fromName = fromParts[0];
+      let fromEmail = fromParts[1];
 
       // email contents
       let url = `${config.resold_url}/sell${queryString}`;
-      let message = `${greeting}\r\n${body} ${secureCashless}\r\n${zeroFee} ${resoldZeroFee}\r\n`;
-      let closing = `\r\n${closer}\r\n${name}`;
+      let message = `${greeting}\r\n${body}\r\n`;
+      let closing = `\r\n${closer}\r\n${fromName}`;
 
       try {
         if(config.sendGrid){
-          let html = `${greeting}<br/><br/>${body} ${secureCashless}<br/><br/>${zeroFee} ${resoldZeroFee}<br /><br/><a href="${url}">${linkInclude}</a><br/><br/>${closer}<br/><br/>${name}`;
-          await emailSender.writeNewEmailSendGrid(i, email, config.from_email, subject, html);
+          let html = `${greeting}
+          <br/><br/>
+          ${body}
+          <br/><br/>
+          <a href="${url}">${linkInclude}</a>
+          <br/><br/>
+          ${closer}
+          <br/><br/>
+          ${fromName}`;
+          await emailSender.writeNewEmailSendGrid(i, email, fromEmail, fromName, subject, html, config.useSMTPRelay);
         }else{
           await emailSender.writeNewEmail(page, {
             index: i,

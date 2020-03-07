@@ -8,16 +8,16 @@ let filter = (arr) => {
 };
 
 // flags
-const debug = true;
+const debug = false;
 const sendGrid = true;
 const createAccounts = false;
+const useSMTPRelay = true;
 
 // constants
-const debug_email = '6ac975ed0ef536b3a4ebae2754b3f74d@sale.craigslist.org';
-const from_email = 'sales@resold.us';
+const debug_email = 'aaa796c361193033bd02c9e192e5a16f@sale.craigslist.org';
 const resold_url = "https://resold.us";
-const read_retries = 10000;
-const send_limit = 10000;
+const read_retries = 1;
+const send_limit = 100000;
 
 // list file resources
 const posts = filter(fs
@@ -40,8 +40,8 @@ const emailClosers = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-closers.txt`), "utf8")
   .split("\n"));
 
-const emailNames = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-closing-names.txt`), "utf8")
+const emailFrom = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-from.txt`), "utf8")
   .split("\n"));
 
 const emailSubjects = filter(fs
@@ -52,26 +52,14 @@ const emailLinkIncludes = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-link-includes.txt`), "utf8")
   .split("\n"));
 
-const emailZeroFee = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-zero-fee.txt`), "utf8")
-  .split("\n"));
-
-const emailResoldZeroFee = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-resold-zero-fee.txt`), "utf8")
-  .split("\n"));
-
-const emailSecureCashless = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-secure-cashless.txt`), "utf8")
-  .split("\n"));
-
 module.exports = {
   resold_url,
   read_retries,
   send_limit,
-  from_email,
   debug_email,
   debug,
   sendGrid,
+  useSMTPRelay,
   createAccounts,
   posts,
   emailAccounts,
@@ -79,9 +67,6 @@ module.exports = {
   emailStarters,
   emailBodys,
   emailClosers,
-  emailNames,
-  emailLinkIncludes,
-  emailZeroFee,
-  emailResoldZeroFee,
-  emailSecureCashless
+  emailFrom,
+  emailLinkIncludes
 };

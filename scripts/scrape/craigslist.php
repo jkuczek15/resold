@@ -82,7 +82,7 @@ $locations = [
   ]
 ];
 
-// mapping between craigslist search url and Resold category
+// map between craigslist search url and Resold category
 $url_parts = [
   '/search/sss?sort=pricedsc&max_price=1200&min_price=50&query=collectibles' => [224]
 ];
@@ -102,10 +102,10 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/', ''];
 
 // limits
-$max_page_count = 1;             // number of pages deep we should crawl per URL part
-$max_page_post_count = 5;       // number of posts we should scrape per page
-$max_images = 2;               // number of images to download per post
-$reply_sleep_time = 4;        // time to wait before copying email from reply button
+$max_page_count = 25;               // number of pages deep we should crawl per URL part
+$max_page_post_count = 120;        // number of posts we should scrape per page
+$max_images = 2;                  // number of images to download per post
+$reply_sleep_time = 4;           // time to wait before copying email from reply button
 
 ######################################
 ######################################
@@ -114,8 +114,6 @@ $reply_sleep_time = 4;        // time to wait before copying email from reply bu
 ######################################
 $puppeteer = new Puppeteer;
 $timeout = 0;
-
-// launch a new instance of puppeteer chromium browser
 $browser = $puppeteer->launch(['headless' => false]);
 
 ######################################
@@ -147,6 +145,7 @@ chmod($base_image_path, 0777);
 // keep track of what we already crawled
 $scraped_urls = [];
 $total_post_count = 1;
+$line_count = 0;
 
 // loop over different URL parts (categories/searches)
 foreach($url_parts as $url_part => $category_ids)
@@ -168,7 +167,7 @@ foreach($url_parts as $url_part => $category_ids)
         $posts_html = file_get_html($posts_url);
         $post_links = filterLinks($posts_html->find('a'), $posts_regex_ignores, $posts_string_ignores);
         $page_post_count = 1;
-        foreach($post_links as $key => $user_post_link)
+        foreach($post_links as $user_post_link)
         {
           try
           {
@@ -235,6 +234,7 @@ foreach($url_parts as $url_part => $category_ids)
               }// end foreach loop over images
 
               fputcsv($fp, formatResult($result));
+              $line_count++;
             }// end if email is set
 
             if($page_post_count++ == $max_page_post_count)
@@ -272,6 +272,13 @@ foreach($url_parts as $url_part => $category_ids)
   }// end foreach loop over locations
 
 }// end foreach loop over post parts
+
+######################################
+######################################
+########## RESULTS ###################
+######################################
+######################################
+echo Console::green('Total posts scraped: '.$line_count."\r\n");
 
 ######################################
 ######################################
