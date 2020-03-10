@@ -14,8 +14,8 @@ const createAccounts = false;
 const useSMTPRelay = true;
 
 // constants
-const debug_email = 'aaa796c361193033bd02c9e192e5a16f@sale.craigslist.org';
-const resold_url = "https://resold.us";
+const debug_email = 'joe.kuczek@gmail.com';
+const resold_url = 'https://resold.us';
 const read_retries = 1;
 const send_limit = 100000;
 
@@ -28,28 +28,36 @@ const emailAccounts = filter(fs
   .readFileSync(path.join(__dirname, "./", `db/email-accounts.txt`), "utf8")
   .split("\n"));
 
+const emailSubjects = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-subjects.txt`), "utf8")
+  .split("\n"));
+
 const emailStarters = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-starters.txt`), "utf8")
-  .split("\n"));
-
-const emailBodys = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-body.txt`), "utf8")
-  .split("\n"));
-
-const emailClosers = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-closers.txt`), "utf8")
   .split("\n"));
 
 const emailFrom = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-from.txt`), "utf8")
   .split("\n"));
 
-const emailSubjects = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-subjects.txt`), "utf8")
+const emailFromResold = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-from-resold.txt`), "utf8")
+  .split("\n"));
+
+const emailBodys = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-body.txt`), "utf8")
+  .split("\n"));
+
+const emailBodysResold = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-body-resold.txt`), "utf8")
   .split("\n"));
 
 const emailLinkIncludes = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-link-includes.txt`), "utf8")
+  .split("\n"));
+
+const emailClosers = filter(fs
+  .readFileSync(path.join(__dirname, "./", `resources/email-closers.txt`), "utf8")
   .split("\n"));
 
 module.exports = {
@@ -66,7 +74,9 @@ module.exports = {
   emailSubjects,
   emailStarters,
   emailBodys,
+  emailBodysResold,
   emailClosers,
   emailFrom,
+  emailFromResold,
   emailLinkIncludes
 };

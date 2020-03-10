@@ -40,10 +40,18 @@ use Nesk\Rialto\Data\JsFunction;
 
 ######################################
 ######################################
-############# CONFIG #################
+########### DEBUG SETTINGS ###########
 ######################################
 ######################################
-// location configuration
+$debug = false;
+$debug_url ='https://chicago.craigslist.org/chc/sys/d/saint-charles-sausage-lilac-dragon/7090516247.html';
+$debug_line_count = 1000;
+
+######################################
+######################################
+############# LOCATIONS ##############
+######################################
+######################################
 $locations = [
   'Chicago' => [
     'url' => 'https://chicago.craigslist.org',
@@ -82,7 +90,12 @@ $locations = [
   ]
 ];
 
-// map between craigslist search url and Resold category
+######################################
+######################################
+############ POST CONFIG #############
+######################################
+######################################
+// map between craigslist search url and Resold category ID
 $url_parts = [
   '/search/sss?sort=pricedsc&max_price=1200&min_price=50&query=collectibles' => [224]
 ];
@@ -133,7 +146,6 @@ $base_image_path = '/var/www/html/pub/media/catalog/craigslist/';
 if(file_exists($base_image_path)){
   deleteDir($base_image_path);
 }// end if folder exists
-
 mkdir($base_image_path);
 chmod($base_image_path, 0777);
 
@@ -171,6 +183,16 @@ foreach($url_parts as $url_part => $category_ids)
         {
           try
           {
+            if($debug)
+            {
+              if($line_count == $debug_line_count)
+              {
+                break 3;
+              }// end if line count == debug line count
+
+              $user_post_link = $debug_url;
+            }// end if debugging
+
             echo Console::cyan('-- Scraping post: '. $user_post_link) . "\r\n";
             $page = $browser->pages()[0];
             $page->goto($user_post_link, ['waitUntil' => 'load', 'timeout' => $timeout]);
@@ -228,7 +250,8 @@ foreach($url_parts as $url_part => $category_ids)
               {
                 $image_path = $image_folder.$key.'.jpg';
                 file_put_contents($image_path, file_get_contents_curl($image_url));
-                if($key == $max_images-1) {
+                if($key == $max_images-1)
+                {
                   break;
                 }// end if max images reached
               }// end foreach loop over images
@@ -267,7 +290,7 @@ foreach($url_parts as $url_part => $category_ids)
         $browser = $puppeteer->launch(['headless' => $headless]);
       }// end try-catch
 
-    } while($posts_url != null && !in_array($posts_url, $scraped_urls) && ++$page_count <= $max_page_count);
+    } while($posts_url != null && ($debug || !in_array($posts_url, $scraped_urls)) && ++$page_count <= $max_page_count);
 
   }// end foreach loop over locations
 
@@ -356,12 +379,14 @@ function formatResult($result)
 
   $email = $result['email'];
   $title = $result['title'];
+  $url = $result['url'];
   unset($result['email'], $result['timeago'], $result['url'], $result['images']);
 
   return [
     'email' => $email,
     'title' => $title,
-    'queryString' => '?ap=1&'.http_build_query($result)
+    'queryString' => '?ap=1&'.http_build_query($result),
+    'url' => $url
   ];
 }// end function searchCheck
 

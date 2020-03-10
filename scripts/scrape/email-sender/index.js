@@ -66,22 +66,24 @@ let templateReplace = (phrase, key, value) => {
       // build an email dynamically from random strings in resources folder
       let subject = getRandom(config.emailSubjects);
       let greeting = getRandom(config.emailStarters);
-      let body = templateReplace(getRandom(config.emailBodys), "{title}", title);
+      let body = getRandom(config.emailBodys);
+      let resoldBody = templateReplace(getRandom(config.emailBodysResold), "{title}", title);
       let closer = getRandom(config.emailClosers);
       let linkInclude = getRandom(config.emailLinkIncludes);
       let fromUser = getRandom(config.emailFrom);
       let fromParts = fromUser.split(',');
       let fromName = fromParts[0];
-      let fromEmail = fromParts[1];
+      let fromEmail = getRandom(config.emailFromResold);
 
       // build one-click url
       let url = `${config.resold_url}/sell${queryString}`;
 
+      // send the email
       try {
         if(config.sendGrid){
           let html = `${greeting}
           <br/><br/>
-          ${body}
+          ${body} ${resoldBody}
           <br/><br/>
           <a href="${url}">${linkInclude}</a>
           <br/><br/>
