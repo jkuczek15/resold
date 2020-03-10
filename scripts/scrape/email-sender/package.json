@@ -9,6 +9,7 @@
     "chalk": "^2.4.2",
     "dotenv": "^8.0.0",
     "emailjs-smtp-client": "^2.0.1",
+    "html-to-text": "^5.1.1",
     "mz": "^2.7.0",
     "nodemailer": "^6.4.4",
     "puppeteer": "^1.15.0",
