@@ -14,7 +14,7 @@ const createAccounts = false;
 const useSMTPRelay = true;
 
 // constants
-const debug_email = 'joe.kuczek@gmail.com';
+const debug_email = '9c93777b41c23c8bb7a29254132721ec@sale.craigslist.org';
 const resold_url = 'https://resold.us';
 const read_retries = 1;
 const send_limit = 100000;
