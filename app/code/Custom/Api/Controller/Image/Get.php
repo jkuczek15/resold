@@ -88,7 +88,7 @@ class Get extends \Magento\Framework\App\Action\Action
 
         $image_keys = $this->s3->getIterator('ListObjects', array(
           'Bucket' => 'craigslist-photos-resold',
-          'Prefix' => 'post-'.$post_count
+          'Prefix' => 'post-'.$post_count.'/'
         ));
 
         foreach ($image_keys as $count => $image) {
