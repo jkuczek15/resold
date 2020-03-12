@@ -20,6 +20,8 @@ use \Magento\Framework\App\Action\Context;
 use \Magento\Framework\Controller\Result\JsonFactory;
 use Ced\CsMarketplace\Model\VendorFactory;
 use Aws\Lambda\LambdaClient;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem\Io\File;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -34,6 +36,20 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $resultJsonFactory;
 
     /**
+     * Directory List
+     *
+     * @var DirectoryList
+     */
+    protected $directoryList;
+
+    /**
+     * File interface
+     *
+     * @var File
+     */
+    protected $file;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      */
      public function __construct(
@@ -46,7 +62,9 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
-        \Magento\Catalog\Helper\Image $_image
+        \Magento\Catalog\Helper\Image $_image,
+        DirectoryList $directoryList,
+        File $file
     )
     {
         $this->session = $customerSession;
@@ -66,6 +84,8 @@ class Index extends \Magento\Framework\App\Action\Action
                 'secret' => 'MWTOZqfWieup6AXJ69Wg5Tlq4O0SPUiAir/e6q1T'
              ]
         ]);
+        $this->directoryList = $directoryList;
+        $this->file = $file;
         parent::__construct($context);
     }
 
@@ -133,6 +153,11 @@ class Index extends \Magento\Framework\App\Action\Action
       if(!isset($post['title_description']) || $post['title_description'] == null){
         $post['title_description'] = '';
       }// end if title description not set
+
+      $autopost = false;
+      if(isset($post['ap']) && $post['ap'] == 1){
+        $autopost = true;
+      }// end if autoposting
 
       // price validation
       $price = $post['price'];
@@ -259,35 +284,76 @@ class Index extends \Magento\Framework\App\Action\Action
       // get the current product images
       $current_images = $_product->getMediaGallery('images');
 
+      // create temporary directory
+      $tmp_path = $this->getMediaDirTmpDir();
+      $this->file->checkAndCreateFolder($tmp_path);
+
+      // try to copy over the first image
+      $image_types = ['image', 'small_image', 'thumbnail'];
       if(($current_images == null || count($current_images) == 0) && count($image_paths) > 0)
       {
-        // create the base/primary image
-        $primary_path = $mediaDir.$image_paths[0];
-        if(strpos($primary_path, "/tmp") !== FALSE || strpos($primary_path, "/craigslist") !== FALSE)
+        if($autopost)
         {
-          if(file_exists($primary_path))
+          // autopost download and create the base/primary image
+          // download the file to temporary location
+          $primary_path = $tmp_path . baseName($image_paths[0]);
+
+          // copy the image and save to product
+          if(file_put_contents($primary_path, $this->file_get_contents_curl($image_paths[0])))
           {
-            // uploading a new file
-            $_product->addImageToMediaGallery($primary_path, array('image', 'small_image', 'thumbnail'), false, false);
-            unset($image_paths[0]);
+            $_product->addImageToMediaGallery($primary_path, $image_types, false, false);
             unlink($primary_path);
-          }// end if file exists
-        }// end if uploading a new file
+          }// end if we were able to read temporary file
+        }
+        else
+        {
+          // create the base/primary image
+          $primary_path = $mediaDir.$image_paths[0];
+          if(strpos($primary_path, "/tmp") !== FALSE || strpos($primary_path, "/craigslist") !== FALSE)
+          {
+            if(file_exists($primary_path))
+            {
+              // uploading a new file
+              $_product->addImageToMediaGallery($primary_path, $image_types, false, false);
+              unset($image_paths[0]);
+              unlink($primary_path);
+            }// end if file exists
+          }// end if uploading a new file
+        }// end if autoposting
       }// end if number of images == 0
 
       // loop over all temporary images uploaded for this product
-      foreach($image_paths as $image_path)
+      foreach($image_paths as $count => $image_path)
       {
-        // image will be given a new path once linked to the product
-        $path = $mediaDir.$image_path;
-        if(strpos($path, "/tmp") !== FALSE || strpos($path, "/craigslist") !== FALSE)
+        if($autopost)
         {
-          if(file_exists($path))
+          if($count != 0)
           {
-            $_product->addImageToMediaGallery($path, null, false, false);
-            unlink($path);
-          }// end if file exists
-        }// end if uploading a new file
+            // autopost download and create the base/primary image
+            // download the file to temporary location
+            $path = $tmp_path . baseName($image_path);
+
+            // copy the image and save to product
+            if(file_put_contents($path, $this->file_get_contents_curl($image_path)))
+            {
+              $_product->addImageToMediaGallery($path, null, true, false);
+              unlink($path);
+            }// end if we were able to read temporary file
+          }// end if count != 0
+        }
+        else
+        {
+          // image will be given a new path once linked to the product
+          $path = $mediaDir.$image_path;
+          if(strpos($path, "/tmp") !== FALSE || strpos($path, "/craigslist") !== FALSE)
+          {
+            if(file_exists($path))
+            {
+              $_product->addImageToMediaGallery($path, null, false, false);
+              // unlink($path);
+            }// end if file exists
+          }// end if uploading a new file
+        }// end if autoposting
       }// end foreach loop over image paths
 
       // Ensure user is a seller
@@ -423,4 +489,34 @@ class Index extends \Magento\Framework\App\Action\Action
       // on success, redirect user to their listing page
       return $this->resultJsonFactory->create()->setData(['success' => 'Y']);
     }// end function execute
+
+    /**
+     * Media directory name for the temporary file storage
+     * pub/media/tmp
+     *
+     * @return string
+     */
+    protected function getMediaDirTmpDir()
+    {
+        return $this->directoryList->getPath(DirectoryList::MEDIA) . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+    }
+
+    /*
+    * function to retreive data from a url
+
+    * returns: $data
+    */
+    protected function file_get_contents_curl($url)
+    {
+      $ch = curl_init();
+
+      curl_setopt($ch, CURLOPT_HEADER, 0);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_URL, $url);
+
+      $data = curl_exec($ch);
+      curl_close($ch);
+
+      return $data;
+    }// end function file_get_contents_curl
 }
