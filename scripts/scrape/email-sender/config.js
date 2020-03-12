@@ -24,6 +24,10 @@ const posts = filter(fs
   .readFileSync(path.join(__dirname, "./", `db/posts-list.txt`), "utf8")
   .split("\n"));
 
+const getLatestPosts = () => filter(fs
+  .readFileSync(path.join(__dirname, "./", `db/posts-list.txt`), "utf8")
+  .split("\n"));
+
 const emailAccounts = filter(fs
   .readFileSync(path.join(__dirname, "./", `db/email-accounts.txt`), "utf8")
   .split("\n"));
@@ -78,5 +82,6 @@ module.exports = {
   emailClosers,
   emailFrom,
   emailFromResold,
-  emailLinkIncludes
+  emailLinkIncludes,
+  getLatestPosts
 };
