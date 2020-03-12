@@ -356,7 +356,7 @@ class Index extends \Magento\Framework\App\Action\Action
             if(file_exists($path))
             {
               $_product->addImageToMediaGallery($path, null, false, false);
-              // unlink($path);
+              unlink($path);
             }// end if file exists
           }// end if uploading a new file
         }// end if autoposting

@@ -16,7 +16,7 @@ const useSMTPRelay = true;
 // constants
 const debug_email = 'joe.kuczek@gmail.com';
 const resold_url = 'https://resold.us';
-const debug_url = 'https://localhost';
+const debug_url = 'https://resold.us';
 const read_retries = 1;
 const send_limit = 100000;
 
