@@ -38,7 +38,7 @@ let templateReplace = (phrase, key, value) => {
   }// end if we aren't using sendgrid
 
   // loop to retry reading from last sent email index
-  while(retry++ < config.read_retries) {
+  while(true) {
     let lastEmailIndex = await emailSender.getLastSentEmailIndex();
     config = require('./config');
 

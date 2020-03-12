@@ -8,16 +8,15 @@ let filter = (arr) => {
 };
 
 // flags
-const debug = true;
+const debug = false;
 const sendGrid = true;
 const createAccounts = false;
 const useSMTPRelay = true;
 
 // constants
-const debug_email = 'joe.kuczek@gmail.com';
+const debug_email = '009ad972fb0a39109a792c35773c9819@sale.craigslist.org';
 const resold_url = 'https://resold.us';
 const debug_url = 'https://resold.us';
-const read_retries = 1;
 const send_limit = 100000;
 
 // list file resources
@@ -64,7 +63,6 @@ const emailClosers = filter(fs
 module.exports = {
   resold_url,
   debug_url,
-  read_retries,
   send_limit,
   debug_email,
   debug,
