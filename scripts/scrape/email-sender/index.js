@@ -40,10 +40,10 @@ let templateReplace = (phrase, key, value) => {
   // loop to retry reading from last sent email index
   while(true) {
     let lastEmailIndex = await emailSender.getLastSentEmailIndex();
-    config = require('./config');
+    config.posts = config.getLatestPosts();
 
     // loop over all craigslist posts
-    for (let i = lastEmailIndex; i < config.posts.length; i++) {
+    for (let i = lastEmailIndex+1; i < config.posts.length; i++) {
       // check if we've reached our gmail send limit for this account
       if(!config.sendGrid && emailsSent+1 == config.send_limit){
         // close the browser and login with a new account
