@@ -117,7 +117,15 @@ $total_post_count = (int) file_get_contents('email-sender/db/post-count.txt');
 ######################################
 // map between craigslist search url and Resold category ID
 $url_parts = [
-  '/search/sss?sort=pricedsc&max_price=1200&min_price=50&query=collectibles' => [224]
+  '/search/sss?query=camera&sort=rel' => [53],        // cameras
+  '/search/sss?query=phone&sort=rel' => [68],         // cell phones
+  '/search/sss?query=laptop&sort=rel' => [59],        // laptops
+  '/search/sss?query=tablet&sort=rel' => [60],        // tablets
+  '/search/sss?query=tv&sort=rel' => [73],            // tvs
+  '/search/sss?query=video+games&sort=rel' => [78],   // video games
+  '/search/sss?query=headphones&sort=rel' => [82],    // headphones
+  '/search/sss?query=speakers&sort=rel' => [80],      // speakers
+  '/search/sss?query=smart+watch&sort=rel' => [71]    // smart watches
 ];
 
 // URL crawling ignores
