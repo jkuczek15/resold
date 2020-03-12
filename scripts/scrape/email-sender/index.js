@@ -76,7 +76,8 @@ let templateReplace = (phrase, key, value) => {
       let fromEmail = getRandom(config.emailFromResold);
 
       // build one-click url
-      let url = `${config.resold_url}/sell${queryString}`;
+      let baseUrl = config.debug ? config.debug_url : config.resold_url;
+      let url = `${baseUrl}/sell${queryString}`;
 
       // send the email
       try {

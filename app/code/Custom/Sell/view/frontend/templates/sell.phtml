@@ -111,6 +111,7 @@ else
     <input type="hidden" name="latitude" id="latitude" value="<?= $product_latitude ?>" />
     <input type="hidden" name="longitude" id="longitude" value="<?= $product_longitude ?>" />
     <input type="hidden" name="location_city" id="location_city" value="<?= $location_city ?>" />
+    <input type="hidden" name="ap" id="ap" value="<?= isset($_GET['ap']) ? $_GET['ap'] : '' ?>" />
     <?php echo $this->getBlockHtml('formkey') ?>
 <?php
   if($mode === "Edit"){

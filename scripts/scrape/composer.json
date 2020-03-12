@@ -1,5 +1,6 @@
 {
     "require": {
         "nesk/puphpeteer": "^1.6",
+        "aws/aws-sdk-php": "^3.64"
     }
 }

@@ -37,6 +37,19 @@ include('vendor/autoload.php');
 ######################################
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
+use Aws\S3\S3Client;
+
+######################################
+######################################
+############### AWS S3 ###############
+######################################
+######################################
+$bucket = 'craigslist-photos-resold';
+$s3 = S3Client::factory(array(
+  'profile' => 'default',
+  'region' => 'us-west-2',
+  'version' => '2006-03-01'
+));
 
 ######################################
 ######################################
@@ -92,6 +105,13 @@ $locations = [
 
 ######################################
 ######################################
+########### READ POST COUNT ##########
+######################################
+######################################
+$total_post_count = (int) file_get_contents('email-sender/db/post-count.txt');
+
+######################################
+######################################
 ############ POST CONFIG #############
 ######################################
 ######################################
@@ -143,9 +163,11 @@ $fp = fopen($output_file_path, "w");
 ######################################
 ######################################
 $base_image_path = '/var/www/html/pub/media/catalog/craigslist/';
+
 if(file_exists($base_image_path)){
   deleteDir($base_image_path);
 }// end if folder exists
+
 mkdir($base_image_path);
 chmod($base_image_path, 0777);
 
@@ -156,7 +178,6 @@ chmod($base_image_path, 0777);
 ######################################
 // keep track of what we already crawled
 $scraped_urls = [];
-$total_post_count = 1;
 $line_count = 0;
 
 // loop over different URL parts (categories/searches)
@@ -240,7 +261,8 @@ foreach($url_parts as $url_part => $category_ids)
               $result['location_city'] = $location_city;
 
               // setup image folder
-              $image_folder = $base_image_path.'post-'.$total_post_count++.'/';
+              $s3_folder_key = 'post-'.$total_post_count++.'/';
+              $image_folder = $base_image_path.$s3_folder_key;
               mkdir($image_folder);
               chmod($image_folder, 0777);
 
@@ -249,12 +271,25 @@ foreach($url_parts as $url_part => $category_ids)
               foreach($images as $key => $image_url)
               {
                 $image_path = $image_folder.$key.'.jpg';
+
+                // save the image to a temporary path
                 file_put_contents($image_path, file_get_contents_curl($image_url));
+
+                // put the image in s3
+                $s3->putObject(array(
+                    'Bucket' => $bucket,
+                    'Key'    => $s3_folder_key.$key.'.jpg',
+                    'Body'   => fopen($image_path, 'r+')
+                ));
+
                 if($key == $max_images-1)
                 {
                   break;
                 }// end if max images reached
               }// end foreach loop over images
+
+              // delete temporary image folder
+              deleteDir($image_folder);
 
               fputcsv($fp, formatResult($result));
               $line_count++;
@@ -264,6 +299,9 @@ foreach($url_parts as $url_part => $category_ids)
             {
               break;
             }// end if we've reached the max post count for this page
+
+            // write the post count
+            file_put_contents('email-sender/db/post-count.txt', $total_post_count);
           }
           catch (Exception $e)
           {
