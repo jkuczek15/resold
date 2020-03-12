@@ -302,7 +302,10 @@ class Index extends \Magento\Framework\App\Action\Action
           if(file_put_contents($primary_path, $this->file_get_contents_curl($image_paths[0])))
           {
             $_product->addImageToMediaGallery($primary_path, $image_types, false, false);
-            unlink($primary_path);
+            if(file_exists($primary_path))
+            {
+              unlink($primary_path);
+            }// end if file exists
           }// end if we were able to read temporary file
         }
         else
@@ -337,7 +340,10 @@ class Index extends \Magento\Framework\App\Action\Action
             if(file_put_contents($path, $this->file_get_contents_curl($image_path)))
             {
               $_product->addImageToMediaGallery($path, null, true, false);
-              unlink($path);
+              if(file_exists($path))
+              {
+                unlink($path);
+              }// end if file exists
             }// end if we were able to read temporary file
           }// end if count != 0
         }
