@@ -8,13 +8,13 @@ let filter = (arr) => {
 };
 
 // flags
-const debug = false;
+const debug = true;
 const sendGrid = true;
 const createAccounts = false;
 const useSMTPRelay = true;
 
 // constants
-const debug_email = '009ad972fb0a39109a792c35773c9819@sale.craigslist.org';
+const debug_email = '391d12ca5983398c9937aa1dfc536b11@sale.craigslist.org';
 const resold_url = 'https://resold.us';
 const debug_url = 'https://resold.us';
 const send_limit = 100000;
@@ -42,10 +42,6 @@ const emailStarters = filter(fs
 
 const emailFrom = filter(fs
   .readFileSync(path.join(__dirname, "./", `resources/email-from.txt`), "utf8")
-  .split("\n"));
-
-const emailFromResold = filter(fs
-  .readFileSync(path.join(__dirname, "./", `resources/email-from-resold.txt`), "utf8")
   .split("\n"));
 
 const emailBodys = filter(fs
@@ -81,7 +77,6 @@ module.exports = {
   emailBodysResold,
   emailClosers,
   emailFrom,
-  emailFromResold,
   emailLinkIncludes,
   getLatestPosts
 };

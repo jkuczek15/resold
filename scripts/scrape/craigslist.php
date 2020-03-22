@@ -117,15 +117,25 @@ $total_post_count = (int) file_get_contents('email-sender/db/post-count.txt');
 ######################################
 // map between craigslist search url and Resold category ID
 $url_parts = [
+  // furniture
+  '/search/sss?query=living+room+furniture&sort=rel' => [137],    // living room
+  '/search/sss?query=bedroom+furniture&sort=rel' => [138],       // bedroom
+  '/search/sss?query=kitchen+furniture&sort=rel' => [139],      // kitchen
+  '/search/sss?query=office+furniture&sort=rel' => [141],      // office
+  '/search/sss?query=furniture&sort=rel' => [142],            // other furniture
+  // electronics
+  '/search/sss?query=laptop&sort=rel' => [59],               // laptops
+  '/search/sss?query=tablet&sort=rel' => [60],              // tablets
+  '/search/sss?query=tv&sort=rel' => [73],                 // tvs
+  '/search/sss?query=video+games&sort=rel' => [78],       // video games
+  '/search/sss?query=headphones&sort=rel' => [82],       // headphones
+  '/search/sss?query=speakers&sort=rel' => [80],        // speakers
+  '/search/sss?query=smart+watch&sort=rel' => [71],    // smart watches
   '/search/sss?query=camera&sort=rel' => [53],        // cameras
-  '/search/sss?query=phone&sort=rel' => [68],         // cell phones
-  '/search/sss?query=laptop&sort=rel' => [59],        // laptops
-  '/search/sss?query=tablet&sort=rel' => [60],        // tablets
-  '/search/sss?query=tv&sort=rel' => [73],            // tvs
-  '/search/sss?query=video+games&sort=rel' => [78],   // video games
-  '/search/sss?query=headphones&sort=rel' => [82],    // headphones
-  '/search/sss?query=speakers&sort=rel' => [80],      // speakers
-  '/search/sss?query=smart+watch&sort=rel' => [71]    // smart watches
+  '/search/sss?query=phone&sort=rel' => [68],        // cell phones
+  // outdoor
+  '/search/sss?query=bikes&sort=rel' => [300],         // bikes
+  '/search/sss?query=fishing+rods&sort=rel' => [306]  // fishing rods
 ];
 
 // URL crawling ignores
@@ -143,7 +153,7 @@ $posts_regex_ignores = [
 $posts_string_ignores = ['/', ''];
 
 // limits
-$max_page_count = 25;               // number of pages deep we should crawl per URL part
+$max_page_count = 6;                // number of pages deep we should crawl per URL part
 $max_page_post_count = 120;        // number of posts we should scrape per page
 $max_images = 2;                  // number of images to download per post
 $reply_sleep_time = 4;           // time to wait before copying email from reply button

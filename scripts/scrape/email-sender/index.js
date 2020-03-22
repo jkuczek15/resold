@@ -73,7 +73,7 @@ let templateReplace = (phrase, key, value) => {
       let fromUser = getRandom(config.emailFrom);
       let fromParts = fromUser.split(',');
       let fromName = fromParts[0];
-      let fromEmail = getRandom(config.emailFromResold);
+      let fromEmail = fromParts[1];
 
       // build one-click url
       let baseUrl = config.debug ? config.debug_url : config.resold_url;
@@ -91,7 +91,7 @@ let templateReplace = (phrase, key, value) => {
           ${closer}
           <br/><br/>
           ${fromName}`;
-          await emailSender.writeNewEmailSendGrid(i, email, fromEmail, fromName, subject, html, config.useSMTPRelay);
+          await emailSender.writeNewEmailSendGrid(i, email, fromEmail, fromName, subject, html, config.useSMTPRelay, config.debug);
         }else{
           let message = `${greeting}\r\n${body}\r\n`;
           let closing = `\r\n${closer}\r\n${fromName}`;
