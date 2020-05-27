@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a70b74e18b224b6d7d12c497bea42257",
+    "content-hash": "4dcf1ba517daadd71164c686fcfd97a2",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -868,6 +868,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -918,6 +919,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
@@ -7120,6 +7122,7 @@
                 "php",
                 "stylesheet"
             ],
+            "abandoned": true,
             "time": "2017-03-28T22:19:25+00:00"
         },
         {
@@ -7522,6 +7525,54 @@
                 "psr-3"
             ],
             "time": "2018-11-20T15:27:04+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "reference": "408d5eafb83c57f6365a3ca330ff23aa4a5fa39b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "time": "2017-10-23T01:57:42+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -8487,6 +8538,7 @@
                 "code",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-code",
             "time": "2015-05-11T16:17:05+00:00"
         },
         {
@@ -8544,6 +8596,7 @@
                 "config",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-config",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -8594,6 +8647,7 @@
                 "console",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-console",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -8646,6 +8700,7 @@
                 "crypt",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-crypt",
             "time": "2015-11-23T16:33:27+00:00"
         },
         {
@@ -8697,6 +8752,7 @@
                 "di",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-di",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -8742,6 +8798,7 @@
                 "escaper",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-escaper",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -8788,6 +8845,7 @@
                 "eventmanager",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-eventmanager",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -8844,6 +8902,7 @@
                 "filter",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-filter",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -8915,6 +8974,7 @@
                 "form",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-form",
             "time": "2015-09-09T19:11:05+00:00"
         },
         {
@@ -8966,6 +9026,7 @@
                 "http",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-http",
             "time": "2015-09-14T16:11:20+00:00"
         },
         {
@@ -9030,6 +9091,7 @@
                 "i18n",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-i18n",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9081,6 +9143,7 @@
                 "inputfilter",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-inputfilter",
             "time": "2015-09-09T15:44:54+00:00"
         },
         {
@@ -9135,6 +9198,7 @@
                 "json",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-json",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9180,6 +9244,7 @@
                 "loader",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-loader",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9242,6 +9307,7 @@
                 "logging",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-log",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9293,6 +9359,7 @@
                 "math",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-math",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9351,6 +9418,7 @@
                 "modulemanager",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-modulemanager",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9439,6 +9507,7 @@
                 "mvc",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-mvc",
             "time": "2015-09-14T16:32:50+00:00"
         },
         {
@@ -9492,6 +9561,7 @@
                 "serializer",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-serializer",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9539,6 +9609,7 @@
                 "server",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-server",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9589,6 +9660,7 @@
                 "servicemanager",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-servicemanager",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9641,6 +9713,7 @@
                 "soap",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-soap",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9696,6 +9769,7 @@
                 "stdlib",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-stdlib",
             "time": "2015-07-21T13:55:46+00:00"
         },
         {
@@ -9743,6 +9817,7 @@
                 "text",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-text",
             "time": "2015-05-07T14:55:31+00:00"
         },
         {
@@ -9791,6 +9866,7 @@
                 "uri",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-uri",
             "time": "2015-09-14T16:17:10+00:00"
         },
         {
@@ -9856,6 +9932,7 @@
                 "validator",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-validator",
             "time": "2015-09-08T21:04:17+00:00"
         },
         {
@@ -9933,6 +10010,7 @@
                 "view",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-view",
             "time": "2015-06-16T15:22:37+00:00"
         },
         {
