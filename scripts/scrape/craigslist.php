@@ -484,6 +484,18 @@ function deleteDir($dirPath)
 }// end function deleteDir
 
 /*
+* function used to filter an array for 'next' page link
+* params: $element - url for the next page request
+*
+* returns: $result - true/false based on regex match
+*/
+function searchCheck($element)
+{
+  global $base_url;
+  return !preg_match("/".str_replace('/', '\/', $base_url)."/", $element);
+}// end function searchCheck
+
+/*
 * function to retreive data from a url
 
 * returns: $data
@@ -501,15 +513,3 @@ function file_get_contents_curl($url)
 
   return $data;
 }// end function file_get_contents_curl
-
-/*
-* function used to filter an array for 'next' page link
-* params: $element - url for the next page request
-*
-* returns: $result - true/false based on regex match
-*/
-function searchCheck($element)
-{
-  global $base_url;
-  return !preg_match("/".str_replace('/', '\/', $base_url)."/", $element);
-}// end function searchCheck
