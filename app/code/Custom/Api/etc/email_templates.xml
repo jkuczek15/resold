@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Email/etc/email_templates.xsd">
-  <template id="connect_to_stripe_template" label="Email Form" file="connect_to_stripe.html" type="html" module="Custom_Api" area="frontend" />
-  <template id="list_10_items_template" label="Email Form" file="list_10_items.html" type="html" module="Custom_Api" area="frontend" />
-</config>
