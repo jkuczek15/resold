@@ -2,7 +2,7 @@
     <type name="Magento\Theme\Model\View\Design">
         <arguments>
             <argument name="themes" xsi:type="array">
-                <item name="adminhtml" xsi:type="string">Resold/ResoldAdmin</item>
+                <item name="adminhtml" xsi:type="string">Resold/Admin</item>
             </argument>
         </arguments>
     </type>
