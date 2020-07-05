@@ -311,3 +311,6 @@ a.custom-button {
   z-index: 20;
   margin-top: -0.4em;
 }
+.hp-block.central-column.grid12-5 {
+  width: 54% !important;
+}
