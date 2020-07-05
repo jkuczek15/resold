@@ -27,12 +27,6 @@
 						<argument name="path" xsi:type="string">sell</argument>
 					</arguments>
 				</block>
-				<block class="Magento\Framework\View\Element\Html\Link\Current" name="csmarketplace-link-header" ifconfig="ced_vshops/general/vshoppage_top_title_enable">
-					<arguments>
-					    <argument name="label" xsi:type="helper" helper="Ced\CsMarketplace\Helper\Data::getCsMarketplaceLink"/>
-							<argument name="path" xsi:type="string">all?local=true/</argument>
-					</arguments>
-				</block>
 				<block class="Magento\Framework\View\Element\Html\Link\Current" name="help-link-header">
 					<arguments>
 						<argument name="label" xsi:type="string">Help</argument>
