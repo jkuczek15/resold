@@ -26,6 +26,7 @@ atlassian*
 /package.json
 /Ultimo-Guide.pdf
 !/pub/media/wysiwyg/*
+/pub/media/wysiwyg/.thumbs
 
 puppeteer/node_modules/*
 
