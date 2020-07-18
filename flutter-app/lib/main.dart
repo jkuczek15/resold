@@ -24,6 +24,7 @@ class Resold extends StatelessWidget {
 
 class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  String baseImagePath = 'https://resold.us/pub/media/catalog/product';
 
   Future<List<Product>> futureProducts;
 
@@ -78,7 +79,26 @@ class HomePageState extends State<HomePage> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(snapshot.data[index].name),
+                    title: Card(
+                      child: InkWell(
+                        splashColor: Colors.blue.withAlpha(30),
+                        onTap: () { /* ... */ },
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white),
+                          child: Row(
+                            children: [
+                              Column (
+                                children: [
+                                Image.network(baseImagePath + snapshot.data[index].smallImage),
+                                Text(snapshot.data[index].name)
+                                ],
+                              )
+                            ]
+                          ),
+                        )
+                      ),
+                    )
+//                    title: Text(snapshot.data[index].name),
                   );
                 },
               );
