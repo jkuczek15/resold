@@ -27,6 +27,7 @@ class ProductListBuilder {
                                       alignment: Alignment.topLeft,
                                       child: Image.network(baseImagePath + data[index].thumbnail, width: 150, height: 150)
                                   ),
+                                  SizedBox(height: 5),
                                   Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(data[index].name)
