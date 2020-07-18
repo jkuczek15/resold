@@ -6,6 +6,7 @@ import 'package:flappy_search_bar/flappy_search_bar.dart';
 
 void main() {
   runApp(Resold());
+
 }
 
 class Resold extends StatelessWidget {
@@ -52,7 +53,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureLocalProducts = resold.Api.fetchLocalProducts();
+    futureLocalProducts = resold.Api.fetchProducts();
   }
 
   @override
