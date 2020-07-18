@@ -11,12 +11,24 @@ class Resold extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
         title: 'Resold',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: const MaterialColor(0xff257292, {
+            50:  Color.fromRGBO(25,72,92, .1),
+            100: Color.fromRGBO(25,72,92, .2),
+            200: Color.fromRGBO(25,72,92, .3),
+            300: Color.fromRGBO(25,72,92, .4),
+            400: Color.fromRGBO(25,72,92, .5),
+            500: Color.fromRGBO(25,72,92, .6),
+            600: Color.fromRGBO(25,72,92, .7),
+            700: Color.fromRGBO(25,72,92, .8),
+            800: Color.fromRGBO(25,72,92, .9),
+            900: Color.fromRGBO(25,72,92, 1)
+          }),
           accentColor: Colors.white,
-          primaryColor: Colors.blue
+          primaryColor: const Color(0xff257292)
         ),
         home: HomePage()
     );
@@ -61,7 +73,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Account')),
         ],
         currentIndex: selectedIndex,
-        fixedColor: Colors.blue,
+        fixedColor: const Color(0xff257292),
         unselectedItemColor: Colors.black,
         onTap: onItemTapped,
       ),
