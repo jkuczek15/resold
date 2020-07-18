@@ -10,10 +10,11 @@ class Api {
 
   static final transport = ConsoleHttpTransport(Uri.parse(searchUrl));
   static final client = elastic.Client(transport);
+  static final itemsPerPage = 20;
 
-  static Future<List<Product>> fetchLocalProducts() async {
+  static Future<List<Product>> fetchProducts({int page = 0}) async {
 
-    final searchResults = await client.search(searchIndex, searchType, null, source: true, offset: 0, limit: 25);
+    final searchResults = await client.search(searchIndex, searchType, null, source: true, offset: page, limit: itemsPerPage);
 
     List<Product> products = new List<Product>();
     searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
@@ -21,13 +22,13 @@ class Api {
     return products;
   }
 
-  static Future<List<Product>> fetchSearchProducts(term) async {
+  static Future<List<Product>> fetchSearchProducts(term, {int page = 0}) async {
 
-      final searchResults = await client.search(searchIndex, searchType, elastic.Query.term('name', [term]), source: true);
+    final searchResults = await client.search(searchIndex, searchType, elastic.Query.term('name', [term]), source: true, offset: page, limit: itemsPerPage);
 
-      List<Product> products = new List<Product>();
-      searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
+    List<Product> products = new List<Product>();
+    searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
 
-      return products;
+    return products;
   }
 }
