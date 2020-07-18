@@ -8,12 +8,25 @@ class Api {
   static final searchIndex = 'magento*';
   static final searchType = 'doc';
 
-  static Future<List<Product>> fetchProducts() async {
+  static Future<List<Product>> fetchLocalProducts() async {
 
     final transport = ConsoleHttpTransport(Uri.parse(searchUrl));
     final client = elastic.Client(transport);
 
     final searchResults = await client.search(searchIndex, searchType, null, source: true);
+
+    List<Product> products = new List<Product>();
+    searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
+
+    return products;
+  }
+
+  static Future<List<Product>> fetchSearchProducts(term) async {
+
+    final transport = ConsoleHttpTransport(Uri.parse(searchUrl));
+    final client = elastic.Client(transport);
+
+    final searchResults = await client.search(searchIndex, searchType, elastic.Query.term('name', term), source: true);
 
     List<Product> products = new List<Product>();
     searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
