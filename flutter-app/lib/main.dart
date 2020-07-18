@@ -102,10 +102,11 @@ class HomePageState extends State<HomePage> {
             children: [
               SafeArea (
                 child: SearchBar<Product>(
+                  hintText: 'Search entire marketplace here...',
                   searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
                   onSearch: resold.Api.fetchSearchProducts,
                   onItemFound: (Product product, int index) {
-                    return ProductListBuilder.buildProductTile(product);
+                    return ProductListBuilder.buildProductTile(product, index);
                   },
                 ),
               )

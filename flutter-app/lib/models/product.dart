@@ -3,7 +3,7 @@ class Product {
 
   final int id;
   final String name;
-  final String titleDescription;
+  String titleDescription;
   final String price;
   final String image;
   final String smallImage;
@@ -23,7 +23,6 @@ class Product {
       var product = Product(
           id: doc['id'],
           name: doc['name_raw'][0].toString(),
-          titleDescription: doc['title_description_raw'][0].toString(),
           price: doc['price_raw'][0].toString(),
           image: doc['image_raw'][0].toString(),
           smallImage: doc['small_image_raw'][0].toString(),
@@ -32,6 +31,11 @@ class Product {
           condition: doc['condition_raw'][0].toString(),
           localGlobal: doc['local_global_raw'][0].toString()
       );
+
+      if(doc['title_description_raw'] != null)
+      {
+        product.titleDescription = doc['title_description_raw'][0].toString();
+      }
 
       if(doc['latitude_raw'] != null && doc['longitude_raw'] != null)
       {
