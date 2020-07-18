@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import './resold-service.dart' as resold;
+import './models.dart' as models;
 
 void main() {
-  runApp(MyApp());
+  runApp(Resold());
 }
 
-class MyApp extends StatelessWidget {
+class Resold extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -12,6 +14,8 @@ class MyApp extends StatelessWidget {
         title: 'Resold',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          accentColor: Colors.white,
+          primaryColor: Colors.blue
         ),
         home: HomePage()
     );
@@ -20,6 +24,9 @@ class MyApp extends StatelessWidget {
 
 class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+
+  Future<models.Album> futureAlbum;
+
   final widgetOptions = [
     Text('Buy'),
     Text('Search'),
@@ -29,15 +36,22 @@ class HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    futureAlbum = resold.Api.fetchProducts();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resold'),
       ),
       body: Center(
-        child: widgetOptions.elementAt(selectedIndex),
+        child: getContent(),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.pin_drop), title: Text('Buy')),
           BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
@@ -46,10 +60,31 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Account')),
         ],
         currentIndex: selectedIndex,
-        fixedColor: Colors.deepPurple,
+        fixedColor: Colors.blue,
+        unselectedItemColor: Colors.black,
         onTap: onItemTapped,
       ),
     );
+  }
+
+  Object getContent() {
+    switch(selectedIndex) {
+      case 0:
+        return FutureBuilder<models.Album>(
+          future: futureAlbum,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text(snapshot.data.title);
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            // By default, show a loading spinner.
+            return CircularProgressIndicator();
+          },
+        );
+      default:
+        return widgetOptions.elementAt(selectedIndex);
+    }
   }
 
   void onItemTapped(int index) {
