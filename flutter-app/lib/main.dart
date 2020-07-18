@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './resold-service.dart' as resold;
-import './models.dart' as models;
+import './services/resold.dart' as resold;
+import './models/product.dart';
 
 void main() {
   runApp(Resold());
@@ -25,7 +25,7 @@ class Resold extends StatelessWidget {
 class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
-  Future<models.Album> futureAlbum;
+  Future<List<Product>> futureProducts;
 
   final widgetOptions = [
     Text('Buy'),
@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureAlbum = resold.Api.fetchProducts();
+    futureProducts = resold.Api.fetchProducts();
   }
 
   @override
@@ -70,11 +70,18 @@ class HomePageState extends State<HomePage> {
   Object getContent() {
     switch(selectedIndex) {
       case 0:
-        return FutureBuilder<models.Album>(
-          future: futureAlbum,
+        return FutureBuilder<List<Product>>(
+          future: futureProducts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Text(snapshot.data.title);
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(snapshot.data[index].name),
+                  );
+                },
+              );
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
