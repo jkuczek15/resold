@@ -9,39 +9,57 @@ class ProductListBuilder {
     return ListView.builder(
       itemCount: data.length,
       itemBuilder: (context, index) {
-        return ListTile(
-            title: Card(
-              child: InkWell(
-                  splashColor: Colors.blue.withAlpha(30),
-                  onTap: () { /* ... */ },
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.white),
-                    child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container (
-                              padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                              child: Column (
-                                children: [
-                                  Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Image.network(baseImagePath + data[index].thumbnail, width: 150, height: 150)
-                                  ),
-                                  SizedBox(height: 5),
-                                  Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(data[index].name)
-                                  )
-                                ],
-                              )
-                          )
-                        ]
-                    ),
-                  )
-              ),
-            )
-        );
+        return buildProductTile(data[index]);
       },
+    );
+  }
+
+  static ListTile buildProductTile(Product data) {
+    return ListTile(
+        title: Card(
+          child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () { /* ... */ },
+              child: Container(
+                decoration: BoxDecoration(color: Colors.white),
+                child: Container (
+                    padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
+                    child: Column (
+                      children: [
+                        Row (
+                          children: [
+                            Column(
+                              children: [
+                                Align(
+                                    alignment: Alignment.center,
+                                    child: SizedBox (
+                                        height: 300,
+                                        width: 300,
+                                        child: Image.network(baseImagePath + data.thumbnail, fit: BoxFit.cover)
+                                    )
+                                ),
+                                SizedBox(height: 10),
+                              ]
+                            )
+                          ]
+                        ),
+                        Row (
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(data.name),
+                                Text("\$" + double.parse(data.price).round().toString())
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                ),
+              )
+          ),
+        )
     );
   }
 }

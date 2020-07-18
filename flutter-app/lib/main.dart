@@ -101,18 +101,13 @@ class HomePageState extends State<HomePage> {
           Stack(
             children: [
               SafeArea (
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: SearchBar<Product>(
-                    onSearch: resold.Api.fetchSearchProducts,
-                    onItemFound: (Product product, int index) {
-                      return ListTile(
-                        title: Text(product.name),
-                        subtitle: Text(product.titleDescription),
-                      );
-                    },
-                  ),
-                )
+                child: SearchBar<Product>(
+                  searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
+                  onSearch: resold.Api.fetchSearchProducts,
+                  onItemFound: (Product product, int index) {
+                    return ProductListBuilder.buildProductTile(product);
+                  },
+                ),
               )
             ]
           );
