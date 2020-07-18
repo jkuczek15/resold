@@ -13,7 +13,7 @@ class Api {
 
   static Future<List<Product>> fetchLocalProducts() async {
 
-    final searchResults = await client.search(searchIndex, searchType, null, source: true);
+    final searchResults = await client.search(searchIndex, searchType, null, source: true, offset: 0, limit: 25);
 
     List<Product> products = new List<Product>();
     searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
@@ -23,16 +23,11 @@ class Api {
 
   static Future<List<Product>> fetchSearchProducts(term) async {
 
-    try {
       final searchResults = await client.search(searchIndex, searchType, elastic.Query.term('name', [term]), source: true);
 
       List<Product> products = new List<Product>();
       searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
 
       return products;
-    } catch (ex) {
-      print(ex);
-      return null;
-    }
   }
 }
