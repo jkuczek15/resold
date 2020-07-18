@@ -24,7 +24,7 @@ class Resold extends StatelessWidget {
 
 class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
-  String baseImagePath = 'https://resold.us/pub/media/catalog/product';
+  String baseImagePath = 'https://s3-us-west-2.amazonaws.com/resold-photos/catalog/product';
 
   Future<List<Product>> futureProducts;
 
@@ -86,19 +86,28 @@ class HomePageState extends State<HomePage> {
                         child: Container(
                           decoration: BoxDecoration(color: Colors.white),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Column (
-                                children: [
-                                Image.network(baseImagePath + snapshot.data[index].smallImage),
-                                Text(snapshot.data[index].name)
-                                ],
+                              Container (
+                                padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                                child: Column (
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Image.network(baseImagePath + snapshot.data[index].thumbnail, width: 150, height: 150)
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(snapshot.data[index].name)
+                                    )
+                                  ],
+                                )
                               )
                             ]
                           ),
                         )
                       ),
                     )
-//                    title: Text(snapshot.data[index].name),
                   );
                 },
               );
