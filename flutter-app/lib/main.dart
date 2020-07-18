@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './services/resold.dart' as resold;
 import './models/product.dart';
+import './builders/product-list-builder.dart';
 
 void main() {
   runApp(Resold());
@@ -24,7 +25,6 @@ class Resold extends StatelessWidget {
 
 class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
-  String baseImagePath = 'https://s3-us-west-2.amazonaws.com/resold-photos/catalog/product';
 
   Future<List<Product>> futureProducts;
 
@@ -75,42 +75,7 @@ class HomePageState extends State<HomePage> {
           future: futureProducts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Card(
-                      child: InkWell(
-                        splashColor: Colors.blue.withAlpha(30),
-                        onTap: () { /* ... */ },
-                        child: Container(
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container (
-                                padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                                child: Column (
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Image.network(baseImagePath + snapshot.data[index].thumbnail, width: 150, height: 150)
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(snapshot.data[index].name)
-                                    )
-                                  ],
-                                )
-                              )
-                            ]
-                          ),
-                        )
-                      ),
-                    )
-                  );
-                },
-              );
+              return ProductListBuilder.buildProductList(snapshot.data);
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
