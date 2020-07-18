@@ -1,6 +1,4 @@
-import 'package:http/http.dart' as http;
 import '../models/product.dart';
-import 'dart:convert';
 import 'package:elastic_client/elastic_client.dart' as elastic;
 import 'package:elastic_client/console_http_transport.dart';
 
