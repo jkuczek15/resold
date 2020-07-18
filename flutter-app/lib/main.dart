@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './services/resold.dart' as resold;
 import './models/product.dart';
 import './builders/product-list-builder.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 
 void main() {
   runApp(Resold());
@@ -38,7 +39,7 @@ class Resold extends StatelessWidget {
 class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
-  Future<List<Product>> futureProducts;
+  Future<List<Product>> futureLocalProducts;
 
   final widgetOptions = [
     Text('Buy'),
@@ -51,7 +52,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureProducts = resold.Api.fetchProducts();
+    futureLocalProducts = resold.Api.fetchLocalProducts();
   }
 
   @override
@@ -84,7 +85,7 @@ class HomePageState extends State<HomePage> {
     switch(selectedIndex) {
       case 0:
         return FutureBuilder<List<Product>>(
-          future: futureProducts,
+          future: futureLocalProducts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ProductListBuilder.buildProductList(snapshot.data);
@@ -95,6 +96,26 @@ class HomePageState extends State<HomePage> {
             return CircularProgressIndicator();
           },
         );
+      case 1:
+        return
+          Stack(
+            children: [
+              SafeArea (
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SearchBar<Product>(
+                    onSearch: resold.Api.fetchSearchProducts,
+                    onItemFound: (Product product, int index) {
+                      return ListTile(
+                        title: Text(product.name),
+                        subtitle: Text(product.titleDescription),
+                      );
+                    },
+                  ),
+                )
+              )
+            ]
+          );
       default:
         return widgetOptions.elementAt(selectedIndex);
     }
