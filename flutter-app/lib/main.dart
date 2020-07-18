@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import './services/resold.dart' as resold;
-import './models/product.dart';
-import './builders/product-list-builder.dart';
+import 'package:resold/services/resold.dart' as resold;
+import 'package:resold/models/product.dart';
+import 'package:resold/builders/product-list-builder.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 
 void main() {
   runApp(Resold());
-
 }
 
 class Resold extends StatelessWidget {
@@ -94,7 +93,7 @@ class HomePageState extends State<HomePage> {
               return Text("${snapshot.error}");
             }
             // By default, show a loading spinner.
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff257292)));
           },
         );
       case 1:
@@ -106,6 +105,7 @@ class HomePageState extends State<HomePage> {
                   hintText: 'Search entire marketplace here...',
                   searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
                   onSearch: resold.Api.fetchSearchProducts,
+                  loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff257292))),
                   onItemFound: (Product product, int index) {
                     return ProductListBuilder.buildProductTile(product, index);
                   },

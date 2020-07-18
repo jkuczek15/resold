@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/view_models/product-view-model.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/widgets/creation-aware-list-item.dart';
@@ -9,7 +10,7 @@ class ProductListBuilder {
 
   static String baseImagePath = 'https://s3-us-west-2.amazonaws.com/resold-photos/catalog/product';
 
-  static ChangeNotifierProvider<ProductViewModel> buildProductList(List<Product> data) {
+  static ChangeNotifierProvider<ProductViewModel> buildProductList(List<Object> data) {
     return ChangeNotifierProvider<ProductViewModel> (
       create: (_) => new ProductViewModel(data),
       child: Consumer<ProductViewModel> (
@@ -19,7 +20,7 @@ class ProductListBuilder {
             itemCreated: () {
               SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
             },
-            child: buildProductTile(model.items[index], index)
+            child: model.items[index].name == LoadingIndicatorTitle ? Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff257292))) : buildProductTile(model.items[index], index)
           ),
         ),
       ),
