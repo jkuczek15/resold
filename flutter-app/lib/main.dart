@@ -44,29 +44,48 @@ class Login extends StatelessWidget {
                 child: Column (
                 children: [
                   RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusDirectional.circular(8)
+                      ),
                       onPressed: () async {
                         //after the login REST api call && response code ==200
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
                       },
-                      child: Text('Get Started'),
+                      child: Text('Get Started',
+                          style: new TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        )
+                      ),
                       padding: EdgeInsets.fromLTRB(120, 30, 120, 30),
                       color: Colors.black,
                       textColor: Colors.white,
                   ),
                   SizedBox(height: 10),
                   RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusDirectional.circular(8)
+                      ),
                       onPressed: () async {
                         //after the login REST api call && response code ==200
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
                       },
-                      child: Text('Sign In'),
-                      padding: EdgeInsets.fromLTRB(134, 30, 134, 30),
+                      child: Text('Sign In',
+                        style: new TextStyle(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                        )
+                      ),
+                      padding: EdgeInsets.fromLTRB(145, 30, 145, 30),
                       color: Colors.black,
                       textColor: Colors.white
                   ),
                 ]
                )
-              )
+              ),
+              SizedBox(height: 5)
             ]
           )
         ]
@@ -147,7 +166,7 @@ class HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.pin_drop), title: Text('Buy')),
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Buy')),
           BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
           BottomNavigationBarItem(icon: Icon(Icons.add_box), title: Text('Sell')),
           BottomNavigationBarItem(icon: Icon(Icons.receipt), title: Text('Orders')),
