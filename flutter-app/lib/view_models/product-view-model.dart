@@ -23,7 +23,7 @@ class ProductViewModel extends ChangeNotifier {
     if (requestMoreData && pageToRequest > currentPage) {
       currentPage = pageToRequest;
       showLoadingIndicator();
-      
+
       var newItems = await resold.Api.fetchProducts(offset: pageToRequest * ItemRequestThreshold);
       items.addAll(newItems);
 
