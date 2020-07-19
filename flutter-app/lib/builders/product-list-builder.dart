@@ -20,7 +20,7 @@ class ProductListBuilder {
             itemCreated: () {
               SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
             },
-            child: model.items[index].name == LoadingIndicatorTitle ? Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff257292))) : buildProductTile(model.items[index], index)
+            child: model.items[index].name == LoadingIndicatorTitle ? Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))) : buildProductTile(model.items[index], index)
           ),
         ),
       ),
@@ -63,18 +63,25 @@ class ProductListBuilder {
                                     children: [
                                       Container(
                                         padding: new EdgeInsets.only(right: 13.0),
-                                        width: 200,
+                                        width: 250,
                                         child: new Text(
                                           data.name,
                                           overflow: TextOverflow.fade,
                                           style: new TextStyle(
-                                            fontSize: 13.0,
+                                            fontSize: 16.0,
                                             fontFamily: 'Roboto',
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.normal,
                                           ),
                                         ),
                                       ),
-                                      Text("\$" + double.parse(data.price).round().toString())
+                                      SizedBox(height: 5),
+                                      Text("\$" + double.parse(data.price).round().toString(),
+                                        style: new TextStyle(
+                                          fontSize: 13.0,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.bold,
+                                        )
+                                      )
                                     ]
                                 )
                               ]

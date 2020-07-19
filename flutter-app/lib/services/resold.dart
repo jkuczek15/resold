@@ -24,7 +24,15 @@ class Api {
 
   static Future<List<Product>> fetchSearchProducts(term, {int offset = 0}) async {
 
-    final searchResults = await client.search(searchIndex, searchType, elastic.Query.term('name', [term]), source: true, offset: offset, limit: itemsPerPage);
+    var query = elastic.Query.bool(should: [
+      elastic.Query.match('name', term),
+      elastic.Query.match('description_raw', term),
+      elastic.Query.match('title_description_raw', term),
+      elastic.Query.match('description', term),
+      elastic.Query.match('title_description', term)
+    ]);
+
+    final searchResults = await client.search(searchIndex, searchType, query, source: true, offset: offset, limit: itemsPerPage);
 
     List<Product> products = new List<Product>();
     searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
