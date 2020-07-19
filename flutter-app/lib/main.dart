@@ -18,15 +18,49 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: RaisedButton(
-          onPressed: () async {
-            //after the login REST api call && response code ==200
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
-          },
-          child: Text('Login'),
-        ),
-      ),
+      body: Stack (
+        children: [
+          Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
+          Column (
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding (
+                child: Align(alignment: Alignment.topCenter, child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
+                padding: EdgeInsets.fromLTRB(30, 0, 30, 0)
+              ),
+              Center(
+                child:
+                Column (
+                children: [
+                  RaisedButton(
+                      onPressed: () async {
+                        //after the login REST api call && response code ==200
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
+                      },
+                      child: Text('Get Started'),
+                      padding: EdgeInsets.fromLTRB(100, 30, 100, 30),
+                      color: Colors.black,
+                      textColor: Colors.white,
+                  ),
+                  SizedBox(height: 10),
+                  RaisedButton(
+                      onPressed: () async {
+                        //after the login REST api call && response code ==200
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
+                      },
+                      child: Text('Sign In'),
+                      padding: EdgeInsets.fromLTRB(114, 30, 114, 30),
+                      color: Colors.black,
+                      textColor: Colors.white,
+                  ),
+                ]
+               )
+              )
+            ]
+          )
+        ]
+      )
     );
   }
 }
