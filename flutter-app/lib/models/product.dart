@@ -32,13 +32,11 @@ class Product {
           localGlobal: doc['local_global_raw'][0].toString()
       );
 
-      if(doc['title_description_raw'] != null)
-      {
+      if(doc['title_description_raw'] != null) {
         product.titleDescription = doc['title_description_raw'][0].toString();
       }
 
-      if(doc['latitude_raw'] != null && doc['longitude_raw'] != null)
-      {
+      if(doc['latitude_raw'] != null && doc['longitude_raw'] != null) {
         product.latitude = doc['latitude_raw'][0].toString();
         product.longitude = doc['longitude_raw'][0].toString();
       }
