@@ -3,12 +3,35 @@ import 'package:resold/services/resold.dart' as resold;
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(Resold());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('email', null);
+  var email = prefs.getString('email');
+  print(email);
+  runApp(MaterialApp(home: email == null ? Login() : Home()));
 }
 
-class Resold extends StatelessWidget {
+class Login extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: RaisedButton(
+          onPressed: () async {
+            //after the login REST api call && response code ==200
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
+          },
+          child: Text('Login'),
+        ),
+      ),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -16,7 +39,7 @@ class Resold extends StatelessWidget {
     return MaterialApp(
         title: 'Resold',
         theme: ThemeData(
-          primarySwatch: const MaterialColor(0xff257292, {
+          primarySwatch: const MaterialColor(0xff41b8ea, {
             50:  Color.fromRGBO(25,72,92, .1),
             100: Color.fromRGBO(25,72,92, .2),
             200: Color.fromRGBO(25,72,92, .3),
@@ -29,7 +52,7 @@ class Resold extends StatelessWidget {
             900: Color.fromRGBO(25,72,92, 1)
           }),
           accentColor: Colors.white,
-          primaryColor: const Color(0xff257292)
+          primaryColor: const Color(0xff41b8ea)
         ),
         home: HomePage()
     );
@@ -59,7 +82,20 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resold'),
+        title: Row (
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align (
+              alignment: Alignment.centerLeft,
+              child: Image.asset('assets/images/resold-white-logo.png', width: 145, height: 145)
+            ),
+            Align (
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.message, color: Colors.white)
+            )
+          ],
+        ),
+        backgroundColor: const Color(0xff41b8ea),
       ),
       body: Center(
         child: getContent(),
@@ -74,7 +110,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Account')),
         ],
         currentIndex: selectedIndex,
-        fixedColor: const Color(0xff257292),
+        fixedColor: const Color(0xff41b8ea),
         unselectedItemColor: Colors.black,
         onTap: onItemTapped,
       ),
@@ -93,7 +129,7 @@ class HomePageState extends State<HomePage> {
               return Text("${snapshot.error}");
             }
             // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff257292)));
+            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
           },
         );
       case 1:
@@ -105,7 +141,7 @@ class HomePageState extends State<HomePage> {
                   hintText: 'Search entire marketplace here...',
                   searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
                   onSearch: resold.Api.fetchSearchProducts,
-                  loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff257292))),
+                  loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
                   onItemFound: (Product product, int index) {
                     return ProductListBuilder.buildProductTile(product, index);
                   },
