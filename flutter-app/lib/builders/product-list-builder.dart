@@ -16,12 +16,45 @@ class ProductListBuilder {
       child: Consumer<ProductViewModel> (
         builder: (context, model, child) => ListView.builder(
           itemCount: model.items.length,
-          itemBuilder: (context, index) => CreationAwareListItem(
-            itemCreated: () {
-              SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
-            },
-            child: model.items[index].name == LoadingIndicatorTitle ? Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))) : buildProductTile(model.items[index], index)
-          ),
+          itemBuilder: (context, index) {
+            if(index == 0) {
+              return Column(
+                children: [
+                  SizedBox(height: 10),
+                  SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                              child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
+                            ),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
+                            ),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
+                            ),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
+                            ),
+                          ]
+                      )
+                  )
+                ]
+              );
+            }
+            index -= 1;
+            return CreationAwareListItem(
+              itemCreated: () {
+                SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
+              },
+              child: model.items[index].name == LoadingIndicatorTitle ? Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))) : buildProductTile(model.items[index], index)
+            );
+          }
         ),
       ),
     );
