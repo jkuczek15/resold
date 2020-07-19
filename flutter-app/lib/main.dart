@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('email', null);
   var email = prefs.getString('email');
   print(email);
   runApp(MaterialApp(home: email == null ? Login() : Home()));
@@ -25,13 +24,24 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding (
-                child: Align(alignment: Alignment.topCenter, child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
-                padding: EdgeInsets.fromLTRB(30, 0, 30, 0)
+              Column (
+                children: [
+                  Padding (
+                    child: Align(alignment: Alignment.topCenter, child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
+                    padding: EdgeInsets.fromLTRB(30, 0, 30, 20)
+                  ),
+                  Center(
+                    child: Text('Buy and sell locally with delivery.',
+                      style: new TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                    ))
+                  )
+                ]
               ),
               Center(
-                child:
-                Column (
+                child: Column (
                 children: [
                   RaisedButton(
                       onPressed: () async {
@@ -39,7 +49,7 @@ class Login extends StatelessWidget {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
                       },
                       child: Text('Get Started'),
-                      padding: EdgeInsets.fromLTRB(100, 30, 100, 30),
+                      padding: EdgeInsets.fromLTRB(120, 30, 120, 30),
                       color: Colors.black,
                       textColor: Colors.white,
                   ),
@@ -50,9 +60,9 @@ class Login extends StatelessWidget {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
                       },
                       child: Text('Sign In'),
-                      padding: EdgeInsets.fromLTRB(114, 30, 114, 30),
+                      padding: EdgeInsets.fromLTRB(134, 30, 134, 30),
                       color: Colors.black,
-                      textColor: Colors.white,
+                      textColor: Colors.white
                   ),
                 ]
                )
