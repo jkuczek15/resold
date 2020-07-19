@@ -134,20 +134,16 @@ class HomePageState extends State<HomePage> {
         );
       case 1:
         return
-          Stack(
-            children: [
-              SafeArea (
-                child: SearchBar<Product>(
-                  hintText: 'Search entire marketplace here...',
-                  searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
-                  onSearch: resold.Api.fetchSearchProducts,
-                  loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
-                  onItemFound: (Product product, int index) {
-                    return ProductListBuilder.buildProductTile(product, index);
-                  },
-                ),
-              )
-            ]
+          SafeArea (
+            child: SearchBar<Product>(
+              hintText: 'Search entire marketplace here...',
+              searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
+              onSearch: resold.Api.fetchSearchProducts,
+              loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
+              onItemFound: (Product product, int index) {
+                return ProductListBuilder.buildProductTile(product, index);
+              },
+            ),
           );
       default:
         return widgetOptions.elementAt(selectedIndex);
