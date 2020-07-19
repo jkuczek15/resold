@@ -16,22 +16,23 @@ class ProductViewModel extends ChangeNotifier {
 
   Future handleItemCreated(int index) async {
     var itemPosition = index + 1;
-    var requestMoreData = itemPosition % ItemRequestThreshold == 0 && itemPosition != 0;
-    var pageToRequest = itemPosition ~/ ItemRequestThreshold;
+    var tempRequestThreshold = ItemRequestThreshold - 1;
+    var requestMoreData = itemPosition % tempRequestThreshold == 0 && itemPosition != 0;
+    var pageToRequest = itemPosition ~/ tempRequestThreshold;
 
     if (requestMoreData && pageToRequest > currentPage) {
       currentPage = pageToRequest;
-      _showLoadingIndicator();
+      showLoadingIndicator();
 
       await Future.delayed(Duration(seconds: 5));
       var newItems = await resold.Api.fetchProducts(offset: pageToRequest * ItemRequestThreshold);
       items.addAll(newItems);
 
-      _removeLoadingIndicator();
+      removeLoadingIndicator();
     }
   }
 
-  void _showLoadingIndicator() {
+  void showLoadingIndicator() {
     items.add(Product(
       name: LoadingIndicatorTitle
     ));
@@ -39,7 +40,7 @@ class ProductViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _removeLoadingIndicator() {
+  void removeLoadingIndicator() {
     items.removeAt(lastLoadingIndex);
     notifyListeners();
   }
