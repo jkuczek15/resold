@@ -351,7 +351,7 @@ class Engine
                             'short_description_raw' => [
                                 'type' => 'text',
                             ],
-                            'location' => [
+                            'location_raw' => [
                               'type' => 'geo_point'
                             ]
                         ],
