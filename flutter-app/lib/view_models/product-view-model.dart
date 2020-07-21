@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/resold.dart' as resold;
+import 'package:geolocator/geolocator.dart';
 
 class ProductViewModel extends ChangeNotifier {
 
@@ -9,9 +10,11 @@ class ProductViewModel extends ChangeNotifier {
   static int currentPage = 0;
   List<Product> items;
   int lastLoadingIndex = 0;
+  Position currentLocation;
 
-  ProductViewModel (List<Product> data) {
+  ProductViewModel (Position currentLocation, List<Product> data) {
     items = data;
+    this.currentLocation = currentLocation;
   }
 
   Future handleItemCreated(int index) async {
@@ -24,7 +27,7 @@ class ProductViewModel extends ChangeNotifier {
       currentPage = pageToRequest;
       showLoadingIndicator();
 
-      var newItems = await resold.Api.fetchProducts(offset: pageToRequest * ItemRequestThreshold);
+      var newItems = await resold.Api.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude, offset: pageToRequest * ItemRequestThreshold);
       items.addAll(newItems);
 
       removeLoadingIndicator();
