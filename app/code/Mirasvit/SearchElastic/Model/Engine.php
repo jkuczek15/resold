@@ -351,6 +351,9 @@ class Engine
                             'short_description_raw' => [
                                 'type' => 'text',
                             ],
+                            'location' => [
+                              'type' => 'geo_point'
+                            ]
                         ],
                         'dynamic_templates' => [
                             [
@@ -388,7 +391,7 @@ class Engine
                                         'ignore_malformed' => true,
                                     ],
                                 ],
-                            ],
+                            ]
                         ],
                     ],
                 ];
