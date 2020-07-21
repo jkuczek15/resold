@@ -335,7 +335,7 @@ class Engine
     public function ensureDocumentType($indexName)
     {
         try {
-            if (!$this->isMappingExists($indexName)) {
+            if (!$this->isMappingExists($indexName) || true) {
                 $mapping = [
                     'index'            => $this->config->getIndexName($indexName),
                     'type'             => Config::DOCUMENT_TYPE,
