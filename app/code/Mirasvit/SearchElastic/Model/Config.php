@@ -39,7 +39,7 @@ class Config
      */
     private $filesystem;
 
-    const DOCUMENT_TYPE = 'doc';
+    const DOCUMENT_TYPE = 'geo_point';
 
     public function __construct(
         LocaleResolver $localeResolver,
