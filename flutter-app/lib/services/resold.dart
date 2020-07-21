@@ -12,9 +12,36 @@ class Api {
   static final client = elastic.Client(transport);
   static final itemsPerPage = 20;
 
-  static Future<List<Product>> fetchProducts({int offset = 0}) async {
+  static Future<List<Product>> fetchLocalProducts(double latitude, double longitude, {int offset = 0}) async {
 
-    final searchResults = await client.search(searchIndex, searchType, null, source: true, offset: offset, limit: itemsPerPage);
+    var query = elastic.Query.bool(
+        must: elastic.Query.matchAll() ,
+        filter: {
+          "geo_bounding_box": {
+            "location": {
+              "top_left": {
+                "lat": 42,
+                "lon": -72
+              },
+              "bottom_right": {
+                "lat": 40,
+                "lon": -74
+              }
+            }
+          }
+
+        'ignore_mapped': true,
+        'geo_distance': {
+          'distance': '200km',
+          'pin.location': {
+            'lat': '${latitude}',
+            'lon' : '${longitude}'
+          }
+        }
+      }
+    );
+    
+    final searchResults = await client.search(searchIndex, searchType, query, source: true, offset: offset, limit: itemsPerPage);
 
     List<Product> products = new List<Product>();
     searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));

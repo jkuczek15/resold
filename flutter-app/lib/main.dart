@@ -4,12 +4,16 @@ import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // check if logged in
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString('email');
-  print(email);
+
+  // run the app
   runApp(MaterialApp(home: email == null ? Login() : Home()));
 }
 
@@ -53,12 +57,12 @@ class Login extends StatelessWidget {
                       },
                       child: Text('Get Started',
                           style: new TextStyle(
-                          fontSize: 25.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white
                         )
                       ),
-                      padding: EdgeInsets.fromLTRB(120, 30, 120, 30),
+                      padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
                       color: Colors.black,
                       textColor: Colors.white,
                   ),
@@ -73,12 +77,12 @@ class Login extends StatelessWidget {
                       },
                       child: Text('Sign In',
                         style: new TextStyle(
-                            fontSize: 25.0,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.white
                         )
                       ),
-                      padding: EdgeInsets.fromLTRB(145, 30, 145, 30),
+                      padding: EdgeInsets.fromLTRB(125, 30, 125, 30),
                       color: Colors.black,
                       textColor: Colors.white
                   ),
@@ -95,6 +99,7 @@ class Login extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -126,6 +131,7 @@ class HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
   Future<List<Product>> futureLocalProducts;
+  Position currentLocation;
 
   final widgetOptions = [
     Text('Buy'),
@@ -138,7 +144,13 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    futureLocalProducts = resold.Api.fetchProducts();
+
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
+      setState(() {
+        currentLocation = location;
+        futureLocalProducts = resold.Api.fetchLocalProducts(location.latitude, location.longitude);
+      });
+    });
   }
 
   @override
@@ -187,7 +199,7 @@ class HomePageState extends State<HomePage> {
           future: futureLocalProducts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ProductListBuilder.buildProductList(snapshot.data);
+              return ProductListBuilder.buildProductList(snapshot.data, currentLocation);
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
@@ -204,7 +216,7 @@ class HomePageState extends State<HomePage> {
               onSearch: resold.Api.fetchSearchProducts,
               loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
               onItemFound: (Product product, int index) {
-                return ProductListBuilder.buildProductTile(product, index);
+                return ProductListBuilder.buildProductTile(currentLocation, product, index);
               },
             ),
           );
