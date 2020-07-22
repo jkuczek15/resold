@@ -46,17 +46,30 @@ class Api {
     return products;
   }
 
-  static Future<List<Product>> fetchSearchProducts(term, {int offset = 0}) async {
+  static Future<List<Product>> fetchSearchProducts(term, double latitude, double longitude, {int offset = 0}) async {
 
-    var query = elastic.Query.bool(should: [
-      elastic.Query.match('name', term),
-      elastic.Query.match('description_raw', term),
-      elastic.Query.match('title_description_raw', term),
-      elastic.Query.match('description', term),
-      elastic.Query.match('title_description', term)
-    ]);
+    var query = elastic.Query.bool(
+      should: [
+        elastic.Query.match('name', term),
+        elastic.Query.match('description_raw', term),
+        elastic.Query.match('title_description_raw', term),
+        elastic.Query.match('description', term),
+        elastic.Query.match('title_description', term)
+      ]
+    );
 
-    final searchResults = await client.search(searchIndex, searchType, query, source: true, offset: offset, limit: itemsPerPage);
+    var sort = [{
+      '_geo_distance' : {
+        'location_raw': {
+          'lat': latitude,
+          'lon' : longitude
+        },
+        'order' : 'asc',
+        'unit' : 'mi'
+      }
+    }];
+
+    final searchResults = await client.search(searchIndex, searchType, query, source: true, offset: offset, limit: itemsPerPage, sort: sort);
 
     List<Product> products = new List<Product>();
     searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));

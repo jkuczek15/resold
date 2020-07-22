@@ -213,7 +213,7 @@ class HomePageState extends State<HomePage> {
             child: SearchBar<Product>(
               hintText: 'Search entire marketplace here...',
               searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
-              onSearch: resold.Api.fetchSearchProducts,
+              onSearch: (term) => resold.Api.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
               loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
               onItemFound: (Product product, int index) {
                 return ProductListBuilder.buildProductTile(currentLocation, product, index);
