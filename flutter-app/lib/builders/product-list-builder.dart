@@ -128,10 +128,13 @@ class ProductListBuilder {
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                      Container(
-                                        width: 70,
+                                    Container(
+                                      width: 70,
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
                                         child: calculateDistance(currentLocation.latitude, currentLocation.longitude, data.latitude, data.longitude)
                                       )
+                                    )
                                   ]
                               )
                             ]
