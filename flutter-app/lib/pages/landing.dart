@@ -36,11 +36,11 @@ class LandingPageState extends State<LandingPage> {
                           ),
                           Center(
                               child: Text('Buy and sell locally with delivery.',
-                                  style: new TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white
-                                  ))
+                              style: new TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                              ))
                           )
                         ]
                     ),
@@ -53,13 +53,21 @@ class LandingPageState extends State<LandingPage> {
                                 ),
                                 onPressed: () async {
                                   //after the login REST api call && response code ==200
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext ctx) => SignUpPage()));
+                                  Navigator.push(context, PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => SignUpPage(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      return FadeTransition (
+                                        opacity: animation,
+                                        child: child
+                                      );
+                                    },
+                                  ));
                                 },
                                 child: Text('Get Started',
                                     style: new TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white
                                     )
                                 ),
                                 padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
@@ -73,7 +81,15 @@ class LandingPageState extends State<LandingPage> {
                                   ),
                                   onPressed: () async {
                                     //after the login REST api call && response code ==200
-                                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext ctx) => LoginPage()));
+                                    Navigator.push(context, PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition (
+                                          opacity: animation,
+                                          child: child
+                                        );
+                                      },
+                                    ));
                                   },
                                   child: Text('Sign In',
                                       style: new TextStyle(
