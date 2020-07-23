@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 
 class ProductViewModel extends ChangeNotifier {
 
-  int ItemRequestThreshold = 20;
+  int itemRequestThreshold = 20;
   static int currentPage = 0;
   List<Product> items;
   int lastLoadingIndex = 0;
@@ -18,10 +18,10 @@ class ProductViewModel extends ChangeNotifier {
   }
 
   Future handleItemCreated(int index) async {
-    ItemRequestThreshold = this.items.length;
+    itemRequestThreshold = this.items.length;
 
     var itemPosition = index + 1;
-    var tempRequestThreshold = ItemRequestThreshold - 1;
+    var tempRequestThreshold = itemRequestThreshold - 1;
     var requestMoreData = itemPosition % tempRequestThreshold == 0 && itemPosition != 0;
     var pageToRequest = itemPosition ~/ tempRequestThreshold;
 
@@ -29,7 +29,7 @@ class ProductViewModel extends ChangeNotifier {
       currentPage = pageToRequest;
       showLoadingIndicator();
 
-      var newItems = await resold.Api.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude, offset: pageToRequest * ItemRequestThreshold);
+      var newItems = await resold.Api.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude, offset: pageToRequest * itemRequestThreshold);
       items.addAll(newItems);
 
       removeLoadingIndicator();
