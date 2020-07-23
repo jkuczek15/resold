@@ -180,7 +180,7 @@ class HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Buy')),
           BottomNavigationBarItem(icon: Icon(Icons.search), title: Text('Search')),
-          BottomNavigationBarItem(icon: Icon(Icons.add_box), title: Text('Sell')),
+          BottomNavigationBarItem(icon: Icon(Icons.attach_money), title: Text('Sell')),
           BottomNavigationBarItem(icon: Icon(Icons.receipt), title: Text('Orders')),
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Account')),
         ],
@@ -213,6 +213,7 @@ class HomePageState extends State<HomePage> {
             child: SearchBar<Product>(
               hintText: 'Search entire marketplace here...',
               searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
+              cancellationWidget: Icon(Icons.cancel),
               onSearch: (term) => resold.Api.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
               loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
               onItemFound: (Product product, int index) {
