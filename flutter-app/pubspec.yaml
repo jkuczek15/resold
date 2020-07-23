@@ -26,7 +26,7 @@ dependencies:
   http: ^0.12.2
   convert: ^2.1.1
   elastic_client: ^0.1.11
-  flappy_search_bar: 1.4.1
+  flappy_search_bar: 1.7.2
   provider: ^4.3.1
   shared_preferences: ^0.5.8
   intl: ^0.16.1
