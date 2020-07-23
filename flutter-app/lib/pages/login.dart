@@ -39,6 +39,40 @@ class LoginPageState extends State<LoginPage> {
                       Center(
                           child: Column (
                               children: [
+                              Padding (
+                                  padding: EdgeInsets.fromLTRB(65, 30, 65, 30),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your email...',
+                                      hintStyle: TextStyle (
+                                        color: Colors.white
+                                      ),
+                                      labelStyle: new TextStyle(
+                                        color: const Color(0xff41b8ea),
+                                      )
+                                    ),
+                                    style: TextStyle (
+                                      color: Colors.white
+                                    )
+                                  )
+                                ),
+                                Padding (
+                                    padding: EdgeInsets.fromLTRB(65, 10, 65, 30),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter your password...',
+                                        hintStyle: TextStyle (
+                                          color: Colors.white
+                                        ),
+                                        labelStyle: new TextStyle(
+                                          color: const Color(0xff41b8ea),
+                                        )
+                                      ),
+                                      style: TextStyle (
+                                        color: Colors.white
+                                      )
+                                  )
+                                ),
                                 RaisedButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadiusDirectional.circular(8)
@@ -46,14 +80,22 @@ class LoginPageState extends State<LoginPage> {
                                   onPressed: () async {
                                     //after the login REST api call && response code ==200
                                     Navigator.pop(context);
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
+                                    Navigator.pushReplacement(context, PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) => Home(),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition (
+                                            opacity: animation,
+                                            child: child
+                                        );
+                                      },
+                                    ));
                                   },
-                                  child: Text('Login',
-                                      style: new TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white
-                                      )
+                                  child: Text('Sign In',
+                                    style: new TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white
+                                    )
                                   ),
                                   padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
                                   color: Colors.black,

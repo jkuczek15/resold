@@ -28,11 +28,11 @@ class SignUpPageState extends State<SignUpPage> {
                             ),
                             Center(
                                 child: Text('Buy and sell locally with delivery.',
-                                    style: new TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white
-                                    ))
+                                style: new TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
+                                ))
                             )
                           ]
                       ),
@@ -46,7 +46,15 @@ class SignUpPageState extends State<SignUpPage> {
                                   onPressed: () async {
                                     //after the login REST api call && response code ==200
                                     Navigator.pop(context);
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext ctx) => Home()));
+                                    Navigator.pushReplacement(context, PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) => Home(),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition (
+                                            opacity: animation,
+                                            child: child
+                                        );
+                                      },
+                                    ));
                                   },
                                   child: Text('Sign Up',
                                       style: new TextStyle(
