@@ -14,6 +14,11 @@ class SignUpPageState extends State<SignUpPage> {
 
   Address address;
 
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +64,116 @@ class SignUpPageState extends State<SignUpPage> {
                       Center(
                           child: Column (
                               children: [
+                                Padding (
+                                    padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                                    child: TextField(
+                                        controller: nameController,
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter your name...',
+                                            hintStyle: TextStyle (
+                                                color: Colors.white
+                                            ),
+                                            labelStyle: new TextStyle(
+                                              color: const Color(0xff41b8ea),
+                                            ),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder (
+                                                borderSide: BorderSide(color: Colors.black)
+                                            ),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            )
+                                        ),
+                                        style: TextStyle (
+                                            color: Colors.white
+                                        )
+                                    )
+                                ),
+                                Padding (
+                                    padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                                    child: TextField(
+                                        controller: emailController,
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter your email...',
+                                            hintStyle: TextStyle (
+                                                color: Colors.white
+                                            ),
+                                            labelStyle: new TextStyle(
+                                              color: const Color(0xff41b8ea),
+                                            ),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder (
+                                                borderSide: BorderSide(color: Colors.black)
+                                            ),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            )
+                                        ),
+                                        style: TextStyle (
+                                            color: Colors.white
+                                        )
+                                    )
+                                ),
+                                Padding (
+                                    padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
+                                    child: TextField(
+                                        obscureText: true,
+                                        controller: passwordController,
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter your password...',
+                                            hintStyle: TextStyle (
+                                                color: Colors.white
+                                            ),
+                                            labelStyle: new TextStyle(
+                                              color: const Color(0xff41b8ea),
+                                            ),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder (
+                                                borderSide: BorderSide(color: Colors.black)
+                                            ),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            )
+                                        ),
+                                        style: TextStyle (
+                                            color: Colors.white
+                                        )
+                                    )
+                                ),
+                                Padding (
+                                    padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
+                                    child: TextField(
+                                        obscureText: true,
+                                        controller: confirmPasswordController,
+                                        decoration: InputDecoration(
+                                            hintText: 'Confirm your password...',
+                                            hintStyle: TextStyle (
+                                                color: Colors.white
+                                            ),
+                                            labelStyle: new TextStyle(
+                                              color: const Color(0xff41b8ea),
+                                            ),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder (
+                                                borderSide: BorderSide(color: Colors.black)
+                                            ),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white),
+                                            )
+                                        ),
+                                        style: TextStyle (
+                                            color: Colors.white
+                                        )
+                                    )
+                                ),
                                 RaisedButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadiusDirectional.circular(8)
