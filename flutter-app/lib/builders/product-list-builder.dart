@@ -56,8 +56,7 @@ class ProductListBuilder {
                 SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
               },
               child: model.items[index+1].name == LoadingIndicatorTitle ?
-              Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)))
-                  : buildProductTile(currentLocation, model.items[index], index)
+              Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))) : buildProductTile(currentLocation, model.items[index], index)
             );
           }
         ),
