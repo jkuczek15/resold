@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/view_models/network/request/login-request.dart';
 import 'package:resold/view_models/network/response/login-response.dart';
 
 class LoginPage extends StatefulWidget {
@@ -112,10 +113,15 @@ class LoginPageState extends State<LoginPage> {
                                         return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                       }
                                     );
+
                                     // attempt to login
-                                    LoginResponse result = await Magento.loginCustomer(emailController.text, passwordController.text);
-                                    if(result.status == 200) {
-                                      //after the login REST api call && response code ==200
+                                    LoginResponse response = await Magento.loginCustomer(LoginRequest(
+                                      username: emailController.text,
+                                      password: passwordController.text
+                                    ));
+
+                                    if(response.status == 200) {
+                                      // login was successful
                                       Navigator.of(context, rootNavigator: true).pop('dialog');
                                       Navigator.pop(context);
                                       Navigator.pushReplacement(context, PageRouteBuilder(
@@ -138,7 +144,7 @@ class LoginPageState extends State<LoginPage> {
                                             content: SingleChildScrollView(
                                               child: ListBody(
                                                 children: <Widget>[
-                                                  Text(result.error)
+                                                  Text(response.error)
                                                 ],
                                               ),
                                             ),

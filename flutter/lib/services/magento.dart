@@ -1,39 +1,32 @@
 import 'package:http/http.dart' show Client;
-import 'package:resold/view_models/network/response/login-response.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:resold/view_models/network/request/login-request.dart';
+import 'package:resold/view_models/network/response/login-response.dart';
+import 'package:resold/view_models/network/request/customer-request.dart';
+import 'package:resold/view_models/network/response/customer-response.dart';
 
 class Magento {
 
   static Config config = Config();
   static Client client = Client();
 
-  static Future<String> fetchStoreConfig() async {
-    print('fetchStoreConfig');
-    await config.initialized;
-    final response = await client.get(
-      '${config.baseUrl}/V1/store/storeConfigs',
-      headers: config.headers,
-    );
-
-    return response.body.toString();
-  }
-
-  static Future<LoginResponse> loginCustomer(String username, String password) async {
-    if(username.isEmpty || password.isEmpty) {
+  static Future<LoginResponse> loginCustomer(LoginRequest request) async {
+    if(request.username.isEmpty || request.password.isEmpty) {
       return LoginResponse (
-          status: 400,
-          error: 'Please enter both an email and a password.'
+        status: 400,
+        error: 'Please enter both an email and a password.'
       );
     }
 
     await config.initialized;
+
     final response = await client.post(
-      '${config.baseUrl}/customer/token',
+      '${config.baseUrl}/integration/customer/token',
       headers: config.headers,
       body: jsonEncode(<String, String>{
-        'username': username,
-        'password': password
+        'username': request.username,
+        'password': request.password
       })
     );
 
@@ -41,7 +34,7 @@ class Magento {
       // login success
       return LoginResponse(
         status: response.statusCode,
-        email: username,
+        email: request.username,
         token: response.body.toString()
       );
     } else {
@@ -50,6 +43,44 @@ class Magento {
       return LoginResponse (
         status: response.statusCode,
         error: json['message']
+      );
+    }
+  }
+
+  static Future<CustomerResponse> createCustomer(CustomerRequest request, String password) async {
+    if(request.firstname.isEmpty || request.lastname.isEmpty) {
+      return CustomerResponse (
+          status: 400,
+          error: 'Please enter both a first name and last name.'
+      );
+    }
+
+    if(request.email.isEmpty || password.isEmpty) {
+      return CustomerResponse (
+          status: 400,
+          error: 'Please enter both an email and a password.'
+      );
+    }
+
+    await config.initialized;
+
+    var json = jsonEncode(<String, Object>{'customer': request, 'password': password });
+
+    final response = await client.post(
+        '${config.baseUrl}/customers',
+        headers: config.headers,
+        body: json
+    );
+
+    if(response.statusCode == 200) {
+      // sign up success
+      return jsonDecode(response.body.toString());
+    } else {
+      // login error
+      var json = jsonDecode(response.body.toString());
+      return CustomerResponse (
+          status: response.statusCode,
+          error: json['message']
       );
     }
   }
@@ -68,7 +99,7 @@ class Config {
 
   init() async {
     final config = {
-      'base_url': 'https://resold.us/rest/V1/integration',
+      'base_url': 'https://resold.us/rest/V1',
       'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'
     };
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/product.dart';
-import 'package:resold/services/resold.dart';
+import 'package:resold/services/resold-search.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ProductViewModel extends ChangeNotifier {
@@ -29,7 +29,7 @@ class ProductViewModel extends ChangeNotifier {
       currentPage = pageToRequest;
       showLoadingIndicator();
 
-      var newItems = await Resold.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude, offset: pageToRequest * itemRequestThreshold);
+      var newItems = await ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude, offset: pageToRequest * itemRequestThreshold);
       items.addAll(newItems);
 
       removeLoadingIndicator();
