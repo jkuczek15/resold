@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resold/services/resold.dart';
+import 'package:resold/services/resold-search.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
@@ -54,7 +54,7 @@ class HomePageState extends State<HomePage> {
       if(this.mounted) {
         setState(() {
           currentLocation = location;
-          futureLocalProducts = Resold.fetchLocalProducts(location.latitude, location.longitude);
+          futureLocalProducts = ResoldSearch.fetchLocalProducts(location.latitude, location.longitude);
         });
       }
     });
@@ -121,7 +121,7 @@ class HomePageState extends State<HomePage> {
               hintText: 'Search entire marketplace here...',
               searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
               cancellationWidget: Icon(Icons.cancel),
-              onSearch: (term) => Resold.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
+              onSearch: (term) => ResoldSearch.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
               loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
               onItemFound: (Product product, int index) {
                 return ProductListBuilder.buildProductTile(currentLocation, product, index);
