@@ -51,10 +51,12 @@ class HomePageState extends State<HomePage> {
     super.initState();
 
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
-      setState(() {
-        currentLocation = location;
-        futureLocalProducts = Resold.fetchLocalProducts(location.latitude, location.longitude);
-      });
+      if(this.mounted) {
+        setState(() {
+          currentLocation = location;
+          futureLocalProducts = Resold.fetchLocalProducts(location.latitude, location.longitude);
+        });
+      }
     });
   }
 

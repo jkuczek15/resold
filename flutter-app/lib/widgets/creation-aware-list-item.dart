@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';class CreationAwareListItem extends StatefulWidget {
+import 'package:flutter/material.dart';
+
+class CreationAwareListItem extends StatefulWidget {
   final Function itemCreated;
   final Widget child;
 

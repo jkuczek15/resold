@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resold/pages/home.dart';
+import 'package:resold/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
 
@@ -13,7 +13,6 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
 
   Address address;
-
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -23,14 +22,13 @@ class SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
 
-    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
-      setState(() async {
-        var addresses = await Geocoder.local.findAddressesFromCoordinates(new Coordinates(
-            location.latitude, location.longitude
-          )
-        );
-        address = addresses.first;
-      });
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) async {
+      if(this.mounted) {
+        var addresses = await Geocoder.local.findAddressesFromCoordinates(new Coordinates(location.latitude, location.longitude));
+        setState(() {
+          address = addresses.first;
+        });
+      }
     });
   }
 

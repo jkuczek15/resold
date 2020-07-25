@@ -1,5 +1,5 @@
 import 'package:http/http.dart' show Client;
-import 'package:resold/view_models/network/login-response.dart';
+import 'package:resold/view_models/network/response/login-response.dart';
 import 'dart:async';
 import 'dart:convert';
 
