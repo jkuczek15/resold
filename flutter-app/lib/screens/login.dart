@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:resold/pages/home.dart';
+import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
-import 'package:resold/view_models/network/login-response.dart';
+import 'package:resold/view_models/network/response/login-response.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);

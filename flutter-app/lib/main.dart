@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:resold/pages/landing.dart';
-import 'package:resold/pages/home.dart';
+import 'package:resold/screens/landing.dart';
+import 'package:resold/screens/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
