@@ -1,4 +1,5 @@
 import 'package:http/http.dart' show Client;
+import 'package:resold/models/customer/customer-address.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:resold/view_models/network/request/login-request.dart';
@@ -35,7 +36,7 @@ class Magento {
       return LoginResponse(
         status: response.statusCode,
         email: request.username,
-        token: response.body.toString()
+        token: response.body.toString().replaceAll("\"", '')
       );
     } else {
       // login error
@@ -47,40 +48,54 @@ class Magento {
     }
   }
 
-  static Future<CustomerResponse> createCustomer(CustomerRequest request, String password) async {
+  static Future<CustomerResponse> createCustomer(CustomerRequest request, String password, String confirmPassword) async {
     if(request.firstname.isEmpty || request.lastname.isEmpty) {
       return CustomerResponse (
           status: 400,
           error: 'Please enter both a first name and last name.'
       );
     }
-
     if(request.email.isEmpty || password.isEmpty) {
       return CustomerResponse (
           status: 400,
           error: 'Please enter both an email and a password.'
       );
     }
+    if(password != confirmPassword) {
+      return CustomerResponse (
+          status: 400,
+          error: 'Confirmation password should match password.'
+      );
+    }
 
     await config.initialized;
 
-    var json = jsonEncode(<String, Object>{'customer': request, 'password': password });
+    var requestJson = jsonEncode(<String, dynamic>{'customer': request, 'password': password });
 
     final response = await client.post(
         '${config.baseUrl}/customers',
         headers: config.headers,
-        body: json
+        body: requestJson
     );
+
+    var responseJson = jsonDecode(response.body.toString());
 
     if(response.statusCode == 200) {
       // sign up success
-      return jsonDecode(response.body.toString());
+      return CustomerResponse (
+        status: response.statusCode,
+        id: int.parse(responseJson['id'].toString()),
+        email: responseJson['email'].toString(),
+        password: password,
+        firstName: responseJson['firstname'].toString(),
+        lastName: responseJson['lastname'].toString(),
+        addresses: [CustomerAddress.fromMap(responseJson['addresses'])]
+      );
     } else {
-      // login error
-      var json = jsonDecode(response.body.toString());
+      // sign up error
       return CustomerResponse (
           status: response.statusCode,
-          error: json['message']
+          error: responseJson['message']
       );
     }
   }
@@ -108,19 +123,6 @@ class Config {
     headers['Authorization'] = 'Bearer ${this.accessToken}';
     headers['User-Agent'] = 'Resold - Mobile Application';
     headers['Content-Type'] = 'application/json';
-  }
-
-  setStoreConfig(Map<String, dynamic> storeConfiguration) {
-    print('setStoreConfig');
-    storeConfig = storeConfiguration;
-  }
-
-  String getMediaUrl() {
-    return '${storeConfig['base_media_url']}';
-  }
-
-  String getProductMediaUrl() {
-    return '${storeConfig['base_media_url']}catalog/product';
   }
 }
 

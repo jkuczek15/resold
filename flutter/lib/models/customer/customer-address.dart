@@ -61,6 +61,33 @@ class CustomerAddress {
     return customerAddress;
   }
 
+  factory CustomerAddress.fromMap(List<dynamic> addresses) {
+    var customerAddress = CustomerAddress();
+    var customerAddressRegion = CustomerAddressRegion();
+
+    if(addresses.length > 0) {
+      var address = addresses[0];
+      customerAddress.defaultBilling = true;
+      customerAddress.defaultShipping = true;
+      customerAddress.firstname = address['firstname'];
+      customerAddress.lastname = address['lastname'];
+      customerAddress.postcode = address['postcode'];
+      customerAddress.city = address['city'];
+      customerAddress.countryId = address['country_id'];
+      customerAddress.street = [address['street'][0].toString()];
+
+      if(address['region'] != null) {
+        var region = address['region'];
+        customerAddressRegion.region = region['region'];
+        customerAddressRegion.regionCode = region['region_code'];
+        customerAddressRegion.regionId = region['region_id'];
+      }
+    }
+
+    customerAddress.region = customerAddressRegion;
+    return customerAddress;
+  }
+
   factory CustomerAddress.fromJson(Map<String, dynamic> json) => _$CustomerAddressFromJson(json);
   Map<String, dynamic> toJson() => _$CustomerAddressToJson(this);
 }

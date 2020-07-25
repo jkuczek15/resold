@@ -4,8 +4,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:resold/view_models/network/request/customer-request.dart';
 import 'package:resold/view_models/network/response/customer-response.dart';
+import 'package:resold/view_models/network/request/login-request.dart';
+import 'package:resold/view_models/network/response/login-response.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold.dart';
 import 'package:resold/models/customer/customer-address.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -221,27 +225,47 @@ class SignUpPageState extends State<SignUpPage> {
 
                                       await locationInitialized;
                                       var addresses = await futureAddresses;
+                                      var address = addresses.first;
 
-                                      CustomerResponse response = await Magento.createCustomer(CustomerRequest(
+                                      var customerAddress = CustomerAddress.fromAddress(address, firstNameController.text, lastNameController.text);
+                                      var regionId = await Resold.getRegionId(customerAddress.region.regionCode, customerAddress.countryId);
+                                      customerAddress.region.regionId = int.parse(regionId);
+
+                                      CustomerResponse customerResponse = await Magento.createCustomer(CustomerRequest(
                                         email: emailController.text,
                                         firstname: firstNameController.text,
                                         lastname: lastNameController.text,
-                                        addresses: [CustomerAddress.fromAddress(addresses.first, firstNameController.text, lastNameController.text)]
-                                      ), passwordController.text);
+                                        addresses: [customerAddress]
+                                      ), passwordController.text, confirmPasswordController.text);
 
-                                      if(response.status == 200) {
-                                        // login was successful
-                                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                                        Navigator.pop(context);
-                                        Navigator.pushReplacement(context, PageRouteBuilder(
-                                          pageBuilder: (context, animation, secondaryAnimation) => Home(),
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                            return FadeTransition (
-                                                opacity: animation,
-                                                child: child
-                                            );
-                                          },
+                                      if(customerResponse.status == 200) {
+                                        // signup was successful
+                                        // get the auth token, attempt to login
+                                        LoginResponse loginResponse = await Magento.loginCustomer(LoginRequest(
+                                            username: emailController.text,
+                                            password: passwordController.text
                                         ));
+
+                                        if(loginResponse.status == 200) {
+                                          // login was successful
+                                          // set shared preferences
+                                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                                          prefs.setString('email', emailController.text);
+                                          prefs.setString('token', loginResponse.token);
+
+                                          // navigate
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          Navigator.pop(context);
+                                          Navigator.pushReplacement(context, PageRouteBuilder(
+                                            pageBuilder: (context, animation, secondaryAnimation) => Home(emailController.text, loginResponse.token),
+                                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                              return FadeTransition (
+                                                  opacity: animation,
+                                                  child: child
+                                              );
+                                            },
+                                          ));
+                                        }// end if login
                                       } else {
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                         return showDialog<void>(
@@ -253,7 +277,7 @@ class SignUpPageState extends State<SignUpPage> {
                                               content: SingleChildScrollView(
                                                 child: ListBody(
                                                   children: <Widget>[
-                                                    Text(response.error)
+                                                    Text(customerResponse.error)
                                                   ],
                                                 ),
                                               ),
