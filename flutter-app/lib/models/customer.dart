@@ -10,8 +10,8 @@ class Customer {
 }
 
 class CustomerAddress {
-  final bool defaultBilling = true;
-  final bool defaultShipping = true;
+  bool defaultBilling = true;
+  bool defaultShipping = true;
 
   String firstName;
   String lastName;
@@ -23,10 +23,15 @@ class CustomerAddress {
   String city;
   String telephone;
   String countryId;
+
+  CustomerAddress({this.defaultBilling, this.defaultShipping, this.firstName, this.lastName, this.region,
+    this.street, this.postCode, this.city, this.telephone, this.countryId});
 }
 
 class CustomerAddressRegion {
   int regionId;
   String regionCode;
   String region;
+
+  CustomerAddressRegion({this.regionId, this.regionCode, this.region});
 }
