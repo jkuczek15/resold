@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resold/services/resold.dart' as resold;
+import 'package:resold/services/resold.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
@@ -53,7 +53,7 @@ class HomePageState extends State<HomePage> {
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
       setState(() {
         currentLocation = location;
-        futureLocalProducts = resold.Api.fetchLocalProducts(location.latitude, location.longitude);
+        futureLocalProducts = Resold.fetchLocalProducts(location.latitude, location.longitude);
       });
     });
   }
@@ -71,7 +71,7 @@ class HomePageState extends State<HomePage> {
             ),
             Align (
                 alignment: Alignment.centerRight,
-                child: Icon(Icons.message, color: Colors.white)
+                child: Icon(Icons.message, color: Colors.white),
             )
           ],
         ),
@@ -119,7 +119,7 @@ class HomePageState extends State<HomePage> {
               hintText: 'Search entire marketplace here...',
               searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
               cancellationWidget: Icon(Icons.cancel),
-              onSearch: (term) => resold.Api.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
+              onSearch: (term) => Resold.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
               loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
               onItemFound: (Product product, int index) {
                 return ProductListBuilder.buildProductTile(currentLocation, product, index);
