@@ -61,7 +61,7 @@ class SignUpPageState extends State<SignUpPage> {
                                   padding: EdgeInsets.fromLTRB(30, 40, 30, 20)
                               ),
                               Center(
-                                  child: Text('Buy and sell locally with delivery',
+                                  child: Text('Buy and sell locally with delivery.',
                                   style: new TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold,

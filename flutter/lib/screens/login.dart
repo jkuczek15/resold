@@ -35,7 +35,7 @@ class LoginPageState extends State<LoginPage> {
                                 padding: EdgeInsets.fromLTRB(30, 0, 30, 20)
                             ),
                             Center(
-                                child: Text('Buy and sell locally with delivery',
+                                child: Text('Buy and sell locally with delivery.',
                                 style: new TextStyle(
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.bold,
@@ -147,7 +147,7 @@ class LoginPageState extends State<LoginPage> {
                                         barrierDismissible: false,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: Text('Login Error'),
+                                            title: Text('Sign In Error'),
                                             content: SingleChildScrollView(
                                               child: ListBody(
                                                 children: <Widget>[
