@@ -170,7 +170,7 @@ class ProductListBuilder {
           ));
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
           );
         }
       },

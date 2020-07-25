@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resold/pages/home.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoder/geocoder.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -9,6 +11,24 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+
+  Address address;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
+      setState(() async {
+        var addresses = await Geocoder.local.findAddressesFromCoordinates(new Coordinates(
+            location.latitude, location.longitude
+          )
+        );
+        address = addresses.first;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

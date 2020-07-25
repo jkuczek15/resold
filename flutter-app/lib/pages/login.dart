@@ -109,7 +109,7 @@ class LoginPageState extends State<LoginPage> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return Center(child: CircularProgressIndicator());
+                                        return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                       }
                                     );
                                     // attempt to login
