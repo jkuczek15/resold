@@ -162,7 +162,7 @@ class ProductListBuilder {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var miles = (snapshot.data / 1609.344).toStringAsFixed(1);
-          return Text("${miles} mi", overflow: TextOverflow.fade, style: new TextStyle(
+          return Text("$miles mi", overflow: TextOverflow.fade, style: new TextStyle(
             fontSize: 14.0,
             fontFamily: 'Roboto',
             fontWeight: FontWeight.normal,
