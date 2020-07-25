@@ -5,9 +5,10 @@ class CustomerResponse extends Response {
 
   final int id;
   final String email;
+  final String password;
   final String firstName;
   final String lastName;
   final List<CustomerAddress> addresses;
 
-  CustomerResponse({this.id, this.email, this.firstName, this.lastName, this.addresses, status, error}) : super(status: status, error: error);
+  CustomerResponse({this.id, this.email, this.password, this.firstName, this.lastName, this.addresses, status, error}) : super(status: status, error: error);
 }

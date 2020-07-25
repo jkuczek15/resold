@@ -6,6 +6,15 @@ import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Home extends StatelessWidget {
+
+  String email;
+  String token;
+
+  Home(String email, String token) {
+    this.email = email;
+    this.token = token;
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class Home extends StatelessWidget {
             accentColor: Colors.white,
             primaryColor: const Color(0xff41b8ea)
         ),
-        home: HomePage()
+        home: HomePage(email, token)
     );
   }
 }
@@ -38,6 +47,9 @@ class HomePageState extends State<HomePage> {
   Future<List<Product>> futureLocalProducts;
   Position currentLocation;
 
+  final String email;
+  final String token;
+
   final widgetOptions = [
     Text('Buy'),
     Text('Search'),
@@ -45,6 +57,8 @@ class HomePageState extends State<HomePage> {
     Text('Orders'),
     Text('Account')
   ];
+
+  HomePageState(this.email, this.token);
 
   @override
   void initState() {
@@ -141,8 +155,12 @@ class HomePageState extends State<HomePage> {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+
+  final String email;
+  final String token;
+
+  HomePage(this.email, this.token, {Key key}) : super(key: key);
 
   @override
-  HomePageState createState() => HomePageState();
+  HomePageState createState() => HomePageState(this.email, this.token);
 }

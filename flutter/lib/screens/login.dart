@@ -3,6 +3,7 @@ import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/view_models/network/request/login-request.dart';
 import 'package:resold/view_models/network/response/login-response.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -122,10 +123,16 @@ class LoginPageState extends State<LoginPage> {
 
                                     if(response.status == 200) {
                                       // login was successful
+                                      // set shared preferences
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      prefs.setString('email', emailController.text);
+                                      prefs.setString('token', response.token);
+
+                                      // navigate
                                       Navigator.of(context, rootNavigator: true).pop('dialog');
                                       Navigator.pop(context);
                                       Navigator.pushReplacement(context, PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) => Home(),
+                                        pageBuilder: (context, animation, secondaryAnimation) => Home(emailController.text, response.token),
                                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                           return FadeTransition (
                                               opacity: animation,
