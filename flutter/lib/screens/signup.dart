@@ -58,7 +58,7 @@ class SignUpPageState extends State<SignUpPage> {
                             children: [
                               Padding (
                                   child: Align(alignment: Alignment.topCenter, child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
-                                  padding: EdgeInsets.fromLTRB(30, 0, 30, 20)
+                                  padding: EdgeInsets.fromLTRB(30, 40, 30, 20)
                               ),
                               Center(
                                   child: Text('Buy and sell locally with delivery.',
@@ -74,7 +74,7 @@ class SignUpPageState extends State<SignUpPage> {
                             child: Column (
                                 children: [
                                   Padding (
-                                      padding: EdgeInsets.fromLTRB(50, 40, 50, 20),
+                                      padding: EdgeInsets.fromLTRB(50, 30, 50, 20),
                                       child: TextField(
                                           controller: firstNameController,
                                           decoration: InputDecoration(
