@@ -2,7 +2,7 @@ import 'package:resold/models/product.dart';
 import 'package:elastic_client/elastic_client.dart' as elastic;
 import 'package:elastic_client/console_http_transport.dart';
 
-class Api {
+class Resold {
 
   static final searchUrl = 'https://search-resold-es-iy75wommvnfqf5hf7p6w7ej2sq.us-west-2.es.amazonaws.com';
   static final searchIndex = 'magento*';

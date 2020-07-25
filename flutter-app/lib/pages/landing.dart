@@ -92,11 +92,11 @@ class LandingPageState extends State<LandingPage> {
                                     ));
                                   },
                                   child: Text('Sign In',
-                                      style: new TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white
-                                      )
+                                    style: new TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white
+                                    )
                                   ),
                                   padding: EdgeInsets.fromLTRB(125, 30, 125, 30),
                                   color: Colors.black,

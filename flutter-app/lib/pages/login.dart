@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resold/pages/home.dart';
+import 'package:resold/services/magento.dart';
+import 'package:resold/view_models/network/login-response.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -9,6 +11,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -28,11 +34,11 @@ class LoginPageState extends State<LoginPage> {
                             ),
                             Center(
                                 child: Text('Buy and sell locally with delivery.',
-                                    style: new TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white
-                                    ))
+                                style: new TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
+                                ))
                             )
                           ]
                       ),
@@ -40,8 +46,9 @@ class LoginPageState extends State<LoginPage> {
                           child: Column (
                               children: [
                               Padding (
-                                  padding: EdgeInsets.fromLTRB(65, 30, 65, 30),
+                                  padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                                   child: TextField(
+                                    controller: emailController,
                                     decoration: InputDecoration(
                                       hintText: 'Enter your email...',
                                       hintStyle: TextStyle (
@@ -57,8 +64,10 @@ class LoginPageState extends State<LoginPage> {
                                   )
                                 ),
                                 Padding (
-                                    padding: EdgeInsets.fromLTRB(65, 10, 65, 30),
+                                    padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
                                     child: TextField(
+                                      obscureText: true,
+                                      controller: passwordController,
                                       decoration: InputDecoration(
                                         hintText: 'Enter your password...',
                                         hintStyle: TextStyle (
@@ -78,17 +87,55 @@ class LoginPageState extends State<LoginPage> {
                                       borderRadius: BorderRadiusDirectional.circular(8)
                                   ),
                                   onPressed: () async {
-                                    //after the login REST api call && response code ==200
-                                    Navigator.pop(context);
-                                    Navigator.pushReplacement(context, PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => Home(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        return FadeTransition (
-                                            opacity: animation,
-                                            child: child
-                                        );
-                                      },
-                                    ));
+                                    // show a loading indicator
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Center(child: CircularProgressIndicator());
+                                      }
+                                    );
+                                    // attempt to login
+                                    LoginResponse result = await Magento.loginCustomer(emailController.text, passwordController.text);
+                                    if(result.status == 200) {
+                                      //after the login REST api call && response code ==200
+                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(context, PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) => Home(),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          return FadeTransition (
+                                              opacity: animation,
+                                              child: child
+                                          );
+                                        },
+                                      ));
+                                    } else {
+                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      return showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Login Error'),
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  Text(result.error)
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text('Ok'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
                                   child: Text('Sign In',
                                     style: new TextStyle(
