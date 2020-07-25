@@ -56,6 +56,15 @@ class LoginPageState extends State<LoginPage> {
                                       ),
                                       labelStyle: new TextStyle(
                                         color: const Color(0xff41b8ea),
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder (
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white),
                                       )
                                     ),
                                     style: TextStyle (
@@ -75,6 +84,15 @@ class LoginPageState extends State<LoginPage> {
                                         ),
                                         labelStyle: new TextStyle(
                                           color: const Color(0xff41b8ea),
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder (
+                                          borderSide: BorderSide(color: Colors.black)
+                                        ),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
                                         )
                                       ),
                                       style: TextStyle (
