@@ -1,5 +1,5 @@
 import 'package:resold/models/customer/customer-address.dart';
-import 'package:resold/view_models/network/response/response.dart';
+import 'package:resold/view-models/network/response/response.dart';
 
 class CustomerResponse extends Response {
 

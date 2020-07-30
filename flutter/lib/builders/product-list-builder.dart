@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/view_models/product-view-model.dart';
+import 'package:resold/view-models/product-view-model.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/widgets/creation-aware-list-item.dart';
 import 'package:provider/provider.dart';
