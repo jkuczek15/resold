@@ -280,6 +280,6 @@ class ProductPageState extends State<ProductPage> {
   }
 
   String cleanDescription (String description) {
-    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n") : '';
+    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n").trim() : '';
   }
 }
