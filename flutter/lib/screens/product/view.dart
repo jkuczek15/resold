@@ -181,7 +181,7 @@ class ProductPageState extends State<ProductPage> {
                                           );
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
                                         },
-                                        child: Text('Buy',
+                                        child: Text('Purchase',
                                             style: new TextStyle(
                                                 fontSize: 20.0,
                                                 fontWeight: FontWeight.bold,
