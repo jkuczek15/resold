@@ -7,13 +7,10 @@ import 'package:geolocator/geolocator.dart';
 
 class Home extends StatelessWidget {
 
-  String email;
-  String token;
+  final String email;
+  final String token;
 
-  Home(String email, String token) {
-    this.email = email;
-    this.token = token;
-  }
+  Home(String email, String token) : email = email, token = token;
 
   // This widget is the root of your application.
   @override
