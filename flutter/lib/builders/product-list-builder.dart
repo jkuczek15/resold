@@ -6,6 +6,7 @@ import 'package:resold/view-models/product-view-model.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/widgets/creation-aware-list-item.dart';
 import 'package:resold/screens/product/view.dart';
+import 'package:resold/builders/location-builder.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -131,7 +132,7 @@ class ProductListBuilder {
                                     width: 70,
                                     child: Align(
                                       alignment: Alignment.centerRight,
-                                      child: calculateDistance(currentLocation.latitude, currentLocation.longitude, product.latitude, product.longitude)
+                                      child: LocationBuilder.calculateDistance(currentLocation.latitude, currentLocation.longitude, product.latitude, product.longitude)
                                     )
                                   )
                                 ]
@@ -143,39 +144,10 @@ class ProductListBuilder {
             )
           ),
           onTapDown: (TapDownDetails details) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
           },
         )
       )
-    );
-  }
-
-  static FutureBuilder <double> calculateDistance (double startLatitude, double startLongitude, endLatitude, endLongitude) {
-
-    try {
-      endLatitude = double.parse(endLatitude);
-      endLongitude = double.parse(endLongitude);
-    } catch (exception) {
-      endLatitude = endLongitude = 0.0;
-    }
-
-    return FutureBuilder<double>(
-      future: Geolocator().distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude),
-      initialData: 0.0,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          var miles = (snapshot.data / 1609.344).toStringAsFixed(1);
-          return Text("$miles mi", overflow: TextOverflow.fade, style: new TextStyle(
-            fontSize: 14.0,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.normal,
-          ));
-        } else {
-          return Center(
-            child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
-          );
-        }
-      },
     );
   }
 }
