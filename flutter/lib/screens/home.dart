@@ -91,10 +91,13 @@ class HomePageState extends State<HomePage> {
             )
           ],
         ),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
         backgroundColor: const Color(0xff41b8ea),
       ),
       body: Center(
-        child: getContent(),
+        child: getContent(context),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -113,14 +116,14 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Object getContent() {
+  Object getContent(BuildContext context) {
     switch(selectedIndex) {
       case 0:
         return FutureBuilder<List<Product>>(
           future: futureLocalProducts,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ProductListBuilder.buildProductList(snapshot.data, currentLocation);
+              return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
@@ -138,7 +141,7 @@ class HomePageState extends State<HomePage> {
               onSearch: (term) => ResoldSearch.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
               loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
               onItemFound: (Product product, int index) {
-                return ProductListBuilder.buildProductTile(currentLocation, product, index);
+                return ProductListBuilder.buildProductTile(context, currentLocation, product, index);
               },
             ),
           );

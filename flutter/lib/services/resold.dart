@@ -30,6 +30,26 @@ class Resold {
       return json['message'];
     }
   }
+
+  static Future<List<String>> getProductImages(int productId) async {
+
+    await config.initialized;
+
+    final response = await client.get(
+      '${config.baseUrl}/image/get?product_id=$productId',
+      headers: config.headers
+    );
+
+    if(response.statusCode == 200) {
+      // success
+      var json = jsonDecode(response.body.toString()).toList();
+      return json.map((value) => value['uuid']).toList().cast<String>();
+    } else {
+      // error
+      var json = jsonDecode(response.body.toString());
+      return [json['message']];
+    }
+  }
 }
 
 class Config {
