@@ -4,13 +4,12 @@ import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:intl/intl.dart';
+import 'package:resold/widgets/read-more-text.dart';
 
 class ProductPage extends StatefulWidget {
-  Product product;
+  final Product product;
 
-  ProductPage(Product product, {Key key}) : super(key: key) {
-    this.product = product;
-  }
+  ProductPage(Product product, {Key key}) : product = product, super(key: key);
 
   @override
   ProductPageState createState() => ProductPageState(this.product);
@@ -29,7 +28,9 @@ class ProductPageState extends State<ProductPage> {
   void initState() {
     super.initState();
     setState(() {
-      futureImages = Resold.getProductImages(product.id);
+      if(this.mounted) {
+        futureImages = Resold.getProductImages(product.id);
+      }
     });
   }
 
@@ -139,7 +140,10 @@ class ProductPageState extends State<ProductPage> {
                                       ]
                                   ),
                                   SizedBox(height: 20),
-                                  Text(product.description.isNotEmpty ? product.description.replaceAll("<br />", "\n") : "")
+                                  ReadMoreText (
+                                    product.description.isNotEmpty ? product.description.replaceAll("<br />", "\n") : '',
+                                    colorClickableText: const Color(0xff41b8ea)
+                                  )
                                 ]
                               )
                             )

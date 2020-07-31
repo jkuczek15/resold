@@ -9,7 +9,7 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // clear shared preferences
-  await prefs.clear();
+  // await prefs.clear();
 
   // get shared preferences
   var email = prefs.getString('email');
