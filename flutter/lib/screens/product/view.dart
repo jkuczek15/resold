@@ -166,7 +166,7 @@ class ProductPageState extends State<ProductPage> {
                                   SizedBox(height: 10),
                                   ButtonTheme (
                                       minWidth: 340.0,
-                                      height: 75.0,
+                                      height: 70.0,
                                       child: RaisedButton(
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadiusDirectional.circular(8)
@@ -195,7 +195,7 @@ class ProductPageState extends State<ProductPage> {
                                   SizedBox(height: 5),
                                   ButtonTheme (
                                     minWidth: 340.0,
-                                    height: 75.0,
+                                    height: 70.0,
                                     child: RaisedButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadiusDirectional.circular(8)
@@ -224,7 +224,7 @@ class ProductPageState extends State<ProductPage> {
                                   SizedBox(height: 5),
                                   ButtonTheme (
                                     minWidth: 340.0,
-                                    height: 75.0,
+                                    height: 70.0,
                                     child: RaisedButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadiusDirectional.circular(8)
@@ -280,6 +280,6 @@ class ProductPageState extends State<ProductPage> {
   }
 
   String cleanDescription (String description) {
-    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n") : '';
+    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n").trim() : '';
   }
 }
