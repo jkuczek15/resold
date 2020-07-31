@@ -72,7 +72,10 @@ class ResoldSearch {
     final searchResults = await client.search(searchIndex, searchType, query, source: true, offset: offset, limit: itemsPerPage, sort: sort);
 
     List<Product> products = new List<Product>();
-    searchResults.hits.forEach((doc) => products.add(Product.fromDoc(doc.doc)));
+    searchResults.hits.forEach((doc) {
+      var product = Product.fromDoc(doc.doc);
+      return products.add(product);
+    });
 
     return products;
   }

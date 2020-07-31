@@ -21,18 +21,18 @@ class Product {
     try {
       var product = Product(
           id: doc['id'],
-          name: doc['name_raw'][0].toString(),
+          name: doc['name_raw'][0].toString().trim(),
           price: doc['price_raw'][0].toString(),
           image: doc['image_raw'][0].toString(),
           smallImage: doc['small_image_raw'][0].toString(),
           thumbnail: doc['thumbnail_raw'][0].toString(),
-          description: doc['description_raw'][0].toString(),
+          description: doc['description_raw'][0].toString().trim(),
           condition: doc['condition_raw'][0].toString(),
           localGlobal: doc['local_global_raw'][0].toString()
       );
 
       if(doc['title_description_raw'] != null) {
-        product.titleDescription = doc['title_description_raw'][0].toString();
+        product.titleDescription = doc['title_description_raw'][0].toString().trim();
       }
 
       if(doc['latitude_raw'] != null && doc['longitude_raw'] != null) {
