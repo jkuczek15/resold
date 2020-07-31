@@ -52,38 +52,38 @@ class ProductPageState extends State<ProductPage> {
                 future: futureImages,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    Widget imageElement;
                     if(snapshot.data.length == 1) {
-                      return Padding (
-                        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                        child: FadeInImage(
-                          image: NetworkImage(baseImagePath + snapshot.data[0]),
-                          placeholder: AssetImage('assets/images/placeholder-image.png'),
-                          fit: BoxFit.cover
-                        )
+                      imageElement = FadeInImage(
+                        image: NetworkImage(baseImagePath + snapshot.data[0]),
+                        placeholder: AssetImage('assets/images/placeholder-image.png'),
+                        fit: BoxFit.cover
                       );
                     } else {
+                        imageElement = CarouselSlider(
+                          options: CarouselOptions(height: 400.0),
+                          items: snapshot.data.map((image) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                                    decoration: BoxDecoration(color: const Color(0xff41b8ea)
+                                  ),
+                                  child: FadeInImage(image: NetworkImage(baseImagePath + image), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
+                                );
+                              },
+                            );
+                          }).toList()
+                        );
+                      }
+
                       return SingleChildScrollView (
                         child: Column (
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CarouselSlider(
-                                options: CarouselOptions(height: 400.0),
-                                items: snapshot.data.map((image) {
-                                  return Builder(
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                          width: MediaQuery.of(context).size.width,
-                                          margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                                          decoration: BoxDecoration(
-                                              color: const Color(0xff41b8ea)
-                                          ),
-                                          child: FadeInImage(image: NetworkImage(baseImagePath + image), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
-                                      );
-                                    },
-                                  );
-                                }).toList()
-                            ),
+                            imageElement,
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                               child: Column (
@@ -139,18 +139,49 @@ class ProductPageState extends State<ProductPage> {
                                         )
                                       ]
                                   ),
-                                  SizedBox(height: 20),
-                                  ReadMoreText (
-                                    product.description.isNotEmpty ? product.description.replaceAll("<br />", "\n") : '',
-                                    colorClickableText: const Color(0xff41b8ea)
+                                  SizedBox(height: 10),
+                                  Container (
+                                    width: 500,
+                                    child:
+                                    ReadMoreText (
+                                      cleanDescription(product.description),
+                                      trimLength: 100,
+                                      colorClickableText: const Color(0xff41b8ea),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadiusDirectional.circular(8)
+                                    ),
+                                    onPressed: () async {
+                                      // show a loading indicator
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                        }
+                                      );
+                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                    },
+                                    child: Text('Buy',
+                                      style: new TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white
+                                      )
+                                    ),
+                                    padding: EdgeInsets.fromLTRB(150, 30, 150, 30),
+                                    color: Colors.black,
+                                    textColor: Colors.white,
                                   )
                                 ]
                               )
                             )
                           ],
                         )
-                      );
-                    }
+                    );
                   } else {
                     return Column (
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -172,5 +203,9 @@ class ProductPageState extends State<ProductPage> {
         return false;
       }
     );
+  }
+
+  String cleanDescription (String description) {
+    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n") : '';
   }
 }
