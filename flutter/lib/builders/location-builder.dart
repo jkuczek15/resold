@@ -3,14 +3,7 @@ import 'package:geolocator/geolocator.dart';
 
 class LocationBuilder {
 
-  static FutureBuilder <double> calculateDistance (double startLatitude, double startLongitude, endLatitude, endLongitude) {
-    try {
-      endLatitude = double.parse(endLatitude);
-      endLongitude = double.parse(endLongitude);
-    } catch (exception) {
-      endLatitude = endLongitude = 0.0;
-    }
-
+  static FutureBuilder <double> calculateDistance (double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
     return FutureBuilder<double>(
       future: Geolocator().distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude),
       initialData: 0.0,
