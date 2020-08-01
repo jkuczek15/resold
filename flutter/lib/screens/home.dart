@@ -6,7 +6,6 @@ import 'package:resold/screens/sell.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class Home extends StatelessWidget {
 
@@ -18,7 +17,6 @@ class Home extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(const Color(0xff41b8ea));
     return MaterialApp(
         title: 'Resold',
         theme: ThemeData(
