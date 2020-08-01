@@ -60,13 +60,13 @@ class LoginPageState extends State<LoginPage> {
                                         color: const Color(0xff41b8ea),
                                       ),
                                       enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide: BorderSide(color: Colors.white, width: 1.5),
                                       ),
                                       focusedBorder: UnderlineInputBorder (
-                                          borderSide: BorderSide(color: Colors.black)
+                                          borderSide: BorderSide(color: Colors.black, width: 1.5)
                                       ),
                                       border: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white),
+                                        borderSide: BorderSide(color: Colors.white, width: 1.5),
                                       )
                                     ),
                                     style: TextStyle (
@@ -88,13 +88,13 @@ class LoginPageState extends State<LoginPage> {
                                           color: const Color(0xff41b8ea),
                                         ),
                                         enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.white),
+                                          borderSide: BorderSide(color: Colors.white, width: 1.5),
                                         ),
                                         focusedBorder: UnderlineInputBorder (
-                                          borderSide: BorderSide(color: Colors.black)
+                                          borderSide: BorderSide(color: Colors.black, width: 1.5)
                                         ),
                                         border: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.white),
+                                          borderSide: BorderSide(color: Colors.white, width: 1.5),
                                         )
                                       ),
                                       style: TextStyle (

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:resold/services/resold-search.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
+import 'package:resold/screens/sell.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class Home extends StatelessWidget {
 
@@ -16,6 +18,7 @@ class Home extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(const Color(0xff41b8ea));
     return MaterialApp(
         title: 'Resold',
         theme: ThemeData(
@@ -47,14 +50,6 @@ class HomePageState extends State<HomePage> {
 
   final String email;
   final String token;
-
-  final widgetOptions = [
-    Text('Buy'),
-    Text('Search'),
-    Text('Sell'),
-    Text('Orders'),
-    Text('Account')
-  ];
 
   HomePageState(this.email, this.token);
 
@@ -113,47 +108,60 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Object getContent(BuildContext context) {
+  Widget getContent(BuildContext context) {
+    Widget content;
     switch(selectedIndex) {
       case 0:
-        return LiquidPullToRefresh (
-          height: 80,
-          springAnimationDurationInMilliseconds: 500,
-          onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
-          showChildOpacityTransition: false,
-          color: const Color(0xff41b8ea),
-          animSpeedFactor: 5.0,
-          child: FutureBuilder<List<Product>>(
-            future: futureLocalProducts,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              // By default, show a loading spinner.
-              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-            },
-          )
-        );
-      case 1:
-        return
-          SafeArea (
-            child: SearchBar<Product>(
-              hintText: 'Search entire marketplace here...',
-              searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
-              cancellationWidget: Icon(Icons.cancel),
-              onSearch: (term) => ResoldSearch.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
-              loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
-              onItemFound: (Product product, int index) {
-                return ProductListBuilder.buildProductTile(context, currentLocation, product, index);
+          //  local buy tab
+          content = LiquidPullToRefresh(
+            height: 80,
+            springAnimationDurationInMilliseconds: 500,
+            onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
+            showChildOpacityTransition: false,
+            color: const Color(0xff41b8ea),
+            animSpeedFactor: 5.0,
+            child: FutureBuilder<List<Product>>(
+              future: futureLocalProducts,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                // By default, show a loading spinner.
+                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
               },
-              emptyWidget: Center(child: Text('Your search returned no results.')),
-            ),
+            )
           );
-      default:
-        return widgetOptions.elementAt(selectedIndex);
+          break;
+        case 1:
+          // search tab
+          content = SearchBar<Product>(
+            hintText: 'Search entire marketplace here...',
+            searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
+            cancellationWidget: Icon(Icons.cancel),
+            onSearch: (term) => ResoldSearch.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
+            loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
+            onItemFound: (Product product, int index) {
+              return ProductListBuilder.buildProductTile(context, currentLocation, product, index);
+            },
+            emptyWidget: Center(child: Text('Your search returned no results.')),
+          );
+          break;
+        case 2:
+          // sell tab
+          content = SellPage();
+          break;
+        case 3:
+          // orders tab
+          content = Center(child: Text('Orders'));
+          break;
+        case 4:
+          // account tab
+          content = Center(child: Text('Account'));
+          break;
     }
+    return content;
   }
 
   void onItemTapped(int index) {

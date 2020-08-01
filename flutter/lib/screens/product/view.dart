@@ -160,7 +160,7 @@ class ProductPageState extends State<ProductPage> {
                                     width: 500,
                                     child: ReadMoreText (
                                       cleanDescription(product.description),
-                                      trimLength: 100,
+                                      trimLength: 200,
                                       colorClickableText: const Color(0xff41b8ea),
                                       textAlign: TextAlign.left,
                                     ),
