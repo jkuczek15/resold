@@ -10,8 +10,8 @@ class Product {
   final String description;
   final String condition;
   final String localGlobal;
-  String latitude;
-  String longitude;
+  double latitude;
+  double longitude;
 
   Product({this.id, this.name, this.titleDescription, this.price, this.image, this.smallImage,
       this.thumbnail, this.latitude, this.longitude, this.description, this.condition,
@@ -36,8 +36,8 @@ class Product {
       }
 
       if(doc['latitude_raw'] != null && doc['longitude_raw'] != null) {
-        product.latitude = doc['latitude_raw'][0].toString();
-        product.longitude = doc['longitude_raw'][0].toString();
+        product.latitude = double.tryParse(doc['latitude_raw'][0].toString());
+        product.longitude = double.tryParse(doc['longitude_raw'][0].toString());
       }
 
       return product;

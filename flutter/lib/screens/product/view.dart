@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:resold/widgets/read-more-text.dart';
 import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
@@ -20,9 +21,10 @@ class ProductPage extends StatefulWidget {
 
 class ProductPageState extends State<ProductPage> {
 
-  Product product;
-  Future<List<String>> futureImages;
+  final Product product;
   final Position currentLocation;
+  Future<List<String>> futureImages;
+  final Map<String, Marker> markers = {};
 
   ProductPageState(Product product, Position currentLocation) : product = product, currentLocation = currentLocation;
 
@@ -249,6 +251,18 @@ class ProductPageState extends State<ProductPage> {
                                       color: Colors.black,
                                       textColor: Colors.white,
                                     )
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container (
+                                    height: 500,
+                                    child: GoogleMap(
+                                      onMapCreated: onMapCreated,
+                                      initialCameraPosition: CameraPosition(
+                                        target: LatLng(product.latitude, product.longitude),
+                                        zoom: 9.5,
+                                      ),
+                                      markers: markers.values.toSet(),
+                                    )
                                   )
                                 ]
                               )
@@ -277,6 +291,33 @@ class ProductPageState extends State<ProductPage> {
         return false;
       }
     );
+  }
+
+  Future<void> onMapCreated(GoogleMapController controller) async {
+    setState(() {
+      markers.clear();
+      final productMarker = Marker(
+        markerId: MarkerId(product.name),
+        position: LatLng(product.latitude, product.longitude),
+        infoWindow: InfoWindow(
+          title: product.name,
+          snippet: product.titleDescription,
+        ),
+      );
+
+      final String currentLocationTitle = "You";
+      final currentLocationMarker = Marker(
+        markerId: MarkerId(currentLocationTitle),
+        position: LatLng(currentLocation.latitude, currentLocation.longitude),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+        infoWindow: InfoWindow(
+          title: currentLocationTitle,
+        ),
+      );
+
+      markers[product.name] = productMarker;
+      markers[currentLocationTitle] = currentLocationMarker;
+    });
   }
 
   String cleanDescription (String description) {
