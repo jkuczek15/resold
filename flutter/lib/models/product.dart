@@ -31,7 +31,7 @@ class Product {
           localGlobal: doc['local_global_raw'][0].toString()
       );
 
-      if(doc['title_description_raw'] != null) {
+      if(doc['title_description_raw'] != null && doc['title_description_raw'][0] != null) {
         product.titleDescription = doc['title_description_raw'][0].toString().trim();
       }
 
