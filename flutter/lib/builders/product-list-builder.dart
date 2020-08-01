@@ -60,8 +60,8 @@ class ProductListBuilder {
               Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))) : buildProductTile(context, currentLocation, model.items[index], index)
             );
           }
-        ),
-      ),
+        )
+      )
     );
   }
 

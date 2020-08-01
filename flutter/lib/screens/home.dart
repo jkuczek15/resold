@@ -140,6 +140,7 @@ class HomePageState extends State<HomePage> {
               onItemFound: (Product product, int index) {
                 return ProductListBuilder.buildProductTile(context, currentLocation, product, index);
               },
+              emptyWidget: Center(child: Text('Your search returned no results.')),
             ),
           );
       default:
