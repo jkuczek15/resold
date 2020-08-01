@@ -10,7 +10,7 @@ class ReadMoreText extends StatefulWidget {
   const ReadMoreText(
       this.data, {
         Key key,
-        this.trimExpandedText = ' less',
+        this.trimExpandedText = '',
         this.trimCollapsedText = ' ...more',
         this.colorClickableText,
         this.trimLength = 240,
