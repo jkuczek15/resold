@@ -98,7 +98,7 @@ class ImageUploaderState extends State<ImageUploader> {
           actionBarTitle: "Select Images",
           allViewTitle: "All Photos",
           useDetailsView: false,
-          statusBarColor: '#41b8ea',
+          statusBarColor: '#318bb0',
           selectCircleStrokeColor: "#41b8ea",
         )
       );
