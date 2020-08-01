@@ -13,16 +13,17 @@ class ImageUploader extends StatefulWidget {
 
 class ImageUploaderState extends State<ImageUploader> {
 
-  List<Asset> images = List<Asset>();
+  List<Object> images = List<Object>();
   Future<File> imageFile;
   String error = 'No Error Dectected';
-  Future<bool> hasFileAccess;
+  Future<bool> hasMediaAccess;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      hasFileAccess = requestAccess();
+      hasMediaAccess = requestAccess();
+      images.add("add-button");
     });
   }
 
@@ -32,66 +33,74 @@ class ImageUploaderState extends State<ImageUploader> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 10),
-        RaisedButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusDirectional.circular(8)
-          ),
-          onPressed: loadAssets,
-          child: Text('Select Images',
-            style: new TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-            )
-          ),
-          padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
-          color: Colors.black,
-          textColor: Colors.white,
-        ),
-        SizedBox(height: 10),
-        Expanded(
-          child: buildGridView(),
-        )
-      ],
-    );
+    return Expanded(child: buildGridView());
   }
 
   Widget buildGridView() {
     return GridView.count(
+      shrinkWrap: true,
       crossAxisCount: 3,
+      childAspectRatio: 1,
       children: List.generate(images.length, (index) {
-        Asset asset = images[index];
-        return Padding (
-          padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-          child: AssetThumb(
-           asset: asset,
-           width: 300,
-           height: 300,
-           spinner: Center(
-             child: SizedBox(
-               width: 50,
-               height: 50,
-               child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
-             ),
-           ),
-          )
-        );
-      })
+        if(images[index] == "add-button") {
+          return Card(
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: loadAssets
+            ),
+          );
+        } else {
+          Asset asset = images[index];
+          return Card(
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              children: <Widget>[
+                AssetThumb(
+                  asset: asset,
+                  width: 300,
+                  height: 300,
+                  spinner: Center(
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.remove_circle,
+                      size: 20,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        images.removeAt(index);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      }),
     );
   }
 
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
+    List<Object> result = List<Object>();
     String error = 'No Error Dectected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 15,
         enableCamera: true,
-        selectedAssets: images,
+        selectedAssets: images.where((element) => element is Asset).cast<Asset>().toList(),
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
           actionBarColor: "#41b8ea",
@@ -111,8 +120,11 @@ class ImageUploaderState extends State<ImageUploader> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
+    result.addAll(resultList);
+    result.add("add-button");
+
     setState(() {
-      images = resultList;
+      images = result;
       error = error;
     });
   }

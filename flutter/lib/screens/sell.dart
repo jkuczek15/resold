@@ -11,6 +11,17 @@ class SellPage extends StatefulWidget {
 class SellPageState extends State<SellPage> {
   @override
   Widget build(BuildContext context) {
-    return ImageUploader();
+    return Padding (
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      child: Column (
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Images:'),
+          SizedBox(height: 5),
+          ImageUploader()
+        ]
+      )
+    );
   }
 }
