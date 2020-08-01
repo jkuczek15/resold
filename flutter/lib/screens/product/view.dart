@@ -296,13 +296,18 @@ class ProductPageState extends State<ProductPage> {
   Future<void> onMapCreated(GoogleMapController controller) async {
     setState(() {
       markers.clear();
+
+      InfoWindow infoWindow;
+      if(product.titleDescription == null) {
+        infoWindow = InfoWindow(title: product.name);
+      } else {
+        infoWindow = InfoWindow(title: product.name, snippet: product.titleDescription);
+      }
+
       final productMarker = Marker(
         markerId: MarkerId(product.name),
         position: LatLng(product.latitude, product.longitude),
-        infoWindow: InfoWindow(
-          title: product.name,
-          snippet: product.titleDescription ?? null,
-        ),
+        infoWindow: infoWindow
       );
 
       final String currentLocationTitle = "You";
