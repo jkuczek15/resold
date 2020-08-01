@@ -4,6 +4,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class Home extends StatelessWidget {
 
@@ -60,7 +61,6 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
       if(this.mounted) {
         setState(() {
@@ -116,17 +116,25 @@ class HomePageState extends State<HomePage> {
   Object getContent(BuildContext context) {
     switch(selectedIndex) {
       case 0:
-        return FutureBuilder<List<Product>>(
-          future: futureLocalProducts,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-          },
+        return LiquidPullToRefresh (
+          height: 80,
+          springAnimationDurationInMilliseconds: 500,
+          onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
+          showChildOpacityTransition: false,
+          color: const Color(0xff41b8ea),
+          animSpeedFactor: 5.0,
+          child: FutureBuilder<List<Product>>(
+            future: futureLocalProducts,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              // By default, show a loading spinner.
+              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+            },
+          )
         );
       case 1:
         return
