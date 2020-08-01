@@ -259,7 +259,7 @@ class ProductPageState extends State<ProductPage> {
                                       onMapCreated: onMapCreated,
                                       initialCameraPosition: CameraPosition(
                                         target: LatLng(product.latitude, product.longitude),
-                                        zoom: 9.5,
+                                        zoom: 9.0,
                                       ),
                                       markers: markers.values.toSet(),
                                     )
@@ -301,7 +301,7 @@ class ProductPageState extends State<ProductPage> {
         position: LatLng(product.latitude, product.longitude),
         infoWindow: InfoWindow(
           title: product.name,
-          snippet: product.titleDescription,
+          snippet: product.titleDescription ?? null,
         ),
       );
 
@@ -309,7 +309,7 @@ class ProductPageState extends State<ProductPage> {
       final currentLocationMarker = Marker(
         markerId: MarkerId(currentLocationTitle),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+        icon: BitmapDescriptor.defaultMarkerWithHue(198),
         infoWindow: InfoWindow(
           title: currentLocationTitle,
         ),
