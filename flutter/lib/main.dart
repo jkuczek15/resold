@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:resold/screens/landing.dart';
 import 'package:resold/screens/home.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 Future<void> main() async {
   // ensure flutter binding
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  // clear shared preferences
-  // await prefs.clear();
+  // clear from disk
+//  await CustomerResponse.clear();
 
-  // get shared preferences
-  var email = prefs.getString('email');
-  var token = prefs.getString('token');
+  // get from disk
+  CustomerResponse customer = await CustomerResponse.load();
 
   // run the app
-  runApp(MaterialApp(home: isLoggedIn(email, token) ? Home(email, token) : Landing()));
+  runApp(MaterialApp(home: isLoggedIn(customer) ? Home(customer) : Landing()));
 }
 
-bool isLoggedIn(String email, String token) {
-  return email != null && token != null;
+bool isLoggedIn(CustomerResponse customer) {
+  return customer.id != null && customer.email != null && customer.token != null;
 }

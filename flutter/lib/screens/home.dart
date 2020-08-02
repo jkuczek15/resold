@@ -3,16 +3,16 @@ import 'package:resold/services/resold-search.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:resold/screens/sell.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class Home extends StatelessWidget {
 
-  final String email;
-  final String token;
+  final CustomerResponse customer;
 
-  Home(String email, String token) : email = email, token = token;
+  Home(CustomerResponse customer) : customer = customer;
 
   // This widget is the root of your application.
   @override
@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
             accentColor: Colors.white,
             primaryColor: const Color(0xff41b8ea)
         ),
-        home: HomePage(email, token)
+        home: HomePage(customer)
     );
   }
 }
@@ -46,10 +46,9 @@ class HomePageState extends State<HomePage> {
   Future<List<Product>> futureLocalProducts;
   Position currentLocation;
 
-  final String email;
-  final String token;
+  final CustomerResponse customer;
 
-  HomePageState(this.email, this.token);
+  HomePageState(this.customer);
 
   @override
   void initState() {
@@ -171,11 +170,10 @@ class HomePageState extends State<HomePage> {
 
 class HomePage extends StatefulWidget {
 
-  final String email;
-  final String token;
+  final CustomerResponse customer;
 
-  HomePage(this.email, this.token, {Key key}) : super(key: key);
+  HomePage(this.customer, {Key key}) : super(key: key);
 
   @override
-  HomePageState createState() => HomePageState(this.email, this.token);
+  HomePageState createState() => HomePageState(this.customer);
 }

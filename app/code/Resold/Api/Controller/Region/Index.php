@@ -32,41 +32,16 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $resultJsonFactory;
 
     /**
-     * Recipient email config path
-     */
-    const XML_PATH_EMAIL_RECIPIENT = 'contact/email/recipient_email';
-
-    /**
-     * Sender email config path
-     */
-    const XML_PATH_EMAIL_SENDER = 'contact/email/sender_email_identity';
-
-    /**
-     * Email template config path
-     */
-    const XML_PATH_EMAIL_TEMPLATE = 'report/email/email_template';
-
-    /**
-     * Enabled config path
-     */
-    const XML_PATH_ENABLED = 'contact/contact/enabled';
-
-    /**
      * @param \Magento\Framework\App\Action\Context $context
      */
      public function __construct(
         Context $context,
         Session $customerSession,
-        JsonFactory $resultJsonFactory,
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Directory\Model\RegionFactory $regionFactory
+        JsonFactory $resultJsonFactory
     )
     {
         $this->session = $customerSession;
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->_transportBuilder = $transportBuilder;
-        $this->scopeConfig = $scopeConfig;
         $this->regionFactory = $regionFactory;
         parent::__construct($context);
     }

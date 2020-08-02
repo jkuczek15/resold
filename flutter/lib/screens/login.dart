@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/view-models/request/login-request.dart';
-import 'package:resold/view-models/response/login-response.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -116,23 +115,21 @@ class LoginPageState extends State<LoginPage> {
                                     );
 
                                     // attempt to login
-                                    LoginResponse response = await Magento.loginCustomer(LoginRequest(
+                                    CustomerResponse response = await Magento.loginCustomer(LoginRequest(
                                       username: emailController.text,
                                       password: passwordController.text
                                     ));
 
                                     if(response.status == 200) {
                                       // login was successful
-                                      // set shared preferences
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      prefs.setString('email', emailController.text);
-                                      prefs.setString('token', response.token);
+                                      // store to disk
+                                      await CustomerResponse.save(response);
 
                                       // navigate
                                       Navigator.of(context, rootNavigator: true).pop('dialog');
                                       Navigator.pop(context);
                                       Navigator.pushReplacement(context, PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) => Home(emailController.text, response.token),
+                                        pageBuilder: (context, animation, secondaryAnimation) => Home(response),
                                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                           return FadeTransition (
                                               opacity: animation,
