@@ -176,10 +176,10 @@ class ProductPageState extends State<ProductPage> {
                                         onPressed: () async {
                                           // show a loading indicator
                                           showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                                              }
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                            }
                                           );
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
                                         },
@@ -205,10 +205,10 @@ class ProductPageState extends State<ProductPage> {
                                       onPressed: () async {
                                         // show a loading indicator
                                         showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                                            }
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                          }
                                         );
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },

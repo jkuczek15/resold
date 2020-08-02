@@ -33,12 +33,13 @@ class ImageUploaderState extends State<ImageUploader> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: buildGridView());
+    return Expanded(child: buildGridView(), flex: 0);
   }
 
   Widget buildGridView() {
     return GridView.count(
       shrinkWrap: true,
+      physics: ScrollPhysics(),
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
