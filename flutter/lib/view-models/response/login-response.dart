@@ -1,4 +1,4 @@
-import 'package:resold/view-models/network/response/response.dart';
+import 'package:resold/view-models/response/abstract-response.dart';
 
 class LoginResponse extends Response {
   String email;

@@ -2,10 +2,10 @@ import 'package:http/http.dart' show Client;
 import 'package:resold/models/customer/customer-address.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:resold/view-models/network/request/login-request.dart';
-import 'package:resold/view-models/network/response/login-response.dart';
-import 'package:resold/view-models/network/request/customer-request.dart';
-import 'package:resold/view-models/network/response/customer-response.dart';
+import 'package:resold/view-models/request/login-request.dart';
+import 'package:resold/view-models/response/login-response.dart';
+import 'package:resold/view-models/request/customer-request.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 class Magento {
 

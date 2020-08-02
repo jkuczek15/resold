@@ -34,13 +34,6 @@ class SellPageState extends State<SellPage> {
             ),
           ),
           SizedBox(height: 20),
-          TextField(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Title Description'
-            ),
-          ),
-          SizedBox(height: 20),
           ScrollableCategoryList(),
           SizedBox(height: 20),
           Row (
@@ -52,20 +45,20 @@ class SellPageState extends State<SellPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Price'
+                        labelText: 'Price (\$)'
                     ),
                   )
               ),
               ToggleButtons(
                 children: [
-                  Padding(padding: EdgeInsets.fromLTRB(25, 10, 25, 10), child: Column (
+                  Padding(padding: EdgeInsets.fromLTRB(20, 8, 20, 8), child: Column (
                       children: [
                         Icon(Icons.local_shipping, semanticLabel: 'Delivery'),
                         Text('Delivery')
                       ],
                     )
                   ),
-                  Padding(padding: EdgeInsets.fromLTRB(25, 10, 25, 10), child: Column (
+                  Padding(padding: EdgeInsets.fromLTRB(20, 8, 20, 8), child: Column (
                       children: [
                         Icon(Icons.location_on, semanticLabel: 'Pickup'),
                         Text('Pickup')
