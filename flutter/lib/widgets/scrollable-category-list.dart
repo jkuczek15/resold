@@ -39,7 +39,7 @@ class ScrollableCategoryListState extends State<ScrollableCategoryList> {
             ),
             Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column (
               children: [
-                Icon(MdiIcons.home, semanticLabel: 'Home & Lawn'),
+                Icon(MdiIcons.sofa, semanticLabel: 'Home & Lawn'),
                 Text('Home & Lawn')
               ],
             )
