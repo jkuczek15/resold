@@ -147,7 +147,6 @@ class Config {
   String accessToken;
   Map<String, String> headers = Map<String, String>();
   Future initialized;
-  Map<String, dynamic> storeConfig;
 
   Config() {
     initialized = init();

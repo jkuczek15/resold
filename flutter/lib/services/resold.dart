@@ -15,9 +15,9 @@ class Resold {
     await config.initialized;
 
     final response = await client.post(
-        '${config.baseUrl}/region',
-        headers: config.headers,
-        body: <String, dynamic> { 'regionCode': regionCode, 'countryId': countryId }
+      '${config.baseUrl}/region',
+      headers: config.headers,
+      body: <String, dynamic> { 'regionCode': regionCode, 'countryId': countryId }
     );
 
     if(response.statusCode == 200) {
@@ -39,9 +39,9 @@ class Resold {
     await config.initialized;
 
     final response = await client.post(
-        '${config.baseUrl}/vendor',
-        headers: config.headers,
-        body: <String, dynamic> { 'customerId': customerId }
+      '${config.baseUrl}/vendor',
+      headers: config.headers,
+      body: <String, dynamic> { 'customerId': customerId.toString() }
     );
 
     if(response.statusCode == 200) {
