@@ -69,8 +69,12 @@ class Index extends \Magento\Framework\App\Action\Action
       }// end if country ID is set
 
       $vendorModel = $this->vendor->create();
-      $vendor = $vendorModel->loadByCustomerId($post['customerId']); 
+      $vendor = $vendorModel->loadByCustomerId($post['customerId']);
 
-      return $this->resultJsonFactory->create()->setData(['vendorId' => $vendor->getId()]);
+      if($vendor) {
+        return $this->resultJsonFactory->create()->setData(['vendorId' => $vendor->getId()]);
+      } else {
+        return $this->resultJsonFactory->create()->setData(['vendorId' => '-1']);
+      }
     }// end function execute
 }
