@@ -3,7 +3,6 @@ import 'package:resold/models/customer/customer-address.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:resold/view-models/request/login-request.dart';
-import 'package:resold/view-models/response/login-response.dart';
 import 'package:resold/view-models/request/customer-request.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 
@@ -12,9 +11,9 @@ class Magento {
   static Config config = Config();
   static Client client = Client();
 
-  static Future<LoginResponse> loginCustomer(LoginRequest request) async {
+  static Future<CustomerResponse> loginCustomer(LoginRequest request) async {
     if(request.username.isEmpty || request.password.isEmpty) {
-      return LoginResponse (
+      return CustomerResponse (
         status: 400,
         error: 'Please enter both an email and a password.'
       );
@@ -33,15 +32,13 @@ class Magento {
 
     if(response.statusCode == 200) {
       // login success
-      return LoginResponse(
-        status: response.statusCode,
-        email: request.username,
-        token: response.body.toString().replaceAll("\"", '')
-      );
+      // call another endpoint to get customer information
+      var token = response.body.toString().replaceAll("\"", '');
+      return await getMe(token, request.password);
     } else {
       // login error
       var json = jsonDecode(response.body.toString());
-      return LoginResponse (
+      return CustomerResponse (
         status: response.statusCode,
         error: json['message']
       );
@@ -82,6 +79,42 @@ class Magento {
 
     if(response.statusCode == 200) {
       // sign up success
+      // make another call to get the token
+      return await loginCustomer(LoginRequest(
+        username: request.email,
+        password: password
+      ));
+    } else {
+      // sign up error
+      return CustomerResponse (
+          status: response.statusCode,
+          error: responseJson['message']
+      );
+    }
+  }
+
+  static Future<CustomerResponse> getMe(String token, String password) async {
+    if(token.isEmpty) {
+      return CustomerResponse (
+          status: 400,
+          error: 'Please enter both an email and a password.'
+      );
+    }
+
+    await config.initialized;
+
+    var headers = config.headers;
+    headers['Authorization'] = 'Bearer ${token}';
+
+    final response = await client.get(
+        '${config.baseUrl}/customers/me',
+        headers: headers
+    );
+
+    var responseJson = jsonDecode(response.body.toString());
+
+    if(response.statusCode == 200) {
+      // return customer information
       return CustomerResponse (
         status: response.statusCode,
         id: int.parse(responseJson['id'].toString()),
@@ -89,13 +122,15 @@ class Magento {
         password: password,
         firstName: responseJson['firstname'].toString(),
         lastName: responseJson['lastname'].toString(),
-        addresses: [CustomerAddress.fromMap(responseJson['addresses'])]
+        addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
+        token: token
       );
     } else {
-      // sign up error
+      // error
+      var json = jsonDecode(response.body.toString());
       return CustomerResponse (
           status: response.statusCode,
-          error: responseJson['message']
+          error: json['message']
       );
     }
   }
