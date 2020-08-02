@@ -37,6 +37,7 @@ class Index extends \Magento\Framework\App\Action\Action
      public function __construct(
         Context $context,
         Session $customerSession,
+        \Magento\Directory\Model\RegionFactory $regionFactory,
         JsonFactory $resultJsonFactory
     )
     {
