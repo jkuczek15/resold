@@ -54,7 +54,7 @@ class ImageUploaderState extends State<ImageUploader> {
                   icon: Icon(Icons.add),
                   onPressed: loadAssets
                 ),
-                Text('Add Image')
+                Text('Add Images')
               ]
             )
           );
