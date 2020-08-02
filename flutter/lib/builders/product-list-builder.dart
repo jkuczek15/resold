@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/widgets/scrollable-category-list.dart';
 
 class ProductListBuilder {
 
@@ -25,29 +26,7 @@ class ProductListBuilder {
               return Column(
                 children: [
                   SizedBox(height: 10),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                              child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                              child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                              child: Image.asset('assets/images/categories/electronics.jpg', height: 175)
-                          ),
-                        ]
-                    )
-                  )
+                  ScrollableCategoryList()
                 ]
               );
             }
