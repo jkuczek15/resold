@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:resold/view-models/request/login-request.dart';
 import 'package:resold/view-models/request/customer-request.dart';
 import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/services/resold.dart';
 
 class Magento {
 
@@ -115,15 +116,20 @@ class Magento {
 
     if(response.statusCode == 200) {
       // return customer information
+      // get vendor id
+      var customerId = int.tryParse(responseJson['id'].toString());
+      var vendorId = await Resold.getVendorId(customerId);
+
       return CustomerResponse (
         status: response.statusCode,
-        id: int.parse(responseJson['id'].toString()),
+        id: customerId,
         email: responseJson['email'].toString(),
         password: password,
         firstName: responseJson['firstname'].toString(),
         lastName: responseJson['lastname'].toString(),
         addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
-        token: token
+        token: token,
+        vendorId: int.tryParse(vendorId)
       );
     } else {
       // error

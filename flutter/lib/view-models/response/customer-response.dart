@@ -10,9 +10,10 @@ class CustomerResponse extends Response {
   String firstName;
   String lastName;
   String token;
+  int vendorId;
   final List<CustomerAddress> addresses;
 
-  CustomerResponse({this.id, this.email, this.password, this.firstName, this.lastName, this.addresses, this.token, status, error})
+  CustomerResponse({this.id, this.email, this.password, this.firstName, this.lastName, this.addresses, this.token, this.vendorId, status, error})
       : super(status: status, error: error);
 
   static Future save(CustomerResponse response) async {
@@ -21,6 +22,7 @@ class CustomerResponse extends Response {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       prefs.setInt('customerId', response.id);
+      prefs.setInt('vendorId', response.vendorId);
       prefs.setString('firstName', response.firstName);
       prefs.setString('lastName', response.lastName);
       prefs.setString('email', response.email);
@@ -38,6 +40,7 @@ class CustomerResponse extends Response {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       response.id = prefs.getInt('customerId');
+      response.vendorId = prefs.getInt('vendorId');
       response.firstName = prefs.getString('firstName');
       response.lastName = prefs.getString('lastName');
       response.email = prefs.getString('email');
