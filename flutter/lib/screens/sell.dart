@@ -86,6 +86,7 @@ class SellPageState extends State<SellPage> {
               focusColor: const Color(0xff41b8ea),
               hint: Text('Condition'),
               onChanged: (String newValue) {
+                FocusScope.of(context).requestFocus(FocusNode());
                 setState(() {
                   condition = newValue;
                 });
