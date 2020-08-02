@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
@@ -45,10 +46,17 @@ class ImageUploaderState extends State<ImageUploader> {
       children: List.generate(images.length, (index) {
         if(images[index] == "add-button") {
           return Card(
-            child: IconButton(
-              icon: Icon(Icons.add),
-              onPressed: loadAssets
-            ),
+            child: Column (
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: loadAssets
+                ),
+                Text('Add Image')
+              ]
+            )
           );
         } else {
           Asset asset = images[index];
