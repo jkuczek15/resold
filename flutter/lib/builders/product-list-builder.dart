@@ -23,12 +23,7 @@ class ProductListBuilder {
           itemCount: model.items.length,
           itemBuilder: (context, index) {
             if(index == 0) {
-              return Column(
-                children: [
-                  SizedBox(height: 10),
-                  ScrollableCategoryList()
-                ]
-              );
+              return ScrollableCategoryList();
             }
             index -= 1;
             return CreationAwareListItem(
