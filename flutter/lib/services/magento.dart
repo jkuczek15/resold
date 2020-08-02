@@ -49,20 +49,20 @@ class Magento {
   static Future<CustomerResponse> createCustomer(CustomerRequest request, String password, String confirmPassword) async {
     if(request.firstname.isEmpty || request.lastname.isEmpty) {
       return CustomerResponse (
-          status: 400,
-          error: 'Please enter both a first name and last name.'
+        status: 400,
+        error: 'Please enter both a first name and last name.'
       );
     }
     if(request.email.isEmpty || password.isEmpty) {
       return CustomerResponse (
-          status: 400,
-          error: 'Please enter both an email and a password.'
+        status: 400,
+        error: 'Please enter both an email and a password.'
       );
     }
     if(password != confirmPassword) {
       return CustomerResponse (
-          status: 400,
-          error: 'Confirmation password should match password.'
+        status: 400,
+        error: 'Confirmation password should match password.'
       );
     }
 
@@ -71,9 +71,9 @@ class Magento {
     var requestJson = jsonEncode(<String, dynamic>{'customer': request, 'password': password });
 
     final response = await client.post(
-        '${config.baseUrl}/customers',
-        headers: config.headers,
-        body: requestJson
+      '${config.baseUrl}/customers',
+      headers: config.headers,
+      body: requestJson
     );
 
     var responseJson = jsonDecode(response.body.toString());
@@ -88,8 +88,8 @@ class Magento {
     } else {
       // sign up error
       return CustomerResponse (
-          status: response.statusCode,
-          error: responseJson['message']
+        status: response.statusCode,
+        error: responseJson['message']
       );
     }
   }
@@ -97,8 +97,8 @@ class Magento {
   static Future<CustomerResponse> getMe(String token, String password) async {
     if(token.isEmpty) {
       return CustomerResponse (
-          status: 400,
-          error: 'Please enter both an email and a password.'
+        status: 400,
+        error: 'Please enter both an email and a password.'
       );
     }
 
@@ -108,8 +108,8 @@ class Magento {
     headers['Authorization'] = 'Bearer ${token}';
 
     final response = await client.get(
-        '${config.baseUrl}/customers/me',
-        headers: headers
+      '${config.baseUrl}/customers/me',
+      headers: headers
     );
 
     var responseJson = jsonDecode(response.body.toString());
