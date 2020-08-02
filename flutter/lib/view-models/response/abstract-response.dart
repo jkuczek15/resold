@@ -1,4 +1,4 @@
-class Response {
+abstract class Response {
   int status;
   String error;
 

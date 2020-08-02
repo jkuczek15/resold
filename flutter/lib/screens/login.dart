@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
-import 'package:resold/view-models/network/request/login-request.dart';
-import 'package:resold/view-models/network/response/login-response.dart';
+import 'package:resold/view-models/request/login-request.dart';
+import 'package:resold/view-models/response/login-response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
