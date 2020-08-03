@@ -8,15 +8,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // clear from disk
-  await CustomerResponse.clear();
+  //  await CustomerResponse.clear();
 
   // get from disk
   CustomerResponse customer = await CustomerResponse.load();
 
   // run the app
-  runApp(MaterialApp(home: isLoggedIn(customer) ? Home(customer) : Landing()));
+  runApp(MaterialApp(home: customer.isLoggedIn() ? Home(customer) : Landing()));
 }
 
-bool isLoggedIn(CustomerResponse customer) {
-  return customer.id != null && customer.email != null && customer.token != null;
-}
