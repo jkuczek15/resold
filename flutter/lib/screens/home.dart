@@ -109,7 +109,7 @@ class HomePageState extends State<HomePage> {
     Widget content;
     switch(selectedIndex) {
       case 0:
-          //  local buy tab
+          //  buy tab
           content = LiquidPullToRefresh(
             height: 80,
             springAnimationDurationInMilliseconds: 500,

@@ -12,10 +12,11 @@ class Product {
   final String localGlobal;
   double latitude;
   double longitude;
+  List<int> categoryIds;
 
   Product({this.id, this.name, this.titleDescription, this.price, this.image, this.smallImage,
       this.thumbnail, this.latitude, this.longitude, this.description, this.condition,
-      this.localGlobal});
+      this.localGlobal, this.categoryIds});
 
   factory Product.fromDoc(Map<dynamic, dynamic> doc) {
     try {
