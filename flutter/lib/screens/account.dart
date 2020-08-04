@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:resold/builders/product-list-builder.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/resold.dart';
+import 'package:resold/constants/url-config.dart';
+import 'package:resold/screens/product/view.dart';
+import 'package:geolocator/geolocator.dart';
 
 class AccountPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -19,6 +23,7 @@ class AccountPageState extends State<AccountPage> {
   Future<List<Product>> futureForSaleVendorProducts;
   Future<List<Product>> futureSoldVendorProducts;
   final CustomerResponse customer;
+  Position currentLocation;
 
   AccountPageState(CustomerResponse customer) : customer = customer;
 
@@ -27,6 +32,13 @@ class AccountPageState extends State<AccountPage> {
     super.initState();
     futureForSaleVendorProducts = Resold.getVendorProducts(customer.vendorId, 'for-sale');
     futureSoldVendorProducts = Resold.getVendorProducts(customer.vendorId, 'sold');
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
+      if(this.mounted) {
+        setState(() {
+          currentLocation = location;
+        });
+      }
+    });
   }
 
   @override
@@ -36,8 +48,9 @@ class AccountPageState extends State<AccountPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          toolbarHeight: 75,
+          toolbarHeight: 74,
           bottom: TabBar(
+            indicatorColor: const Color(0xff41b8ea),
             tabs: [
               Tab(icon: Icon(MdiIcons.signRealEstate, semanticLabel: 'For Sale'), text: 'For Sale'),
               Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
@@ -50,7 +63,13 @@ class AccountPageState extends State<AccountPage> {
               future: futureForSaleVendorProducts,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text('success');
+                  return GridView.count(
+                    crossAxisCount: 2,
+                    children: List.generate(snapshot.data.length, (index) {
+                      var product = snapshot.data[index];
+                      return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
+                    })
+                  );
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
@@ -62,7 +81,13 @@ class AccountPageState extends State<AccountPage> {
               future: futureSoldVendorProducts,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text('success');
+                  return GridView.count(
+                    crossAxisCount: 2,
+                    children: List.generate(snapshot.data.length, (index) {
+                      var product = snapshot.data[index];
+                      return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
+                    }),
+                  );
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }

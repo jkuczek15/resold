@@ -88,9 +88,12 @@ class Resold {
 
     if(response.statusCode == 200) {
       // success
-      var test = response.body.toString();
-      List<Product> vendorProducts = jsonDecode(response.body.toString()).toList();
-      return vendorProducts;
+      List<dynamic> vendorProducts = jsonDecode(response.body.toString()).toList();
+      List<Product> products = new List<Product>();
+      vendorProducts.forEach((vendorProduct) {
+        products.add(Product.fromJson(vendorProduct));
+      });
+      return products;
     } else {
       // error
       var json = jsonDecode(response.body.toString());

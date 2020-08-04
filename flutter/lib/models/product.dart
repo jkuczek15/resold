@@ -46,4 +46,34 @@ class Product {
       return Product();
     }
   }
+
+
+  factory Product.fromJson(dynamic doc) {
+    try {
+      var product = Product(
+          id: int.tryParse(doc['id']),
+          name: doc['name'].toString().trim(),
+          price: doc['price'].toString(),
+          image: doc['image'].toString(),
+          smallImage: doc['small_image'].toString(),
+          thumbnail: doc['thumbnail'].toString(),
+          description: doc['description'].toString().trim(),
+          condition: doc['condition'].toString(),
+          localGlobal: doc['local_global'].toString()
+      );
+
+      if(doc['title_description'] != null && doc['title_description'] != null) {
+        product.titleDescription = doc['title_description'].toString().trim();
+      }
+
+      if(doc['latitude'] != null && doc['longitude'] != null) {
+        product.latitude = double.tryParse(doc['latitude'].toString());
+        product.longitude = double.tryParse(doc['longitude'].toString());
+      }
+
+      return product;
+    } catch (exception) {
+      return Product();
+    }
+  }
 }
