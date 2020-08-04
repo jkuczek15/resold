@@ -5,8 +5,6 @@ import 'package:resold/builders/product-list-builder.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/resold.dart';
-import 'package:resold/constants/url-config.dart';
-import 'package:resold/screens/product/view.dart';
 import 'package:geolocator/geolocator.dart';
 
 class AccountPage extends StatefulWidget {
@@ -65,6 +63,7 @@ class AccountPageState extends State<AccountPage> {
                 if (snapshot.hasData) {
                   return GridView.count(
                     crossAxisCount: 2,
+                    childAspectRatio: 1.6,
                     children: List.generate(snapshot.data.length, (index) {
                       var product = snapshot.data[index];
                       return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
@@ -83,6 +82,7 @@ class AccountPageState extends State<AccountPage> {
                 if (snapshot.hasData) {
                   return GridView.count(
                     crossAxisCount: 2,
+                    childAspectRatio: 3/2,
                     children: List.generate(snapshot.data.length, (index) {
                       var product = snapshot.data[index];
                       return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);

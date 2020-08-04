@@ -16,7 +16,7 @@ import 'package:resold/widgets/scrollable-category-list.dart';
 class ProductListBuilder {
 
   static ChangeNotifierProvider<ProductViewModel> buildProductList(
-      BuildContext context, List<Product> products, Position currentLocation) {
+      BuildContext context, List<Product> products, Position currentLocation, bool showCategoryHeader) {
     return ChangeNotifierProvider<ProductViewModel>(
         create: (_) => new ProductViewModel(currentLocation, products),
         child: Consumer<ProductViewModel>(
@@ -25,7 +25,7 @@ class ProductListBuilder {
                     itemCount: model.items.length,
                     itemBuilder: (context, index) {
                       if (index == 0) {
-                        return ScrollableCategoryList();
+                        return showCategoryHeader ? ScrollableCategoryList() : Column();
                       }
                       index -= 1;
                       return CreationAwareListItem(
@@ -38,7 +38,7 @@ class ProductListBuilder {
                               ?
                           Center(child: CircularProgressIndicator(
                               backgroundColor: const Color(0xff41b8ea)))
-                              : buildProductTile(
+                              : buildProductListTile(
                               context, currentLocation, model.items[index],
                               index)
                       );
@@ -48,7 +48,7 @@ class ProductListBuilder {
     );
   }
 
-  static ListTile buildProductTile(BuildContext context,
+  static ListTile buildProductListTile(BuildContext context,
       Position currentLocation, Product product, int index) {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return ListTile(
@@ -158,17 +158,16 @@ class ProductListBuilder {
     return ListTile(
         title: Card(
           child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
-              },
-              child: FadeInImage(
-                height: 250,
-                image: NetworkImage(baseImagePath + product.image),
-                placeholder: AssetImage('assets/images/placeholder-image.png'),
-                fit: BoxFit.cover
-              )
-          )
+            splashColor: Colors.blue.withAlpha(30),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
+            },
+            child: FadeInImage(
+              image: NetworkImage(baseImagePath + product.image),
+              placeholder: AssetImage('assets/images/placeholder-image.png'),
+              fit: BoxFit.cover
+            )
+        )
       )
     );
   }
