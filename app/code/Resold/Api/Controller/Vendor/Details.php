@@ -82,9 +82,7 @@ class Details extends \Magento\Framework\App\Action\Action
         'about' => trim($vendor->getAbout()),
         'profilePicture' => $vendor->getProfilePicture()
       ];
-      var_dump($result);
-      exit;
 
-      return $this->resultJsonFactory->create()->setData([]);
+      return $this->resultJsonFactory->create()->setData($result);
     }// end function execute
 }
