@@ -68,6 +68,10 @@ class Products extends \Magento\Framework\App\Action\Action
         return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
       }// end if vendor ID is set
 
+      if(!isset($post['type']) || $post['type'] == null){
+        return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
+      }// end if vendor ID is set
+
       if($post['vendorId'] == '-1') {
         return $this->resultJsonFactory->create()->setData(['error' => 'You have not listed any items for sale.']);
       }// end if vendor Id == -1
@@ -96,7 +100,9 @@ class Products extends \Magento\Framework\App\Action\Action
 
       $result = [];
       foreach($vendorProducts as $product) {
-        $result[] = [
+
+        $categoryIds = $product->getCategoryIds();
+        $productResult = [
           'id' => $product->getId(),
           'name' => $product->getName(),
           'price' => $product->getPrice(),
@@ -111,6 +117,16 @@ class Products extends \Magento\Framework\App\Action\Action
           'latitude' => $product->getCustomAttribute('latitude')->getValue(),
           'longitude' => $product->getCustomAttribute('longitude')->getValue()
         ];
+
+        if($post['type'] == 'for-sale') {
+          if(!empty($categoryIds)) {
+            $result[] = $productResult;
+          }
+        } else {
+          if(empty($categoryIds)) {
+            $result[] = $productResult;
+          }
+        }// end if type == 'for-sale'
       }// end foreach loop over vendor products
 
       return $this->resultJsonFactory->create()->setData($result);
