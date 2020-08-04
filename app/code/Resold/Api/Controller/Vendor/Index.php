@@ -66,7 +66,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
       if(!isset($post['customerId']) || $post['customerId'] == null){
         return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
-      }// end if country ID is set
+      }// end if customer ID is set
 
       $vendorModel = $this->vendor->create();
       $vendor = $vendorModel->loadByCustomerId($post['customerId']);
