@@ -1,6 +1,7 @@
 import 'package:http/http.dart' show Client;
 import 'dart:async';
 import 'dart:convert';
+import 'package:resold/models/product.dart';
 
 class Resold {
 
@@ -68,6 +69,28 @@ class Resold {
       // success
       var json = jsonDecode(response.body.toString()).toList();
       return json.map((value) => value['uuid']).toList().cast<String>();
+    } else {
+      // error
+      var json = jsonDecode(response.body.toString());
+      return [json['message']];
+    }
+  }
+
+  static Future<List<Product>> getVendorProducts(int vendorId, String type) async {
+
+    await config.initialized;
+
+    final response = await client.post(
+      '${config.baseUrl}/vendor/products',
+      headers: config.headers,
+      body: <String, dynamic> { 'vendorId': vendorId.toString(), 'type': type }
+    );
+
+    if(response.statusCode == 200) {
+      // success
+      var test = response.body.toString();
+      List<Product> vendorProducts = jsonDecode(response.body.toString()).toList();
+      return vendorProducts;
     } else {
       // error
       var json = jsonDecode(response.body.toString());

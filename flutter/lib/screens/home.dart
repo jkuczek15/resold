@@ -48,18 +48,6 @@ class HomePageState extends State<HomePage> {
   HomePageState(this.customer);
 
   @override
-  void initState() {
-    super.initState();
-    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
-      if(this.mounted) {
-        setState(() {
-          currentLocation = location;
-        });
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -103,11 +91,11 @@ class HomePageState extends State<HomePage> {
 
   Widget getContent(BuildContext context) {
     switch(selectedTab) {
-      case 0: return BrowsePage(currentLocation);
-      case 1: return SearchPage(currentLocation);
+      case 0: return BrowsePage();
+      case 1: return SearchPage();
       case 2: return SellPage();
       case 3: return OrdersPage();
-      case 4: return AccountPage();
+      case 4: return AccountPage(customer);
       default: return Text('Unknown tab');
     }
   }

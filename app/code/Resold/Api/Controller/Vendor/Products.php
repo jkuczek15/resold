@@ -101,6 +101,12 @@ class Products extends \Magento\Framework\App\Action\Action
       $result = [];
       foreach($vendorProducts as $product) {
 
+        $titleDescription = $product->getCustomAttribute('title_description');
+        $localGlobal = $product->getCustomAttribute('local_global');
+        $condition = $product->getCustomAttribute('condition');
+        $latitude = $product->getCustomAttribute('latitude');
+        $longitude = $product->getCustomAttribute('longitude');
+
         $categoryIds = $product->getCategoryIds();
         $productResult = [
           'id' => $product->getId(),
@@ -111,11 +117,11 @@ class Products extends \Magento\Framework\App\Action\Action
           'smallImage' => $product->getSmallImage(),
           'thumbnail' => $product->getThumbnail(),
           'categoryIds' => $product->getCategoryIds(),
-          'titleDescription' => $product->getCustomAttribute('title_description')->getValue(),
-          'localGlobal' => $product->getCustomAttribute('local_global')->getValue(),
-          'condition' => $product->getCustomAttribute('condition')->getValue(),
-          'latitude' => $product->getCustomAttribute('latitude')->getValue(),
-          'longitude' => $product->getCustomAttribute('longitude')->getValue()
+          'titleDescription' => $titleDescription ? $titleDescription->getValue() : null,
+          'localGlobal' => $localGlobal ? $localGlobal->getValue() : null,
+          'condition' => $condition ? $condition->getValue() : null,
+          'latitude' => $latitude ? $latitude->getValue() : null,
+          'longitude' => $longitude ? $longitude->getValue() : null
         ];
 
         if($post['type'] == 'for-sale') {
