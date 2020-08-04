@@ -77,7 +77,7 @@ class ProductListBuilder {
                                                 width: 270,
                                                 child: FadeInImage(
                                                     image: NetworkImage(
-                                                        baseImagePath +
+                                                        baseProductImagePath +
                                                             product.thumbnail),
                                                     placeholder: AssetImage(
                                                         'assets/images/placeholder-image.png'),
@@ -163,7 +163,7 @@ class ProductListBuilder {
               Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
             },
             child: FadeInImage(
-              image: NetworkImage(baseImagePath + product.image),
+              image: NetworkImage(baseProductImagePath + product.image),
               placeholder: AssetImage('assets/images/placeholder-image.png'),
               fit: BoxFit.cover
             )

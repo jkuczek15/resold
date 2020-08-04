@@ -60,7 +60,7 @@ class ProductPageState extends State<ProductPage> {
                     if(snapshot.data.length == 1) {
                       imageElement = FadeInImage(
                         width: MediaQuery.of(context).size.width,
-                        image: NetworkImage(baseImagePath + snapshot.data[0]),
+                        image: NetworkImage(baseProductImagePath + snapshot.data[0]),
                         placeholder: AssetImage('assets/images/placeholder-image.png'),
                         fit: BoxFit.cover
                       );
@@ -73,7 +73,7 @@ class ProductPageState extends State<ProductPage> {
                                 return Container(
                                   width: MediaQuery.of(context).size.width,
                                   margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                                  child: FadeInImage(image: NetworkImage(baseImagePath + image), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
+                                  child: FadeInImage(image: NetworkImage(baseProductImagePath + image), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
                                 );
                               }
                             );

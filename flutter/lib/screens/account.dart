@@ -41,63 +41,70 @@ class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          toolbarHeight: 74,
-          bottom: TabBar(
-            indicatorColor: const Color(0xff41b8ea),
-            tabs: [
-              Tab(icon: Icon(MdiIcons.signRealEstate, semanticLabel: 'For Sale'), text: 'For Sale'),
-              Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
+    return ListView(children: [
+      Container(
+          color: Colors.orangeAccent,
+          height: 150.0,
+          child: Center(child: Text('Something'))),
+      DefaultTabController(
+          length: 2,
+          initialIndex: 0,
+          child: Column(
+            children: [
+                TabBar(
+                indicatorColor: const Color(0xff41b8ea),
+                tabs: [
+                  Tab(icon: Icon(MdiIcons.signRealEstate, semanticLabel: 'For Sale'), text: 'For Sale'),
+                  Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
+                ],
+              ),
+              Container (
+                height: 300.0,
+                child: TabBarView(
+                children: [
+                  FutureBuilder<List<Product>>(
+                    future: futureForSaleVendorProducts,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return GridView.count(
+                            crossAxisCount: 2,
+                            childAspectRatio: 1.6,
+                            children: List.generate(snapshot.data.length, (index) {
+                              var product = snapshot.data[index];
+                              return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
+                            })
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      // By default, show a loading spinner.
+                      return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                    },
+                  ),
+                  FutureBuilder<List<Product>>(
+                    future: futureSoldVendorProducts,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return GridView.count(
+                          crossAxisCount: 2,
+                          childAspectRatio: 3/2,
+                          children: List.generate(snapshot.data.length, (index) {
+                            var product = snapshot.data[index];
+                            return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
+                          }),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      // By default, show a loading spinner.
+                      return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                    },
+                  )
+                ],
+                )
+              )
             ],
-          )
-        ),
-        body: TabBarView(
-          children: [
-            FutureBuilder<List<Product>>(
-              future: futureForSaleVendorProducts,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.6,
-                    children: List.generate(snapshot.data.length, (index) {
-                      var product = snapshot.data[index];
-                      return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
-                    })
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                // By default, show a loading spinner.
-                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-              },
-            ),
-            FutureBuilder<List<Product>>(
-              future: futureSoldVendorProducts,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3/2,
-                    children: List.generate(snapshot.data.length, (index) {
-                      var product = snapshot.data[index];
-                      return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
-                    }),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                // By default, show a loading spinner.
-                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-              },
-            )
-          ],
-        ),
-      ),
-    );
+        ))
+    ]);
   }
 }
