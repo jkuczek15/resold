@@ -8,27 +8,26 @@ import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
 
 class BrowsePage extends StatefulWidget {
-  final Position currentLocation;
 
-  BrowsePage(Position currentLocation, {Key key}) : currentLocation = currentLocation, super(key: key);
+  BrowsePage({Key key}) : super(key: key);
 
   @override
-  BrowsePageState createState() => BrowsePageState(currentLocation);
+  BrowsePageState createState() => BrowsePageState();
 }
 
 class BrowsePageState extends State<BrowsePage> {
 
-  final Position currentLocation;
+  Position currentLocation;
   Future<List<Product>> futureLocalProducts;
-
-  BrowsePageState(Position currentLocation) : currentLocation = currentLocation;
 
   @override
   void initState() {
     super.initState();
+
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
       if(this.mounted) {
         setState(() {
+          currentLocation = location;
           futureLocalProducts = ResoldSearch.fetchLocalProducts(location.latitude, location.longitude);
         });
       }
@@ -38,24 +37,24 @@ class BrowsePageState extends State<BrowsePage> {
   @override
   Widget build(BuildContext context) {
     return LiquidPullToRefresh(
-        height: 80,
-        springAnimationDurationInMilliseconds: 500,
-        onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
-        showChildOpacityTransition: false,
-        color: const Color(0xff41b8ea),
-        animSpeedFactor: 5.0,
-        child: FutureBuilder<List<Product>>(
-          future: futureLocalProducts,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-          },
-        )
+      height: 80,
+      springAnimationDurationInMilliseconds: 500,
+      onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
+      showChildOpacityTransition: false,
+      color: const Color(0xff41b8ea),
+      animSpeedFactor: 5.0,
+      child: FutureBuilder<List<Product>>(
+        future: futureLocalProducts,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && currentLocation != null) {
+            return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          // By default, show a loading spinner.
+          return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+        },
+      )
     );
   }
 }
