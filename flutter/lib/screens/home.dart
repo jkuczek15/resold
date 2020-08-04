@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:resold/services/resold-search.dart';
-import 'package:resold/models/product.dart';
-import 'package:resold/builders/product-list-builder.dart';
-import 'package:resold/screens/sell.dart';
-import 'package:resold/view-models/response/customer-response.dart';
-import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:resold/screens/browse.dart';
+import 'package:resold/screens/sell.dart';
+import 'package:resold/screens/account.dart';
+import 'package:resold/screens/orders.dart';
+import 'package:resold/screens/search.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 class Home extends StatelessWidget {
 
@@ -41,11 +40,9 @@ class Home extends StatelessWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  int selectedIndex = 0;
 
-  Future<List<Product>> futureLocalProducts;
+  int selectedTab = 0;
   Position currentLocation;
-
   final CustomerResponse customer;
 
   HomePageState(this.customer);
@@ -57,7 +54,6 @@ class HomePageState extends State<HomePage> {
       if(this.mounted) {
         setState(() {
           currentLocation = location;
-          futureLocalProducts = ResoldSearch.fetchLocalProducts(location.latitude, location.longitude);
         });
       }
     });
@@ -97,7 +93,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.receipt), title: Text('Orders')),
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Account')),
         ],
-        currentIndex: selectedIndex,
+        currentIndex: selectedTab,
         fixedColor: const Color(0xff41b8ea),
         unselectedItemColor: Colors.black,
         onTap: onItemTapped,
@@ -106,64 +102,19 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget getContent(BuildContext context) {
-    Widget content;
-    switch(selectedIndex) {
-      case 0:
-          //  buy tab
-          content = LiquidPullToRefresh(
-            height: 80,
-            springAnimationDurationInMilliseconds: 500,
-            onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
-            showChildOpacityTransition: false,
-            color: const Color(0xff41b8ea),
-            animSpeedFactor: 5.0,
-            child: FutureBuilder<List<Product>>(
-              future: futureLocalProducts,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                // By default, show a loading spinner.
-                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-              },
-            )
-          );
-          break;
-        case 1:
-          // search tab
-          content = SearchBar<Product>(
-            hintText: 'Search entire marketplace here...',
-            searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
-            cancellationWidget: Icon(Icons.cancel),
-            onSearch: (term) => ResoldSearch.fetchSearchProducts(term, currentLocation.latitude, currentLocation.longitude),
-            loader: Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))),
-            onItemFound: (Product product, int index) {
-              return ProductListBuilder.buildProductTile(context, currentLocation, product, index);
-            },
-            emptyWidget: Center(child: Text('Your search returned no results.')),
-          );
-          break;
-        case 2:
-          // sell tab
-          content = SellPage();
-          break;
-        case 3:
-          // orders tab
-          content = Center(child: Text('Orders'));
-          break;
-        case 4:
-          // account tab
-          content = Center(child: Text('Account'));
-          break;
+    switch(selectedTab) {
+      case 0: return BrowsePage(currentLocation);
+      case 1: return SearchPage(currentLocation);
+      case 2: return SellPage();
+      case 3: return OrdersPage();
+      case 4: return AccountPage();
+      default: return Text('Unknown tab');
     }
-    return content;
   }
 
   void onItemTapped(int index) {
     setState(() {
-      selectedIndex = index;
+      selectedTab = index;
     });
   }
 }
