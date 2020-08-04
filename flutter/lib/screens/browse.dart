@@ -47,7 +47,7 @@ class BrowsePageState extends State<BrowsePage> {
         future: futureLocalProducts,
         builder: (context, snapshot) {
           if (snapshot.hasData && currentLocation != null) {
-            return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation);
+            return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation, true);
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
