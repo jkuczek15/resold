@@ -45,254 +45,193 @@ class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
-      Container(
-          color: const Color(0xff41b8ea),
-          height: 205.0,
-          child: FutureBuilder<Vendor>(
-            future: futureVendor,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column (
-                  children: [
-                    Row (
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column (
-                          crossAxisAlignment: CrossAxisAlignment.start,
+
+    return FutureBuilder<List<dynamic>> (
+      future: Future.wait([futureVendor, futureForSaleVendorProducts, futureSoldVendorProducts]),
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+
+          var vendor = snapshot.data[0];
+          var forSaleProducts = snapshot.data[1];
+          var soldProducts = snapshot.data[2];
+
+          return ListView(children: [
+            Container(
+                height: 215.0,
+                child: Stack (
                           children: [
-                            Container (
-                                height: 115,
-                                width: 115,
-                                child: Padding (
-                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                    child: CircleAvatar (
-                                      backgroundImage: NetworkImage(baseImagePath + '/' + snapshot.data.profilePicture),
-                                    )
-                                )
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
-                                child: Text(snapshot.data.name, style: new TextStyle(
-                                    fontSize: 14.0,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white
-                                ))
+                            Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
+                            Column (
+                                children: [
+                                  Row (
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Column (
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container (
+                                                  height: 115,
+                                                  width: 115,
+                                                  child: Padding (
+                                                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                                      child: CircleAvatar (
+                                                        backgroundImage: NetworkImage(baseImagePath + '/' + vendor.profilePicture),
+                                                      )
+                                                  )
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
+                                                  child: Text(vendor.name, style: new TextStyle(
+                                                      fontSize: 14.0,
+                                                      fontFamily: 'Roboto',
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white
+                                                  ))
+                                              )
+                                            ]
+                                        ),
+                                        Column (
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container (
+                                                  child: Padding (
+                                                      padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                                                      child: Column (
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Row (
+                                                                children: [
+                                                                  Column (
+                                                                      children: [
+                                                                        Text(forSaleProducts.length.toString(), style: new TextStyle(
+                                                                            fontSize: 24.0,
+                                                                            fontFamily: 'Roboto',
+                                                                            fontWeight: FontWeight.bold,
+                                                                            color: Colors.white
+                                                                        )),
+                                                                        Text('for sale', style: new TextStyle(
+                                                                            fontSize: 14.0,
+                                                                            fontFamily: 'Roboto',
+                                                                            fontWeight: FontWeight.normal,
+                                                                            color: Colors.white
+                                                                        ))
+                                                                      ]
+                                                                  ),
+                                                                  SizedBox(width: 35),
+                                                                  Column (
+                                                                    children: [
+                                                                      Text(soldProducts.length.toString(), style: new TextStyle(
+                                                                          fontSize: 24.0,
+                                                                          fontFamily: 'Roboto',
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.white
+                                                                      )),
+                                                                      Text('sold', style: new TextStyle(
+                                                                          fontSize: 14.0,
+                                                                          fontFamily: 'Roboto',
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.white
+                                                                      ))
+                                                                    ]
+                                                                  ),
+                                                                  SizedBox(width: 35),
+                                                                  Column (
+                                                                    children: [
+                                                                      Icon(MdiIcons.tshirtCrew, color: Colors.white, size: 29.0),
+                                                                      Text('best seller', style: new TextStyle(
+                                                                          fontSize: 14.0,
+                                                                          fontFamily: 'Roboto',
+                                                                          fontWeight: FontWeight.normal,
+                                                                          color: Colors.white
+                                                                      ))
+                                                                    ]
+                                                                  )
+                                                                ]
+                                                            )
+                                                          ]
+                                                      )
+                                                  )
+                                              ),
+                                              Container (
+                                                  height: 60,
+                                                  child: Padding (
+                                                      padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                                                      child: Column (
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(vendor.about, style: new TextStyle(
+                                                                fontSize: 14.0,
+                                                                fontFamily: 'Roboto',
+                                                                fontWeight: FontWeight.normal,
+                                                                color: Colors.white
+                                                            ))
+                                                          ]
+                                                      )
+                                                  )
+                                              )
+                                            ]
+                                        )
+                                      ]
+                                  ),
+                                  SizedBox(height: 10),
+                                  ButtonTheme (
+                                      minWidth: 340.0,
+                                      height: 50.0,
+                                      child: RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadiusDirectional.circular(8)
+                                        ),
+                                        onPressed: () async {
+                                          // show a loading indicator
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                              }
+                                          );
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        },
+                                        child: Text('Edit Profile',
+                                            style: new TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white
+                                            )
+                                        ),
+                                        color: Colors.black,
+                                        textColor: Colors.white,
+                                      )
+                                  ),
+                                ]
                             )
                           ]
-                      ),
-                      Column (
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container (
-                                child: Padding (
-                                    padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
-                                    child: Column (
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row (
-                                              children: [
-                                                FutureBuilder<List<Product>> (
-                                                    future: futureForSaleVendorProducts,
-                                                    builder: (context, snapshot) {
-                                                      if(snapshot.hasData) {
-                                                        return Column (
-                                                            children: [
-                                                              Text(snapshot.data.length.toString(), style: new TextStyle(
-                                                                  fontSize: 24.0,
-                                                                  fontFamily: 'Roboto',
-                                                                  fontWeight: FontWeight.bold,
-                                                                  color: Colors.white
-                                                              )),
-                                                              Text('for sale', style: new TextStyle(
-                                                                  fontSize: 14.0,
-                                                                  fontFamily: 'Roboto',
-                                                                  fontWeight: FontWeight.normal,
-                                                                  color: Colors.white
-                                                              ))
-                                                            ]
-                                                        );
-                                                      } else {
-                                                        return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                                                      }
-                                                    }
-                                                ),
-                                                SizedBox(width: 35),
-                                                FutureBuilder<List<Product>> (
-                                                    future: futureSoldVendorProducts,
-                                                    builder: (context, snapshot) {
-                                                      if(snapshot.hasData) {
-                                                        return Column (
-                                                            children: [
-                                                              Text(snapshot.data.length.toString(), style: new TextStyle(
-                                                                  fontSize: 24.0,
-                                                                  fontFamily: 'Roboto',
-                                                                  fontWeight: FontWeight.bold,
-                                                                  color: Colors.white
-                                                              )),
-                                                              Text('sold', style: new TextStyle(
-                                                                  fontSize: 14.0,
-                                                                  fontFamily: 'Roboto',
-                                                                  fontWeight: FontWeight.normal,
-                                                                  color: Colors.white
-                                                              ))
-                                                            ]
-                                                        );
-                                                      } else {
-                                                        return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                                                      }
-                                                    }
-                                                ),
-                                                SizedBox(width: 35),
-                                                FutureBuilder<List<Product>> (
-                                                    future: futureSoldVendorProducts,
-                                                    builder: (context, snapshot) {
-                                                      if(snapshot.hasData) {
-                                                        return Column (
-                                                            children: [
-                                                              Icon(MdiIcons.tshirtCrew, color: Colors.white, size: 29.0),
-                                                              Text('best seller', style: new TextStyle(
-                                                                  fontSize: 14.0,
-                                                                  fontFamily: 'Roboto',
-                                                                  fontWeight: FontWeight.normal,
-                                                                  color: Colors.white
-                                                              ))
-                                                            ]
-                                                        );
-                                                      } else {
-                                                        return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                                                      }
-                                                    }
-                                                ),
-                                              ]
-                                          )
-                                        ]
-                                    )
-                                )
-                            ),
-                            Container (
-                              height: 60,
-                              child: Padding (
-                                padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
-                                child: Column (
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                  Text(snapshot.data.about, style: new TextStyle(
-                                      fontSize: 14.0,
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.white
-                                  ))
-                                ]
-                              )
-                            )
-                          )
-                        ]
                       )
-                  ]
-              ),
-              SizedBox(height: 10),
-              ButtonTheme (
-                    minWidth: 340.0,
-                    height: 50.0,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusDirectional.circular(8)
-                      ),
-                      onPressed: () async {
-                        // show a loading indicator
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                            }
-                        );
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                      },
-                      child: Text('Edit Profile',
-                          style: new TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
-                          )
-                      ),
-                      color: Colors.black,
-                      textColor: Colors.white,
-                    )
                     ),
-                  ]
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              // By default, show a loading spinner.
-              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-            },
-          )
-      ),
-      DefaultTabController(
-            length: 2,
-            initialIndex: 0,
-            child: Column(
-              children: [
-                TabBar(
-                  indicatorColor: const Color(0xff41b8ea),
-                tabs: [
-                  Tab(icon: Icon(MdiIcons.signRealEstate, semanticLabel: 'For Sale'), text: 'For Sale'),
-                  Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
-                ],
-              ),
-              Container (
-                height: 300.0,
-                child: TabBarView(
-                children: [
-                  FutureBuilder<List<Product>>(
-                    future: futureForSaleVendorProducts,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return GridView.count(
-                            crossAxisCount: 2,
-                            childAspectRatio: 1.6,
-                            children: List.generate(snapshot.data.length, (index) {
-                              var product = snapshot.data[index];
-                              return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
-                            })
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      // By default, show a loading spinner.
-                      return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                    },
-                  ),
-                  FutureBuilder<List<Product>>(
-                    future: futureSoldVendorProducts,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return GridView.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: 3/2,
-                          children: List.generate(snapshot.data.length, (index) {
-                            var product = snapshot.data[index];
-                            return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
-                          }),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      // By default, show a loading spinner.
-                      return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
-                    },
-                  )
-                ],
+                  Column(
+                  children: [
+                    SingleChildScrollView (
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        children: List.generate(forSaleProducts.length, (index) {
+                          var product = forSaleProducts[index];
+                          return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
+                        })
+                      )
+                    ),
+                  ],
                 )
-              )
-            ],
-        ))
-    ]);
-  }
+               ]
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            // By default, show a loading spinner.
+            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+        }
+      );
+    }
 }
