@@ -9,14 +9,12 @@ class Vendor {
 
   factory Vendor.fromJson(dynamic doc) {
     try {
-      var vendor = Vendor(
+      return Vendor(
         id: int.tryParse(doc['id']),
         name: doc['name'].toString().trim(),
         about: doc['about'].toString(),
         profilePicture: doc['profilePicture'].toString(),
       );
-
-      return vendor;
     } catch (exception) {
       return Vendor();
     }
