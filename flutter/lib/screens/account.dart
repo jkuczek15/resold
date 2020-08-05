@@ -57,7 +57,7 @@ class AccountPageState extends State<AccountPage> {
 
           return ListView(children: [
             Container(
-                height: 215.0,
+                height: 210.0,
                 child: Stack (
                           children: [
                             Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
