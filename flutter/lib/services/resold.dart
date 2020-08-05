@@ -2,6 +2,7 @@ import 'package:http/http.dart' show Client;
 import 'dart:async';
 import 'dart:convert';
 import 'package:resold/models/product.dart';
+import 'package:resold/models/vendor.dart';
 
 class Resold {
 
@@ -49,6 +50,28 @@ class Resold {
       // success
       var json = jsonDecode(response.body.toString());
       return json['vendorId'];
+    } else {
+      // error
+      var json = jsonDecode(response.body.toString());
+      return json['message'];
+    }
+  }
+
+
+  static Future<Vendor> getVendor(int vendorId) async {
+
+    await config.initialized;
+
+    final response = await client.post(
+        '${config.baseUrl}/vendor/details',
+        headers: config.headers,
+        body: <String, dynamic> { 'vendorId': vendorId.toString() }
+    );
+
+    if(response.statusCode == 200) {
+      // success
+      var json = jsonDecode(response.body.toString());
+      return Vendor.fromJson(json);
     } else {
       // error
       var json = jsonDecode(response.body.toString());
