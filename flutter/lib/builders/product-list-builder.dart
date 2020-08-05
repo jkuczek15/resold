@@ -48,7 +48,7 @@ class ProductListBuilder {
     );
   }
 
-  static ListTile buildProductListTile(BuildContext context,
+  static Widget buildProductListTile(BuildContext context,
       Position currentLocation, Product product, int index) {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return ListTile(
@@ -154,20 +154,18 @@ class ProductListBuilder {
     );
   }
 
-  static ListTile buildProductGridTile(BuildContext context, Position currentLocation, Product product, int index) {
-    return ListTile(
-        title: Card(
-          child: InkWell(
-            splashColor: Colors.blue.withAlpha(30),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
-            },
-            child: FadeInImage(
+  static Widget buildProductGridTile(BuildContext context, Position currentLocation, Product product, int index) {
+    return Card(
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
+          },
+          child: FadeInImage(
               image: NetworkImage(baseProductImagePath + product.image),
               placeholder: AssetImage('assets/images/placeholder-image.png'),
               fit: BoxFit.cover
-            )
-        )
+          )
       )
     );
   }
