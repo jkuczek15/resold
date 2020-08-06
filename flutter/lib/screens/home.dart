@@ -94,7 +94,7 @@ class HomePageState extends State<HomePage> {
       case 0: return BrowsePage();
       case 1: return SearchPage();
       case 2: return SellPage();
-      case 3: return OrdersPage();
+      case 3: return OrdersPage(customer);
       case 4: return AccountPage(customer);
       default: return Text('Unknown tab');
     }
