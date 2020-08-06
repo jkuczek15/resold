@@ -123,6 +123,7 @@ class Resold {
       return [json['message']];
     }
   }
+
 }
 
 class Config {
