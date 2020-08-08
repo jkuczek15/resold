@@ -23,9 +23,9 @@ class Firebase {
     }// end if we need to create a new user
   }
 
-  static Future sendProductMessage(int fromId, int toId, String content, int type) async {
+  static Future sendProductMessage(int fromId, int toId, int productId, String content, int type) async {
 
-    var chatId = fromId.toString() + '-' + toId.toString();
+    var chatId = fromId.toString() + '-' + toId.toString() + '-' + productId.toString();
 
     var documentReference = Firestore.instance
         .collection('messages')
@@ -47,8 +47,15 @@ class Firebase {
     });
   }
 
-  static Stream getUserMessagesStream() {
-    return Firestore.instance.collection('users').snapshots();
+  static Stream getUserMessagesStream(int customerId) {
+    // todo: store user inbox messages as separate collection
+    return Firestore.instance.collection('messages')
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: customerId)
+        .where(FieldPath.documentId, isLessThan: customerId+1)
+        .orderBy(FieldPath.documentId)
+        .orderBy('timestamp', descending: true)
+        .limit(20)
+        .snapshots();
   }
 
   static Stream getProductMessagesStream(String chatId) {

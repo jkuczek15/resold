@@ -49,7 +49,7 @@ class MessagePageState extends State<MessagePage> {
   void initState() {
     super.initState();
     focusNode.addListener(onFocusChange);
-    chatId = customer.id.toString() + '-' + toId.toString();
+    chatId = customer.id.toString() + '-' + toId.toString() + '-' + product.id.toString();
     isLoading = false;
   }
 
@@ -99,7 +99,7 @@ class MessagePageState extends State<MessagePage> {
     if (content.trim() != '') {
       textEditingController.clear();
 
-      await Firebase.sendProductMessage(customer.id, toId, content, type);
+      await Firebase.sendProductMessage(customer.id, toId, product.id, content, type);
 
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
@@ -205,7 +205,6 @@ class MessagePageState extends State<MessagePage> {
           Flexible(
             child: Container(
               child: TextField(
-                autofocus: true,
                 style: TextStyle(color: Colors.black, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
