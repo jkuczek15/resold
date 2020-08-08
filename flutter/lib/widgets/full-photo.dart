@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
 class FullPhoto extends StatelessWidget {
+  final String title;
   final String url;
 
-  FullPhoto({Key key, @required this.url}) : super(key: key);
+  FullPhoto(String title, {Key key, @required this.url}) : title = title, super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(title, style: new TextStyle(color: Colors.white)),
         iconTheme: IconThemeData(
           color: Colors.white, //change your color here
         ),

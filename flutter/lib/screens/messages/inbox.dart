@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/services/firebase.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:resold/screens/messages/message.dart';
+import 'package:resold/constants/url-config.dart';
+import 'package:resold/models/product.dart';
+import 'package:intl/intl.dart';
 
 class InboxPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -59,26 +62,92 @@ class InboxPageState extends State<InboxPage> {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
-                          child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))
+                        child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))
+                      );
+                    } else if(snapshot.hasData && snapshot.data.documents.length == 0) {
+                      return Center(
+                        child: Text('You haven\'t received any messages')
                       );
                     } else {
-                      var x = snapshot.data.documents;
-
                       return ListView.builder(
                           shrinkWrap: true,
                           itemCount: snapshot.data.documents.length,
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.fromLTRB(2, 10, 2, 10),
                           itemBuilder: (context, index) {
                             var item = snapshot.data.documents[index];
-                            return ListTile(
-                                title: Container(
-                                  height: 50,
-                                  child: Row(
-                                    children: [
-                                      Text('testing')
-                                    ],
-                                  ),
-                                )
+                            var date = new DateTime.fromMillisecondsSinceEpoch(int.parse(item['lastMessageTimestamp']));
+
+                            Product product = Product.fromJson(item['product'], parseId: false);
+
+                            // check if date is today, if so just use the time
+                            var formattedDate = DateFormat('M/d/yy').format(date);
+                            if(formattedDate == DateFormat('M/d/yy').format(DateTime.now())) {
+                              formattedDate = DateFormat().add_jm().format(date);
+                            }// end if date is today
+
+                            return InkWell (
+                              onTap: () async {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                  }
+                                );
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, item['toId'])));
+                                Navigator.of(context, rootNavigator: true).pop('dialog');
+                              },
+                                child: Card (
+                                  child: ListTile (
+                                      title: Container(
+                                        child: Row (
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Column (
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container (
+                                                      height: 70,
+                                                      width: 70,
+                                                      child: Align (
+                                                          alignment: Alignment.centerLeft,
+                                                          child: FadeInImage(image: NetworkImage(baseProductImagePath + product.thumbnail), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
+                                                      )
+                                                  )
+                                                ]
+                                            ),
+                                            Column (
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(height: 4),
+                                                  Row (
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Container (
+                                                          width: 160,
+                                                          child: Text(product.name, overflow: TextOverflow.ellipsis)
+                                                      ),
+                                                      SizedBox(width: 25),
+                                                      Container (
+                                                          child: Text(formattedDate, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.grey))
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Container (
+                                                      width: 110,
+                                                      child: Text(item['messagePreview'], overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.grey))
+                                                  ),
+                                                  SizedBox(height: 4)
+                                                ]
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                  )
+                              )
                             );
                           }
                       );
