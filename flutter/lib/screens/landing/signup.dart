@@ -7,6 +7,7 @@ import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/models/customer/customer-address.dart';
+import 'package:resold/services/firebase.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -239,6 +240,9 @@ class SignUpPageState extends State<SignUpPage> {
                                         // signup was successful
                                         // store to disk
                                         await CustomerResponse.save(response);
+
+                                        // create a firebase user
+                                        await Firebase.createUser(response);
 
                                         // navigate
                                         Navigator.of(context, rootNavigator: true).pop('dialog');

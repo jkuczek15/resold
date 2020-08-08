@@ -3,22 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/services/resold-search.dart';
+import 'package:resold/services/search.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 class BrowsePage extends StatefulWidget {
+  final CustomerResponse customer;
 
-  BrowsePage({Key key}) : super(key: key);
+  BrowsePage(CustomerResponse customer, {Key key}) : customer = customer, super(key: key);
 
   @override
-  BrowsePageState createState() => BrowsePageState();
+  BrowsePageState createState() => BrowsePageState(customer);
 }
 
 class BrowsePageState extends State<BrowsePage> {
 
+  CustomerResponse customer;
   Position currentLocation;
   Future<List<Product>> futureLocalProducts;
+
+  BrowsePageState(CustomerResponse customer) : customer = customer;
 
   @override
   void initState() {
@@ -28,7 +33,7 @@ class BrowsePageState extends State<BrowsePage> {
       if(this.mounted) {
         setState(() {
           currentLocation = location;
-          futureLocalProducts = ResoldSearch.fetchLocalProducts(location.latitude, location.longitude);
+          futureLocalProducts = Search.fetchLocalProducts(location.latitude, location.longitude);
         });
       }
     });
@@ -39,7 +44,7 @@ class BrowsePageState extends State<BrowsePage> {
     return LiquidPullToRefresh(
       height: 80,
       springAnimationDurationInMilliseconds: 500,
-      onRefresh: () => futureLocalProducts = ResoldSearch.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
+      onRefresh: () => futureLocalProducts = Search.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude),
       showChildOpacityTransition: false,
       color: const Color(0xff41b8ea),
       animSpeedFactor: 5.0,
@@ -47,7 +52,7 @@ class BrowsePageState extends State<BrowsePage> {
         future: futureLocalProducts,
         builder: (context, snapshot) {
           if (snapshot.hasData && currentLocation != null) {
-            return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation, true);
+            return ProductListBuilder.buildProductList(context, snapshot.data, currentLocation, customer, true);
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/screens/browse.dart';
-import 'package:resold/screens/sell.dart';
-import 'package:resold/screens/account.dart';
-import 'package:resold/screens/orders.dart';
-import 'package:resold/screens/search.dart';
+import 'package:resold/screens/tabs/browse.dart';
+import 'package:resold/screens/tabs/sell.dart';
+import 'package:resold/screens/tabs/account.dart';
+import 'package:resold/screens/tabs/orders.dart';
+import 'package:resold/screens/tabs/search.dart';
+import 'package:resold/screens/inbox.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 
 class Home extends StatelessWidget {
@@ -60,7 +61,12 @@ class HomePageState extends State<HomePage> {
             ),
             Align (
                 alignment: Alignment.centerRight,
-                child: Icon(Icons.message, color: Colors.white),
+                child: InkWell (
+                  child: Icon(Icons.message, color: Colors.white),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => InboxPage(customer)));
+                  },
+                )
             )
           ],
         ),
@@ -91,8 +97,8 @@ class HomePageState extends State<HomePage> {
 
   Widget getContent(BuildContext context) {
     switch(selectedTab) {
-      case 0: return BrowsePage();
-      case 1: return SearchPage();
+      case 0: return BrowsePage(customer);
+      case 1: return SearchPage(customer);
       case 2: return SellPage();
       case 3: return OrdersPage(customer);
       case 4: return AccountPage(customer);

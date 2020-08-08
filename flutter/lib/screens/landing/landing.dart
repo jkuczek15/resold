@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:resold/screens/signup.dart';
-import 'package:resold/screens/login.dart';
+import 'package:resold/screens/landing/signup.dart';
+import 'package:resold/screens/landing/login.dart';
 
 class Landing extends StatelessWidget {
   // This widget is the root of your application.

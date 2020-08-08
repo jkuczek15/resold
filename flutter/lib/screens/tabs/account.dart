@@ -218,7 +218,7 @@ class AccountPageState extends State<AccountPage> {
                         crossAxisCount: 2,
                         children: List.generate(forSaleProducts.length, (index) {
                           var product = forSaleProducts[index];
-                          return ProductListBuilder.buildProductGridTile(context, currentLocation, product, index);
+                          return ProductListBuilder.buildProductGridTile(context, currentLocation, product, customer, index);
                         })
                       )
                     ),
