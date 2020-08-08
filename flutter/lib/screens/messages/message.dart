@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:resold/enums/message-type.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
@@ -61,11 +62,11 @@ class MessagePageState extends State<MessagePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Align (
-                  alignment: Alignment.centerLeft,
-                  child: Container (
-                    width: 260,
-                    child: Text(product.name, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))
-                  )
+                alignment: Alignment.centerLeft,
+                child: Container (
+                  width: 260,
+                  child: Text(product.name, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))
+                )
               )
             ],
           ),
@@ -99,7 +100,7 @@ class MessagePageState extends State<MessagePage> {
     if (content.trim() != '') {
       textEditingController.clear();
 
-      await Firebase.sendProductMessage(customer.id, toId, product.id, content, type);
+      await Firebase.sendProductMessage(customer.id, toId, product, content, MessageType.buyer);
 
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
@@ -293,7 +294,7 @@ class MessagePageState extends State<MessagePage> {
               ),
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
+                    context, MaterialPageRoute(builder: (context) => FullPhoto(product.name, url: document['content'])));
               },
               padding: EdgeInsets.all(0),
             ),
@@ -389,7 +390,7 @@ class MessagePageState extends State<MessagePage> {
                     ),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
+                          MaterialPageRoute(builder: (context) => FullPhoto(product.name, url: document['content'])));
                     },
                     padding: EdgeInsets.all(0),
                   ),

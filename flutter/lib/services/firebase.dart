@@ -1,12 +1,10 @@
-import 'package:http/http.dart' show Client;
 import 'dart:async';
 import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:resold/enums/message-type.dart';
 
 class Firebase {
-
-  static Config config = Config();
-  static Client client = Client();
 
   static Future createUser(CustomerResponse response) async {
     // check if we have a firebase user
@@ -23,9 +21,46 @@ class Firebase {
     }// end if we need to create a new user
   }
 
-  static Future sendProductMessage(int fromId, int toId, int productId, String content, int type) async {
+  static Future createUserInboxMessage(int fromId, int toId, String chatId, MessageType type, String content, Product product) async {
+    // get existing message collection
+    var userMessageId = fromId.toString() + '-' + toId.toString() + '-' + product.id.toString();
+    QuerySnapshot result = await Firestore.instance.collection('inbox_messages').where('id', isEqualTo: userMessageId).getDocuments();
+    List <DocumentSnapshot> documents = result.documents;
 
-    var chatId = fromId.toString() + '-' + toId.toString() + '-' + productId.toString();
+    // set up params to store for user inbox message
+    var now = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // setup message preview and trim if necessary
+    var messagePreview = content;
+    if(content.length > 50) {
+      messagePreview = content.substring(0, 50);
+    }// end if content length > 50
+
+    if (documents.length == 0) {
+      // create a inbox message
+      Firestore.instance.collection('inbox_messages').document(userMessageId).setData({
+        'fromId': fromId,
+        'toId': toId,
+        'chatId': chatId,
+        'product': product.toJson(),
+        'type': type.index,
+        'messagePreview': messagePreview,
+        'lastMessageTimestamp': now
+      });
+    } else {
+      // update the last message timestamp and preview
+      documents[0].data['messagePreview'] = messagePreview;
+      documents[0].data['lastMessageTimestamp'] = now;
+      Firestore.instance.collection('inbox_messages').document(userMessageId).setData(documents[0].data);
+    }// end if we need to create a new inbox message
+  }
+
+  static Future sendProductMessage(int fromId, int toId, Product product, String content, MessageType type) async {
+
+    var chatId = fromId.toString() + '-' + toId.toString() + '-' + product.id.toString();
+
+    await createUserInboxMessage(fromId, toId, chatId, MessageType.buyer, content, product);
+    await createUserInboxMessage(toId, fromId, chatId, MessageType.seller, content, product);
 
     var documentReference = Firestore.instance
         .collection('messages')
@@ -41,19 +76,18 @@ class Firebase {
           'idTo': toId,
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           'content': content,
-          'type': type
+          'type': type.index
         },
       );
     });
   }
 
   static Stream getUserMessagesStream(int customerId) {
-    // todo: store user inbox messages as separate collection
-    return Firestore.instance.collection('messages')
-        .where(FieldPath.documentId, isGreaterThanOrEqualTo: customerId)
-        .where(FieldPath.documentId, isLessThan: customerId+1)
+    return Firestore.instance.collection('inbox_messages')
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: customerId.toString())
+        .where(FieldPath.documentId, isLessThan: (customerId+1).toString())
         .orderBy(FieldPath.documentId)
-        .orderBy('timestamp', descending: true)
+//        .orderBy('lastMessageTimestamp', descending: true)
         .limit(20)
         .snapshots();
   }
@@ -67,29 +101,8 @@ class Firebase {
         .limit(20)
         .snapshots();
   }
-}
 
-class Config {
-  String baseUrl;
-  String accessToken;
-  Map<String, String> adminHeaders = Map<String, String>();
-  Map<String, String> customerHeaders = Map<String, String>();
-  Future initialized;
-
-  Config() {
-    initialized = init();
-  }
-
-  init() async {
-    final config = {
-      'base_url': 'https://resold.us/rest/V1',
-      'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'
-    };
-
-    baseUrl = config['base_url'];
-    accessToken = config['access_token'];
-    adminHeaders['Authorization'] = 'Bearer ${this.accessToken}';
-    adminHeaders['User-Agent'] = customerHeaders['User-Agent'] = 'Resold - Mobile Application';
-    adminHeaders['Content-Type'] = customerHeaders['User-Agent'] = 'application/json';
+  static Future configure() async {
+    await Firestore.instance.settings(persistenceEnabled: false);
   }
 }

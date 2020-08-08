@@ -48,10 +48,10 @@ class Product {
   }
 
 
-  factory Product.fromJson(dynamic doc) {
+  factory Product.fromJson(dynamic doc, {bool parseId = true}) {
     try {
       var product = Product(
-          id: int.tryParse(doc['id']),
+          id: parseId ? int.tryParse(doc['id']) : doc['id'],
           name: doc['name'].toString().trim(),
           price: doc['price'].toString(),
           image: doc['image'].toString(),
@@ -74,6 +74,27 @@ class Product {
       return product;
     } catch (exception) {
       return Product();
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    try {
+      return {
+        'id': this.id,
+        'name': this.name,
+        'price': this.price,
+        'image': this.image,
+        'smallImage': this.smallImage,
+        'thumbnail': this.thumbnail,
+        'description': this.description,
+        'titleDescription': this.titleDescription,
+        'condition': this.condition,
+        'localGlobal': this.localGlobal,
+        'latitude': this.latitude,
+        'longitude': this.longitude
+      };
+    } catch (exception) {
+      return {};
     }
   }
 }
