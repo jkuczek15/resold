@@ -108,8 +108,8 @@ class InboxPageState extends State<InboxPage> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Container (
-                                                      height: 70,
-                                                      width: 70,
+                                                      height: 65,
+                                                      width: 65,
                                                       child: Align (
                                                           alignment: Alignment.centerLeft,
                                                           child: FadeInImage(image: NetworkImage(baseProductImagePath + product.thumbnail), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
@@ -117,6 +117,7 @@ class InboxPageState extends State<InboxPage> {
                                                   )
                                                 ]
                                             ),
+                                            SizedBox(width: 5),
                                             Column (
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
