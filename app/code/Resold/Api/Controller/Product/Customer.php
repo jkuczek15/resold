@@ -39,13 +39,11 @@ class Customer extends \Magento\Framework\App\Action\Action
         JsonFactory $resultJsonFactory,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         VendorFactory $Vendor
-        // \Magento\Catalog\Api\ProductRepositoryInterface $productRepositoryInterface,
     )
     {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->_categoryFactory = $categoryFactory;
         $this->vendor = $Vendor;
-        // $this->_productRepositoryInterface = $productRepositoryInterface;
         parent::__construct($context);
     }
 
