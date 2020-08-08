@@ -36,14 +36,14 @@ class InboxPageState extends State<InboxPage> {
                 alignment: Alignment.centerLeft,
                 child: Text('Messages', style: new TextStyle(color: Colors.white))
             ),
-            Align (
-                alignment: Alignment.centerRight,
-                child: InkWell (
-                  child: Icon(MdiIcons.dotsVertical, color: Colors.white),
-                  onTap: () {
-                  },
-                )
-            )
+//            Align (
+//                alignment: Alignment.centerRight,
+//                child: InkWell (
+//                  child: Icon(MdiIcons.dotsVertical, color: Colors.white),
+//                  onTap: () {
+//                  },
+//                )
+//            )
           ],
         ),
         iconTheme: IconThemeData(
@@ -55,13 +55,15 @@ class InboxPageState extends State<InboxPage> {
         children: [
           Expanded (
               child: StreamBuilder (
-                  stream: Firebase.getUserMessagesStream(),
+                  stream: Firebase.getUserMessagesStream(customer.id),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
                           child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))
                       );
                     } else {
+                      var x = snapshot.data.documents;
+
                       return ListView.builder(
                           shrinkWrap: true,
                           itemCount: snapshot.data.documents.length,
