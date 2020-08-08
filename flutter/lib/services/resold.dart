@@ -58,6 +58,30 @@ class Resold {
   }
 
 
+  static Future<String> getCustomerIdByProduct(int productId) async {
+    if(productId == null) {
+      return 'Please enter a product id.';
+    }
+
+    await config.initialized;
+
+    final response = await client.post(
+        '${config.baseUrl}/Product/Customer',
+        headers: config.headers,
+        body: <String, dynamic> { 'productId': productId.toString() }
+    );
+
+    if(response.statusCode == 200) {
+      // success
+      var json = jsonDecode(response.body.toString());
+      return json['customerId'];
+    } else {
+      // error
+      var json = jsonDecode(response.body.toString());
+      return json['message'];
+    }
+  }
+
   static Future<Vendor> getVendor(int vendorId) async {
 
     await config.initialized;

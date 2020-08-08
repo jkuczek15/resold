@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/view-models/product-view-model.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/widgets/creation-aware-list-item.dart';
 import 'package:resold/screens/product/view.dart';
@@ -16,7 +17,7 @@ import 'package:resold/widgets/scrollable-category-list.dart';
 class ProductListBuilder {
 
   static ChangeNotifierProvider<ProductViewModel> buildProductList(
-      BuildContext context, List<Product> products, Position currentLocation, bool showCategoryHeader) {
+      BuildContext context, List<Product> products, Position currentLocation, CustomerResponse customer, bool showCategoryHeader) {
     return ChangeNotifierProvider<ProductViewModel>(
         create: (_) => new ProductViewModel(currentLocation, products),
         child: Consumer<ProductViewModel>(
@@ -39,7 +40,7 @@ class ProductListBuilder {
                           Center(child: CircularProgressIndicator(
                               backgroundColor: const Color(0xff41b8ea)))
                               : buildProductListTile(
-                              context, currentLocation, model.items[index],
+                              context, currentLocation, model.items[index], customer,
                               index)
                       );
                     }
@@ -49,7 +50,7 @@ class ProductListBuilder {
   }
 
   static Widget buildProductListTile(BuildContext context,
-      Position currentLocation, Product product, int index) {
+      Position currentLocation, Product product, CustomerResponse customer, int index) {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return ListTile(
         title: Card(
@@ -58,7 +59,7 @@ class ProductListBuilder {
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context) =>
-                          ProductPage(product, currentLocation)));
+                          ProductPage(product, customer, currentLocation)));
                 },
                 child: Container(
                     decoration: BoxDecoration(color: Colors.white),
@@ -154,12 +155,12 @@ class ProductListBuilder {
     );
   }
 
-  static Widget buildProductGridTile(BuildContext context, Position currentLocation, Product product, int index) {
+  static Widget buildProductGridTile(BuildContext context, Position currentLocation, Product product, CustomerResponse customer, int index) {
     return Card(
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
           },
           child: FadeInImage(
               image: NetworkImage(baseProductImagePath + product.image),

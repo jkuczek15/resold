@@ -8,25 +8,29 @@ import 'package:resold/widgets/read-more-text.dart';
 import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:resold/screens/message.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
+  final CustomerResponse customer;
   final Position currentLocation;
 
-  ProductPage(Product product, Position currentLocation, {Key key}) : product = product, currentLocation = currentLocation, super(key: key);
+  ProductPage(Product product, CustomerResponse customer, Position currentLocation, {Key key}) : product = product, customer = customer, currentLocation = currentLocation, super(key: key);
 
   @override
-  ProductPageState createState() => ProductPageState(this.product, this.currentLocation);
+  ProductPageState createState() => ProductPageState(this.customer, this.product, this.currentLocation);
 }
 
 class ProductPageState extends State<ProductPage> {
 
   final Product product;
+  final CustomerResponse customer;
   final Position currentLocation;
   Future<List<String>> futureImages;
   final Map<String, Marker> markers = {};
 
-  ProductPageState(Product product, Position currentLocation) : product = product, currentLocation = currentLocation;
+  ProductPageState(CustomerResponse customer, Product product, Position currentLocation) : customer = customer, product = product, currentLocation = currentLocation;
 
   @override
   void initState() {
@@ -210,6 +214,7 @@ class ProductPageState extends State<ProductPage> {
                                             return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                           }
                                         );
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Send Offer',
@@ -239,14 +244,17 @@ class ProductPageState extends State<ProductPage> {
                                               return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                             }
                                         );
+
+                                        await
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Contact Seller',
-                                          style: new TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white
-                                          )
+                                        style: new TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white
+                                        )
                                       ),
                                       color: Colors.black,
                                       textColor: Colors.white,

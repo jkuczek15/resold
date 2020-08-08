@@ -3,6 +3,7 @@ import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/view-models/request/login-request.dart';
 import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/services/firebase.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -124,6 +125,9 @@ class LoginPageState extends State<LoginPage> {
                                       // login was successful
                                       // store to disk
                                       await CustomerResponse.save(response);
+
+                                      // create a firebase user
+                                      await Firebase.createUser(response);
 
                                       // navigate
                                       Navigator.of(context, rootNavigator: true).pop('dialog');
