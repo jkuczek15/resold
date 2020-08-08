@@ -8,7 +8,7 @@ import 'package:resold/widgets/read-more-text.dart';
 import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:resold/screens/message.dart';
+import 'package:resold/screens/messages/message.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 
 class ProductPage extends StatefulWidget {
@@ -214,7 +214,11 @@ class ProductPageState extends State<ProductPage> {
                                             return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                           }
                                         );
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product)));
+
+                                        // todo: get full customer details
+                                        var toId = await Resold.getCustomerIdByProduct(product.id);
+
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, int.tryParse(toId))));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Send Offer',
@@ -245,8 +249,10 @@ class ProductPageState extends State<ProductPage> {
                                             }
                                         );
 
-                                        await
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product)));
+                                        // todo: get full customer details
+                                        var toId = await Resold.getCustomerIdByProduct(product.id);
+
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, int.tryParse(toId))));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Contact Seller',

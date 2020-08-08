@@ -63,6 +63,7 @@ class InboxPageState extends State<InboxPage> {
                       );
                     } else {
                       return ListView.builder(
+                          shrinkWrap: true,
                           itemCount: snapshot.data.documents.length,
                           padding: EdgeInsets.all(10.0),
                           itemBuilder: (context, index) {

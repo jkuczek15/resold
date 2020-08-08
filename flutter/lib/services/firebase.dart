@@ -23,7 +23,9 @@ class Firebase {
     }// end if we need to create a new user
   }
 
-  static Future sendProductMessage(String chatId, int fromId, int toId, String content, int type) async {
+  static Future sendProductMessage(int fromId, int toId, String content, int type) async {
+
+    var chatId = fromId.toString() + '-' + toId.toString();
 
     var documentReference = Firestore.instance
         .collection('messages')

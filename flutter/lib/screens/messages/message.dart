@@ -49,45 +49,48 @@ class MessagePageState extends State<MessagePage> {
   void initState() {
     super.initState();
     focusNode.addListener(onFocusChange);
-    chatId = '';
+    chatId = customer.id.toString() + '-' + toId.toString();
     isLoading = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              // List of messages
-              StreamBuilder(
-              stream: Firebase.getProductMessagesStream(customer.id.toString() + '-' + product.id.toString()),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                      child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))
-                  );
-                } else {
-                  return ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
-                    itemCount: snapshot.data.documents.length,
-                    reverse: true,
-                  );
-                }
-              },
-          ),
-              // Input content
-              buildInput(),
+    return Scaffold (
+        appBar: AppBar(
+          title: Row (
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align (
+                  alignment: Alignment.centerLeft,
+                  child: Container (
+                    width: 260,
+                    child: Text(product.name, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))
+                  )
+              )
             ],
           ),
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
+          backgroundColor: const Color(0xff41b8ea),
+        ),
+        body: getContent()
+    );
+  }
 
-          // Loading
+  Widget getContent() {
+    return Container (
+      child: Stack (
+        children: [
+          Column (
+            children: [
+              buildListMessage(),
+              buildInput(),
+            ]
+          ),
           buildLoading()
         ],
       ),
-      onWillPop: onBackPress,
     );
   }
 
@@ -96,24 +99,12 @@ class MessagePageState extends State<MessagePage> {
     if (content.trim() != '') {
       textEditingController.clear();
 
-      await Firebase.sendProductMessage(chatId, customer.id, toId, content, type);
+      await Firebase.sendProductMessage(customer.id, toId, content, type);
 
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     }
-  }
-
-  // Hide sticker or back
-  Future<bool> onBackPress() {
-    if (isShowSticker) {
-      setState(() {
-        isShowSticker = false;
-      });
-    } else {
-      Navigator.pop(context);
-    }
-    return Future.value(false);
   }
 
   void getSticker() {
@@ -183,8 +174,8 @@ class MessagePageState extends State<MessagePage> {
             listMessage = snapshot.data.documents;
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
-              itemBuilder: (context, index) => buildItem(index, snapshot.data.documents[index]),
-              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index) => buildItem(index, listMessage[index]),
+              itemCount: listMessage.length,
               reverse: true,
               controller: listScrollController,
             );
@@ -197,7 +188,7 @@ class MessagePageState extends State<MessagePage> {
   Widget buildInput() {
     return Container(
       child: Row(
-        children: <Widget>[
+        children: [
           // Button send image
           Material(
             child: Container(
@@ -214,6 +205,7 @@ class MessagePageState extends State<MessagePage> {
           Flexible(
             child: Container(
               child: TextField(
+                autofocus: true,
                 style: TextStyle(color: Colors.black, fontSize: 15.0),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
@@ -255,11 +247,11 @@ class MessagePageState extends State<MessagePage> {
               ? Container(
             child: Text(
               document['content'],
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.white),
             ),
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
             width: 200.0,
-            decoration: BoxDecoration(color: Colors.blueGrey, borderRadius: BorderRadius.circular(8.0)),
+            decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
               : document['type'] == 1
