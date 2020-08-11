@@ -12,7 +12,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:resold/enums/message-type.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
