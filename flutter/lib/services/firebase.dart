@@ -55,7 +55,7 @@ class Firebase {
     }// end if we need to create a new inbox message
   }
 
-  static Future sendProductMessage(int fromId, int toId, Product product, String content, MessageType type) async {
+  static Future sendProductMessage(int fromId, int toId, Product product, String content, int type) async {
 
     var chatId = fromId.toString() + '-' + toId.toString() + '-' + product.id.toString();
 
@@ -76,7 +76,7 @@ class Firebase {
           'idTo': toId,
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           'content': content,
-          'type': type.index
+          'type': type
         },
       );
     });
@@ -87,7 +87,6 @@ class Firebase {
         .where(FieldPath.documentId, isGreaterThanOrEqualTo: customerId.toString())
         .where(FieldPath.documentId, isLessThan: (customerId+1).toString())
         .orderBy(FieldPath.documentId)
-//        .orderBy('lastMessageTimestamp', descending: true)
         .limit(20)
         .snapshots();
   }
