@@ -100,7 +100,7 @@ class MessagePageState extends State<MessagePage> {
     if (content.trim() != '') {
       textEditingController.clear();
 
-      await Firebase.sendProductMessage(customer.id, toId, product, content, MessageType.buyer);
+      await Firebase.sendProductMessage(customer.id, toId, product, content, type);
 
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
