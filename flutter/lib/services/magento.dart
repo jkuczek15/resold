@@ -8,11 +8,18 @@ import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/models/order.dart';
 
+/*
+* Resold Magento API service - Magento specific API client
+*/
 class Magento {
 
   static Config config = Config();
   static Client client = Client();
 
+  /*
+  * loginCustomer - Authenticates a customer against Magento service
+  * request - LoginRequest object with information to authenticate the customer
+  */
   static Future<CustomerResponse> loginCustomer(LoginRequest request) async {
     if (request.username.isEmpty || request.password.isEmpty) {
       return CustomerResponse(
@@ -45,8 +52,12 @@ class Magento {
           error: json['message']
       );
     }
-  }
+  }// end function loginCustomer
 
+  /*
+  * createCustomer - Creates a customer using Magento service
+  * request - CustomerRequest object with information to create a customer
+  */
   static Future<CustomerResponse> createCustomer(CustomerRequest request,
       String password, String confirmPassword) async {
     if (request.firstname.isEmpty || request.lastname.isEmpty) {
@@ -95,8 +106,13 @@ class Magento {
           error: responseJson['message']
       );
     }
-  }
+  }// end function createCustomer
 
+  /*
+  * getMe - Return information about the currently signed in customer
+  * token - Customer API token
+  * password - Customer password
+  */
   static Future<CustomerResponse> getMe(String token, String password) async {
     if (token.isEmpty) {
       return CustomerResponse(
@@ -141,8 +157,12 @@ class Magento {
           error: json['message']
       );
     }
-  }
+  }// end function getMe
 
+  /*
+  * getPurchasedOrders - Returns a list of orders for the customer
+  * customerId - ID of the customer
+  */
   static Future<List<Order>> getPurchasedOrders(int customerId) async {
     await config.initialized;
 
@@ -167,9 +187,13 @@ class Magento {
       var json = jsonDecode(response.body.toString());
       return [json['message']];
     }
-  }
-}
+  }// end function getPurchasedOrders
 
+}// end class Magento
+
+/*
+ * Config - Configuration class for Resold Magento specific API calls
+ */
 class Config {
   String baseUrl;
   String accessToken;
@@ -192,6 +216,7 @@ class Config {
     adminHeaders['Authorization'] = 'Bearer ${this.accessToken}';
     adminHeaders['User-Agent'] = customerHeaders['User-Agent'] = 'Resold - Mobile Application';
     adminHeaders['Content-Type'] = customerHeaders['User-Agent'] = 'application/json';
-  }
-}
+  }// end function init
+
+}// end class Config
 

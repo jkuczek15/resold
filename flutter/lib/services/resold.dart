@@ -4,11 +4,19 @@ import 'dart:convert';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 
+/*
+* Resold service - Resold specific API client
+*/
 class Resold {
 
   static Client client = Client();
   static Config config = Config();
 
+  /*
+   * getRegionId - Returns region ID for customer address
+   * regionCode - State code
+   * countryId - Country code
+   */
   static Future<String> getRegionId(String regionCode, String countryId) async {
     if(regionCode.isEmpty || countryId.isEmpty) {
       return 'Please enter both a region code and a country Id.';
@@ -31,8 +39,12 @@ class Resold {
       var json = jsonDecode(response.body.toString());
       return json['message'];
     }
-  }
+  }// end function getRegionId
 
+  /*
+   * getVendorId - Returns vendor ID for a customer
+   * customerId - ID of the signed in customer
+   */
   static Future<String> getVendorId(int customerId) async {
     if(customerId == null) {
       return 'Please enter a customer id.';
@@ -55,9 +67,12 @@ class Resold {
       var json = jsonDecode(response.body.toString());
       return json['message'];
     }
-  }
+  }// end function getVendorId
 
-
+  /*
+   * getCustomerIdByProduct - Returns customer ID given a product ID
+   * productId - ID of the product
+   */
   static Future<String> getCustomerIdByProduct(int productId) async {
     if(productId == null) {
       return 'Please enter a product id.';
@@ -80,8 +95,12 @@ class Resold {
       var json = jsonDecode(response.body.toString());
       return json['message'];
     }
-  }
+  }// end function getCustomerIdByProduct
 
+  /*
+   * getVendor - Returns vendor given a vendor ID
+   * vendorId - ID of the vendor
+   */
   static Future<Vendor> getVendor(int vendorId) async {
 
     await config.initialized;
@@ -101,8 +120,12 @@ class Resold {
       var json = jsonDecode(response.body.toString());
       return json['message'];
     }
-  }
+  }// end function getVendor
 
+  /*
+   * getProductImages - Returns product images given a product ID
+   * productId - ID of product
+   */
   static Future<List<String>> getProductImages(int productId) async {
 
     await config.initialized;
@@ -121,8 +144,13 @@ class Resold {
       var json = jsonDecode(response.body.toString());
       return [json['message']];
     }
-  }
+  }// end function getProductImages
 
+  /*
+   * getVendorProducts - Returns products listed by a specific vendor
+   * vendorId - ID of the vendor
+   * type - Either for-sale or sold products
+   */
   static Future<List<Product>> getVendorProducts(int vendorId, String type) async {
 
     await config.initialized;
@@ -146,10 +174,13 @@ class Resold {
       var json = jsonDecode(response.body.toString());
       return [json['message']];
     }
-  }
+  }// end function getVendorProducts
 
-}
+}// end class Resold
 
+/*
+ * Config - Configuration class for Resold specific API calls
+ */
 class Config {
   String baseUrl;
   Map<String, String> headers = Map<String, String>();
@@ -166,5 +197,6 @@ class Config {
 
     baseUrl = config['base_url'];
     headers['User-Agent'] = 'Resold - Mobile Application';
-  }
-}
+  }// end function init
+
+}// end class Config
