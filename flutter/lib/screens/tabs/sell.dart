@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:resold/widgets/image-uploader.dart';
 import 'package:resold/widgets/scroll-column-expandable.dart';
 import 'package:resold/widgets/scrollable-category-list.dart';
+import 'package:resold/services/resold.dart';
+import 'package:resold/models/product.dart';
 
 class SellPage extends StatefulWidget {
   SellPage({Key key}) : super(key: key);
@@ -19,13 +21,14 @@ class SellPageState extends State<SellPage> {
 
   @override
   Widget build(BuildContext context) {
+    var imageUploader = ImageUploader();
     return Padding (
       padding: EdgeInsets.all(20),
       child: ScrollColumnExpandable(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ImageUploader(),
+          imageUploader,
           SizedBox(height: 20),
           TextField(
             decoration: InputDecoration(
@@ -128,6 +131,7 @@ class SellPageState extends State<SellPage> {
                     return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                   }
                 );
+                await Resold.postProduct(Product(), imageUploader.state.imagePaths);
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },
               child: Text('Post',

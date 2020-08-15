@@ -3,6 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 /*
 * Resold service - Resold specific API client
@@ -11,6 +14,7 @@ class Resold {
 
   static Client client = Client();
   static Config config = Config();
+  static Dio dio = Dio();
 
   /*
    * getRegionId - Returns region ID for customer address
@@ -175,6 +179,58 @@ class Resold {
       return [json['message']];
     }
   }// end function getVendorProducts
+
+  /*
+   * uploadImages - Upload images from multi image picker
+   * images - List of images to upload
+   */
+  static Future<List<String>> uploadImages(List<Asset> images) async {
+
+    await config.initialized;
+
+    var imagePaths = List<String>();
+    images.forEach((asset) async {
+      var filePath = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      FormData formData = new FormData.fromMap({
+        'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)
+      });
+      var response = await dio.post('${config.baseUrl}/image/upload', data: formData);
+      if(response.statusCode == 200 && response.data['success'] == 'Y') {
+        imagePaths.add(response.data['path']);
+      }
+    });
+
+    return imagePaths;
+  }// end function uploadImages
+
+  /*
+   * Delete Image - Delete an uploaded image
+   * imagePath - Server image path to delete
+   */
+  static Future deleteImage(String imagePath) async {
+    await config.initialized;
+    FormData formData = new FormData.fromMap({
+      'qquuid': imagePath
+    });
+    await dio.post('${config.baseUrl}/image/delete', data: formData);
+  }// end function uploadImages
+
+  /*
+   * postProduct - Post a product
+   * product - Product to post
+   * imagePaths - List of image paths
+   */
+  static Future postProduct(Product product, List<String> imagePaths) async {
+
+    await config.initialized;
+
+    FormData formData = new FormData.fromMap({
+    });
+
+    var response = await dio.post('${config.baseUrl}/product', data: formData);
+
+    var x = response;
+  }// end function uploadImages
 
 }// end class Resold
 
