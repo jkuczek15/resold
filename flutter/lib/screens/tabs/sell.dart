@@ -6,18 +6,24 @@ import 'package:resold/widgets/scroll-column-expandable.dart';
 import 'package:resold/widgets/scrollable-category-list.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/view-models/response/customer-response.dart';
 
 class SellPage extends StatefulWidget {
-  SellPage({Key key}) : super(key: key);
+  final CustomerResponse customer;
+
+  SellPage(CustomerResponse customer, {Key key}) : customer = customer, super(key: key);
 
   @override
-  SellPageState createState() => SellPageState();
+  SellPageState createState() => SellPageState(customer);
 }
 
 class SellPageState extends State<SellPage> {
 
+  final CustomerResponse customer;
   final List<bool> localGlobalSelected = [false, false];
   String condition;
+
+  SellPageState(CustomerResponse customer) : customer = customer;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +137,8 @@ class SellPageState extends State<SellPage> {
                     return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                   }
                 );
-                await Resold.postProduct(Product(), imageUploader.state.imagePaths);
+                var product = Product();
+                await Resold.postProduct(customer.token, product, imageUploader.state.imagePaths);
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },
               child: Text('Post',
