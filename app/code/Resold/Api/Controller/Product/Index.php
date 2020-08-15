@@ -63,6 +63,7 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
         \Magento\Catalog\Helper\Image $_image,
+        \Magento\Authorization\Model\CompositeUserContext $userContext,
         DirectoryList $directoryList,
         File $file
     )
@@ -86,6 +87,7 @@ class Index extends \Magento\Framework\App\Action\Action
         ]);
         $this->directoryList = $directoryList;
         $this->file = $file;
+        $this->userContext = $userContext;
         parent::__construct($context);
     }
 
@@ -101,7 +103,8 @@ class Index extends \Magento\Framework\App\Action\Action
       // REQUEST AND USER VALIDATON
       ###################################
       // Ensure user is logged in
-      if (!$this->session->isLoggedIn()) {
+      $mobileCustomerId = $this->userContext->getUserId();
+      if (!$this->session->isLoggedIn() && $mobileCustomerId == null) {
         return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
       }// end if user not logged in
 
