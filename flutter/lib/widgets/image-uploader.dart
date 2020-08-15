@@ -4,17 +4,27 @@ import 'dart:io';
 import 'dart:async';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:resold/services/resold.dart';
 
 class ImageUploader extends StatefulWidget {
+
+  ImageUploaderState state;
+
+  getImagePaths() {
+    return state.imagePaths;
+  }
+
   @override
   ImageUploaderState createState() {
-    return ImageUploaderState();
+    state = ImageUploaderState();
+    return state;
   }
 }
 
 class ImageUploaderState extends State<ImageUploader> {
 
   List<Object> images = List<Object>();
+  List<String> imagePaths = List<String>();
   Future<File> imageFile;
   String error = 'No Error Dectected';
   Future<bool> hasMediaAccess;
@@ -85,7 +95,8 @@ class ImageUploaderState extends State<ImageUploader> {
                       size: 20,
                       color: Colors.red,
                     ),
-                    onTap: () {
+                    onTap: () async {
+                      await Resold.deleteImage(imagePaths[index]);
                       setState(() {
                         images.removeAt(index);
                       });
@@ -131,6 +142,9 @@ class ImageUploaderState extends State<ImageUploader> {
 
     result.addAll(resultList);
     result.add("add-button");
+
+    // upload the images to the server
+    imagePaths = await Resold.uploadImages(resultList);
 
     setState(() {
       images = result;
