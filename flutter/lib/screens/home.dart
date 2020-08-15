@@ -99,7 +99,7 @@ class HomePageState extends State<HomePage> {
     switch(selectedTab) {
       case 0: return BrowsePage(customer);
       case 1: return SearchPage(customer);
-      case 2: return SellPage();
+      case 2: return SellPage(customer);
       case 3: return OrdersPage(customer);
       case 4: return AccountPage(customer);
       default: return Text('Unknown tab');

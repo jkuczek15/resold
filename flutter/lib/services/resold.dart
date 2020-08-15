@@ -220,13 +220,14 @@ class Resold {
    * product - Product to post
    * imagePaths - List of image paths
    */
-  static Future postProduct(Product product, List<String> imagePaths) async {
+  static Future postProduct(String token, Product product, List<String> imagePaths) async {
 
     await config.initialized;
 
     FormData formData = new FormData.fromMap({
     });
 
+    dio.options.headers['Authorization'] = 'Bearer ${token}';
     var response = await dio.post('${config.baseUrl}/product', data: formData);
 
     var x = response;
