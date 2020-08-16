@@ -18,6 +18,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Resold\Api\Api\ProductManagementInterface" type="Resold\Api\Model\ProductManagement"/>
   <preference for="Magento\Config\Model\Config" type="Ced\CsMarketplace\Model\Adminhtml\Config\Data" />
   <preference for="Magento\Store\Model\Store" type="Ced\CsMarketplace\Model\Core\Store" />
   <preference for="Magento\Config\Model\Config\SchemaLocator" type="Ced\CsMarketplace\Model\Config\SchemaLocator" />
