@@ -22,11 +22,19 @@ class ProductManagement
    */
    public function __construct(
     \Magento\Authorization\Model\UserContextInterface $userContext,
-    \Ced\CsMarketplace\Model\VendorFactory $Vendor
+    \Ced\CsMarketplace\Model\VendorFactory $Vendor,
+    \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+    \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
+    \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+    \Magento\Framework\Event\ManagerInterface $eventManager
   )
   {
       $this->userContext = $userContext;
       $this->vendor = $Vendor;
+      $this->_transportBuilder = $transportBuilder;
+      $this->inlineTranslation = $inlineTranslation;
+      $this->_customerRepositoryInterface = $customerRepositoryInterface;
+      $this->_eventManager = $eventManager;
   }
 
 	/**
@@ -48,8 +56,6 @@ class ProductManagement
     ####################################
     // FORM VALIDATION
     ###################################
-    $local_id = '231';
-
     // determine whether we need to skip price validation
     if(!is_numeric($price) || $price < 5){
       return ['error' => 'Price must be an integer greater than 5.'];
@@ -102,17 +108,84 @@ class ProductManagement
     $_product->setWebsiteIds(array(1));
     $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
     $_product->setCustomAttribute('condition', $condition);
-    $_product->setCustomAttribute('local_global', $localGlobal);
+    $_product->setCustomAttribute('local_global', implode($localGlobal, ','));
     $_product->setCustomAttribute('latitude', $latitude);
     $_product->setCustomAttribute('longitude', $longitude);
+    $_product->setCustomAttribute('location', $latitude.','.$longitude);
+
+    // tempory location for product images
+    $mediaDir = '/var/www/html/pub/media';
+
+    // loop over all temporary images uploaded for this product
+    foreach($imagePaths as $count => $imagePath)
+    {
+      // image will be given a new path once linked to the product
+      $path = $mediaDir.$imagePath;
+      if(strpos($path, "/tmp") !== FALSE || strpos($path, "/craigslist") !== FALSE)
+      {
+        if(file_exists($path))
+        {
+          $_product->addImageToMediaGallery($path, null, false, false);
+          unlink($path);
+        }// end if file exists
+      }// end if uploading a new file
+    }// end foreach loop over image paths
+
+    // save the product to the database
+    $_product->save();
 
     // load the vendor
     $vendorModel = $this->vendor->create();
     $vendor = $vendorModel->loadByCustomerId($customerId);
     $vendorId = $vendor->getId();
 
-    var_dump($vendorId);
-    exit;
-		return 'api POST return the $param ' . $param . ' with customer id: ' . $customerId;
+    $standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
+    $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
+
+    if(count($stripe_model) == 0){
+      // check to see if connected to stripe
+      // the user hasn't connected to stripe yet
+      $customer = $this->_customerRepositoryInterface->getById($customerId);
+
+      try {
+        // send an email to the user letting them know they need to connect to stripe
+        $this->inlineTranslation->suspend();
+        // send the customer an email telling them to connect with stripe
+        $sender = [
+          'name' => 'Resold',
+          'email' => 'support@resold.us'
+        ];
+
+        $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+        $transport = $this->_transportBuilder
+          ->setTemplateIdentifier('connect_to_stripe_template') // this code we have mentioned in the email_templates.xml
+          ->setTemplateOptions([
+            'area' => \Magento\Framework\App\Area::AREA_FRONTEND, // this is using frontend area to get the template file
+            'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
+        ])
+        ->setTemplateVars(['host' => $_SERVER['HTTP_HOST'], 'name' => $customer->getName() ])
+        ->setFrom($sender)
+        ->addTo($customer->getEmail())
+        ->getTransport();
+
+        $transport->sendMessage();
+        $this->inlineTranslation->resume();
+      }
+      catch(\Exception $e)
+      {
+        $this->inlineTranslation->resume();
+      }// end try catch
+    }// end if user hasn't connected to Stripe
+
+    // creating a new product and linking it to the seller
+    // save a vendor product with the seller
+    $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);
+    $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE);
+    $this->_eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
+      'product' => $_product,
+      'vendor_id' => $vendorId
+    ]);
+
+    return ['success' => 'Y', 'productId' => $_product->getId()];
 	}
 }
