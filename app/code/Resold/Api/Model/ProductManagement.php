@@ -34,7 +34,7 @@ class ProductManagement
 	/**
 	 * {@inheritdoc}
 	 */
-	public function createProduct($post)
+  public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude)
 	{
     $customerId = $this->userContext->getUserId();
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -46,36 +46,15 @@ class ProductManagement
     if (!$this->session->isLoggedIn()) {
       return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
     }// end if user not logged in
-    
+
     if ($customerId == null) {
       return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
     }// end if user not logged in
-
-    // Ensure POST request
-    if(empty($post)){
-      return $this->resultJsonFactory->create()->setData(['error' => 'You have sent an unsupported request type.']);
-    }// end if post array empty
 
     ####################################
     // FORM VALIDATION
     ###################################
     $local_id = '231';
-    $required =  ['local_global',
-                  'name',
-                  'details',
-                  'price',
-                  'topcategory',
-                  'condition'];
-
-    // check required fields
-    foreach($required as $require){
-      if(!isset($post[$require]) || $post[$require] == null || (!is_array($post[$require]) && trim($post[$require]) == null) || (is_array($post[$require]) && count($post[$require]) == 0)){
-        return $this->resultJsonFactory->create()->setData(['error' => 'Missing one or more required fields.']);
-      }// end if field is not set
-    }// end foreach over required fields
-
-    // price validation
-    $price = $post['price'];
 
     // determine whether we need to skip price validation
     if(!is_numeric($price) || $price < 5){
@@ -83,17 +62,13 @@ class ProductManagement
     }// end if invalid price
 
     // location validation
-    $local_global = implode(',', $post['local_global']);
-    if(!isset($post['latitude']) || !isset($post['longitude']) || !is_numeric($post['latitude']) || !is_numeric($post['longitude'])){
+    if(!is_numeric($latitude) || !is_numeric($longitude)){
       return $this->resultJsonFactory->create()->setData(['error' => 'Invalid location.']);
     }// end if latitude longitude not set
 
     // image validation
-    $image_paths = $post['image_paths'];
-    if($image_paths == ''){
+    if($imagePaths == ''){
       return $this->resultJsonFactory->create()->setData(['error' => 'At least one image is required.']);
-    }else{
-      $image_paths = explode(',', $image_paths);
     }// end if no images uploaded
 
     ####################################
@@ -103,7 +78,7 @@ class ProductManagement
     $all_category_id = 105;
 
     // Clean up the title and title description
-    $post['name'] = ucwords(strtolower($post['name']));
+    $name = ucwords(strtolower($name));
 
     // Set our time zone to Chicago
     date_default_timezone_set('America/Chicago');
@@ -120,19 +95,19 @@ class ProductManagement
       $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
     }// end if creating a product
 
-    $_product->setName($post['name']);
+    $_product->setName($name);
     $_product->setTypeId('simple');
     $_product->setStoreId(1);
     $_product->setAttributeSetId(4);
     $_product->setVisibility(4);
-    $_product->setPrice($post['price']);
-    $_product->setDescription(nl2br($post['description']));
-    $_product->setCategoryIds([$post['topcategory'], $all_category_id]);
+    $_product->setPrice($price);
+    $_product->setDescription(nl2br($details));
+    $_product->setCategoryIds([$topCategory, $all_category_id]);
     $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
     $_product->setWebsiteIds(array(1));
     $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
-    $_product->setCustomAttribute('condition', $post['condition']);
-    $_product->setCustomAttribute('local_global', $local_global);
+    $_product->setCustomAttribute('condition', $condition);
+    $_product->setCustomAttribute('local_global', $localGlobal);
 
     $vendorId = $this->session->getVendorId();
 
