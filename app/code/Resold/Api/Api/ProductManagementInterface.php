@@ -20,8 +20,16 @@ interface ProductManagementInterface
 	/**
 	 * Create a product
 	 *
-	 * @param object $post
+	 * @param string $name
+ 	 * @param double $price
+ 	 * @param int $topCategory
+ 	 * @param int $condition
+	 * @param string $details
+	 * @param int[] $localGlobal
+	 * @param string[] $imagePaths
+	 * @param double $latitude
+ 	 * @param double $longitude
 	 * @return string
 	 */
-	public function createProduct($post);
+	public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude);
 }
