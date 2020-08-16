@@ -3,7 +3,7 @@
     <route url="/V1/resold/product" method="POST">
         <service class="Resold\Api\Api\ProductManagementInterface" method="createProduct"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="self"/>
         </resources>
     </route>
 </routes>
