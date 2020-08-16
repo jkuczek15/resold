@@ -20,8 +20,8 @@ interface ProductManagementInterface
 	/**
 	 * Create a product
 	 *
-	 * @param string $param
+	 * @param object $post
 	 * @return string
 	 */
-	public function createProduct($param);
+	public function createProduct($post);
 }
