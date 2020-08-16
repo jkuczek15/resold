@@ -22,13 +22,11 @@ class ProductManagement
    */
    public function __construct(
     \Magento\Authorization\Model\UserContextInterface $userContext,
-    \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
-    \Magento\Customer\Model\Session $customerSession
+    \Ced\CsMarketplace\Model\VendorFactory $Vendor
   )
   {
-      $this->session = $customerSession;
       $this->userContext = $userContext;
-      $this->resultJsonFactory = $resultJsonFactory;
+      $this->vendor = $Vendor;
   }
 
 	/**
@@ -43,12 +41,8 @@ class ProductManagement
     // REQUEST AND USER VALIDATON
     ###################################
     // Ensure user is logged in
-    if (!$this->session->isLoggedIn()) {
-      return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
-    }// end if user not logged in
-
     if ($customerId == null) {
-      return $this->resultJsonFactory->create()->setData(['error' => 'You must be logged in to sell items.']);
+      return ['error' => 'You must be logged in to sell items.'];
     }// end if user not logged in
 
     ####################################
@@ -58,17 +52,17 @@ class ProductManagement
 
     // determine whether we need to skip price validation
     if(!is_numeric($price) || $price < 5){
-      return $this->resultJsonFactory->create()->setData(['error' => 'Price must be an integer greater than 5.']);
+      return ['error' => 'Price must be an integer greater than 5.'];
     }// end if invalid price
 
     // location validation
     if(!is_numeric($latitude) || !is_numeric($longitude)){
-      return $this->resultJsonFactory->create()->setData(['error' => 'Invalid location.']);
+      return ['error' => 'Invalid location.'];
     }// end if latitude longitude not set
 
     // image validation
     if($imagePaths == ''){
-      return $this->resultJsonFactory->create()->setData(['error' => 'At least one image is required.']);
+      return ['error' => 'At least one image is required.'];
     }// end if no images uploaded
 
     ####################################
@@ -95,6 +89,7 @@ class ProductManagement
       $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
     }// end if creating a product
 
+    // set product attributes
     $_product->setName($name);
     $_product->setTypeId('simple');
     $_product->setStoreId(1);
@@ -108,10 +103,14 @@ class ProductManagement
     $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
     $_product->setCustomAttribute('condition', $condition);
     $_product->setCustomAttribute('local_global', $localGlobal);
+    $_product->setCustomAttribute('latitude', $latitude);
+    $_product->setCustomAttribute('longitude', $longitude);
 
-    $vendorId = $this->session->getVendorId();
+    // load the vendor
+    $vendorModel = $this->vendor->create();
+    $vendor = $vendorModel->loadByCustomerId($customerId);
+    $vendorId = $vendor->getId();
 
-    var_dump($post);
     var_dump($vendorId);
     exit;
 		return 'api POST return the $param ' . $param . ' with customer id: ' . $customerId;
