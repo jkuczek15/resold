@@ -32,7 +32,7 @@ class ProductManagement
 	 */
 	public function createProduct($param)
 	{
-    $mobileCustomerId = $this->userContext->getUserId();
-		return 'api POST return the $param ' . $param . ' with customer id: ' . $mobileCustomerId;
+    $customerId = $this->userContext->getUserId();
+		return 'api POST return the $param ' . $param . ' with customer id: ' . $customerId;
 	}
 }
