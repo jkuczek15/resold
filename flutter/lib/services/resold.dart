@@ -190,7 +190,8 @@ class Resold {
     await config.initialized;
 
     var imagePaths = List<String>();
-    images.forEach((asset) async {
+
+    await Future.forEach(images, (asset) async {
       var filePath = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
       FormData formData = new FormData.fromMap({
         'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)
@@ -198,9 +199,6 @@ class Resold {
 
       // upload the image
       var response = await dio.post('${config.baseUrl}/image/upload', data: formData);
-
-      // sleep for a few seconds
-      await new Future.delayed(const Duration(seconds: 2));
 
       if(response.statusCode == 200 && response.data['success'] == 'Y') {
         imagePaths.add(response.data['path']);
