@@ -10,6 +10,7 @@ import 'package:resold/models/order.dart';
 
 /*
 * Resold Magento API service - Magento specific API client
+* This service is used to make Magento REST requests
 */
 class Magento {
 
