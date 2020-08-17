@@ -108,7 +108,7 @@ class ProductManagement
     $_product->setWebsiteIds(array(1));
     $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
     $_product->setCustomAttribute('condition', $condition);
-    $_product->setCustomAttribute('local_global', implode($localGlobal, ','));
+    $_product->setCustomAttribute('local_global', $localGlobal);
     $_product->setCustomAttribute('latitude', $latitude);
     $_product->setCustomAttribute('longitude', $longitude);
     $_product->setCustomAttribute('location', $latitude.','.$longitude);
