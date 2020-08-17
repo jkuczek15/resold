@@ -3,12 +3,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class ScrollableCategoryList extends StatefulWidget {
 
-  final ScrollableCategoryListState state = ScrollableCategoryListState();
+  final ScrollableCategoryListState state = new ScrollableCategoryListState();
+
+  ScrollableCategoryList({Key key}) : super(key: key);
 
   @override
-  ScrollableCategoryListState createState() {
-    return state;
-  }
+  ScrollableCategoryListState createState() => state;
 }
 
 class ScrollableCategoryListState extends State<ScrollableCategoryList> {

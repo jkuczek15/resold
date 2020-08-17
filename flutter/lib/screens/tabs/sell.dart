@@ -25,6 +25,10 @@ class SellPageState extends State<SellPage> {
   Position currentLocation;
   String condition;
 
+  // widget keys
+  final imageUploaderKey = new GlobalKey<ImageUploaderState>();
+  final scrollableCategoryKey = new GlobalKey<ScrollableCategoryListState>();
+
   // field controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -46,8 +50,8 @@ class SellPageState extends State<SellPage> {
 
   @override
   Widget build(BuildContext context) {
-    var imageUploader = ImageUploader();
-    var scrollAbleCategoryList = ScrollableCategoryList();
+    var imageUploader = ImageUploader(key: imageUploaderKey);
+    var scrollableCategoryList = ScrollableCategoryList(key: scrollableCategoryKey);
     return Padding (
       padding: EdgeInsets.all(20),
       child: ScrollColumnExpandable(
@@ -64,7 +68,7 @@ class SellPageState extends State<SellPage> {
             ),
           ),
           SizedBox(height: 20),
-          scrollAbleCategoryList,
+          scrollableCategoryList,
           SizedBox(height: 20),
           Row (
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,11 +170,11 @@ class SellPageState extends State<SellPage> {
                   description: detailsController.text,
                   condition: getConditionValue(condition).toString(),
                   localGlobal: getLocalGlobalValue(),
-                  categoryIds: [getSelectedCategory(scrollAbleCategoryList.state.categorySelected)],
+                  categoryIds: [getSelectedCategory(scrollableCategoryKey.currentState.categorySelected)],
                   latitude: currentLocation.latitude,
                   longitude: currentLocation.longitude
                 );
-                await ResoldRest.postProduct(customer.token, product, imageUploader.state.imagePaths);
+                await ResoldRest.postProduct(customer.token, product, imageUploaderKey.currentState.imagePaths);
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },
               child: Text('Post',

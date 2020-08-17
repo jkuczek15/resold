@@ -8,12 +8,12 @@ import 'package:resold/services/resold.dart';
 
 class ImageUploader extends StatefulWidget {
 
-  final ImageUploaderState state = ImageUploaderState();
+  final ImageUploaderState state = new ImageUploaderState();
+
+  ImageUploader({Key key}) : super(key: key);
 
   @override
-  ImageUploaderState createState() {
-    return state;
-  }
+  ImageUploaderState createState() => state;
 }
 
 class ImageUploaderState extends State<ImageUploader> {
@@ -139,10 +139,11 @@ class ImageUploaderState extends State<ImageUploader> {
     result.add("add-button");
 
     // upload the images to the server
-    imagePaths = await Resold.uploadImages(resultList);
+    var paths = await Resold.uploadImages(resultList);
 
     setState(() {
       images = result;
+      imagePaths = paths;
       error = error;
     });
   }
