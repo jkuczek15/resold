@@ -117,6 +117,20 @@ class ProductManagement
 
     // tempory location for product images
     $mediaDir = '/var/www/html/pub/media';
+    $image_types = ['image', 'small_image', 'thumbnail'];
+
+    // create the base/primary image
+    $primary_path = $mediaDir.$imagePaths[0];
+    if(strpos($primary_path, "/tmp") !== FALSE || strpos($primary_path, "/craigslist") !== FALSE)
+    {
+      if(file_exists($primary_path))
+      {
+        // uploading a new file
+        $_product->addImageToMediaGallery($primary_path, $image_types, false, false);
+        unset($imagePaths[0]);
+        unlink($primary_path);
+      }// end if file exists
+    }// end if uploading a new file
 
     // loop over all temporary images uploaded for this product
     foreach($imagePaths as $count => $imagePath)
