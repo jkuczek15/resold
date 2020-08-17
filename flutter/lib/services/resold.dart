@@ -194,7 +194,13 @@ class Resold {
       FormData formData = new FormData.fromMap({
         'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)
       });
+
+      // upload the image
       var response = await dio.post('${config.baseUrl}/image/upload', data: formData);
+
+      // sleep for a few seconds
+      await new Future.delayed(const Duration(seconds: 2));
+
       if(response.statusCode == 200 && response.data['success'] == 'Y') {
         imagePaths.add(response.data['path']);
       }
@@ -213,24 +219,6 @@ class Resold {
       'qquuid': imagePath
     });
     await dio.post('${config.baseUrl}/image/delete', data: formData);
-  }// end function uploadImages
-
-  /*
-   * postProduct - Post a product
-   * product - Product to post
-   * imagePaths - List of image paths
-   */
-  static Future postProduct(String token, Product product, List<String> imagePaths) async {
-
-    await config.initialized;
-
-    FormData formData = new FormData.fromMap({
-    });
-
-    dio.options.headers['Authorization'] = 'Bearer ${token}';
-    var response = await dio.post('${config.baseUrl}/product', data: formData);
-
-    var x = response;
   }// end function uploadImages
 
 }// end class Resold

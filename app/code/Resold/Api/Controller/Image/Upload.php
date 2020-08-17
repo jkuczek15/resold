@@ -79,6 +79,7 @@ class Upload extends \Magento\Framework\App\Action\Action
             break;
         }// end switch on type
 
+        $tmpPathExt = '';
         if($tmpPath != '')
         {
             // temporary path with extension for image

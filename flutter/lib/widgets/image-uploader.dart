@@ -8,15 +8,10 @@ import 'package:resold/services/resold.dart';
 
 class ImageUploader extends StatefulWidget {
 
-  ImageUploaderState state;
-
-  getImagePaths() {
-    return state.imagePaths;
-  }
+  final ImageUploaderState state = ImageUploaderState();
 
   @override
   ImageUploaderState createState() {
-    state = ImageUploaderState();
     return state;
   }
 }
