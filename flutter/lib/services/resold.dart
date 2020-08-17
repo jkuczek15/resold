@@ -9,6 +9,7 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 /*
 * Resold service - Resold specific API client
+* This service is used to make anonymous resold requests
 */
 class Resold {
 

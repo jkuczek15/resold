@@ -6,6 +6,7 @@ import 'package:resold/enums/message-type.dart';
 
 /*
 * Resold Firebase API service - Firebase specific API client
+* This service is used to make real-time requests
 */
 class Firebase {
 

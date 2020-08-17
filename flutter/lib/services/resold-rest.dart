@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 /*
 * Resold service - Resold Rest specific API client
+* This service is used to make authenticated resold requests
 */
 class ResoldRest {
 
