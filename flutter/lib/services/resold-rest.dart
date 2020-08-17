@@ -17,7 +17,7 @@ class ResoldRest {
    * product - Product to post
    * imagePaths - List of image paths
    */
-  static Future postProduct(String token, Product product, List<String> imagePaths) async {
+  static Future<String> postProduct(String token, Product product, List<String> imagePaths) async {
 
     await config.initialized;
 
@@ -35,8 +35,6 @@ class ResoldRest {
 
     dio.options.headers['Authorization'] = 'Bearer ${token}';
     var response = await dio.post('${config.baseUrl}/product', data: formData);
-
-    var x = response;
 
     if(response.data.length > 1) {
       return response.data[1];

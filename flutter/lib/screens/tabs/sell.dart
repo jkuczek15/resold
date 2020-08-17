@@ -7,6 +7,7 @@ import 'package:resold/widgets/scrollable-category-list.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/screens/product/view.dart';
 import 'package:geolocator/geolocator.dart';
 
 class SellPage extends StatefulWidget {
@@ -174,8 +175,10 @@ class SellPageState extends State<SellPage> {
                   latitude: currentLocation.latitude,
                   longitude: currentLocation.longitude
                 );
-                await ResoldRest.postProduct(customer.token, product, imageUploaderKey.currentState.imagePaths);
+                var response = await ResoldRest.postProduct(customer.token, product, imageUploaderKey.currentState.imagePaths);
+                product.id = int.tryParse(response);
                 Navigator.of(context, rootNavigator: true).pop('dialog');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
               },
               child: Text('Post',
                 style: new TextStyle(

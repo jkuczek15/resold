@@ -91,7 +91,15 @@ class ImageUploaderState extends State<ImageUploader> {
                       color: Colors.red,
                     ),
                     onTap: () async {
+                      // show a loading indicator
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                          }
+                      );
                       await Resold.deleteImage(imagePaths[index]);
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
                       setState(() {
                         images.removeAt(index);
                       });
@@ -138,8 +146,18 @@ class ImageUploaderState extends State<ImageUploader> {
     result.addAll(resultList);
     result.add("add-button");
 
+    // show a loading indicator
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+        }
+    );
+
     // upload the images to the server
     var paths = await Resold.uploadImages(resultList);
+
+    Navigator.of(context, rootNavigator: true).pop('dialog');
 
     setState(() {
       images = result;

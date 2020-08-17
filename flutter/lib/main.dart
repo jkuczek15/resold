@@ -12,7 +12,7 @@ Future<void> main() async {
   await Firebase.configure();
 
   // clear from disk
-  await CustomerResponse.clear();
+//  await CustomerResponse.clear();
 
   // get from disk
   CustomerResponse customer = await CustomerResponse.load();
