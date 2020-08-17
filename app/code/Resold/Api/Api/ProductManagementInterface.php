@@ -25,7 +25,7 @@ interface ProductManagementInterface
  	 * @param int $topCategory
  	 * @param int $condition
 	 * @param string $details
-	 * @param int[] $localGlobal
+	 * @param string $localGlobal
 	 * @param string[] $imagePaths
 	 * @param double $latitude
  	 * @param double $longitude

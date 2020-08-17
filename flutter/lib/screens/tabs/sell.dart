@@ -11,20 +11,18 @@ import 'package:geolocator/geolocator.dart';
 
 class SellPage extends StatefulWidget {
   final CustomerResponse customer;
-  final Position currentLocation;
 
-  SellPage(CustomerResponse customer, Position currentLocation, {Key key}) : customer = customer, currentLocation = currentLocation, super(key: key);
+  SellPage(CustomerResponse customer, {Key key}) : customer = customer, super(key: key);
 
   @override
-  SellPageState createState() => SellPageState(customer, currentLocation);
+  SellPageState createState() => SellPageState(customer);
 }
 
 class SellPageState extends State<SellPage> {
 
   final CustomerResponse customer;
-  final Position currentLocation;
   final List<bool> localGlobalSelected = [false, false];
-
+  Position currentLocation;
   String condition;
 
   // field controllers
@@ -32,7 +30,19 @@ class SellPageState extends State<SellPage> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController detailsController = TextEditingController();
 
-  SellPageState(CustomerResponse customer, Position currentLocation) : customer = customer, currentLocation = currentLocation;
+  SellPageState(CustomerResponse customer) : customer = customer;
+
+  @override
+  void initState() {
+    super.initState();
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
+      if(this.mounted) {
+        setState(() {
+          currentLocation = location;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

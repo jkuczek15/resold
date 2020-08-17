@@ -29,7 +29,7 @@ class ResoldRest {
       'localGlobal': product.localGlobal,
       'latitude': product.latitude,
       'longitude': product.longitude,
-      'imagePaths': imagePaths,
+      'imagePaths': imagePaths
     });
 
     dio.options.headers['Authorization'] = 'Bearer ${token}';

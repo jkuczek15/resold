@@ -43,7 +43,6 @@ class Home extends StatelessWidget {
 class HomePageState extends State<HomePage> {
 
   int selectedTab = 0;
-  Position currentLocation;
   final CustomerResponse customer;
 
   HomePageState(this.customer);
@@ -99,7 +98,7 @@ class HomePageState extends State<HomePage> {
     switch(selectedTab) {
       case 0: return BrowsePage(customer);
       case 1: return SearchPage(customer);
-      case 2: return SellPage(customer, currentLocation);
+      case 2: return SellPage(customer);
       case 3: return OrdersPage(customer);
       case 4: return AccountPage(customer);
       default: return Text('Unknown tab');
