@@ -4,30 +4,40 @@ import 'package:flutter/rendering.dart';
 import 'package:resold/widgets/image-uploader.dart';
 import 'package:resold/widgets/scroll-column-expandable.dart';
 import 'package:resold/widgets/scrollable-category-list.dart';
-import 'package:resold/services/resold.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/view-models/response/customer-response.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SellPage extends StatefulWidget {
   final CustomerResponse customer;
+  final Position currentLocation;
 
-  SellPage(CustomerResponse customer, {Key key}) : customer = customer, super(key: key);
+  SellPage(CustomerResponse customer, Position currentLocation, {Key key}) : customer = customer, currentLocation = currentLocation, super(key: key);
 
   @override
-  SellPageState createState() => SellPageState(customer);
+  SellPageState createState() => SellPageState(customer, currentLocation);
 }
 
 class SellPageState extends State<SellPage> {
 
   final CustomerResponse customer;
+  final Position currentLocation;
   final List<bool> localGlobalSelected = [false, false];
+
   String condition;
 
-  SellPageState(CustomerResponse customer) : customer = customer;
+  // field controllers
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController detailsController = TextEditingController();
+
+  SellPageState(CustomerResponse customer, Position currentLocation) : customer = customer, currentLocation = currentLocation;
 
   @override
   Widget build(BuildContext context) {
     var imageUploader = ImageUploader();
+    var scrollAbleCategoryList = ScrollableCategoryList();
     return Padding (
       padding: EdgeInsets.all(20),
       child: ScrollColumnExpandable(
@@ -37,13 +47,14 @@ class SellPageState extends State<SellPage> {
           imageUploader,
           SizedBox(height: 20),
           TextField(
+            controller: nameController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Listing Title'
             ),
           ),
           SizedBox(height: 20),
-          ScrollableCategoryList(),
+          scrollAbleCategoryList,
           SizedBox(height: 20),
           Row (
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,6 +62,7 @@ class SellPageState extends State<SellPage> {
               Container (
                   width: 100,
                   child: TextField(
+                    controller: priceController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -113,6 +125,7 @@ class SellPageState extends State<SellPage> {
           ),
           SizedBox(height: 20),
           TextField(
+            controller: detailsController,
             maxLines: null,
             minLines: null,
             keyboardType: TextInputType.multiline,
@@ -137,8 +150,17 @@ class SellPageState extends State<SellPage> {
                     return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                   }
                 );
-                var product = Product();
-                await Resold.postProduct(customer.token, product, imageUploader.state.imagePaths);
+                var product = Product(
+                  name: nameController.text,
+                  price: priceController.text,
+                  description: detailsController.text,
+                  condition: getConditionValue(condition).toString(),
+                  localGlobal: getLocalGlobalValue(),
+                  categoryIds: [getSelectedCategory(scrollAbleCategoryList.state.categorySelected)],
+                  latitude: currentLocation.latitude,
+                  longitude: currentLocation.longitude
+                );
+                await ResoldRest.postProduct(customer.token, product, imageUploader.state.imagePaths);
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },
               child: Text('Post',
@@ -155,5 +177,77 @@ class SellPageState extends State<SellPage> {
       ]
       )
     );
+  }
+
+  int getConditionValue(String text) {
+    switch(text) {
+      case 'New':
+        return 235;
+      case 'Like New':
+        return 236;
+      case 'Good':
+        return 237;
+      case 'Used':
+        return 238;
+      default:
+        return 235;
+    }
+  }
+
+  String getLocalGlobalValue() {
+    var localGlobal = '';
+    if(localGlobalSelected[0]) {
+      localGlobal += '232';
+      if(localGlobalSelected[1]) {
+        localGlobal += ',';
+      }
+    }
+    if(localGlobalSelected[1]) {
+      localGlobal += '231';
+    }
+    return localGlobal;
+  }
+
+  int getSelectedCategory(List<bool> categorySelected) {
+    int selectedIndex = 0;
+    for(var i = 0; i < categorySelected.length; i++) {
+      var selected = categorySelected[i];
+      if(selected) {
+        selectedIndex = i;
+      }
+    }
+    return getSelectedCategoryId(selectedIndex);
+  }
+
+  int getSelectedCategoryId(int index) {
+    switch(index) {
+      case 0:
+        // Electronics
+        return 42;
+      case 1:
+        // Fashion
+        return 93;
+      case 2:
+        // Home and Lawn
+        return 100;
+      case 3:
+        // Outdoors
+        return 101;
+      case 4:
+        // Sporting goods
+        return 102;
+      case 5:
+        // Music
+        return 103;
+      case 6:
+        // Collectibles
+        return 104;
+      case 7:
+        // Handmade
+        return 105;
+      default:
+        // Electronics
+        return 42;
+    }
   }
 }
