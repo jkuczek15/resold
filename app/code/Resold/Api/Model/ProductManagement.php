@@ -26,9 +26,11 @@ class ProductManagement
     \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
     \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
     \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+    \Magento\Customer\Model\Session $customerSession,
     \Magento\Framework\Event\ManagerInterface $eventManager
   )
   {
+      $this->session = $customerSession;
       $this->userContext = $userContext;
       $this->vendor = $Vendor;
       $this->_transportBuilder = $transportBuilder;
@@ -138,6 +140,7 @@ class ProductManagement
     $vendorModel = $this->vendor->create();
     $vendor = $vendorModel->loadByCustomerId($customerId);
     $vendorId = $vendor->getId();
+    $this->session->setVendorId($vendorId);
 
     $standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
     $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
