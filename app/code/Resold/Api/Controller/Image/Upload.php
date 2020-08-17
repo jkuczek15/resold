@@ -105,7 +105,6 @@ class Upload extends \Magento\Framework\App\Action\Action
           // move the uploaded image to the media directory
           move_uploaded_file($tmpPath, $newPath);
         }// end if valid tmp path
-;
       }// end if we have an image
 
       // on success, redirect user to their listing page

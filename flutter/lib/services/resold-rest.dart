@@ -24,6 +24,7 @@ class ResoldRest {
     FormData formData = new FormData.fromMap({
       'name': product.name,
       'price': product.price,
+      'condition': product.condition,
       'topCategory': product.categoryIds.first,
       'details': product.description,
       'localGlobal': product.localGlobal,
@@ -36,6 +37,12 @@ class ResoldRest {
     var response = await dio.post('${config.baseUrl}/product', data: formData);
 
     var x = response;
+
+    if(response.data.length > 1) {
+      return response.data[1];
+    } else {
+      return 'Error: ' + response.data;
+    }// end if response data success
   }// end function postProduct
 
 }// end class Resold
