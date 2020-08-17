@@ -62,29 +62,30 @@ class Upload extends \Magento\Framework\App\Action\Action
         // temp server image path
         $tmpPath = $image['tmp_name'];
 
-        $tmpPathExt = '';
         if($tmpPath == '') {
-          $tmpPathExt = $image['name'];
-        } else {
-          // type of image
-          $type = $image['type'];
-          switch($type){
-            case 'image/jpeg':
-              $extension = 'jpeg';
-              break;
-            case 'image/jpg':
-              $extension = 'jpg';
-              break;
-            case 'image/png':
-              $extension = 'png';
-              break;
-            default:
-              $extension = 'png';
-              break;
-          }// end switch on type
+          $tmpPath = '/tmp/'.$image['name'];
+        }
 
-          if($tmpPath != '')
-          {
+        // type of image
+        $type = $image['type'];
+        switch($type){
+          case 'image/jpeg':
+            $extension = 'jpeg';
+            break;
+          case 'image/jpg':
+            $extension = 'jpg';
+            break;
+          case 'image/png':
+            $extension = 'png';
+            break;
+          default:
+            $extension = 'png';
+            break;
+        }// end switch on type
+
+        $tmpPathExt = '';
+        if($tmpPath != '')
+        {
             // temporary path with extension for image
             $tmpPathExt = $tmpPath.'.'.$extension;
 
@@ -93,8 +94,8 @@ class Upload extends \Magento\Framework\App\Action\Action
 
             // move the uploaded image to the media directory
             move_uploaded_file($tmpPath, $newPath);
-          }// end if valid tmp path
-        }// end if we have a tmp path
+        }// end if valid tmp path
+
       }// end if we have an image
 
       // on success, redirect user to their listing page
