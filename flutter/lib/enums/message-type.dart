@@ -1,4 +1,6 @@
 enum MessageType {
-  buyer,
-  seller
+  text,
+  image,
+  sticker,
+  purchaseRequest
 }

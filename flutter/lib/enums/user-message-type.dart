@@ -1,0 +1,4 @@
+enum UserMessageType {
+  buyer,
+  seller
+}

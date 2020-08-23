@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:resold/enums/message-type.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:resold/enums/message-type.dart';
+import 'package:resold/enums/user-message-type.dart';
 
 /*
 * Resold Firebase API service - Firebase specific API client
@@ -38,9 +39,16 @@ class Firebase {
   * content - Content of the message for message preview
   * product - Product that message group is related to.
   */
-  static Future createUserInboxMessage(int fromId, int toId, String chatId, MessageType type, String content, Product product) async {
+  static Future createUserInboxMessage(int fromId, int toId, String chatId, String content, Product product, UserMessageType type) async {
     // get existing message collection
-    var userMessageId = fromId.toString() + '-' + toId.toString() + '-' + product.id.toString();
+    String userMessageId;
+
+    if(type == UserMessageType.buyer) {
+      userMessageId = fromId.toString() + '-' + product.id.toString();
+    } else {
+      userMessageId = toId.toString() + '-' + product.id.toString();
+    }// end if type is buyer
+
     QuerySnapshot result = await Firestore.instance.collection('inbox_messages').where('id', isEqualTo: userMessageId).getDocuments();
     List <DocumentSnapshot> documents = result.documents;
 
@@ -74,18 +82,17 @@ class Firebase {
 
   /*
   * sendProductMessage - Send a product message from one user to another
+  * chatId - Group chat ID
   * fromId - Customer from ID
   * toId - Customer to ID
   * product - Product that message group is related to.
   * content - Content of the message for message preview
   * type - Type of the message (buyer or seller)
   */
-  static Future sendProductMessage(int fromId, int toId, Product product, String content, int type) async {
+  static Future sendProductMessage(String chatId, int fromId, int toId, Product product, String content, MessageType type) async {
 
-    var chatId = fromId.toString() + '-' + toId.toString() + '-' + product.id.toString();
-
-    await createUserInboxMessage(fromId, toId, chatId, MessageType.buyer, content, product);
-    await createUserInboxMessage(toId, fromId, chatId, MessageType.seller, content, product);
+    await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.buyer);
+    await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.seller);
 
     var documentReference = Firestore.instance
         .collection('messages')
@@ -101,7 +108,7 @@ class Firebase {
           'idTo': toId,
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           'content': content,
-          'type': type
+          'type': type.index
         },
       );
     });

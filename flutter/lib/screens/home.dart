@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:resold/screens/tabs/browse.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';

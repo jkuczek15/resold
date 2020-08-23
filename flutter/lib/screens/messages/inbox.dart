@@ -6,6 +6,7 @@ import 'package:resold/services/firebase.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/enums/user-message-type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
@@ -95,7 +96,7 @@ class InboxPageState extends State<InboxPage> {
                                           return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                         }
                                     );
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, item['toId'])));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, item['toId'], item['chatId'], UserMessageType.values[item['type']])));
                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                   },
                                   child: Card (
@@ -111,7 +112,7 @@ class InboxPageState extends State<InboxPage> {
                                                     children: [
                                                       Container (
                                                           height: 65,
-                                                          width: 65,
+                                                          width: 57,
                                                           child: Align (
                                                               alignment: Alignment.centerLeft,
                                                               child: FadeInImage(image: NetworkImage(baseProductImagePath + product.thumbnail), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
