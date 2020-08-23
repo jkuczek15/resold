@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -10,6 +11,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/services/firebase.dart';
+import 'package:resold/enums/message-type.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
@@ -185,6 +188,15 @@ class ProductPageState extends State<ProductPage> {
                                               return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
                                             }
                                           );
+
+                                          // todo: get full customer details
+                                          var toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                          var chatId = customer.id.toString() + '-' + product.id.toString();
+
+                                          // send initial purchase message
+                                          await Firebase.sendProductMessage(chatId, customer.id, toId, product, 'Purchase request', MessageType.purchaseRequest);
+
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, toId, chatId, UserMessageType.buyer)));
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
                                         },
                                         child: Text('Purchase',
@@ -216,9 +228,10 @@ class ProductPageState extends State<ProductPage> {
                                         );
 
                                         // todo: get full customer details
-                                        var toId = await Resold.getCustomerIdByProduct(product.id);
+                                        var toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                        var chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, int.tryParse(toId))));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, toId, chatId, UserMessageType.buyer)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Send Offer',
@@ -250,9 +263,10 @@ class ProductPageState extends State<ProductPage> {
                                         );
 
                                         // todo: get full customer details
-                                        var toId = await Resold.getCustomerIdByProduct(product.id);
+                                        var toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                        var chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, int.tryParse(toId))));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, toId, chatId, UserMessageType.buyer)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Contact Seller',

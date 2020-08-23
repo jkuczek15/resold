@@ -12,24 +12,28 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:resold/enums/message-type.dart';
+import 'package:resold/enums/user-message-type.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
   final Product product;
   final CustomerResponse customer;
   final int toId;
+  final String chatId;
+  final UserMessageType type;
 
-  MessagePage(customer, product, toId, {Key key}) : customer = customer, product = product, toId = toId, super(key: key);
+  MessagePage(customer, product, toId, chatId, type, {Key key}) : customer = customer, product = product, toId = toId, chatId = chatId, type = type, super(key: key);
 
   @override
-  MessagePageState createState() => MessagePageState(customer, product, toId);
+  MessagePageState createState() => MessagePageState(customer, product, toId, chatId, type);
 }
 
 class MessagePageState extends State<MessagePage> {
 
   final CustomerResponse customer;
   final Product product;
-  bool isShowSticker;
+  final UserMessageType type;
   int toId;
 
   var listMessage;
@@ -43,13 +47,13 @@ class MessagePageState extends State<MessagePage> {
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
 
-  MessagePageState(CustomerResponse customer, Product product, int toId) : customer = customer, product = product, toId = toId;
+  MessagePageState(CustomerResponse customer, Product product, int toId, String chatId, UserMessageType type)
+      : customer = customer, product = product, toId = toId, chatId = chatId, type = type;
 
   @override
   void initState() {
     super.initState();
-    focusNode.addListener(onFocusChange);
-    chatId = customer.id.toString() + '-' + toId.toString() + '-' + product.id.toString();
+    peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
   }
 
@@ -94,33 +98,13 @@ class MessagePageState extends State<MessagePage> {
     );
   }
 
-  Future onSendMessage(String content, int type) async {
-    // type: 0 = text, 1 = image, 2 = sticker
+  Future onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-
-      await Firebase.sendProductMessage(customer.id, toId, product, content, type);
-
+      await Firebase.sendProductMessage(chatId, customer.id, toId, product, content, type);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
-    }
-  }
-
-  void getSticker() {
-    // Hide keyboard when sticker appear
-    focusNode.unfocus();
-    setState(() {
-      isShowSticker = !isShowSticker;
-    });
-  }
-
-  void onFocusChange() {
-    if (focusNode.hasFocus) {
-      // Hide sticker when keyboard appear
-      setState(() {
-        isShowSticker = false;
-      });
     }
   }
 
@@ -133,7 +117,7 @@ class MessagePageState extends State<MessagePage> {
       imageUrl = downloadUrl;
       setState(() {
         isLoading = false;
-        onSendMessage(imageUrl, 1);
+        onSendMessage(imageUrl, MessageType.image);
       });
     }, onError: (err) {
       setState(() {
@@ -168,8 +152,7 @@ class MessagePageState extends State<MessagePage> {
         stream: Firebase.getProductMessagesStream(chatId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
-                child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
           } else {
             listMessage = snapshot.data.documents;
             return ListView.builder(
@@ -222,7 +205,7 @@ class MessagePageState extends State<MessagePage> {
               margin: EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () => onSendMessage(textEditingController.text, 0),
+                onPressed: () => onSendMessage(textEditingController.text, MessageType.text),
                 color: Colors.black,
               ),
             ),
@@ -241,9 +224,9 @@ class MessagePageState extends State<MessagePage> {
       // Right (my message)
       return Row(
         children: <Widget>[
-          document['type'] == 0
+          document['type'] == MessageType.text.index ?
           // Text
-              ? Container(
+          Container(
             child: Text(
               document['content'],
               style: TextStyle(color: Colors.white),
@@ -253,9 +236,9 @@ class MessagePageState extends State<MessagePage> {
             decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
-              : document['type'] == 1
-          // Image
-              ? Container(
+            : document['type'] == MessageType.image.index ?
+            // Image
+            Container(
             child: FlatButton(
               child: Material(
                 child: CachedNetworkImage(
@@ -292,23 +275,36 @@ class MessagePageState extends State<MessagePage> {
                 clipBehavior: Clip.hardEdge,
               ),
               onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => FullPhoto(product.name, url: document['content'])));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FullPhoto(product.name, url: document['content'])));
               },
               padding: EdgeInsets.all(0),
             ),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
-          // Sticker
-              : Container(
-            child: Image.asset(
-              'images/${document['content']}.gif',
-              width: 100.0,
-              height: 100.0,
-              fit: BoxFit.cover,
+          : document['type'] == MessageType.purchaseRequest.index ?
+          // Purchase Request
+          Container(
+            child: Text(
+              'You have sent a request to purchase this item.',
+              style: TextStyle(color: Colors.white60),
             ),
+            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+            width: 200.0,
+            decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-          ),
+          )
+          :
+          // Offer
+          Container(
+            child: Text(
+              'Offer received for ${product.name}.',
+              style: TextStyle(color: Colors.grey),
+            ),
+            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+            width: 200.0,
+            decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+            margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+          )
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -321,37 +317,35 @@ class MessagePageState extends State<MessagePage> {
               children: <Widget>[
                 isLastMessageLeft(index)
                     ? Material(
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) => Container(
-                      child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
-                      width: 35.0,
-                      height: 35.0,
-                      padding: EdgeInsets.all(10.0),
-                    ),
-                    imageUrl: peerAvatar,
-                    width: 35.0,
-                    height: 35.0,
-                    fit: BoxFit.cover,
+                  child: Padding (
+                    child: FadeInImage(
+                        image: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'),
+                        placeholder: AssetImage('assets/images/avatar-placeholder.png'),
+                        width: 35.0,
+                        height: 35.0,
+                        fit: BoxFit.cover
+                      ),
+                      padding: EdgeInsets.all(10.0)
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(18.0),
                   ),
                   clipBehavior: Clip.hardEdge,
                 )
-                    : Container(width: 35.0),
-                document['type'] == 0
-                    ? Container(
+                  : Container(width: 35.0),
+                document['type'] == MessageType.text.index ?
+                Container(
                   child: Text(
                     document['content'],
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: 200.0,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(color: const Color(0xffe1e1e1), borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(left: 10.0),
                 )
-                    : document['type'] == 1
-                    ? Container(
+                : document['type'] == MessageType.image.index ?
+                  Container(
                   child: FlatButton(
                     child: Material(
                       child: CachedNetworkImage(
@@ -388,25 +382,38 @@ class MessagePageState extends State<MessagePage> {
                       clipBehavior: Clip.hardEdge,
                     ),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => FullPhoto(product.name, url: document['content'])));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FullPhoto(product.name, url: document['content'])));
                     },
                     padding: EdgeInsets.all(0),
                   ),
                   margin: EdgeInsets.only(left: 10.0),
                 )
-                    : Container(
-                  child: Image.asset(
-                    'images/${document['content']}.gif',
-                    width: 100.0,
-                    height: 100.0,
-                    fit: BoxFit.cover,
+                : document['type'] == MessageType.purchaseRequest.index ?
+                // Purchase Request
+                Container(
+                  child: Text(
+                    'Someone has sent you a request to purchase this item.',
+                    style: TextStyle(color: Colors.black54),
                   ),
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                  width: 200.0,
+                  decoration: BoxDecoration(color: const Color(0xffe1e1e1), borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-                ),
+                )
+                :
+                // Offer
+                Container(
+                  child: Text(
+                    'Offer received for ${product.name}.',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                  width: 200.0,
+                  decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+                  margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                )
               ],
             ),
-
             // Time
             isLastMessageLeft(index)
                 ? Container(
