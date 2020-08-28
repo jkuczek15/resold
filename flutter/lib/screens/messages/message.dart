@@ -391,13 +391,42 @@ class MessagePageState extends State<MessagePage> {
                 : document['type'] == MessageType.purchaseRequest.index ?
                 // Purchase Request
                 Container(
-                  child: Text(
-                    'Someone has sent you a request to purchase this item.',
-                    style: TextStyle(color: Colors.black54),
+                  child:
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+                          child: Text(
+                            'Someone has requested to purchase your item.',
+                            style: TextStyle(color: Colors.black.withOpacity(0.6))
+                          ),
+                        ),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.start,
+                          children: [
+                            FlatButton(
+                              textColor: const Color(0xff41b8ea),
+                              onPressed: () {
+                                // Perform some action
+                              },
+                              child: const Text('Schedule Pickup'),
+                            ),
+                            FlatButton(
+                              textColor: const Color(0xff41b8ea),
+                              onPressed: () {
+                                // Perform some action
+                              },
+                              child: const Text('Request Payment'),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
-                  decoration: BoxDecoration(color: const Color(0xffe1e1e1), borderRadius: BorderRadius.circular(8.0)),
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 15.0, 0),
+                  width: 275.0,
                   margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
                 )
                 :
@@ -418,8 +447,7 @@ class MessagePageState extends State<MessagePage> {
             isLastMessageLeft(index)
                 ? Container(
               child: Text(
-                DateFormat('dd MMM kk:mm')
-                    .format(DateTime.fromMillisecondsSinceEpoch(int.parse(document['timestamp']))),
+                DateFormat('MMM dd, h:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(document['timestamp']))),
                 style: TextStyle(color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
               ),
               margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
