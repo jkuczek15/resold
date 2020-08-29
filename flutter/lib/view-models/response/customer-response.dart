@@ -1,6 +1,8 @@
 import 'package:resold/models/customer/customer-address.dart';
+import 'package:resold/view-models/request/login-request.dart';
 import 'package:resold/view-models/response/abstract-response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:resold/services/magento.dart';
 
 class CustomerResponse extends Response {
 
@@ -17,21 +19,15 @@ class CustomerResponse extends Response {
       : super(status: status, error: error);
 
   bool isLoggedIn() {
-    return id != null && email != null && token != null;
+    return token != null;
   }
 
   static Future save(CustomerResponse response) async {
     try {
       // persist customer settings to disk
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      prefs.setInt('customerId', response.id);
-      prefs.setInt('vendorId', response.vendorId);
-      prefs.setString('firstName', response.firstName);
-      prefs.setString('lastName', response.lastName);
       prefs.setString('email', response.email);
       prefs.setString('password', response.password);
-      prefs.setString('token', response.token);
     } catch (ex) {
       print(ex);
     }
@@ -40,16 +36,14 @@ class CustomerResponse extends Response {
   static Future<CustomerResponse> load() async {
     CustomerResponse response = CustomerResponse();
     try {
-      // persist customer settings to disk
+      // load customer settings from disk and login
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      response.id = prefs.getInt('customerId');
-      response.vendorId = prefs.getInt('vendorId');
-      response.firstName = prefs.getString('firstName');
-      response.lastName = prefs.getString('lastName');
-      response.email = prefs.getString('email');
-      response.password = prefs.getString('password');
-      response.token = prefs.getString('token');
+      // login so we get a new token each time we load the customer
+      return await Magento.loginCustomer(LoginRequest(
+        username: prefs.getString('email'),
+        password: prefs.getString('password')
+      ));
     } catch (ex) {
       print(ex);
     }

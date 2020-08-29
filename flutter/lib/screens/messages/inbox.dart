@@ -62,7 +62,7 @@ class InboxPageState extends State<InboxPage> {
                       );
                     } else if(snapshot.hasData && snapshot.data.documents.length == 0) {
                       return Center(
-                        child: Text('You haven\'t received any messages')
+                        child: Text('You don\'t have any messages')
                       );
                     } else {
                       messages = snapshot.data.documents;

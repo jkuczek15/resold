@@ -52,9 +52,9 @@ class SellPageState extends State<SellPage> {
 
   @override
   Widget build(BuildContext context) {
-    var imageUploader = ImageUploader(key: imageUploaderKey);
-    var scrollableCategoryList = ScrollableCategoryList(key: scrollableCategoryKey);
-    var scrollableSizeList = ScrollableCategoryList(key: scrollableSizeKey);
+    final imageUploader = ImageUploader(key: imageUploaderKey);
+    final scrollableCategoryList = ScrollableCategoryList(key: scrollableCategoryKey);
+    final scrollableSizeList = ScrollableSizeList(key: scrollableSizeKey);
     return Padding (
       padding: EdgeInsets.all(20),
       child: ScrollColumnExpandable(
@@ -80,6 +80,7 @@ class SellPageState extends State<SellPage> {
             children: [
               Container (
                   width: 130,
+                  height: 60,
                   child: TextField(
                     controller: priceController,
                     keyboardType: TextInputType.number,
@@ -90,7 +91,8 @@ class SellPageState extends State<SellPage> {
                   )
               ),
               Container (
-                width: 120,
+                width: 130,
+                height: 60,
                 child: DropdownButtonFormField<String>(
                   value: condition,
                   iconSize: 0,

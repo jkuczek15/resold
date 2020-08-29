@@ -29,6 +29,7 @@ interface ProductManagementInterface
 	 * @param string[] $imagePaths
 	 * @param double $latitude
  	 * @param double $longitude
+ 	 * @param string $itemSize
 	 * @return mixed[]
 	 */
 	public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude, $itemSize);
