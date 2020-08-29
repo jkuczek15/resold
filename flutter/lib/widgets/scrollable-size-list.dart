@@ -28,28 +28,28 @@ class ScrollableSizeListState extends State<ScrollableSizeList> {
           children: <Widget>[
             Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column (
               children: [
-                Icon(Icons.computer, semanticLabel: 'Small'),
+                Icon(MdiIcons.sizeS, semanticLabel: 'Small'),
                 Text('Small')
               ],
             )
             ),
             Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column (
               children: [
-                Icon(MdiIcons.tshirtCrew, semanticLabel: 'Medium'),
+                Icon(MdiIcons.sizeM, semanticLabel: 'Medium'),
                 Text('Medium')
               ],
             )
             ),
             Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column (
               children: [
-                Icon(MdiIcons.sofa, semanticLabel: 'Large'),
+                Icon(MdiIcons.sizeL, semanticLabel: 'Large'),
                 Text('Large')
               ],
             )
             ),
             Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column (
               children: [
-                Icon(Icons.directions_bike, semanticLabel: 'Extra Large'),
+                Icon(MdiIcons.sizeXl, semanticLabel: 'Extra Large'),
                 Text('Extra Large')
               ],
             )
