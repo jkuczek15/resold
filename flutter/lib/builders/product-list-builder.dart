@@ -5,14 +5,14 @@ import 'package:resold/constants/url-config.dart';
 import 'package:resold/view-models/product-view-model.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/models/product.dart';
-import 'package:resold/widgets/creation-aware-list-item.dart';
+import 'package:resold/widgets/list/creation-aware-list-item.dart';
 import 'package:resold/screens/product/view.dart';
 import 'package:resold/builders/location-builder.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/widgets/scrollable-category-list.dart';
+import 'package:resold/widgets/scroll/scrollable-category-list.dart';
 
 class ProductListBuilder {
 
