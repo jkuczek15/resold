@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/view-models/response/customer-response.dart';
-import 'package:resold/widgets/full-photo.dart';
+import 'package:resold/widgets/image/full-photo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:resold/widgets/image-uploader.dart';
-import 'package:resold/widgets/scroll-column-expandable.dart';
-import 'package:resold/widgets/scrollable-category-list.dart';
+import 'package:resold/widgets/image/image-uploader.dart';
+import 'package:resold/widgets/scroll/scroll-column-expandable.dart';
+import 'package:resold/widgets/dropdown/dropdown-category-list.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/screens/product/view.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/widgets/scrollable-size-list.dart';
+import 'package:resold/widgets/dropdown/dropdown-size-list.dart';
+import 'package:resold/widgets/dropdown/dropdown-condition-list.dart';
 
 class SellPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -28,8 +29,9 @@ class SellPageState extends State<SellPage> {
 
   // widget keys
   final imageUploaderKey = new GlobalKey<ImageUploaderState>();
-  final scrollableCategoryKey = new GlobalKey<ScrollableCategoryListState>();
-  final scrollableSizeKey = new GlobalKey<ScrollableSizeListState>();
+  final dropdownCategoryKey = new GlobalKey<DropdownCategoryListState>();
+  final dropdownSizeKey = new GlobalKey<DropdownSizeListState>();
+  final dropdownConditionKey = new GlobalKey<DropdownConditionListState>();
 
   // field controllers
   final TextEditingController nameController = TextEditingController();
@@ -53,8 +55,9 @@ class SellPageState extends State<SellPage> {
   @override
   Widget build(BuildContext context) {
     final imageUploader = ImageUploader(key: imageUploaderKey);
-    final scrollableCategoryList = ScrollableCategoryList(key: scrollableCategoryKey);
-    final scrollableSizeList = ScrollableSizeList(key: scrollableSizeKey);
+    final dropdownCategoryList = DropdownCategoryList(key: dropdownCategoryKey);
+    final dropdownSizeList = DropdownSizeList(key: dropdownSizeKey);
+    final dropdownConditionList = DropdownConditionList(key: dropdownConditionKey);
     return Padding (
       padding: EdgeInsets.all(20),
       child: ScrollColumnExpandable(
@@ -71,15 +74,15 @@ class SellPageState extends State<SellPage> {
             ),
           ),
           SizedBox(height: 20),
-          scrollableCategoryList,
+          dropdownCategoryList,
           SizedBox(height: 20),
-          scrollableSizeList,
+          dropdownSizeList,
           SizedBox(height: 20),
           Row (
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container (
-                  width: 130,
+                  width: 125,
                   height: 60,
                   child: TextField(
                     controller: priceController,
@@ -91,31 +94,9 @@ class SellPageState extends State<SellPage> {
                   )
               ),
               Container (
-                width: 130,
+                width: 150,
                 height: 60,
-                child: DropdownButtonFormField<String>(
-                  value: condition,
-                  iconSize: 0,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.black),
-                  focusColor: const Color(0xff41b8ea),
-                  hint: Text('Condition'),
-                  onChanged: (String newValue) {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    setState(() {
-                      condition = newValue;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    border: const OutlineInputBorder(),
-                  ),
-                  items: <String>['New', 'Like New', 'Good', 'Used'].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
+                child: dropdownConditionList
               ),
             ]
           ),
@@ -150,12 +131,12 @@ class SellPageState extends State<SellPage> {
                   name: nameController.text,
                   price: priceController.text,
                   description: detailsController.text,
-                  condition: getConditionValue(condition).toString(),
-                  localGlobal: getLocalGlobalValue(),
-                  categoryIds: [getSelectedCategory(scrollableCategoryKey.currentState.categorySelected)],
-                  itemSize: getSelectedSize(scrollableSizeKey.currentState.sizeSelected),
+                  condition: dropdownConditionKey.currentState.conditionSelected,
+                  categoryIds: [int.tryParse(dropdownCategoryKey.currentState.categorySelected)],
+                  itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
                   latitude: currentLocation.latitude,
-                  longitude: currentLocation.longitude
+                  longitude: currentLocation.longitude,
+                  localGlobal: '231,232'
                 );
                 var response = await ResoldRest.postProduct(customer.token, product, imageUploaderKey.currentState.imagePaths);
                 product.id = int.tryParse(response);
@@ -176,98 +157,5 @@ class SellPageState extends State<SellPage> {
       ]
       )
     );
-  }
-
-  int getSelectedCategory(List<bool> categorySelected) {
-    int selectedIndex = 0;
-    for(var i = 0; i < categorySelected.length; i++) {
-      var selected = categorySelected[i];
-      if(selected) {
-        selectedIndex = i;
-      }
-    }
-    return getSelectedCategoryId(selectedIndex);
-  }
-
-  int getSelectedSize(List<bool> sizeSelected) {
-    int selectedIndex = 0;
-    for(var i = 0; i < sizeSelected.length; i++) {
-      var selected = sizeSelected[i];
-      if(selected) {
-        selectedIndex = i;
-      }
-    }
-    return getSelectedSizeId(selectedIndex);
-  }
-
-  int getConditionValue(String text) {
-    switch(text) {
-      case 'New':
-        return 235;
-      case 'Like New':
-        return 236;
-      case 'Good':
-        return 237;
-      case 'Used':
-        return 238;
-      default:
-        return 235;
-    }
-  }
-
-  String getLocalGlobalValue() {
-    return '232,231';
-  }
-
-  int getSelectedCategoryId(int index) {
-    switch(index) {
-      case 0:
-        // Electronics
-        return 42;
-      case 1:
-        // Fashion
-        return 93;
-      case 2:
-        // Home and Lawn
-        return 100;
-      case 3:
-        // Outdoors
-        return 101;
-      case 4:
-        // Sporting goods
-        return 102;
-      case 5:
-        // Music
-        return 103;
-      case 6:
-        // Collectibles
-        return 104;
-      case 7:
-        // Handmade
-        return 105;
-      default:
-        // Electronics
-        return 42;
-    }
-  }
-
-  int getSelectedSizeId(int index) {
-    switch(index) {
-      case 0:
-      // Small
-        return 239;
-      case 1:
-      // Medium
-        return 240;
-      case 2:
-      // Large
-        return 241;
-      case 3:
-      // XLarge
-        return 242;
-      default:
-      // Electronics
-        return 240;
-    }
   }
 }

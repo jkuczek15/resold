@@ -5,7 +5,7 @@ import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:intl/intl.dart';
-import 'package:resold/widgets/read-more-text.dart';
+import 'package:resold/widgets/text/read-more-text.dart';
 import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
