@@ -31,5 +31,5 @@ interface ProductManagementInterface
  	 * @param double $longitude
 	 * @return mixed[]
 	 */
-	public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude);
+	public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude, $itemSize);
 }
