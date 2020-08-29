@@ -42,7 +42,7 @@ class ProductManagement
 	/**
 	 * {@inheritdoc}
 	 */
-  public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude)
+  public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude, $itemSize)
 	{
     $customerId = $this->userContext->getUserId();
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -66,6 +66,11 @@ class ProductManagement
     // location validation
     if(!is_numeric($latitude) || !is_numeric($longitude)){
       return ['error' => 'Invalid location.'];
+    }// end if latitude longitude not set
+
+    // item size validation
+    if(!is_numeric($itemSize) || !is_numeric($itemSize)){
+      return ['error' => 'Invalid item size.'];
     }// end if latitude longitude not set
 
     // image validation
@@ -114,6 +119,7 @@ class ProductManagement
     $_product->setCustomAttribute('latitude', $latitude);
     $_product->setCustomAttribute('longitude', $longitude);
     $_product->setCustomAttribute('location', $latitude.','.$longitude);
+    $_product->setCustomAttribute('item_size', $itemSize);
 
     // tempory location for product images
     $mediaDir = '/var/www/html/pub/media';
