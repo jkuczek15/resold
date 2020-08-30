@@ -44,6 +44,24 @@ class ResoldRest {
     }// end if response data success
   }// end function postProduct
 
+  /*
+   * createVendor - Create a seller account
+   * token - Customer identification token
+   */
+  static Future<String> createVendor(String token) async {
+
+    await config.initialized;
+
+    dio.options.headers['Authorization'] = 'Bearer ${token}';
+    var response = await dio.post('${config.baseUrl}/vendor');
+
+    if(response.data.length > 1) {
+      return response.data[1];
+    } else {
+      return 'Error: ' + response.data;
+    }// end if response data success
+  }// end function postProduct
+
 }// end class Resold
 
 /*
