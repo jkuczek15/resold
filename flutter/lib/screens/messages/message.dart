@@ -408,8 +408,53 @@ class MessagePageState extends State<MessagePage> {
                           children: [
                             FlatButton(
                               textColor: const Color(0xff41b8ea),
-                              onPressed: () {
-                                // Perform some action
+                              onPressed: () async {
+                                // show date picker
+                                DateTime now = DateTime.now();
+                                DateTime future = now.add(Duration(days: 30));
+                                var selectedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: now,
+                                  firstDate: now,
+                                  lastDate: future,
+                                  builder: (BuildContext context, Widget child) {
+                                    return Theme(
+                                      data: ThemeData.light().copyWith(
+                                        primaryColor: const Color(0xff41b8ea),
+                                        accentColor: const Color(0xff41b8ea),
+                                        colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
+                                        buttonTheme: ButtonThemeData(
+                                          textTheme: ButtonTextTheme.primary
+                                        )
+                                      ),
+                                      child: child,
+                                    );
+                                  },
+                                );
+                                if(selectedDate != null) {
+                                  // show time picker
+                                  var selectedTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
+                                    builder: (BuildContext context, Widget child) {
+                                      return Theme(
+                                        data: ThemeData.light().copyWith(
+                                          primaryColor: const Color(0xff41b8ea),
+                                          accentColor: const Color(0xff41b8ea),
+                                          colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
+                                          buttonTheme: ButtonThemeData(
+                                            textTheme: ButtonTextTheme.primary
+                                          )
+                                        ),
+                                        child: child,
+                                      );
+                                    },
+                                  );
+                                  if(selectedTime != null) {
+                                    // user selected both a time and a date, send a message
+
+                                  }// end if user selected a time and a date
+                                }// end if user selected a date
                               },
                               child: const Text('Schedule Pickup'),
                             ),
