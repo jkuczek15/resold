@@ -166,9 +166,10 @@ class Resold {
       body: <String, dynamic> { 'vendorId': vendorId.toString(), 'type': type }
     );
 
-    if(response.statusCode == 200) {
+    var body = jsonDecode(response.body.toString());
+    if(response.statusCode == 200 && body['error'] == null) {
       // success
-      List<dynamic> vendorProducts = jsonDecode(response.body.toString()).toList();
+      List<dynamic> vendorProducts = body.toList();
       List<Product> products = new List<Product>();
       vendorProducts.forEach((vendorProduct) {
         products.add(Product.fromJson(vendorProduct));
@@ -176,8 +177,7 @@ class Resold {
       return products;
     } else {
       // error
-      var json = jsonDecode(response.body.toString());
-      return [json['message']];
+      return [];
     }
   }// end function getVendorProducts
 
