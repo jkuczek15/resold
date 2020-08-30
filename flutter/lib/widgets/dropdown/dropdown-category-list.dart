@@ -20,7 +20,7 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
     'Fashion',
     'Home & Lawn',
     'Outdoors',
-    'Sporting goods',
+    'Sporting Goods',
     'Music',
     'Collectibles',
     'Handmade'
@@ -84,7 +84,7 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
       // Outdoors
         return 101;
       case 4:
-      // Sporting goods
+      // Sporting Goods
         return 102;
       case 5:
       // Music
@@ -116,7 +116,7 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
       // Outdoors
         return Icons.directions_bike;
       case 4:
-      // Sporting goods
+      // Sporting Goods
         return MdiIcons.basketball;
       case 5:
       // Music

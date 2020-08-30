@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/widgets/loading.dart';
 import 'package:resold/widgets/scroll/scrollable-category-list.dart';
 
 class ProductListBuilder {
@@ -36,12 +37,7 @@ class ProductListBuilder {
                           },
                           child: model.items[index + 1].name ==
                               LoadingIndicatorTitle
-                              ?
-                          Center(child: CircularProgressIndicator(
-                              backgroundColor: const Color(0xff41b8ea)))
-                              : buildProductListTile(
-                              context, currentLocation, model.items[index], customer,
-                              index)
+                              ? Center(child: Loading()) : buildProductListTile(context, currentLocation, model.items[index], customer, index)
                       );
                     }
                 )

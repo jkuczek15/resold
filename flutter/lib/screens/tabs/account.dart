@@ -7,6 +7,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/constants/url-config.dart';
+import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
 
 class AccountPage extends StatefulWidget {
@@ -189,7 +190,7 @@ class AccountPageState extends State<AccountPage> {
                                           showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
-                                                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                                return Center(child: Loading());
                                               }
                                           );
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -230,7 +231,7 @@ class AccountPageState extends State<AccountPage> {
               return Text("${snapshot.error}");
             }
             // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+            return Center(child: Loading());
         }
       );
     }

@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:resold/models/order.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/widgets/loading.dart';
 import 'package:intl/intl.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -81,7 +82,7 @@ class OrdersPageState extends State<OrdersPage> {
                   return Text("${snapshot.error}");
                 }
                 // By default, show a loading spinner.
-                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                return Center(child: Loading());
               },
             ),
             FutureBuilder<List<Order>>(
@@ -114,7 +115,7 @@ class OrdersPageState extends State<OrdersPage> {
                   return Text("${snapshot.error}");
                 }
                 // By default, show a loading spinner.
-                return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                return Center(child: Loading());
               },
             )
           ],

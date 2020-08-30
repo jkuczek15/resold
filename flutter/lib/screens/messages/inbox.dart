@@ -7,6 +7,7 @@ import 'package:resold/screens/messages/message.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/enums/user-message-type.dart';
+import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
@@ -58,7 +59,7 @@ class InboxPageState extends State<InboxPage> {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Center(
-                        child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))
+                        child: Loading()
                       );
                     } else if(snapshot.hasData && snapshot.data.documents.length == 0) {
                       return Center(
@@ -93,7 +94,7 @@ class InboxPageState extends State<InboxPage> {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                          return Center(child: Loading());
                                         }
                                     );
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, item['toId'], item['chatId'], UserMessageType.values[item['type']])));

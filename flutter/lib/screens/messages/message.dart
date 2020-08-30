@@ -140,19 +140,19 @@ class MessagePageState extends State<MessagePage> {
 
   Widget buildLoading() {
     return Positioned(
-      child: isLoading ? const Loading() : Container(),
+      child: isLoading ? Loading() : Container(),
     );
   }
 
   Widget buildListMessage() {
     return Flexible(
       child: chatId == ''
-          ? Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)))
+          ? Center(child: Loading())
           : StreamBuilder(
         stream: Firebase.getProductMessagesStream(chatId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+            return Center(child: Loading());
           } else {
             listMessage = snapshot.data.documents;
             return ListView.builder(
@@ -243,7 +243,7 @@ class MessagePageState extends State<MessagePage> {
               child: Material(
                 child: CachedNetworkImage(
                   placeholder: (context, url) => Container(
-                    child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
+                    child: Loading(),
                     width: 200.0,
                     height: 200.0,
                     padding: EdgeInsets.all(70.0),
@@ -350,7 +350,7 @@ class MessagePageState extends State<MessagePage> {
                     child: Material(
                       child: CachedNetworkImage(
                         placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
+                          child: Loading(),
                           width: 200.0,
                           height: 200.0,
                           padding: EdgeInsets.all(70.0),

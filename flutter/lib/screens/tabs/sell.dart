@@ -11,6 +11,7 @@ import 'package:resold/screens/product/view.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/widgets/dropdown/dropdown-size-list.dart';
 import 'package:resold/widgets/dropdown/dropdown-condition-list.dart';
+import 'package:resold/widgets/loading.dart';
 
 class SellPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -124,7 +125,7 @@ class SellPageState extends State<SellPage> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                    return Center(child: Loading());
                   }
                 );
                 var product = Product(

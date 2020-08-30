@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/widgets/loading.dart';
 
 class LocationBuilder {
 
@@ -17,7 +18,7 @@ class LocationBuilder {
           ));
         } else {
           return Center(
-            child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
+            child: Loading(),
           );
         }
       },

@@ -13,6 +13,7 @@ import 'package:resold/screens/messages/message.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/enums/message-type.dart';
+import 'package:resold/widgets/loading.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
@@ -185,7 +186,7 @@ class ProductPageState extends State<ProductPage> {
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                              return Center(child: Loading());
                                             }
                                           );
 
@@ -223,7 +224,7 @@ class ProductPageState extends State<ProductPage> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                            return Center(child: Loading());
                                           }
                                         );
 
@@ -258,7 +259,7 @@ class ProductPageState extends State<ProductPage> {
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                              return Center(child: Loading());
                                             }
                                         );
 
@@ -304,7 +305,7 @@ class ProductPageState extends State<ProductPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Center(
-                          child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea))
+                          child: Loading()
                         )
                       ]
                     );
