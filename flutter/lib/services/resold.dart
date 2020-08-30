@@ -166,10 +166,9 @@ class Resold {
       body: <String, dynamic> { 'vendorId': vendorId.toString(), 'type': type }
     );
 
-    var body = jsonDecode(response.body.toString());
-    if(response.statusCode == 200 && body['error'] == null) {
+    if(response.statusCode == 200) {
       // success
-      List<dynamic> vendorProducts = body.toList();
+      List<dynamic> vendorProducts = jsonDecode(response.body.toString()).toList();
       List<Product> products = new List<Product>();
       vendorProducts.forEach((vendorProduct) {
         products.add(Product.fromJson(vendorProduct));

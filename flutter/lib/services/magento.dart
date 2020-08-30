@@ -5,8 +5,9 @@ import 'dart:convert';
 import 'package:resold/view-models/request/login-request.dart';
 import 'package:resold/view-models/request/customer-request.dart';
 import 'package:resold/view-models/response/customer-response.dart';
-import 'package:resold/services/resold.dart';
 import 'package:resold/models/order.dart';
+import 'package:resold/services/resold.dart';
+import 'package:resold/services/resold-rest.dart';
 
 /*
 * Resold Magento API service - Magento specific API client
@@ -49,20 +50,12 @@ class Magento {
       var customer = await getMe(token, request.password);
 
       // ensure the user is a seller
-      if(customer.vendorId == null) {
-
-        final response = await client.post(
-            '${config.baseUrl}/integration/customer/token',
-            headers: config.adminHeaders,
-            body: jsonEncode(<String, String>{
-              'username': request.username,
-              'password': request.password
-            })
-        );
-
+      if(customer.vendorId == -1) {
+        var vendorId = await ResoldRest.createVendor(customer.token);
+        customer.vendorId = int.tryParse(vendorId);
       }// end if user is not a seller
 
-      return await getMe(token, request.password);
+      return customer;
     } else {
       // login error
       var json = jsonDecode(response.body.toString());
@@ -135,8 +128,8 @@ class Magento {
   static Future<CustomerResponse> getMe(String token, String password) async {
     if (token.isEmpty) {
       return CustomerResponse(
-          status: 400,
-          error: 'Please enter both an email and a password.'
+        status: 400,
+        error: 'Please enter both an email and a password.'
       );
     }
 
@@ -145,8 +138,8 @@ class Magento {
     config.customerHeaders['Authorization'] = 'Bearer ${token}';
 
     final response = await client.get(
-        '${config.baseUrl}/customers/me',
-        headers: config.customerHeaders
+      '${config.baseUrl}/customers/me',
+      headers: config.customerHeaders
     );
 
     var responseJson = jsonDecode(response.body.toString());
@@ -158,15 +151,15 @@ class Magento {
       var vendorId = await Resold.getVendorId(customerId);
 
       return CustomerResponse(
-          status: response.statusCode,
-          id: customerId,
-          email: responseJson['email'].toString(),
-          password: password,
-          firstName: responseJson['firstname'].toString(),
-          lastName: responseJson['lastname'].toString(),
-          addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
-          token: token,
-          vendorId: int.tryParse(vendorId)
+        status: response.statusCode,
+        id: customerId,
+        email: responseJson['email'].toString(),
+        password: password,
+        firstName: responseJson['firstname'].toString(),
+        lastName: responseJson['lastname'].toString(),
+        addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
+        token: token,
+        vendorId: int.tryParse(vendorId)
       );
     } else {
       // error
