@@ -44,6 +44,24 @@ class Magento {
       // login success
       // call another endpoint to get customer information
       var token = response.body.toString().replaceAll("\"", '');
+
+      // get existing user information
+      var customer = await getMe(token, request.password);
+
+      // ensure the user is a seller
+      if(customer.vendorId == null) {
+
+        final response = await client.post(
+            '${config.baseUrl}/integration/customer/token',
+            headers: config.adminHeaders,
+            body: jsonEncode(<String, String>{
+              'username': request.username,
+              'password': request.password
+            })
+        );
+
+      }// end if user is not a seller
+
       return await getMe(token, request.password);
     } else {
       // login error
