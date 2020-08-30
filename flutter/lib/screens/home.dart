@@ -31,8 +31,10 @@ class Home extends StatelessWidget {
               800: Color.fromRGBO(25,72,92, .9),
               900: Color.fromRGBO(25,72,92, 1)
             }),
+            brightness: Brightness.light,
             accentColor: Colors.white,
-            primaryColor: const Color(0xff41b8ea)
+            primaryColor: const Color(0xff41b8ea),
+            splashColor: const Color(0xff41b8ea),
         ),
         home: HomePage(customer)
     );
