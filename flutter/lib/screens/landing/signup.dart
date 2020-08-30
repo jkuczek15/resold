@@ -8,6 +8,7 @@ import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/models/customer/customer-address.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:resold/widgets/loading.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -217,7 +218,7 @@ class SignUpPageState extends State<SignUpPage> {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                          return Center(child: Loading());
                                         }
                                       );
 

@@ -4,6 +4,7 @@ import 'package:resold/services/magento.dart';
 import 'package:resold/view-models/request/login-request.dart';
 import 'package:resold/view-models/response/customer-response.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:resold/widgets/loading.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -111,7 +112,7 @@ class LoginPageState extends State<LoginPage> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                                        return Center(child: Loading());
                                       }
                                     );
 

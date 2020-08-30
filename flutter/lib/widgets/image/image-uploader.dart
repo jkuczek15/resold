@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:resold/services/resold.dart';
+import 'package:resold/widgets/loading.dart';
 
 class ImageUploader extends StatefulWidget {
 
@@ -77,7 +78,7 @@ class ImageUploaderState extends State<ImageUploader> {
                     child: SizedBox(
                       width: 50,
                       height: 50,
-                      child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)),
+                      child: Loading(),
                     ),
                   ),
                 ),
@@ -95,7 +96,7 @@ class ImageUploaderState extends State<ImageUploader> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+                            return Center(child: Loading());
                           }
                       );
                       await Resold.deleteImage(imagePaths[index]);
@@ -150,7 +151,7 @@ class ImageUploaderState extends State<ImageUploader> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Center(child: CircularProgressIndicator(backgroundColor: const Color(0xff41b8ea)));
+          return Center(child: Loading());
         }
     );
 
