@@ -2,5 +2,6 @@ enum MessageType {
   text,
   image,
   sticker,
-  purchaseRequest
+  purchaseRequest,
+  deliveryRequest
 }
