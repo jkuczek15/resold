@@ -293,6 +293,18 @@ class MessagePageState extends State<MessagePage> {
             decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
+          : document['type'] == MessageType.deliveryRequest.index ?
+          // Delivery Request
+          Container(
+            child: Text(
+              'You have sent a request to deliver this item and have it picked up at ' + DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(document['content'])),
+              style: TextStyle(color: Colors.white60),
+            ),
+            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+            width: 200.0,
+            decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+            margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+          )
           :
           // Offer
           Container(
@@ -412,7 +424,7 @@ class MessagePageState extends State<MessagePage> {
                                 // show date picker
                                 DateTime now = DateTime.now();
                                 DateTime future = now.add(Duration(days: 30));
-                                var selectedDate = await showDatePicker(
+                                DateTime selectedDate = await showDatePicker(
                                   context: context,
                                   initialDate: now,
                                   firstDate: now,
@@ -433,7 +445,7 @@ class MessagePageState extends State<MessagePage> {
                                 );
                                 if(selectedDate != null) {
                                   // show time picker
-                                  var selectedTime = await showTimePicker(
+                                  TimeOfDay selectedTime = await showTimePicker(
                                     context: context,
                                     initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
                                     builder: (BuildContext context, Widget child) {
@@ -452,7 +464,8 @@ class MessagePageState extends State<MessagePage> {
                                   );
                                   if(selectedTime != null) {
                                     // user selected both a time and a date, send a message
-
+                                    DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+                                    await Firebase.sendProductMessage(chatId, customer.id, toId, product, selectedDateTime.toString(), MessageType.deliveryRequest);
                                   }// end if user selected a time and a date
                                 }// end if user selected a date
                               },
@@ -464,6 +477,93 @@ class MessagePageState extends State<MessagePage> {
                                 // Perform some action
                               },
                               child: const Text('Request Payment'),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 15.0, 0),
+                  width: 275.0,
+                  margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                )
+                : document['type'] == MessageType.deliveryRequest.index ?
+                // Purchase Request
+                Container(
+                  child:
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+                          child: Text(
+                            'You have received a delivery request. Your item will be delivered at ' + DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(document['content'])),
+                            style: TextStyle(color: Colors.black.withOpacity(0.6))
+                          ),
+                        ),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.start,
+                          children: [
+                            FlatButton(
+                              textColor: const Color(0xff41b8ea),
+                              onPressed: () async {
+                                // todo: payment flow
+                              },
+                              child: const Text('Accept Delivery'),
+                            ),
+                            FlatButton(
+                              textColor: const Color(0xff41b8ea),
+                              onPressed: () async {
+                                // show date picker
+                                DateTime now = DateTime.now();
+                                DateTime future = now.add(Duration(days: 30));
+                                DateTime selectedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: now,
+                                  firstDate: now,
+                                  lastDate: future,
+                                  builder: (BuildContext context, Widget child) {
+                                    return Theme(
+                                      data: ThemeData.light().copyWith(
+                                        primaryColor: const Color(0xff41b8ea),
+                                        accentColor: const Color(0xff41b8ea),
+                                        colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
+                                        buttonTheme: ButtonThemeData(
+                                            textTheme: ButtonTextTheme.primary
+                                        )
+                                      ),
+                                      child: child,
+                                    );
+                                  },
+                                );
+                                if(selectedDate != null) {
+                                  // show time picker
+                                  TimeOfDay selectedTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
+                                    builder: (BuildContext context, Widget child) {
+                                      return Theme(
+                                        data: ThemeData.light().copyWith(
+                                          primaryColor: const Color(0xff41b8ea),
+                                          accentColor: const Color(0xff41b8ea),
+                                          colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
+                                          buttonTheme: ButtonThemeData(
+                                              textTheme: ButtonTextTheme.primary
+                                          )
+                                        ),
+                                        child: child,
+                                      );
+                                    },
+                                  );
+                                  if(selectedTime != null) {
+                                    // user selected both a time and a date, send a message
+                                    DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+                                    await Firebase.sendProductMessage(chatId, customer.id, toId, product, selectedDateTime.toString(), MessageType.deliveryRequest);
+                                  }// end if user selected a time and a date
+                                }// end if user selected a date
+                              },
+                              child: const Text('Suggest Different Time'),
                             ),
                           ],
                         )
