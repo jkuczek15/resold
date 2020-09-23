@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:resold/enums/message-type.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resold/enums/user-message-type.dart';

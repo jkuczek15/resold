@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
-import 'package:resold/view-models/request/login-request.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/request/magento/login-request.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/widgets/loading.dart';
 

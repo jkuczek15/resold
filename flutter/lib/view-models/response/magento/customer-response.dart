@@ -1,5 +1,5 @@
 import 'package:resold/models/customer/customer-address.dart';
-import 'package:resold/view-models/request/login-request.dart';
+import 'package:resold/view-models/request/magento/login-request.dart';
 import 'package:resold/view-models/response/abstract-response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:resold/services/magento.dart';

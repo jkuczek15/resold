@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/image/full-photo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -465,6 +465,10 @@ class MessagePageState extends State<MessagePage> {
                                   if(selectedTime != null) {
                                     // user selected both a time and a date, send a message
                                     DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+
+                                    // get a delivery quote from Postmates
+
+
                                     await Firebase.sendProductMessage(chatId, customer.id, toId, product, selectedDateTime.toString(), MessageType.deliveryRequest);
                                   }// end if user selected a time and a date
                                 }// end if user selected a date

@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/builders/product-list-builder.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
 
 class BrowsePage extends StatefulWidget {

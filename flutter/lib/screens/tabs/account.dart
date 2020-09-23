@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/builders/product-list-builder.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/services/resold.dart';

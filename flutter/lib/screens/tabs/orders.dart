@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/models/order.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:intl/intl.dart';
