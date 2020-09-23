@@ -10,7 +10,7 @@ import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/screens/messages/message.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/widgets/loading.dart';

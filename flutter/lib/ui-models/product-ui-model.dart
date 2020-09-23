@@ -4,7 +4,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
 import 'package:geolocator/geolocator.dart';
 
-class ProductViewModel extends ChangeNotifier {
+class ProductUiModel extends ChangeNotifier {
 
   int itemRequestThreshold = 20;
   static int currentPage = 0;
@@ -12,7 +12,7 @@ class ProductViewModel extends ChangeNotifier {
   int lastLoadingIndex = 0;
   Position currentLocation;
 
-  ProductViewModel (Position currentLocation, List<Product> data) {
+  ProductUiModel (Position currentLocation, List<Product> data) {
     items = data;
     this.currentLocation = currentLocation;
   }

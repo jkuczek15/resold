@@ -6,7 +6,7 @@ import 'package:resold/widgets/scroll/scroll-column-expandable.dart';
 import 'package:resold/widgets/dropdown/dropdown-category-list.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/models/product.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/screens/product/view.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/widgets/dropdown/dropdown-size-list.dart';

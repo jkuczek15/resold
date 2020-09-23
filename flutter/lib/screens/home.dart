@@ -5,7 +5,7 @@ import 'package:resold/screens/tabs/account.dart';
 import 'package:resold/screens/tabs/orders.dart';
 import 'package:resold/screens/tabs/search.dart';
 import 'package:resold/screens/messages/inbox.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class Home extends StatelessWidget {
 

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
-import 'package:resold/view-models/product-view-model.dart';
-import 'package:resold/view-models/response/customer-response.dart';
+import 'package:resold/ui-models/product-ui-model.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/widgets/list/creation-aware-list-item.dart';
 import 'package:resold/screens/product/view.dart';
@@ -17,11 +17,11 @@ import 'package:resold/widgets/scroll/scrollable-category-list.dart';
 
 class ProductListBuilder {
 
-  static ChangeNotifierProvider<ProductViewModel> buildProductList(
+  static ChangeNotifierProvider<ProductUiModel> buildProductList(
       BuildContext context, List<Product> products, Position currentLocation, CustomerResponse customer, bool showCategoryHeader) {
-    return ChangeNotifierProvider<ProductViewModel>(
-        create: (_) => new ProductViewModel(currentLocation, products),
-        child: Consumer<ProductViewModel>(
+    return ChangeNotifierProvider<ProductUiModel>(
+        create: (_) => new ProductUiModel(currentLocation, products),
+        child: Consumer<ProductUiModel>(
             builder: (context, model, child) =>
                 ListView.builder(
                     itemCount: model.items.length,
