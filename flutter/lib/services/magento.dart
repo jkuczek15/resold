@@ -201,6 +201,28 @@ class Magento {
     }
   }// end function getPurchasedOrders
 
+  /*
+  * getCustomerById - Get a particular customer by ID
+  * customerId - Customer Id
+  */
+  static Future<CustomerAddress> getCustomerAddressById(int customerId) async {
+
+    await config.initialized;
+
+    final response = await client.get(
+        '${config.baseUrl}/customers/$customerId',
+        headers: config.adminHeaders,
+    );
+
+    var responseJson = jsonDecode(response.body.toString());
+
+    if (response.statusCode == 200) {
+      return CustomerAddress.fromMap(responseJson['addresses']);
+    } else {
+      return CustomerAddress();
+    }
+  }// end function createCustomer
+
 }// end class Magento
 
 /*

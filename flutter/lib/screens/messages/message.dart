@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
+import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
+import 'package:resold/models/customer/customer-address.dart';
 import 'package:resold/widgets/image/full-photo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +18,7 @@ import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/enums/user-message-type.dart';
+import 'package:resold/services/postmates.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
@@ -466,9 +471,20 @@ class MessagePageState extends State<MessagePage> {
                                     // user selected both a time and a date, send a message
                                     DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
 
-                                    // get a delivery quote from Postmates
+                                    // get the from ID from the chat ID
+                                    var chatIdParts = this.chatId.split('-');
+                                    var fromId = int.tryParse(chatIdParts[0]);
 
+                                    // get the customer address by id
+                                    CustomerAddress dropoffAddress = await Magento.getCustomerAddressById(fromId);
 
+                                    // create a Postmates delivery quote
+                                    DeliveryQuoteResponse response = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
+                                      dropoff_address: dropoffAddress.toString(),
+                                      pickup_address: customer.addresses.first.toString()
+                                    ));
+
+                                    // send a Firebase message
                                     await Firebase.sendProductMessage(chatId, customer.id, toId, product, selectedDateTime.toString(), MessageType.deliveryRequest);
                                   }// end if user selected a time and a date
                                 }// end if user selected a date

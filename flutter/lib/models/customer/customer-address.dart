@@ -23,6 +23,11 @@ class CustomerAddress {
   CustomerAddress({this.defaultBilling, this.defaultShipping, this.firstname, this.lastname, this.region,
     this.street, this.postcode, this.city, this.countryId});
 
+  @override
+  String toString() {
+    return this.street.first + ', ' + this.city + ', ' + this.region.regionCode + ', ' + this.postcode;
+  }
+
   factory CustomerAddress.fromAddress(Address address, String firstName, String lastName) {
 
     var customerAddress = CustomerAddress();
