@@ -202,10 +202,10 @@ class Magento {
   }// end function getPurchasedOrders
 
   /*
-  * getCustomerById - Get a particular customer by ID
+  * getCustomerAddressById - Get a particular customer by ID
   * customerId - Customer Id
   */
-  static Future<CustomerAddress> getCustomerAddressById(int customerId) async {
+  static Future<CustomerResponse> getCustomerById(int customerId) async {
 
     await config.initialized;
 
@@ -215,13 +215,24 @@ class Magento {
     );
 
     var responseJson = jsonDecode(response.body.toString());
-
     if (response.statusCode == 200) {
-      return CustomerAddress.fromMap(responseJson['addresses']);
+      var vendorId = await Resold.getVendorId(customerId);
+      return CustomerResponse(
+          status: response.statusCode,
+          id: customerId,
+          email: responseJson['email'].toString(),
+          firstName: responseJson['firstname'].toString(),
+          lastName: responseJson['lastname'].toString(),
+          addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
+          vendorId: int.tryParse(vendorId)
+      );
     } else {
-      return CustomerAddress();
+      return CustomerResponse(
+          status: response.statusCode,
+          error: responseJson['message']
+      );
     }
-  }// end function createCustomer
+  }// end function getCustomerAddressById
 
 }// end class Magento
 

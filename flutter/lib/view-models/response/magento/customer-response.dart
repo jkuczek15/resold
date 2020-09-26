@@ -14,6 +14,7 @@ class CustomerResponse extends Response {
   String token;
   int vendorId;
   final List<CustomerAddress> addresses;
+  String get fullName => this.firstName + ' ' + this.lastName;
 
   CustomerResponse({this.id, this.email, this.password, this.firstName, this.lastName, this.addresses, this.token, this.vendorId, status, error})
       : super(status: status, error: error);

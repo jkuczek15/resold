@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/widgets/loading.dart';
 
@@ -190,14 +191,15 @@ class ProductPageState extends State<ProductPage> {
                                             }
                                           );
 
-                                          // todo: get full customer details
-                                          var toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                          var chatId = customer.id.toString() + '-' + product.id.toString();
+                                          // get the to customer details
+                                          int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                          CustomerResponse toCustomer = await Magento.getCustomerById(toId);
+                                          String chatId = customer.id.toString() + '-' + product.id.toString();
 
                                           // send initial purchase message
-                                          await Firebase.sendProductMessage(chatId, customer.id, toId, product, 'Purchase request', MessageType.purchaseRequest);
+                                          await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product, 'Purchase request', MessageType.purchaseRequest);
 
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, toId, chatId, UserMessageType.buyer)));
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
                                         },
                                         child: Text('Purchase',
@@ -228,11 +230,12 @@ class ProductPageState extends State<ProductPage> {
                                           }
                                         );
 
-                                        // todo: get full customer details
-                                        var toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                        var chatId = customer.id.toString() + '-' + product.id.toString();
+                                        // get the to customer details
+                                        int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                        CustomerResponse toCustomer = await Magento.getCustomerById(toId);
+                                        String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, toId, chatId, UserMessageType.buyer)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Send Offer',
@@ -263,11 +266,12 @@ class ProductPageState extends State<ProductPage> {
                                             }
                                         );
 
-                                        // todo: get full customer details
-                                        var toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                        var chatId = customer.id.toString() + '-' + product.id.toString();
+                                        // get the to customer details
+                                        int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                        CustomerResponse toCustomer = await Magento.getCustomerById(toId);
+                                        String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, toId, chatId, UserMessageType.buyer)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Text('Contact Seller',
