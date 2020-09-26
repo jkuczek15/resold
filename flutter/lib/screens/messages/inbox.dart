@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
@@ -97,7 +98,11 @@ class InboxPageState extends State<InboxPage> {
                                           return Center(child: Loading());
                                         }
                                     );
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, product, item['toId'], item['chatId'], UserMessageType.values[item['type']])));
+
+                                    // get the to customer details
+                                    CustomerResponse toCustomer = await Magento.getCustomerById(item['toId']);
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, item['chatId'], UserMessageType.values[item['type']])));
                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                   },
                                   child: Card (

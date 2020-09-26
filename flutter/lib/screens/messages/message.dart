@@ -2,12 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/services/firebase.dart';
-import 'package:resold/services/magento.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
-import 'package:resold/models/customer/customer-address.dart';
 import 'package:resold/widgets/image/full-photo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -19,27 +17,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/services/postmates.dart';
+import 'package:money2/money2.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
   final Product product;
-  final CustomerResponse customer;
-  final int toId;
+  final CustomerResponse fromCustomer;
+  final CustomerResponse toCustomer;
   final String chatId;
   final UserMessageType type;
 
-  MessagePage(customer, product, toId, chatId, type, {Key key}) : customer = customer, product = product, toId = toId, chatId = chatId, type = type, super(key: key);
+  MessagePage(fromCustomer, toCustomer, product, chatId, type, {Key key}) : fromCustomer = fromCustomer, toCustomer = toCustomer,
+        product = product, chatId = chatId, type = type, super(key: key);
 
   @override
-  MessagePageState createState() => MessagePageState(customer, product, toId, chatId, type);
+  MessagePageState createState() => MessagePageState(fromCustomer, toCustomer, product, chatId, type);
 }
 
 class MessagePageState extends State<MessagePage> {
 
-  final CustomerResponse customer;
+  final CustomerResponse fromCustomer;
+  final CustomerResponse toCustomer;
   final Product product;
   final UserMessageType type;
-  int toId;
 
   var listMessage;
   bool isLoading;
@@ -52,8 +52,8 @@ class MessagePageState extends State<MessagePage> {
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
 
-  MessagePageState(CustomerResponse customer, Product product, int toId, String chatId, UserMessageType type)
-      : customer = customer, product = product, toId = toId, chatId = chatId, type = type;
+  MessagePageState(CustomerResponse fromCustomer, CustomerResponse toCustomer, Product product, String chatId, UserMessageType type)
+      : fromCustomer = fromCustomer, toCustomer = toCustomer, product = product, chatId = chatId, type = type;
 
   @override
   void initState() {
@@ -106,7 +106,7 @@ class MessagePageState extends State<MessagePage> {
   Future onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      await Firebase.sendProductMessage(chatId, customer.id, toId, product, content, type);
+      await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
@@ -225,7 +225,18 @@ class MessagePageState extends State<MessagePage> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
-    if (document['idFrom'] == customer.id) {
+
+    var currency = Currency.create('USD', 2);
+    var quoteId, fee, expectedPickup, expectedDropoff = '';
+    if(document['type'] == MessageType.deliveryRequest.index) {
+      var content = document['content'].split('-');
+      quoteId = content[0];
+      fee = Money.fromInt(int.tryParse(content[1]), currency).toString();
+      expectedPickup = DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(content[2]))).toString()));
+      expectedDropoff = DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(content[3]))).toString()));
+    }// end if delivery request
+
+    if (document['idFrom'] == fromCustomer.id) {
       // Right (my message)
       return Row(
         children: <Widget>[
@@ -290,7 +301,7 @@ class MessagePageState extends State<MessagePage> {
           // Purchase Request
           Container(
             child: Text(
-              'You have sent a request to purchase this item.',
+              'You have sent a request to purchase this item from ${toCustomer.fullName}.',
               style: TextStyle(color: Colors.white60),
             ),
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
@@ -302,7 +313,7 @@ class MessagePageState extends State<MessagePage> {
           // Delivery Request
           Container(
             child: Text(
-              'You have sent a request to deliver this item and have it picked up at ' + DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(document['content'])),
+              'You have sent a delivery request to ${toCustomer.fullName}. If accepted, your item will be picked up at ' + expectedPickup,
               style: TextStyle(color: Colors.white60),
             ),
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
@@ -416,7 +427,7 @@ class MessagePageState extends State<MessagePage> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
                           child: Text(
-                            'Someone has requested to purchase your item.',
+                            '${toCustomer.fullName} has sent you a request to purchase your item.',
                             style: TextStyle(color: Colors.black.withOpacity(0.6))
                           ),
                         ),
@@ -471,21 +482,25 @@ class MessagePageState extends State<MessagePage> {
                                     // user selected both a time and a date, send a message
                                     DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
 
-                                    // get the from ID from the chat ID
-                                    var chatIdParts = this.chatId.split('-');
-                                    var fromId = int.tryParse(chatIdParts[0]);
-
-                                    // get the customer address by id
-                                    CustomerAddress dropoffAddress = await Magento.getCustomerAddressById(fromId);
+                                    // compute pickup and dropoff window
+                                    var pickupDeadline = selectedDateTime.add(Duration(minutes: 30));
+                                    var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
 
                                     // create a Postmates delivery quote
                                     DeliveryQuoteResponse response = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
-                                      dropoff_address: dropoffAddress.toString(),
-                                      pickup_address: customer.addresses.first.toString()
+                                      pickup_address: fromCustomer.addresses.first.toString(),
+                                      pickup_ready_dt: selectedDateTime.toUtc().toIso8601String(),
+                                      pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+                                      dropoff_address: toCustomer.addresses.first.toString(),
+                                      dropoff_ready_dt: selectedDateTime.toUtc().toIso8601String(),
+                                      dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
                                     ));
 
+                                    // prepare message content for delivery request
+                                    String content = response.id + '-' + response.fee.toString() + '-' + response.pickup_duration.toString() + '-' + response.duration.toString();
+
                                     // send a Firebase message
-                                    await Firebase.sendProductMessage(chatId, customer.id, toId, product, selectedDateTime.toString(), MessageType.deliveryRequest);
+                                    await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryRequest);
                                   }// end if user selected a time and a date
                                 }// end if user selected a date
                               },
@@ -518,7 +533,8 @@ class MessagePageState extends State<MessagePage> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
                           child: Text(
-                            'You have received a delivery request. Your item will be delivered at ' + DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(document['content'])),
+                            '${toCustomer.fullName} has sent you a delivery request. If you accept, this item will be delivered at ' + expectedDropoff
+                                + ' This includes an additional delivery fee of ' + fee + '.',
                             style: TextStyle(color: Colors.black.withOpacity(0.6))
                           ),
                         ),
@@ -579,7 +595,7 @@ class MessagePageState extends State<MessagePage> {
                                   if(selectedTime != null) {
                                     // user selected both a time and a date, send a message
                                     DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
-                                    await Firebase.sendProductMessage(chatId, customer.id, toId, product, selectedDateTime.toString(), MessageType.deliveryRequest);
+                                    await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, selectedDateTime.toString(), MessageType.deliveryRequest);
                                   }// end if user selected a time and a date
                                 }// end if user selected a date
                               },
@@ -627,7 +643,7 @@ class MessagePageState extends State<MessagePage> {
   }
 
   bool isLastMessageLeft(int index) {
-    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] == customer.id) || index == 0) {
+    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] == fromCustomer.id) || index == 0) {
       return true;
     } else {
       return false;
@@ -635,7 +651,7 @@ class MessagePageState extends State<MessagePage> {
   }
 
   bool isLastMessageRight(int index) {
-    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] != customer.id) || index == 0) {
+    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] != fromCustomer.id) || index == 0) {
       return true;
     } else {
       return false;

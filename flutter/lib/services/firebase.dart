@@ -24,7 +24,7 @@ class Firebase {
       Firestore.instance.collection('users').document(response.id.toString()).setData({
         'id': response.id,
         'email': response.email,
-        'nickname': response.firstName + ' ' + response.lastName,
+        'nickname': response.fullName,
         'vendorId': response.vendorId
       });
     }// end if we need to create a new user
@@ -49,9 +49,6 @@ class Firebase {
       userMessageId = toId.toString() + '-' + product.id.toString();
     }// end if type is buyer
 
-    QuerySnapshot result = await Firestore.instance.collection('inbox_messages').where('id', isEqualTo: userMessageId).getDocuments();
-    List <DocumentSnapshot> documents = result.documents;
-
     // set up params to store for user inbox message
     var now = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -61,23 +58,23 @@ class Firebase {
       messagePreview = content.substring(0, 50);
     }// end if content length > 50
 
-    if (documents.length == 0) {
-      // create a inbox message
-      Firestore.instance.collection('inbox_messages').document(userMessageId).setData({
-        'fromId': fromId,
-        'toId': toId,
-        'chatId': chatId,
-        'product': product.toJson(),
-        'type': type.index,
-        'messagePreview': messagePreview,
-        'lastMessageTimestamp': now
-      });
+    // create/update a inbox message
+    var data =  {
+      'chatId': chatId,
+      'product': product.toJson(),
+      'type': type.index,
+      'messagePreview': messagePreview,
+      'lastMessageTimestamp': now
+    };
+    if(type == UserMessageType.buyer) {
+      data['toId'] = toId;
+      data['fromId'] = fromId;
     } else {
-      // update the last message timestamp and preview
-      documents[0].data['messagePreview'] = messagePreview;
-      documents[0].data['lastMessageTimestamp'] = now;
-      Firestore.instance.collection('inbox_messages').document(userMessageId).setData(documents[0].data);
-    }// end if we need to create a new inbox message
+      data['fromId'] = toId;
+      data['toId'] = fromId;
+    }// end if type is buyer
+
+    Firestore.instance.collection('inbox_messages').document(userMessageId).setData(data);
   }// end function createUserInboxMessage
 
   /*
