@@ -229,11 +229,13 @@ class MessagePageState extends State<MessagePage> {
     var currency = Currency.create('USD', 2);
     var quoteId, fee, expectedPickup, expectedDropoff = '';
     if(document['type'] == MessageType.deliveryRequest.index) {
-      var content = document['content'].split('-');
+      var content = document['content'].split('|');
       quoteId = content[0];
-      fee = Money.fromInt(int.tryParse(content[1]), currency).toString();
-      expectedPickup = DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(content[2]))).toString()));
-      expectedDropoff = DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(content[3]))).toString()));
+      fee = Money.fromInt(int.tryParse(content[1]), currency);
+      expectedPickup = DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(content[2]))).toString()))
+          .replaceAll(new RegExp(r'on ' + DateFormat('MM/dd/yyyy').format(DateTime.now()) + '.'), '');
+      expectedDropoff = DateFormat('h:mm a on MM/dd/yyyy.').format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(content[3]))).toString()))
+          .replaceAll(new RegExp(r'on ' + DateFormat('MM/dd/yyyy').format(DateTime.now()) + '.'), '');
     }// end if delivery request
 
     if (document['idFrom'] == fromCustomer.id) {
@@ -313,7 +315,8 @@ class MessagePageState extends State<MessagePage> {
           // Delivery Request
           Container(
             child: Text(
-              'You have sent a delivery request to ${toCustomer.fullName}. If accepted, your item will be picked up at ' + expectedPickup,
+              'You have sent a delivery request to ${toCustomer.fullName}.'
+                  + '\n\nPickup ETA: ' + expectedPickup,
               style: TextStyle(color: Colors.white60),
             ),
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
@@ -439,72 +442,28 @@ class MessagePageState extends State<MessagePage> {
                               onPressed: () async {
                                 // show date picker
                                 DateTime now = DateTime.now();
-                                DateTime future = now.add(Duration(days: 30));
-                                DateTime selectedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: now,
-                                  firstDate: now,
-                                  lastDate: future,
-                                  builder: (BuildContext context, Widget child) {
-                                    return Theme(
-                                      data: ThemeData.light().copyWith(
-                                        primaryColor: const Color(0xff41b8ea),
-                                        accentColor: const Color(0xff41b8ea),
-                                        colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
-                                        buttonTheme: ButtonThemeData(
-                                          textTheme: ButtonTextTheme.primary
-                                        )
-                                      ),
-                                      child: child,
-                                    );
-                                  },
-                                );
-                                if(selectedDate != null) {
-                                  // show time picker
-                                  TimeOfDay selectedTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
-                                    builder: (BuildContext context, Widget child) {
-                                      return Theme(
-                                        data: ThemeData.light().copyWith(
-                                          primaryColor: const Color(0xff41b8ea),
-                                          accentColor: const Color(0xff41b8ea),
-                                          colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
-                                          buttonTheme: ButtonThemeData(
-                                            textTheme: ButtonTextTheme.primary
-                                          )
-                                        ),
-                                        child: child,
-                                      );
-                                    },
-                                  );
-                                  if(selectedTime != null) {
-                                    // user selected both a time and a date, send a message
-                                    DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
 
-                                    // compute pickup and dropoff window
-                                    var pickupDeadline = selectedDateTime.add(Duration(minutes: 30));
-                                    var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+                                // compute pickup and dropoff window
+                                var pickupDeadline = now.add(Duration(minutes: 30));
+                                var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
 
-                                    // create a Postmates delivery quote
-                                    DeliveryQuoteResponse response = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
-                                      pickup_address: fromCustomer.addresses.first.toString(),
-                                      pickup_ready_dt: selectedDateTime.toUtc().toIso8601String(),
-                                      pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
-                                      dropoff_address: toCustomer.addresses.first.toString(),
-                                      dropoff_ready_dt: selectedDateTime.toUtc().toIso8601String(),
-                                      dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
-                                    ));
+                                // create a Postmates delivery quote
+                                DeliveryQuoteResponse response = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
+                                  pickup_address: fromCustomer.addresses.first.toString(),
+                                  pickup_ready_dt: now.toUtc().toIso8601String(),
+                                  pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+                                  dropoff_address: toCustomer.addresses.first.toString(),
+                                  dropoff_ready_dt: now.toUtc().toIso8601String(),
+                                  dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
+                                ));
 
-                                    // prepare message content for delivery request
-                                    String content = response.id + '-' + response.fee.toString() + '-' + response.pickup_duration.toString() + '-' + response.duration.toString();
+                                // prepare message content for delivery request
+                                String content = response.id + '|' + response.fee.toString() + '|' + response.pickup_duration.toString() + '|' + response.duration.toString();
 
-                                    // send a Firebase message
-                                    await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryRequest);
-                                  }// end if user selected a time and a date
-                                }// end if user selected a date
+                                // send a Firebase message
+                                await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryRequest);
                               },
-                              child: const Text('Schedule Pickup'),
+                              child: const Text('Request Pickup'),
                             ),
                             FlatButton(
                               textColor: const Color(0xff41b8ea),
@@ -533,8 +492,12 @@ class MessagePageState extends State<MessagePage> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
                           child: Text(
-                            '${toCustomer.fullName} has sent you a delivery request. If you accept, this item will be delivered at ' + expectedDropoff
-                                + ' This includes an additional delivery fee of ' + fee + '.',
+                            '${toCustomer.fullName} has sent you a delivery request.'
+                                + '\n\n${product.name}'
+                                + '\n\nDelivery ETA: ' + expectedDropoff
+                                + '\n\nDelivery fee: ' + fee.toString()
+                                + '\n\nTotal: ' + (fee
+                                + Money.from(double.tryParse(product.price), currency)).toString(),
                             style: TextStyle(color: Colors.black.withOpacity(0.6))
                           ),
                         ),
@@ -551,55 +514,9 @@ class MessagePageState extends State<MessagePage> {
                             FlatButton(
                               textColor: const Color(0xff41b8ea),
                               onPressed: () async {
-                                // show date picker
-                                DateTime now = DateTime.now();
-                                DateTime future = now.add(Duration(days: 30));
-                                DateTime selectedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: now,
-                                  firstDate: now,
-                                  lastDate: future,
-                                  builder: (BuildContext context, Widget child) {
-                                    return Theme(
-                                      data: ThemeData.light().copyWith(
-                                        primaryColor: const Color(0xff41b8ea),
-                                        accentColor: const Color(0xff41b8ea),
-                                        colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
-                                        buttonTheme: ButtonThemeData(
-                                            textTheme: ButtonTextTheme.primary
-                                        )
-                                      ),
-                                      child: child,
-                                    );
-                                  },
-                                );
-                                if(selectedDate != null) {
-                                  // show time picker
-                                  TimeOfDay selectedTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay(hour: now.hour, minute: now.minute),
-                                    builder: (BuildContext context, Widget child) {
-                                      return Theme(
-                                        data: ThemeData.light().copyWith(
-                                          primaryColor: const Color(0xff41b8ea),
-                                          accentColor: const Color(0xff41b8ea),
-                                          colorScheme: ColorScheme.light(primary: const Color(0xff41b8ea)),
-                                          buttonTheme: ButtonThemeData(
-                                              textTheme: ButtonTextTheme.primary
-                                          )
-                                        ),
-                                        child: child,
-                                      );
-                                    },
-                                  );
-                                  if(selectedTime != null) {
-                                    // user selected both a time and a date, send a message
-                                    DateTime selectedDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
-                                    await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, selectedDateTime.toString(), MessageType.deliveryRequest);
-                                  }// end if user selected a time and a date
-                                }// end if user selected a date
+                                await Firebase.deleteProductMessage(chatId, document.documentID);
                               },
-                              child: const Text('Suggest Different Time'),
+                              child: const Text('Decline Delivery'),
                             ),
                           ],
                         )

@@ -139,6 +139,20 @@ class Firebase {
   }// end function getProductMessagesStream
 
   /*
+  * deleteProductMessage - Delete a product message
+  * chatId - Group chat ID
+  * messageId - Message ID
+  */
+  static Future deleteProductMessage(String chatId, String messageId) async {
+    await Firestore.instance
+        .collection('messages')
+        .document(chatId)
+        .collection(chatId)
+        .document(messageId)
+        .delete();
+  }// end function sendProductMessage
+
+  /*
   * configure - Configure Firebase settings
   */
   static Future configure() async {
