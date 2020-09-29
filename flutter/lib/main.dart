@@ -3,6 +3,7 @@ import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 Future<void> main() async {
   // ensure flutter binding
@@ -10,6 +11,13 @@ Future<void> main() async {
 
   // setup Firebase
   await Firebase.configure();
+
+  // setup Stripe
+  StripePayment.setOptions(StripeOptions(
+    publishableKey: 'pk_test_6QOUWv18fiwTf0QzwAzudvxK',
+    merchantId: 'Test',
+    androidPayMode: 'test')
+  );
 
   // clear from disk
   await CustomerResponse.clear();
