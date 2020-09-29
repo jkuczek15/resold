@@ -18,6 +18,7 @@ import 'package:resold/enums/message-type.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/services/postmates.dart';
 import 'package:money2/money2.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
@@ -443,7 +444,6 @@ class MessagePageState extends State<MessagePage> {
                                 // show date picker
                                 DateTime now = DateTime.now();
 
-                                // compute pickup and dropoff window
                                 var pickupDeadline = now.add(Duration(minutes: 30));
                                 var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
 
@@ -507,7 +507,27 @@ class MessagePageState extends State<MessagePage> {
                             FlatButton(
                               textColor: const Color(0xff41b8ea),
                               onPressed: () async {
-                                // todo: payment flow
+                                StripePayment.paymentRequestWithNativePay(
+                                  androidPayOptions: AndroidPayPaymentRequest(
+                                    totalPrice: (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), ''),
+                                    currencyCode: 'USD',
+                                  ),
+                                  applePayOptions: ApplePayPaymentOptions(
+                                    countryCode: 'US',
+                                    currencyCode: 'USD',
+                                    items: [
+                                      ApplePayItem(
+                                        label: product.name,
+                                        amount: (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), '')
+                                      )
+                                    ],
+                                  ),
+                                ).then((Token token) {
+                                  // todo: create a card charge and a delivery
+                                  print(token);
+                                }).catchError((err) {
+                                  print(err);
+                                });
                               },
                               child: const Text('Accept Delivery'),
                             ),
