@@ -18,7 +18,7 @@ class DeliveryQuoteResponse extends Response {
   final int pickup_duration;    // estimated minutes until a courier will arrive at the pickup
 
   DeliveryQuoteResponse({this.id, this.created, this.currency, this.currency_type, this.dropoff_eta, this.duration, this.expires, this.fee, this.kind, this.pickup_duration,
-    status, error}) : super(status: status, error: error);
+    statusCode, error}) : super(statusCode: statusCode, error: error);
 
   factory DeliveryQuoteResponse.fromJson(Map<String, dynamic> json) => _$DeliveryQuoteResponseFromJson(json);
   Map<String, dynamic> toJson() => _$DeliveryQuoteResponseToJson(this);

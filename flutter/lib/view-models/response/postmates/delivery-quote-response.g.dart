@@ -25,7 +25,7 @@ DeliveryQuoteResponse _$DeliveryQuoteResponseFromJson(
     fee: json['fee'] as int,
     kind: json['kind'] as String,
     pickup_duration: json['pickup_duration'] as int,
-    status: json['status'],
+    statusCode: json['statusCode'],
     error: json['error'],
   );
 }
@@ -33,7 +33,7 @@ DeliveryQuoteResponse _$DeliveryQuoteResponseFromJson(
 Map<String, dynamic> _$DeliveryQuoteResponseToJson(
         DeliveryQuoteResponse instance) =>
     <String, dynamic>{
-      'status': instance.status,
+      'statusCode': instance.statusCode,
       'error': instance.error,
       'id': instance.id,
       'created': instance.created?.toIso8601String(),

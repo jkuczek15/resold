@@ -25,7 +25,7 @@ class Magento {
   static Future<CustomerResponse> loginCustomer(LoginRequest request) async {
     if (request.username.isEmpty || request.password.isEmpty) {
       return CustomerResponse(
-          status: 400,
+          statusCode: 400,
           error: 'Please enter both an email and a password.'
       );
     }
@@ -60,7 +60,7 @@ class Magento {
       // login error
       var json = jsonDecode(response.body.toString());
       return CustomerResponse(
-          status: response.statusCode,
+          statusCode: response.statusCode,
           error: json['message']
       );
     }
@@ -74,19 +74,19 @@ class Magento {
       String password, String confirmPassword) async {
     if (request.firstname.isEmpty || request.lastname.isEmpty) {
       return CustomerResponse(
-          status: 400,
+          statusCode: 400,
           error: 'Please enter both a first name and last name.'
       );
     }
     if (request.email.isEmpty || password.isEmpty) {
       return CustomerResponse(
-          status: 400,
+          statusCode: 400,
           error: 'Please enter both an email and a password.'
       );
     }
     if (password != confirmPassword) {
       return CustomerResponse(
-          status: 400,
+          statusCode: 400,
           error: 'Confirmation password should match password.'
       );
     }
@@ -114,7 +114,7 @@ class Magento {
     } else {
       // sign up error
       return CustomerResponse(
-          status: response.statusCode,
+          statusCode: response.statusCode,
           error: responseJson['message']
       );
     }
@@ -128,7 +128,7 @@ class Magento {
   static Future<CustomerResponse> getMe(String token, String password) async {
     if (token.isEmpty) {
       return CustomerResponse(
-        status: 400,
+        statusCode: 400,
         error: 'Please enter both an email and a password.'
       );
     }
@@ -151,7 +151,7 @@ class Magento {
       var vendorId = await Resold.getVendorId(customerId);
 
       return CustomerResponse(
-        status: response.statusCode,
+        statusCode: response.statusCode,
         id: customerId,
         email: responseJson['email'].toString(),
         password: password,
@@ -165,7 +165,7 @@ class Magento {
       // error
       var json = jsonDecode(response.body.toString());
       return CustomerResponse(
-          status: response.statusCode,
+          statusCode: response.statusCode,
           error: json['message']
       );
     }
@@ -218,7 +218,7 @@ class Magento {
     if (response.statusCode == 200) {
       var vendorId = await Resold.getVendorId(customerId);
       return CustomerResponse(
-          status: response.statusCode,
+          statusCode: response.statusCode,
           id: customerId,
           email: responseJson['email'].toString(),
           firstName: responseJson['firstname'].toString(),
@@ -228,7 +228,7 @@ class Magento {
       );
     } else {
       return CustomerResponse(
-          status: response.statusCode,
+          statusCode: response.statusCode,
           error: responseJson['message']
       );
     }

@@ -122,7 +122,7 @@ class LoginPageState extends State<LoginPage> {
                                       password: passwordController.text
                                     ));
 
-                                    if(response.status == 200) {
+                                    if(response.statusCode == 200) {
                                       // login was successful
                                       // store to disk
                                       await CustomerResponse.save(response);

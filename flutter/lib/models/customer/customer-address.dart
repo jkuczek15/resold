@@ -17,7 +17,7 @@ class CustomerAddress {
 
   String postcode;
   String city;
-//  String telephone;  todo: get the user's phone number
+  String telephone;  // todo: get the user's phone number in-app
   String countryId;
 
   CustomerAddress({this.defaultBilling, this.defaultShipping, this.firstname, this.lastname, this.region,
@@ -80,6 +80,7 @@ class CustomerAddress {
       customerAddress.city = address['city'];
       customerAddress.countryId = address['country_id'];
       customerAddress.street = [address['street'][0].toString()];
+      customerAddress.telephone = address['telephone'];
 
       if(address['region'] != null) {
         var region = address['region'];
