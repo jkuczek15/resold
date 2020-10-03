@@ -4,8 +4,10 @@ import 'package:flutter/rendering.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
+import 'package:resold/view-models/request/postmates/delivery-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
+import 'package:resold/view-models/response/postmates/delivery-response.dart';
 import 'package:resold/widgets/image/full-photo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -441,21 +443,8 @@ class MessagePageState extends State<MessagePage> {
                             FlatButton(
                               textColor: const Color(0xff41b8ea),
                               onPressed: () async {
-                                // show date picker
-                                DateTime now = DateTime.now();
-
-                                var pickupDeadline = now.add(Duration(minutes: 30));
-                                var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
-
-                                // create a Postmates delivery quote
-                                DeliveryQuoteResponse response = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
-                                  pickup_address: fromCustomer.addresses.first.toString(),
-                                  pickup_ready_dt: now.toUtc().toIso8601String(),
-                                  pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
-                                  dropoff_address: toCustomer.addresses.first.toString(),
-                                  dropoff_ready_dt: now.toUtc().toIso8601String(),
-                                  dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
-                                ));
+                                // get a Postmates delivery quote
+                                DeliveryQuoteResponse response = await getDeliveryQuote();
 
                                 // prepare message content for delivery request
                                 String content = response.id + '|' + response.fee.toString() + '|' + response.pickup_duration.toString() + '|' + response.duration.toString();
@@ -522,8 +511,10 @@ class MessagePageState extends State<MessagePage> {
                                       )
                                     ],
                                   ),
-                                ).then((Token token) {
+                                ).then((Token token) async {
                                   // todo: create a card charge and a delivery
+                                  DeliveryResponse response = await getDelivery();
+
                                   print(token);
                                 }).catchError((err) {
                                   print(err);
@@ -577,6 +568,50 @@ class MessagePageState extends State<MessagePage> {
         margin: EdgeInsets.only(bottom: 10.0),
       );
     }
+  }
+
+  Future<DeliveryQuoteResponse> getDeliveryQuote() async {
+    DateTime now = DateTime.now();
+
+    var pickupDeadline = now.add(Duration(minutes: 30));
+    var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+
+    // create a Postmates delivery quote
+    return await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
+        pickup_address: fromCustomer.addresses.first.toString(),
+        pickup_ready_dt: now.toUtc().toIso8601String(),
+        pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+        dropoff_address: toCustomer.addresses.first.toString(),
+        dropoff_ready_dt: now.toUtc().toIso8601String(),
+        dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
+    ));
+  }
+
+  Future<DeliveryResponse> getDelivery() async {
+    DateTime now = DateTime.now();
+
+    var pickupDeadline = now.add(Duration(minutes: 30));
+    var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+
+    // create a Postmates delivery
+    return await Postmates.createDelivery(DeliveryRequest(
+        pickup_name: toCustomer.fullName,
+        pickup_phone_number: toCustomer.addresses.first.telephone,
+        pickup_address: toCustomer.addresses.first.toString(),
+        pickup_ready_dt: now.toUtc().toIso8601String(),
+        pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+        dropoff_name: fromCustomer.fullName,
+        dropoff_phone_number: fromCustomer.addresses.first.telephone,
+        dropoff_address: fromCustomer.addresses.first.toString(),
+        dropoff_ready_dt: now.toUtc().toIso8601String(),
+        dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String(),
+        manifest: product.name,
+        manifest_items: [new ManifestItem(
+          name: product.name,
+          quantity: 1,
+          size: product.getPostmatesItemSize()
+        )]
+    ));
   }
 
   bool isLastMessageLeft(int index) {

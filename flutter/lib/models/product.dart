@@ -106,4 +106,19 @@ class Product {
       return {};
     }
   }
+
+  String getPostmatesItemSize() {
+    switch(this.itemSize) {
+      case 239:
+        return 'small';
+      case 240:
+        return 'medium';
+      case 241:
+        return 'large';
+      case 242:
+        return 'xlarge';
+      default:
+        return 'medium';
+    }
+  }
 }

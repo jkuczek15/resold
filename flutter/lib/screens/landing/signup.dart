@@ -237,7 +237,7 @@ class SignUpPageState extends State<SignUpPage> {
                                         addresses: [customerAddress]
                                       ), passwordController.text, confirmPasswordController.text);
 
-                                      if(response.status == 200) {
+                                      if(response.statusCode == 200) {
                                         // signup was successful
                                         // store to disk
                                         await CustomerResponse.save(response);

@@ -20,7 +20,7 @@ CustomerAddress _$CustomerAddressFromJson(Map<String, dynamic> json) {
     postcode: json['postcode'] as String,
     city: json['city'] as String,
     countryId: json['countryId'] as String,
-  );
+  )..telephone = json['telephone'] as String;
 }
 
 Map<String, dynamic> _$CustomerAddressToJson(CustomerAddress instance) =>
@@ -33,5 +33,6 @@ Map<String, dynamic> _$CustomerAddressToJson(CustomerAddress instance) =>
       'street': instance.street,
       'postcode': instance.postcode,
       'city': instance.city,
+      'telephone': instance.telephone,
       'countryId': instance.countryId,
     };
