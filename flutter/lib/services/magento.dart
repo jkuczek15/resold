@@ -1,5 +1,7 @@
 import 'package:http/http.dart' show Client;
+import 'package:resold/models/customer/customer-address-region.dart';
 import 'package:resold/models/customer/customer-address.dart';
+import 'package:resold/models/product.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:resold/view-models/request/magento/login-request.dart';
@@ -8,6 +10,7 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/resold-rest.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 /*
 * Resold Magento API service - Magento specific API client
@@ -172,6 +175,92 @@ class Magento {
   }// end function getMe
 
   /*
+  * createQuote - Return the quote ID for the customer
+  * token - Customer API token
+  * shippingAddress - Customer shipping address
+  * product - Product to be added to the cart
+  */
+  static Future<int> createQuote(String token, CustomerAddress shippingAddress, Product product) async {
+
+    await config.initialized;
+
+    config.customerHeaders['Authorization'] = 'Bearer ${token}';
+
+    var response = await client.post(
+      '${config.baseUrl}/carts/mine',
+      headers: config.customerHeaders
+    );
+
+    var responseText = response.body.toString().replaceAll("\"", "");
+    if (response.statusCode == 200) {
+      // get the cart ID
+      int cartId = int.tryParse(responseText);
+
+      // setup the cart item request
+      var requestJson = jsonEncode(<String, dynamic>{'cartItem': {
+        'sku': product.sku,
+        'qty': 1,
+        'quote_id': cartId
+      }});
+
+      // add the product to the cart
+      response = await client.post(
+        '${config.baseUrl}/carts/mine/items',
+        headers: config.customerHeaders,
+        body: requestJson
+      );
+
+      // setup shipping estimate request
+      var address = shippingAddress.toJson();
+      CustomerAddressRegion region = address['region'];
+      address.remove('region');
+      address.remove('defaultBilling');
+      address.remove('defaultShipping');
+      address['region_id'] = region.regionId;
+      address['region_code'] = region.regionCode;
+      address['same_as_billing'] = 1;
+      requestJson = jsonEncode(<String, dynamic>{'address': address});
+
+      // estimate shipping methods
+      response = await client.post(
+        '${config.baseUrl}/carts/mine/estimate-shipping-methods',
+        headers: config.customerHeaders,
+        body: requestJson
+      );
+
+      responseText = response.body.toString();
+
+      // setup shipping information request
+      requestJson = jsonEncode(<String, dynamic> {
+        'addressInformation': {
+          'shipping_address': address,
+          'billing_address': address,
+          'shipping_carrier_code': 'flatrate',
+          'shipping_method_code': 'flatrate'
+        }
+      });
+
+      // set shipping information
+      response = await client.post(
+        '${config.baseUrl}/carts/mine/shipping-information',
+        headers: config.customerHeaders,
+        body: requestJson
+      );
+
+      // todo: decode response into order/quote response
+      responseText = response.body.toString();
+
+      if (response.statusCode == 200) {
+        return cartId;
+      }
+      return -1;
+    } else {
+      // error
+      return -1;
+    }
+  }// end function getMe
+
+  /*
   * getPurchasedOrders - Returns a list of orders for the customer
   * customerId - ID of the customer
   */
@@ -260,7 +349,7 @@ class Config {
     accessToken = config['access_token'];
     adminHeaders['Authorization'] = 'Bearer ${this.accessToken}';
     adminHeaders['User-Agent'] = customerHeaders['User-Agent'] = 'Resold - Mobile Application';
-    adminHeaders['Content-Type'] = customerHeaders['User-Agent'] = 'application/json';
+    adminHeaders['Content-Type'] = customerHeaders['Content-Type'] = 'application/json';
   }// end function init
 
 }// end class Config
