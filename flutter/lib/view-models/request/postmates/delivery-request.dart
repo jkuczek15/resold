@@ -30,13 +30,21 @@ class DeliveryRequest {
   final String pickup_phone_number;
   final String pickup_ready_dt;
 
+  // robot info
+  String robo_delivered;
+  String robo_dropoff;
+  String robo_pickup;
+  String robo_pickup_complete;
+  String robo_undeliverable_action;
+
   // manifest, what the courier will be delivering
   final String manifest;
   final List<ManifestItem> manifest_items;
 
   DeliveryRequest({this.dropoff_address, this.pickup_address, this.dropoff_deadline_dt, this.dropoff_latitude, this.dropoff_longitude,
   this.dropoff_phone_number, this.dropoff_ready_dt, this.pickup_deadline_dt, this.pickup_latitude, this.pickup_longitude, this.pickup_phone_number, this.pickup_ready_dt,
-  this.manifest, this.manifest_items, this.dropoff_notes, this.dropoff_name, this.pickup_name});
+  this.manifest, this.manifest_items, this.dropoff_notes, this.dropoff_name, this.pickup_name, this.robo_delivered, this.robo_dropoff, this.robo_pickup, this.robo_pickup_complete,
+  this.robo_undeliverable_action});
 
   factory DeliveryRequest.fromJson(Map<String, dynamic> json) => _$DeliveryRequestFromJson(json);
   Map<String, dynamic> toJson() => _$DeliveryRequestToJson(this);

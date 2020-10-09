@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/request/postmates/delivery-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -512,8 +513,12 @@ class MessagePageState extends State<MessagePage> {
                                     ],
                                   ),
                                 ).then((Token token) async {
-                                  // todo: create a card charge and a delivery
                                   DeliveryResponse response = await getDelivery();
+                                  int quoteId = await Magento.createQuote(fromCustomer.token, fromCustomer.addresses.first, product);
+
+                                  // todo: create a card charge via Stripe, pay the seller
+                                  // todo: create a Magento order, move status to in progress
+                                  // todo: save current delivery details with the order
 
                                   print(token);
                                 }).catchError((err) {
