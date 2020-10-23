@@ -57,6 +57,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 		$this->_objectManager = $objectInterface;
 	}
 	public function assignData(DataObject $data) {
+		throw new \Magento\Framework\Exception\LocalizedException ( __ ( $data ) );
 		if (! ($data instanceof DataObject)) {
 			$data = new DataObject ( $data );
 		}
