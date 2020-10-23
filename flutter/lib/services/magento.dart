@@ -175,12 +175,12 @@ class Magento {
   }// end function getMe
 
   /*
-  * createQuote - Return the quote ID for the customer
+  * createOrder - Return the order ID for the customer
   * token - Customer API token
   * shippingAddress - Customer shipping address
   * product - Product to be added to the cart
   */
-  static Future<int> createQuote(String token, CustomerAddress shippingAddress, Product product) async {
+  static Future<int> createOrder(String token, CustomerAddress shippingAddress, Product product) async {
 
     await config.initialized;
 
@@ -247,11 +247,34 @@ class Magento {
         body: requestJson
       );
 
-      // todo: decode response into order/quote response
+      // setup shipping information request
+      // todo: include Stripe cc_type, cc_number, etc...
+      requestJson = jsonEncode(<String, dynamic> {
+        'paymentMethod': {
+          'method': 'stripe',
+          'additional_data': {
+            'cc_type': 'visa',
+            'cc_number': '4242424242424242',
+            'cc_cid': '032',
+            'cc_exp_year': '2022',
+            'cc_exp_month': '5'
+          }
+        },
+        'billing_address': address
+      });
+
+      // set payment information and create order
+      response = await client.post(
+        '${config.baseUrl}/carts/mine/payment-information',
+        headers: config.customerHeaders,
+        body: requestJson
+      );
+
       responseText = response.body.toString();
 
       if (response.statusCode == 200) {
-        return cartId;
+        // return the order Id
+        return int.tryParse(responseText.replaceAll("\"", ""));
       }
       return -1;
     } else {

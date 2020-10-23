@@ -23,6 +23,7 @@ import 'package:resold/services/postmates.dart';
 import 'package:money2/money2.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'dart:io';
+import 'package:stripe_sdk/stripe_sdk.dart';
 
 class MessagePage extends StatefulWidget {
   final Product product;
@@ -513,12 +514,13 @@ class MessagePageState extends State<MessagePage> {
                                     ],
                                   ),
                                 ).then((Token token) async {
-                                  DeliveryResponse response = await getDelivery();
-                                  int quoteId = await Magento.createQuote(fromCustomer.token, fromCustomer.addresses.first, product);
+                                  await StripePayment.completeNativePayRequest();
 
-                                  // todo: create a card charge via Stripe, pay the seller
-                                  // todo: create a Magento order, move status to in progress
-                                  // todo: save current delivery details with the order
+                                  // todo: include Stripe credit card in Magento order
+                                  // todo: include delivery quote amount as fee
+                                  DeliveryQuoteResponse quote = await getDeliveryQuote();
+                                  int orderId = await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product);
+                                  DeliveryResponse delivery = await getDelivery();
 
                                   print(token);
                                 }).catchError((err) {

@@ -28,7 +28,8 @@ class OrdersPageState extends State<OrdersPage> {
   @override
   void initState() {
     super.initState();
-    futurePurchasedOrders = Magento.getPurchasedOrders(98);
+    futurePurchasedOrders = Magento.getPurchasedOrders(customer.id);
+    // todo: get the customer's sold items
     futureSoldOrders = Magento.getPurchasedOrders(customer.id);
   }
 
