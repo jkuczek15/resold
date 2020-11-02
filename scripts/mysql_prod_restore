@@ -3,16 +3,16 @@ host=$1
 
 if [[ -n "$host" ]]; then
   # Perform a mysql dump of prod database cluster and store on the web server
-  ssh -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host" "mysqldump -h mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com -u admin -p MagentoQuickstartDB > ~/prod-dump.sql"
+  ssh -i "~/.ssh/magento-key-pair.pem" ec2-user@"$host" "mysqldump -h mm6imdf4u5ak4w.czqsdryzxcba.us-west-2.rds.amazonaws.com -u admin -p MagentoQuickstartDB > ~/prod-dump.sql"
 
   # Transfer the dump file to our local machine
-  scp -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host":~/prod-dump.sql ~/prod-dump.sql
+  scp -i "~/.ssh/magento-key-pair.pem" ec2-user@"$host":~/prod-dump.sql ~/prod-dump.sql
 
   # Restore our local database
   mysql -h localhost -u root -p MagentoQuickstartDB < ~/prod-dump.sql
 
   # Remove the production dump from the web server file system
-  ssh -i "/home/joe/.ssh/magento-key-pair.pem" ec2-user@"$host" "rm -rf ~/prod-dump.sql"
+  ssh -i "~/.ssh/magento-key-pair.pem" ec2-user@"$host" "rm -rf ~/prod-dump.sql"
 
   # Remove the production dump from the local machine file system
   rm -rf ~/prod-dump.sql
