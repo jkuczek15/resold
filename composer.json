@@ -58,7 +58,10 @@
         "sebastian/phpcpd": "2.0.0"
     },
     "config": {
-        "use-include-path": true
+        "use-include-path": true,
+	"platform": {
+		"php": "7.0.2"
+	}
     },
     "autoload": {
         "psr-4": {
