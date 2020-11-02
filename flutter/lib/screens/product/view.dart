@@ -202,7 +202,7 @@ class ProductPageState extends State<ProductPage> {
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
                                         },
-                                        child: Text('Purchase',
+                                        child: Text('Request Delivery',
                                             style: new TextStyle(
                                                 fontSize: 20.0,
                                                 fontWeight: FontWeight.bold,
