@@ -20,7 +20,7 @@ Future<void> main() async {
   );
 
   // clear from disk
-  await CustomerResponse.clear();
+  // await CustomerResponse.clear();
 
   // get from disk and login
   CustomerResponse customer = await CustomerResponse.load();
