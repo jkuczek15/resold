@@ -37,6 +37,12 @@ class DropdownSizeListState extends State<DropdownSizeList> {
       style: TextStyle(color: Colors.black),
       focusColor: const Color(0xff41b8ea),
       hint: Text('Vehicle Required'),
+      validator: (value) {
+        if (value == null) {
+          return 'Please select a vehicle.';
+        }
+        return null;
+      },
       onChanged: (String newValue) {
         FocusScope.of(context).requestFocus(FocusNode());
         setState(() {

@@ -36,6 +36,12 @@ class DropdownConditionListState extends State<DropdownConditionList> {
       elevation: 16,
       style: TextStyle(color: Colors.black),
       focusColor: const Color(0xff41b8ea),
+      validator: (value) {
+        if (value == null) {
+          return 'Please select a condition.';
+        }
+        return null;
+      },
       hint: Text('Condition'),
       onChanged: (String newValue) {
         FocusScope.of(context).requestFocus(FocusNode());

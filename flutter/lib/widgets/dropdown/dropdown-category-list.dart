@@ -41,6 +41,12 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
       style: TextStyle(color: Colors.black),
       focusColor: const Color(0xff41b8ea),
       hint: Text('Category'),
+      validator: (value) {
+        if (value == null) {
+          return 'Please select a category.';
+        }
+        return null;
+      },
       onChanged: (String newValue) {
         FocusScope.of(context).requestFocus(FocusNode());
         setState(() {

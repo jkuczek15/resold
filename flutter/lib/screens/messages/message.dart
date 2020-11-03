@@ -23,7 +23,6 @@ import 'package:resold/services/postmates.dart';
 import 'package:money2/money2.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'dart:io';
-import 'package:stripe_sdk/stripe_sdk.dart';
 
 class MessagePage extends StatefulWidget {
   final Product product;
@@ -233,7 +232,8 @@ class MessagePageState extends State<MessagePage> {
 
     var currency = Currency.create('USD', 2);
     var quoteId, fee, expectedPickup, expectedDropoff = '';
-    if(document['type'] == MessageType.deliveryRequest.index) {
+
+    if(document['messageType'] == MessageType.deliveryQuote.index || document['messageType'] == MessageType.deliveryRequest.index) {
       var content = document['content'].split('|');
       quoteId = content[0];
       fee = Money.fromInt(int.tryParse(content[1]), currency);
@@ -247,7 +247,7 @@ class MessagePageState extends State<MessagePage> {
       // Right (my message)
       return Row(
         children: <Widget>[
-          document['type'] == MessageType.text.index ?
+          document['messageType'] == MessageType.text.index ?
           // Text
           Container(
             child: Text(
@@ -259,7 +259,7 @@ class MessagePageState extends State<MessagePage> {
             decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
-            : document['type'] == MessageType.image.index ?
+            : document['messageType'] == MessageType.image.index ?
             // Image
             Container(
             child: FlatButton(
@@ -304,19 +304,44 @@ class MessagePageState extends State<MessagePage> {
             ),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
-          : document['type'] == MessageType.purchaseRequest.index ?
+          : document['messageType'] == MessageType.deliveryQuote.index ?
+
           // Purchase Request
           Container(
-            child: Text(
-              'You have sent a request to purchase this item from ${toCustomer.fullName}.',
-              style: TextStyle(color: Colors.white60),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+              child: Column (
+                children: [
+                  Text(
+                    'You have sent a delivery quote to: ${toCustomer.fullName}.'
+                        + '\n\n${product.name}'
+                        + '\n\nDelivery ETA: ' + expectedDropoff
+                        + '\n\nDelivery fee: ' + fee.toString()
+                        + '\n\nTotal: ' + (fee
+                        + Money.from(double.tryParse(product.price), currency)).toString(),
+                    style: TextStyle(color: Colors.white)
+                  ),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.start,
+                    children: [
+                      FlatButton(
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          await Firebase.deleteProductMessage(chatId, document.documentID);
+                        },
+                        child: const Text('Cancel Delivery'),
+                      )
+                    ],
+                  )
+                ]
+              )
             ),
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
             width: 200.0,
             decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
-          : document['type'] == MessageType.deliveryRequest.index ?
+          : document['messageType'] == MessageType.deliveryRequest.index ?
           // Delivery Request
           Container(
             child: Text(
@@ -369,7 +394,7 @@ class MessagePageState extends State<MessagePage> {
                   clipBehavior: Clip.hardEdge,
                 )
                   : Container(width: 35.0),
-                document['type'] == MessageType.text.index ?
+                document['messageType'] == MessageType.text.index ?
                 Container(
                   child: Text(
                     document['content'],
@@ -380,7 +405,7 @@ class MessagePageState extends State<MessagePage> {
                   decoration: BoxDecoration(color: const Color(0xffe1e1e1), borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(left: 10.0),
                 )
-                : document['type'] == MessageType.image.index ?
+                : document['messageType'] == MessageType.image.index ?
                   Container(
                   child: FlatButton(
                     child: Material(
@@ -424,19 +449,23 @@ class MessagePageState extends State<MessagePage> {
                   ),
                   margin: EdgeInsets.only(left: 10.0),
                 )
-                : document['type'] == MessageType.purchaseRequest.index ?
+                : document['messageType'] == MessageType.deliveryQuote.index ?
                 // Purchase Request
                 Container(
-                  child:
-                  Card(
+                  child: Card(
                     clipBehavior: Clip.antiAlias,
                     child: Column(
                       children: [
                         Padding(
                           padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
                           child: Text(
-                            '${toCustomer.fullName} has sent you a request to purchase your item.',
-                            style: TextStyle(color: Colors.black.withOpacity(0.6))
+                              '${toCustomer.fullName} has sent you a delivery quote.'
+                                  + '\n\n${product.name}'
+                                  + '\n\nDelivery ETA: ' + expectedDropoff
+                                  + '\n\nDelivery fee: ' + fee.toString()
+                                  + '\n\nTotal: ' + (fee
+                                  + Money.from(double.tryParse(product.price), currency)).toString(),
+                              style: TextStyle(color: Colors.black.withOpacity(0.6))
                           ),
                         ),
                         ButtonBar(
@@ -472,7 +501,7 @@ class MessagePageState extends State<MessagePage> {
                   width: 275.0,
                   margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
                 )
-                : document['type'] == MessageType.deliveryRequest.index ?
+                : document['messageType'] == MessageType.deliveryRequest.index ?
                 // Purchase Request
                 Container(
                   child:
@@ -483,7 +512,7 @@ class MessagePageState extends State<MessagePage> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
                           child: Text(
-                            '${toCustomer.fullName} has sent you a delivery request.'
+                            '${toCustomer.fullName} has sent you a delivery quote.'
                                 + '\n\n${product.name}'
                                 + '\n\nDelivery ETA: ' + expectedDropoff
                                 + '\n\nDelivery fee: ' + fee.toString()

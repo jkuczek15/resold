@@ -39,11 +39,11 @@ class Firebase {
   * content - Content of the message for message preview
   * product - Product that message group is related to.
   */
-  static Future createUserInboxMessage(int fromId, int toId, String chatId, String content, Product product, UserMessageType type) async {
+  static Future createUserInboxMessage(int fromId, int toId, String chatId, String content, Product product, UserMessageType userMessageType) async {
     // get existing message collection
     String userMessageId;
 
-    if(type == UserMessageType.buyer) {
+    if(userMessageType == UserMessageType.buyer) {
       userMessageId = fromId.toString() + '-' + product.id.toString();
     } else {
       userMessageId = toId.toString() + '-' + product.id.toString();
@@ -62,11 +62,11 @@ class Firebase {
     var data =  {
       'chatId': chatId,
       'product': product.toJson(),
-      'type': type.index,
+      'messageType': userMessageType.index,
       'messagePreview': messagePreview,
       'lastMessageTimestamp': now
     };
-    if(type == UserMessageType.buyer) {
+    if(userMessageType == UserMessageType.buyer) {
       data['toId'] = toId;
       data['fromId'] = fromId;
     } else {
@@ -86,7 +86,7 @@ class Firebase {
   * content - Content of the message for message preview
   * type - Type of the message (buyer or seller)
   */
-  static Future sendProductMessage(String chatId, int fromId, int toId, Product product, String content, MessageType type) async {
+  static Future sendProductMessage(String chatId, int fromId, int toId, Product product, String content, MessageType messageType) async {
 
     await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.buyer);
     await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.seller);
@@ -94,18 +94,27 @@ class Firebase {
     var documentReference = Firestore.instance
         .collection('messages')
         .document(chatId)
-        .collection(chatId)
-        .document(DateTime.now().millisecondsSinceEpoch.toString());
+        .collection(chatId);
+
+    if(messageType == MessageType.deliveryQuote) {
+      var deliveryQuoteRef = documentReference.where('messageType', isEqualTo: MessageType.deliveryQuote.index );
+      var deliveryQuoteDocuments = await deliveryQuoteRef.getDocuments();
+      if(deliveryQuoteDocuments.documents.isNotEmpty) {
+        Firestore.instance.runTransaction((transaction) async {
+          await transaction.delete(deliveryQuoteDocuments.documents[0].reference);
+        });
+      }
+    }
 
     Firestore.instance.runTransaction((transaction) async {
       await transaction.set(
-        documentReference,
+        documentReference.document(DateTime.now().millisecondsSinceEpoch.toString()),
         {
           'idFrom': fromId,
           'idTo': toId,
+          'messageType': messageType.index,
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          'content': content,
-          'type': type.index
+          'content': content
         },
       );
     });
