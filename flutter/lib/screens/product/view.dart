@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/services/postmates.dart';
 import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:intl/intl.dart';
+import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
+import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
 import 'package:resold/widgets/text/read-more-text.dart';
 import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -196,8 +199,26 @@ class ProductPageState extends State<ProductPage> {
                                           CustomerResponse toCustomer = await Magento.getCustomerById(toId);
                                           String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                          // send initial purchase message
-                                          await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product, 'Purchase request', MessageType.purchaseRequest);
+                                          // get a Postmates delivery quote
+                                          DateTime now = DateTime.now();
+
+                                          var pickupDeadline = now.add(Duration(minutes: 30));
+                                          var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+
+                                          // create a Postmates delivery quote
+                                          DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
+                                              pickup_address: customer.addresses.first.toString(),
+                                              pickup_ready_dt: now.toUtc().toIso8601String(),
+                                              pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+                                              dropoff_address: toCustomer.addresses.first.toString(),
+                                              dropoff_ready_dt: now.toUtc().toIso8601String(),
+                                              dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
+                                          ));
+
+                                          // prepare message content for delivery request
+                                          String content = quote.id + '|' + quote.fee.toString() + '|' + quote.pickup_duration.toString() + '|' + quote.duration.toString();
+
+                                          await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product, content, MessageType.deliveryQuote);
 
                                           Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -324,6 +345,10 @@ class ProductPageState extends State<ProductPage> {
         return false;
       }
     );
+  }
+
+  Future<DeliveryQuoteResponse> getDeliveryQuote() async {
+
   }
 
   Future<void> onMapCreated(GoogleMapController controller) async {

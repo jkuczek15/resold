@@ -38,6 +38,7 @@ class SellPageState extends State<SellPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController detailsController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   SellPageState(CustomerResponse customer) : customer = customer;
 
@@ -65,96 +66,123 @@ class SellPageState extends State<SellPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          imageUploader,
-          SizedBox(height: 20),
-          TextField(
-            controller: nameController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Listing Title'
-            ),
-          ),
-          SizedBox(height: 20),
-          dropdownCategoryList,
-          SizedBox(height: 20),
-          dropdownSizeList,
-          SizedBox(height: 20),
-          Row (
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container (
-                  width: 125,
-                  height: 60,
-                  child: TextField(
-                    controller: priceController,
-                    keyboardType: TextInputType.number,
+          Form(
+            key: formKey,
+            child: Column(
+                children: <Widget>[
+                  imageUploader,
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: nameController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Price (\$)'
+                        labelText: 'Listing Title'
                     ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text.';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  dropdownCategoryList,
+                  SizedBox(height: 20),
+                  dropdownSizeList,
+                  SizedBox(height: 20),
+                  Row (
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container (
+                            width: 125,
+                            height: 60,
+                            child: TextFormField(
+                              controller: priceController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Price (\$)'
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter a price.';
+                                }
+                                return null;
+                              },
+                            )
+                        ),
+                        Container (
+                            width: 150,
+                            height: 60,
+                            child: dropdownConditionList
+                        ),
+                      ]
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: detailsController,
+                    maxLines: null,
+                    minLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Details',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text.';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  ButtonTheme (
+                      minWidth: 340.0,
+                      height: 70.0,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(8)
+                        ),
+                        onPressed: () async {
+                          if(formKey.currentState.validate()) {
+                            // show a loading indicator
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Center(child: Loading());
+                                }
+                            );
+                            var product = Product(
+                                name: nameController.text,
+                                price: priceController.text,
+                                description: detailsController.text,
+                                condition: dropdownConditionKey.currentState.conditionSelected,
+                                categoryIds: [int.tryParse(dropdownCategoryKey.currentState.categorySelected)],
+                                itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
+                                latitude: currentLocation.latitude,
+                                longitude: currentLocation.longitude,
+                                localGlobal: '231,232'
+                            );
+                            var response = await ResoldRest.postProduct(customer.token, product, imageUploaderKey.currentState.imagePaths);
+                            product.id = int.tryParse(response);
+                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
+                          }// end if form is valid
+                        },
+                        child: Text('Post',
+                            style: new TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                            )
+                        ),
+                        color: Colors.black,
+                        textColor: Colors.white,
+                      )
                   )
-              ),
-              Container (
-                width: 150,
-                height: 60,
-                child: dropdownConditionList
-              ),
-            ]
-          ),
-          SizedBox(height: 20),
-          TextField(
-            controller: detailsController,
-            maxLines: null,
-            minLines: null,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Details',
-            ),
-          ),
-          SizedBox(height: 20),
-          ButtonTheme (
-            minWidth: 340.0,
-            height: 70.0,
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusDirectional.circular(8)
-              ),
-              onPressed: () async {
-                // show a loading indicator
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Center(child: Loading());
-                  }
-                );
-                var product = Product(
-                  name: nameController.text,
-                  price: priceController.text,
-                  description: detailsController.text,
-                  condition: dropdownConditionKey.currentState.conditionSelected,
-                  categoryIds: [int.tryParse(dropdownCategoryKey.currentState.categorySelected)],
-                  itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
-                  latitude: currentLocation.latitude,
-                  longitude: currentLocation.longitude,
-                  localGlobal: '231,232'
-                );
-                var response = await ResoldRest.postProduct(customer.token, product, imageUploaderKey.currentState.imagePaths);
-                product.id = int.tryParse(response);
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
-              },
-              child: Text('Post',
-                style: new TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                )
-              ),
-              color: Colors.black,
-              textColor: Colors.white,
+                ]
             )
-        )
+          )
       ]
       )
     );
