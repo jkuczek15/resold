@@ -29,7 +29,6 @@ class BrowsePageState extends State<BrowsePage> {
   @override
   void initState() {
     super.initState();
-
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
       if(this.mounted) {
         setState(() {
