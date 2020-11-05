@@ -411,14 +411,14 @@ class MessagePageState extends State<MessagePage> {
                         ),
                       ] :
                       [
-                          FlatButton(
-                            color: Colors.black,
-                            textColor: Colors.white,
-                            onPressed: () async {
-                              await Firebase.deleteProductMessage(chatId, document.documentID);
-                            },
-                            child: const Text('Cancel Delivery'),
-                          ),
+                        FlatButton(
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            await Firebase.deleteProductMessage(chatId, document.documentID);
+                          },
+                          child: const Text('Cancel Delivery'),
+                        ),
                       ],
                     )
                   )
@@ -571,7 +571,16 @@ class MessagePageState extends State<MessagePage> {
                           ),
                           ButtonBar(
                             alignment: MainAxisAlignment.start,
-                            children: isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted ? [] : [
+                            children: isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted ? [
+                                FlatButton(
+                                  color: Colors.black,
+                                  textColor: Colors.white,
+                                  onPressed: () async {
+                                    await Firebase.deleteProductMessage(chatId, document.documentID);
+                                  },
+                                  child: const Text('Cancel Delivery'),
+                                ),
+                              ] : [
                               FlatButton(
                                 onPressed: () async {
                                   if(isSeller) {
@@ -698,9 +707,11 @@ class MessagePageState extends State<MessagePage> {
 
       // todo: include Stripe credit card in Magento order
       // todo: include delivery quote amount as fee
+      // todo: send the user to the order details page
       DeliveryQuoteResponse quote = await getDeliveryQuote();
       int orderId = await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product);
       DeliveryResponse delivery = await getDelivery();
+      await Firebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.paid);
 
       print(token);
     }).catchError((err) {
