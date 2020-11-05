@@ -196,11 +196,11 @@ class AccountPageState extends State<AccountPage> {
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
                                         },
                                         child: Text('Edit Profile',
-                                            style: new TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white
-                                            )
+                                          style: new TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white
+                                          )
                                         ),
                                         color: Colors.black,
                                         textColor: Colors.white,

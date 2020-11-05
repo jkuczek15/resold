@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
@@ -51,6 +52,7 @@ class MessagePageState extends State<MessagePage> {
   String peerAvatar;
   File imageFile;
   String imageUrl;
+  bool isSeller;
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
@@ -64,6 +66,10 @@ class MessagePageState extends State<MessagePage> {
     super.initState();
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
+
+    // determine if this is the seller
+    var chatIdParts = this.chatId.split('-');
+    isSeller = fromCustomer.id.toString() != chatIdParts[0];
   }
 
   @override
@@ -76,8 +82,8 @@ class MessagePageState extends State<MessagePage> {
               Align (
                 alignment: Alignment.centerLeft,
                 child: Container (
-                  width: 260,
-                  child: Text(product.name, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))
+                  width: 250,
+                  child: Text(product.name + ' - ' + toCustomer.fullName, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))
                 )
               )
             ],
@@ -86,8 +92,21 @@ class MessagePageState extends State<MessagePage> {
             color: Colors.white, //change your color here
           ),
           backgroundColor: const Color(0xff41b8ea),
-        ),
-        body: getContent()
+          actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: handleMenuClick,
+            itemBuilder: (BuildContext context) {
+              return {'Request Delivery', 'Send Offer'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
+      ),
+      body: getContent()
     );
   }
 
@@ -134,6 +153,23 @@ class MessagePageState extends State<MessagePage> {
       });
       Fluttertoast.showToast(msg: 'This file is not an image');
     });
+  }
+
+  void handleMenuClick(String value) async {
+    switch (value) {
+      case 'Request Delivery':
+        // get a Postmates delivery quote
+        DeliveryQuoteResponse response = await getDeliveryQuote();
+
+        // prepare message content for delivery request
+        String content = response.id + '|' + response.fee.toString() + '|' + response.pickup_duration.toString() + '|' + response.duration.toString();
+
+        // send a Firebase message
+        await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote);
+        break;
+      case 'Send Offer':
+        break;
+    }// end switch on menu click
   }
 
   Future getImage() async {
@@ -207,7 +243,6 @@ class MessagePageState extends State<MessagePage> {
               ),
             ),
           ),
-
           // Button send message
           Material(
             child: Container(
@@ -232,8 +267,12 @@ class MessagePageState extends State<MessagePage> {
 
     var currency = Currency.create('USD', 2);
     var quoteId, fee, expectedPickup, expectedDropoff = '';
+    var deliveryQuoteStatus = DeliveryQuoteStatus.none;
 
-    if(document['messageType'] == MessageType.deliveryQuote.index || document['messageType'] == MessageType.deliveryRequest.index) {
+    if(document['messageType'] == MessageType.deliveryQuote.index) {
+      if(document['status'] != null) {
+        deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
+      }
       var content = document['content'].split('|');
       quoteId = content[0];
       fee = Money.fromInt(int.tryParse(content[1]), currency);
@@ -305,54 +344,90 @@ class MessagePageState extends State<MessagePage> {
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
           : document['messageType'] == MessageType.deliveryQuote.index ?
-
           // Purchase Request
           Container(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+              child: Padding(
+              padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
               child: Column (
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'You have sent a delivery quote to: ${toCustomer.fullName}.'
-                        + '\n\n${product.name}'
+                  Padding (
+                    padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
+                    child:
+                    isSeller ? Text(
+                        'You have requested a delivery.'
+                          + '\n\nPickup ETA: ' + expectedPickup
+                          + '\n\nYour profit: ' + (fee
+                          + Money.from(double.tryParse(product.price), currency)).toString(),
+                        style: TextStyle(color: Colors.white)
+                    ) :
+                    // buyer, delivery was accepted from the seller
+                    !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted ?
+                    Text(
+                      '${toCustomer.fullName} has confirmed your delivery request.'
                         + '\n\nDelivery ETA: ' + expectedDropoff
                         + '\n\nDelivery fee: ' + fee.toString()
                         + '\n\nTotal: ' + (fee
                         + Money.from(double.tryParse(product.price), currency)).toString(),
-                    style: TextStyle(color: Colors.white)
+                      style: TextStyle(color: Colors.white)
+                    ) :
+                    Text(
+                        'You have requested a delivery.'
+                            + '\n\nDelivery ETA: ' + expectedDropoff
+                            + '\n\nDelivery fee: ' + fee.toString()
+                            + '\n\nTotal: ' + (fee
+                            + Money.from(double.tryParse(product.price), currency)).toString(),
+                        style: TextStyle(color: Colors.white)
+                    ),
                   ),
-                  ButtonBar(
-                    alignment: MainAxisAlignment.start,
-                    children: [
-                      FlatButton(
-                        textColor: Colors.white,
-                        onPressed: () async {
-                          await Firebase.deleteProductMessage(chatId, document.documentID);
-                        },
-                        child: const Text('Cancel Delivery'),
-                      )
-                    ],
+                  Align (
+                    alignment: Alignment.centerLeft,
+                    child: ButtonBar(
+                      alignment: MainAxisAlignment.start,
+                      children: !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted ? [
+                        FlatButton(
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            if(isSeller) {
+                              // user is the seller
+                              await Firebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.accepted);
+                            } else {
+                              // user is the buyer
+                              handlePaymentFlow(fee, currency);
+                            }// end if user is seller
+                          },
+                          child: const Text('Accept Delivery'),
+                        ),
+                        FlatButton(
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            // Perform some action
+                            await Firebase.deleteProductMessage(chatId, document.documentID);
+                          },
+                          child: const Text('Decline Delivery'),
+                        ),
+                      ] :
+                      [
+                          FlatButton(
+                            color: Colors.black,
+                            textColor: Colors.white,
+                            onPressed: () async {
+                              await Firebase.deleteProductMessage(chatId, document.documentID);
+                            },
+                            child: const Text('Cancel Delivery'),
+                          ),
+                      ],
+                    )
                   )
                 ]
               )
             ),
-            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-            width: 200.0,
-            decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+            width: 260.0,
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-          )
-          : document['messageType'] == MessageType.deliveryRequest.index ?
-          // Delivery Request
-          Container(
-            child: Text(
-              'You have sent a delivery request to ${toCustomer.fullName}.'
-                  + '\n\nPickup ETA: ' + expectedPickup,
-              style: TextStyle(color: Colors.white60),
-            ),
-            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-            width: 200.0,
             decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
-            margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
           :
           // Offer
@@ -450,125 +525,77 @@ class MessagePageState extends State<MessagePage> {
                   margin: EdgeInsets.only(left: 10.0),
                 )
                 : document['messageType'] == MessageType.deliveryQuote.index ?
-                // Purchase Request
+                // Delivery Quote
                 Container(
                   child: Card(
                     clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-                          child: Text(
-                              '${toCustomer.fullName} has sent you a delivery quote.'
-                                  + '\n\n${product.name}'
-                                  + '\n\nDelivery ETA: ' + expectedDropoff
-                                  + '\n\nDelivery fee: ' + fee.toString()
-                                  + '\n\nTotal: ' + (fee
-                                  + Money.from(double.tryParse(product.price), currency)).toString(),
-                              style: TextStyle(color: Colors.black.withOpacity(0.6))
-                          ),
-                        ),
-                        ButtonBar(
-                          alignment: MainAxisAlignment.start,
-                          children: [
-                            FlatButton(
-                              textColor: const Color(0xff41b8ea),
-                              onPressed: () async {
-                                // get a Postmates delivery quote
-                                DeliveryQuoteResponse response = await getDeliveryQuote();
-
-                                // prepare message content for delivery request
-                                String content = response.id + '|' + response.fee.toString() + '|' + response.pickup_duration.toString() + '|' + response.duration.toString();
-
-                                // send a Firebase message
-                                await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryRequest);
-                              },
-                              child: const Text('Request Pickup'),
-                            ),
-                            FlatButton(
-                              textColor: const Color(0xff41b8ea),
-                              onPressed: () {
-                                // Perform some action
-                              },
-                              child: const Text('Request Payment'),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 15.0, 0),
-                  width: 275.0,
-                  margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-                )
-                : document['messageType'] == MessageType.deliveryRequest.index ?
-                // Purchase Request
-                Container(
-                  child:
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-                          child: Text(
-                            '${toCustomer.fullName} has sent you a delivery quote.'
-                                + '\n\n${product.name}'
+                    child: Padding (
+                      padding: EdgeInsets.fromLTRB(2.0, 16.0, 16.0, 0),
+                      child: Column(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0),
+                              child:
+                              // seller with open delivery quote
+                              isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none ?
+                              Text('You have received a delivery request.'
+                                + '\n\nPickup ETA: ' + expectedPickup
+                                + '\n\nYour Profit: ' + (fee
+                                + Money.from(double.tryParse(product.price), currency)).toString(),
+                                style: TextStyle(color: Colors.black.withOpacity(0.6))
+                              ) :
+                              // seller with accepted delivery quote
+                              isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted ?
+                              Text('You have accepted the delivery. Please wait for the buyer to complete payment.'
+                              + '\n\nPickup ETA: ' + expectedPickup
+                              + '\n\nYour Profit: ' + (fee
+                              + Money.from(double.tryParse(product.price), currency)).toString(),
+                              style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                              :
+                              // buyer with opened delivery quote
+                              !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none ?
+                                Text('You have received a delivery request.'
                                 + '\n\nDelivery ETA: ' + expectedDropoff
                                 + '\n\nDelivery fee: ' + fee.toString()
                                 + '\n\nTotal: ' + (fee
                                 + Money.from(double.tryParse(product.price), currency)).toString(),
-                            style: TextStyle(color: Colors.black.withOpacity(0.6))
+                                style: TextStyle(color: Colors.black.withOpacity(0.6))
+                              ) :
+                              Text('You have received a delivery request.'
+                                  + '\n\nDelivery ETA: ' + expectedDropoff
+                                  + '\n\nDelivery fee: ' + fee.toString()
+                                  + '\n\nTotal: ' + (fee
+                                  + Money.from(double.tryParse(product.price), currency)).toString(),
+                                  style: TextStyle(color: Colors.black.withOpacity(0.6))
+                              )
                           ),
-                        ),
-                        ButtonBar(
-                          alignment: MainAxisAlignment.start,
-                          children: [
-                            FlatButton(
-                              textColor: const Color(0xff41b8ea),
-                              onPressed: () async {
-                                StripePayment.paymentRequestWithNativePay(
-                                  androidPayOptions: AndroidPayPaymentRequest(
-                                    totalPrice: (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), ''),
-                                    currencyCode: 'USD',
-                                  ),
-                                  applePayOptions: ApplePayPaymentOptions(
-                                    countryCode: 'US',
-                                    currencyCode: 'USD',
-                                    items: [
-                                      ApplePayItem(
-                                        label: product.name,
-                                        amount: (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), '')
-                                      )
-                                    ],
-                                  ),
-                                ).then((Token token) async {
-                                  await StripePayment.completeNativePayRequest();
-
-                                  // todo: include Stripe credit card in Magento order
-                                  // todo: include delivery quote amount as fee
-                                  DeliveryQuoteResponse quote = await getDeliveryQuote();
-                                  int orderId = await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product);
-                                  DeliveryResponse delivery = await getDelivery();
-
-                                  print(token);
-                                }).catchError((err) {
-                                  print(err);
-                                });
-                              },
-                              child: const Text('Accept Delivery'),
-                            ),
-                            FlatButton(
-                              textColor: const Color(0xff41b8ea),
-                              onPressed: () async {
-                                await Firebase.deleteProductMessage(chatId, document.documentID);
-                              },
-                              child: const Text('Decline Delivery'),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ButtonBar(
+                            alignment: MainAxisAlignment.start,
+                            children: isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted ? [] : [
+                              FlatButton(
+                                onPressed: () async {
+                                  if(isSeller) {
+                                    // user is the seller
+                                    await Firebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.accepted);
+                                  } else {
+                                    // user is the buyer
+                                    handlePaymentFlow(fee, currency);
+                                  }// end if user is seller
+                                },
+                                child: const Text('Accept Delivery'),
+                              ),
+                              FlatButton(
+                                onPressed: () async {
+                                  // Perform some action
+                                  await Firebase.deleteProductMessage(chatId, document.documentID);
+                                },
+                                child: const Text('Decline Delivery'),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
                   ),
                   padding: EdgeInsets.fromLTRB(0, 10.0, 15.0, 0),
                   width: 275.0,
@@ -650,13 +677,44 @@ class MessagePageState extends State<MessagePage> {
     ));
   }
 
+  handlePaymentFlow(Money fee, Currency currency) async {
+    StripePayment.paymentRequestWithNativePay(
+      androidPayOptions: AndroidPayPaymentRequest(
+        totalPrice: (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), ''),
+        currencyCode: 'USD',
+      ),
+      applePayOptions: ApplePayPaymentOptions(
+        countryCode: 'US',
+        currencyCode: 'USD',
+        items: [
+          ApplePayItem(
+              label: product.name,
+              amount: (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), '')
+          )
+        ],
+      ),
+    ).then((Token token) async {
+      await StripePayment.completeNativePayRequest();
+
+      // todo: include Stripe credit card in Magento order
+      // todo: include delivery quote amount as fee
+      DeliveryQuoteResponse quote = await getDeliveryQuote();
+      int orderId = await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product);
+      DeliveryResponse delivery = await getDelivery();
+
+      print(token);
+    }).catchError((err) {
+      print(err);
+    });
+  }// end function handlePaymentFlow
+
   bool isLastMessageLeft(int index) {
     if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] == fromCustomer.id) || index == 0) {
       return true;
     } else {
       return false;
     }
-  }
+  }// end function isLastMessageLeft
 
   bool isLastMessageRight(int index) {
     if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] != fromCustomer.id) || index == 0) {
@@ -664,6 +722,5 @@ class MessagePageState extends State<MessagePage> {
     } else {
       return false;
     }
-  }
-
+  }// end function isLastMessageRight
 }
