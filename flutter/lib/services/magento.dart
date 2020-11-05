@@ -10,7 +10,6 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/resold-rest.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 /*
 * Resold Magento API service - Magento specific API client

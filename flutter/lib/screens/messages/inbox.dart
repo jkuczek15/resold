@@ -102,7 +102,7 @@ class InboxPageState extends State<InboxPage> {
                                     // get the to customer details
                                     CustomerResponse toCustomer = await Magento.getCustomerById(item['toId']);
 
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, item['chatId'], UserMessageType.values[item['type']])));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, item['chatId'], UserMessageType.values[item['messageType']])));
                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                   },
                                   child: Card (

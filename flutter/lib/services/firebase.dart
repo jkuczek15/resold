@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
@@ -119,6 +120,27 @@ class Firebase {
       );
     });
   }// end function sendProductMessage
+
+  /*
+  * acceptDeliveryQuote - Accept a delivery quote from a group of messages
+  * chatId - Group chat ID
+  */
+  static Future updateDeliveryQuoteStatus(String chatId, DeliveryQuoteStatus status) async {
+    var documentReference = Firestore.instance
+        .collection('messages')
+        .document(chatId)
+        .collection(chatId);
+
+    var deliveryQuoteRef = documentReference.where('messageType', isEqualTo: MessageType.deliveryQuote.index );
+    var deliveryQuoteDocuments = await deliveryQuoteRef.getDocuments();
+
+    if(deliveryQuoteDocuments.documents.isNotEmpty) {
+      var deliveryQuote = deliveryQuoteDocuments.documents[0];
+      await deliveryQuote.reference.updateData(<String, dynamic> {
+        'status': status.index
+      });
+    }// end if we found a delivery quote to accept
+  }// end function for accepting a delivery quote
 
   /*
   * getUserMessagesStream - Returns a real time messages stream for the inbox
