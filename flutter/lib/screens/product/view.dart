@@ -24,27 +24,37 @@ class ProductPage extends StatefulWidget {
   final CustomerResponse customer;
   final Position currentLocation;
 
-  ProductPage(Product product, CustomerResponse customer, Position currentLocation, {Key key}) : product = product, customer = customer, currentLocation = currentLocation, super(key: key);
+  ProductPage(
+      Product product, CustomerResponse customer, Position currentLocation,
+      {Key key})
+      : product = product,
+        customer = customer,
+        currentLocation = currentLocation,
+        super(key: key);
 
   @override
-  ProductPageState createState() => ProductPageState(this.customer, this.product, this.currentLocation);
+  ProductPageState createState() =>
+      ProductPageState(this.customer, this.product, this.currentLocation);
 }
 
 class ProductPageState extends State<ProductPage> {
-
   final Product product;
   final CustomerResponse customer;
   final Position currentLocation;
   Future<List<String>> futureImages;
   final Map<String, Marker> markers = {};
 
-  ProductPageState(CustomerResponse customer, Product product, Position currentLocation) : customer = customer, product = product, currentLocation = currentLocation;
+  ProductPageState(
+      CustomerResponse customer, Product product, Position currentLocation)
+      : customer = customer,
+        product = product,
+        currentLocation = currentLocation;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      if(this.mounted) {
+      if (this.mounted) {
         futureImages = Resold.getProductImages(product.id);
       }
     });
@@ -54,65 +64,74 @@ class ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return WillPopScope(
-      child: Scaffold(
-        appBar: AppBar (
-          title: Text(product.name, style: new TextStyle(color: Colors.white)),
-          backgroundColor: const Color(0xff41b8ea),
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-        ),
-        body: Stack (
-          children: [
-            FutureBuilder<List<String>>(
-                future: futureImages,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    Widget imageElement;
-                    if(snapshot.data.length == 1) {
-                      imageElement = FadeInImage(
-                        width: MediaQuery.of(context).size.width,
-                        image: NetworkImage(baseProductImagePath + snapshot.data[0]),
-                        placeholder: AssetImage('assets/images/placeholder-image.png'),
-                        fit: BoxFit.cover
-                      );
-                    } else {
-                        imageElement = CarouselSlider(
-                          options: CarouselOptions(height: 400.0),
-                          items: snapshot.data.map((image) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                                  child: FadeInImage(image: NetworkImage(baseProductImagePath + image), placeholder: AssetImage('assets/images/placeholder-image.png'), fit: BoxFit.cover)
-                                );
-                              }
-                            );
-                          }).toList()
-                        );
-                      }// end if we are displaying one image
+        child: Scaffold(
+            appBar: AppBar(
+              title:
+                  Text(product.name, style: new TextStyle(color: Colors.white)),
+              backgroundColor: const Color(0xff41b8ea),
+              iconTheme: IconThemeData(
+                color: Colors.white, //change your color here
+              ),
+            ),
+            body: Stack(
+              children: [
+                FutureBuilder<List<String>>(
+                    future: futureImages,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        Widget imageElement;
+                        if (snapshot.data.length == 1) {
+                          imageElement = FadeInImage(
+                              width: MediaQuery.of(context).size.width,
+                              image: NetworkImage(
+                                  baseProductImagePath + snapshot.data[0]),
+                              placeholder: AssetImage(
+                                  'assets/images/placeholder-image.png'),
+                              fit: BoxFit.cover);
+                        } else {
+                          imageElement = CarouselSlider(
+                              options: CarouselOptions(height: 400.0),
+                              items: snapshot.data.map((image) {
+                                return Builder(builder: (BuildContext context) {
+                                  return Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 10.0),
+                                      child: FadeInImage(
+                                          image: NetworkImage(
+                                              baseProductImagePath + image),
+                                          placeholder: AssetImage(
+                                              'assets/images/placeholder-image.png'),
+                                          fit: BoxFit.cover));
+                                });
+                              }).toList());
+                        } // end if we are displaying one image
 
-                      return SingleChildScrollView (
-                        child: Column (
+                        return SingleChildScrollView(
+                            child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             imageElement,
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                              child: Column (
-                                children: [
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 10.0),
+                                child: Column(children: [
                                   Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Column (
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                        Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Container(
-                                                padding: new EdgeInsets.only(right: 13.0),
+                                                padding: new EdgeInsets.only(
+                                                    right: 13.0),
                                                 width: 250,
                                                 child: new Text(
                                                   product.name,
@@ -120,235 +139,314 @@ class ProductPageState extends State<ProductPage> {
                                                   style: new TextStyle(
                                                     fontSize: 14.0,
                                                     fontFamily: 'Roboto',
-                                                    fontWeight: FontWeight.normal,
+                                                    fontWeight:
+                                                        FontWeight.normal,
                                                   ),
                                                 ),
                                               ),
                                               Container(
-                                                padding: new EdgeInsets.only(right: 13.0),
+                                                padding: new EdgeInsets.only(
+                                                    right: 13.0),
                                                 width: 250,
                                                 child: new Text(
-                                                  product.titleDescription ?? "",
+                                                  product.titleDescription ??
+                                                      "",
                                                   overflow: TextOverflow.fade,
                                                   style: new TextStyle(
                                                     fontSize: 14.0,
                                                     fontFamily: 'Roboto',
-                                                    fontWeight: FontWeight.normal,
+                                                    fontWeight:
+                                                        FontWeight.normal,
                                                   ),
                                                 ),
                                               ),
-                                            ]
-                                        ),
-                                        Column (
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            ]),
+                                        Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Container (
-                                                width: 70,
-                                                child: Align (
-                                                  alignment: Alignment.centerRight,
-                                                  child: Text(formatter.format(double.parse(product.price).round()),
-                                                    style: new TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontFamily: 'Roboto',
-                                                      fontWeight: FontWeight.bold,
-                                                    )
-                                                  )
-                                                )
-                                              ),
                                               Container(
-                                                width: 70,
-                                                child: Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: LocationBuilder.calculateDistance(currentLocation.latitude, currentLocation.longitude, product.latitude, product.longitude)
-                                                )
-                                              )
-                                            ]
-                                        )
-                                      ]
-                                  ),
+                                                  width: 70,
+                                                  child: Align(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: Text(
+                                                          formatter.format(
+                                                              double.parse(
+                                                                      product
+                                                                          .price)
+                                                                  .round()),
+                                                          style: new TextStyle(
+                                                            fontSize: 14.0,
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          )))),
+                                              Container(
+                                                  width: 70,
+                                                  child: Align(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: LocationBuilder
+                                                          .calculateDistance(
+                                                              currentLocation
+                                                                  .latitude,
+                                                              currentLocation
+                                                                  .longitude,
+                                                              product.latitude,
+                                                              product
+                                                                  .longitude)))
+                                            ])
+                                      ]),
                                   SizedBox(height: 10),
-                                  Container (
+                                  Container(
                                     width: 500,
-                                    child: ReadMoreText (
+                                    child: ReadMoreText(
                                       cleanDescription(product.description),
                                       trimLength: 200,
-                                      colorClickableText: const Color(0xff41b8ea),
+                                      colorClickableText:
+                                          const Color(0xff41b8ea),
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  ButtonTheme (
+                                  ButtonTheme(
                                       minWidth: 340.0,
                                       height: 70.0,
                                       child: RaisedButton(
                                         shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadiusDirectional.circular(8)
-                                        ),
+                                            borderRadius:
+                                                BorderRadiusDirectional
+                                                    .circular(8)),
                                         onPressed: () async {
                                           // show a loading indicator
                                           showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Center(child: Loading());
-                                            }
-                                          );
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Center(child: Loading());
+                                              });
 
                                           // get the to customer details
-                                          int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                          CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                          String chatId = customer.id.toString() + '-' + product.id.toString();
+                                          int toId = int.tryParse(await Resold
+                                              .getCustomerIdByProduct(
+                                                  product.id));
+                                          CustomerResponse toCustomer =
+                                              await Magento.getCustomerById(
+                                                  toId);
+                                          String chatId =
+                                              customer.id.toString() +
+                                                  '-' +
+                                                  product.id.toString();
 
                                           // get a Postmates delivery quote
                                           DateTime now = DateTime.now();
 
-                                          var pickupDeadline = now.add(Duration(minutes: 30));
-                                          var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+                                          var pickupDeadline =
+                                              now.add(Duration(minutes: 30));
+                                          var dropoffDeadline = pickupDeadline
+                                              .add(Duration(hours: 2));
 
                                           // create a Postmates delivery quote
-                                          DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
-                                              pickup_address: customer.addresses.first.toString(),
-                                              pickup_ready_dt: now.toUtc().toIso8601String(),
-                                              pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
-                                              dropoff_address: toCustomer.addresses.first.toString(),
-                                              dropoff_ready_dt: now.toUtc().toIso8601String(),
-                                              dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()
-                                          ));
+                                          DeliveryQuoteResponse quote =
+                                              await Postmates.createDeliveryQuote(
+                                                  DeliveryQuoteRequest(
+                                                      pickup_address:
+                                                          customer.addresses.first
+                                                              .toString(),
+                                                      pickup_ready_dt: now
+                                                          .toUtc()
+                                                          .toIso8601String(),
+                                                      pickup_deadline_dt:
+                                                          pickupDeadline
+                                                              .toUtc()
+                                                              .toIso8601String(),
+                                                      dropoff_address:
+                                                          toCustomer
+                                                              .addresses.first
+                                                              .toString(),
+                                                      dropoff_ready_dt: now
+                                                          .toUtc()
+                                                          .toIso8601String(),
+                                                      dropoff_deadline_dt:
+                                                          dropoffDeadline
+                                                              .toUtc()
+                                                              .toIso8601String()));
 
                                           // prepare message content for delivery request
-                                          String content = quote.id + '|' + quote.fee.toString() + '|' + quote.pickup_duration.toString() + '|' + quote.duration.toString();
+                                          String content = quote.id +
+                                              '|' +
+                                              quote.fee.toString() +
+                                              '|' +
+                                              quote.pickup_duration.toString() +
+                                              '|' +
+                                              quote.duration.toString();
 
-                                          await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product, content, MessageType.deliveryQuote);
+                                          await Firebase.sendProductMessage(
+                                              chatId,
+                                              customer.id,
+                                              toCustomer.id,
+                                              product,
+                                              content,
+                                              MessageType.deliveryQuote);
 
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MessagePage(
+                                                          customer,
+                                                          toCustomer,
+                                                          product,
+                                                          chatId,
+                                                          UserMessageType
+                                                              .buyer)));
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop('dialog');
                                         },
                                         child: Text('Request Delivery',
                                             style: new TextStyle(
                                                 fontSize: 20.0,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.white
-                                            )
-                                        ),
+                                                color: Colors.white)),
                                         color: Colors.black,
                                         textColor: Colors.white,
-                                    )
-                                  ),
+                                      )),
                                   SizedBox(height: 5),
-                                  ButtonTheme (
+                                  ButtonTheme(
                                     minWidth: 340.0,
                                     height: 70.0,
                                     child: RaisedButton(
                                       shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadiusDirectional.circular(8)
-                                      ),
-                                      onPressed: () async {
-                                        // show a loading indicator
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Center(child: Loading());
-                                          }
-                                        );
-
-                                        // get the to customer details
-                                        int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                        CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                        String chatId = customer.id.toString() + '-' + product.id.toString();
-
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                                      },
-                                      child: Text('Send Offer',
-                                        style: new TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white
-                                        )
-                                      ),
-                                      color: Colors.black,
-                                      textColor: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  ButtonTheme (
-                                    minWidth: 340.0,
-                                    height: 70.0,
-                                    child: RaisedButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadiusDirectional.circular(8)
-                                      ),
+                                          borderRadius:
+                                              BorderRadiusDirectional.circular(
+                                                  8)),
                                       onPressed: () async {
                                         // show a loading indicator
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
                                               return Center(child: Loading());
-                                            }
-                                        );
+                                            });
 
                                         // get the to customer details
-                                        int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                        CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                        String chatId = customer.id.toString() + '-' + product.id.toString();
+                                        int toId = int.tryParse(
+                                            await Resold.getCustomerIdByProduct(
+                                                product.id));
+                                        CustomerResponse toCustomer =
+                                            await Magento.getCustomerById(toId);
+                                        String chatId = customer.id.toString() +
+                                            '-' +
+                                            product.id.toString();
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MessagePage(
+                                                        customer,
+                                                        toCustomer,
+                                                        product,
+                                                        chatId,
+                                                        UserMessageType
+                                                            .buyer)));
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop('dialog');
                                       },
-                                      child: Text('Contact Seller',
-                                        style: new TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white
-                                        )
-                                      ),
+                                      child: Text('Send Offer',
+                                          style: new TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white)),
                                       color: Colors.black,
                                       textColor: Colors.white,
-                                    )
+                                    ),
                                   ),
+                                  SizedBox(height: 5),
+                                  ButtonTheme(
+                                      minWidth: 340.0,
+                                      height: 70.0,
+                                      child: RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadiusDirectional
+                                                    .circular(8)),
+                                        onPressed: () async {
+                                          // show a loading indicator
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Center(child: Loading());
+                                              });
+
+                                          // get the to customer details
+                                          int toId = int.tryParse(await Resold
+                                              .getCustomerIdByProduct(
+                                                  product.id));
+                                          CustomerResponse toCustomer =
+                                              await Magento.getCustomerById(
+                                                  toId);
+                                          String chatId =
+                                              customer.id.toString() +
+                                                  '-' +
+                                                  product.id.toString();
+
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MessagePage(
+                                                          customer,
+                                                          toCustomer,
+                                                          product,
+                                                          chatId,
+                                                          UserMessageType
+                                                              .buyer)));
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop('dialog');
+                                        },
+                                        child: Text('Contact Seller',
+                                            style: new TextStyle(
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white)),
+                                        color: Colors.black,
+                                        textColor: Colors.white,
+                                      )),
                                   SizedBox(height: 10),
-                                  Container (
-                                    height: 500,
-                                    child: GoogleMap(
-                                      onMapCreated: onMapCreated,
-                                      initialCameraPosition: CameraPosition(
-                                        target: LatLng(product.latitude, product.longitude),
-                                        zoom: 9.0,
-                                      ),
-                                      markers: markers.values.toSet(),
-                                    )
-                                  )
-                                ]
-                              )
-                            )
+                                  Container(
+                                      height: 500,
+                                      child: GoogleMap(
+                                        onMapCreated: onMapCreated,
+                                        initialCameraPosition: CameraPosition(
+                                          target: LatLng(product.latitude,
+                                              product.longitude),
+                                          zoom: 9.0,
+                                        ),
+                                        markers: markers.values.toSet(),
+                                      ))
+                                ]))
                           ],
-                        )
-                    );
-                  } else {
-                    return Column (
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Loading()
-                        )
-                      ]
-                    );
-                  }// end if we have data
-                }// end builder function
-            )
-          ],
-        )
-      ),
-      onWillPop: () async {
-        Navigator.pop(context);
-        return false;
-      }
-    );
-  }
-
-  Future<DeliveryQuoteResponse> getDeliveryQuote() async {
-
+                        ));
+                      } else {
+                        return Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [Center(child: Loading())]);
+                      } // end if we have data
+                    } // end builder function
+                    )
+              ],
+            )),
+        onWillPop: () async {
+          Navigator.pop(context);
+          return false;
+        });
   }
 
   Future<void> onMapCreated(GoogleMapController controller) async {
@@ -356,17 +454,17 @@ class ProductPageState extends State<ProductPage> {
       markers.clear();
 
       InfoWindow infoWindow;
-      if(product.titleDescription == null) {
+      if (product.titleDescription == null) {
         infoWindow = InfoWindow(title: product.name);
       } else {
-        infoWindow = InfoWindow(title: product.name, snippet: product.titleDescription);
+        infoWindow =
+            InfoWindow(title: product.name, snippet: product.titleDescription);
       }
 
       final productMarker = Marker(
-        markerId: MarkerId(product.name),
-        position: LatLng(product.latitude, product.longitude),
-        infoWindow: infoWindow
-      );
+          markerId: MarkerId(product.name),
+          position: LatLng(product.latitude, product.longitude),
+          infoWindow: infoWindow);
 
       final String currentLocationTitle = "You";
       final currentLocationMarker = Marker(
@@ -383,7 +481,13 @@ class ProductPageState extends State<ProductPage> {
     });
   }
 
-  String cleanDescription (String description) {
-    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n").trim() : '';
+  String cleanDescription(String description) {
+    return description.isNotEmpty
+        ? description
+            .replaceAll("<br />", "\n")
+            .replaceAll("\n\n\n", "\n")
+            .replaceAll("\n\n", "\n")
+            .trim()
+        : '';
   }
 }
