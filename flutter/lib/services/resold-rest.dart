@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 * This service is used to make authenticated resold requests
 */
 class ResoldRest {
-
   static Config config = Config();
   static Dio dio = Dio();
 
@@ -17,8 +16,8 @@ class ResoldRest {
    * product - Product to post
    * imagePaths - List of image paths
    */
-  static Future<String> postProduct(String token, Product product, List<String> imagePaths) async {
-
+  static Future<String> postProduct(
+      String token, Product product, List<String> imagePaths) async {
     await config.initialized;
 
     FormData formData = new FormData.fromMap({
@@ -34,35 +33,34 @@ class ResoldRest {
       'imagePaths': imagePaths
     });
 
-    dio.options.headers['Authorization'] = 'Bearer ${token}';
+    dio.options.headers['Authorization'] = 'Bearer $token';
     var response = await dio.post('${config.baseUrl}/product', data: formData);
 
-    if(response.data.length > 1) {
+    if (response.data.length > 1) {
       return response.data[1];
     } else {
       return 'Error: ' + response.data;
-    }// end if response data success
-  }// end function postProduct
+    } // end if response data success
+  } // end function postProduct
 
   /*
    * createVendor - Create a seller account
    * token - Customer identification token
    */
   static Future<String> createVendor(String token) async {
-
     await config.initialized;
 
-    dio.options.headers['Authorization'] = 'Bearer ${token}';
+    dio.options.headers['Authorization'] = 'Bearer $token';
     var response = await dio.post('${config.baseUrl}/vendor');
 
-    if(response.data.length > 1) {
+    if (response.data.length > 1) {
       return response.data[1];
     } else {
       return 'Error: ' + response.data;
-    }// end if response data success
-  }// end function postProduct
+    } // end if response data success
+  } // end function postProduct
 
-}// end class Resold
+} // end class Resold
 
 /*
  * Config - Configuration class for Resold specific API calls
@@ -77,12 +75,10 @@ class Config {
   }
 
   init() async {
-    final config = {
-      'base_url': 'https://resold.us/rest/V1/resold'
-    };
+    final config = {'base_url': 'https://resold.us/rest/V1/resold'};
 
     baseUrl = config['base_url'];
     headers['User-Agent'] = 'Resold - Mobile Application';
-  }// end function init
+  } // end function init
 
-}// end class Config
+} // end class Config

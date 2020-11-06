@@ -16,7 +16,6 @@ import 'package:resold/services/resold-rest.dart';
 * This service is used to make Magento REST requests
 */
 class Magento {
-
   static Config config = Config();
   static Client client = Client();
 
@@ -27,9 +26,7 @@ class Magento {
   static Future<CustomerResponse> loginCustomer(LoginRequest request) async {
     if (request.username.isEmpty || request.password.isEmpty) {
       return CustomerResponse(
-          statusCode: 400,
-          error: 'Please enter both an email and a password.'
-      );
+          statusCode: 400, error: 'Please enter both an email and a password.');
     }
 
     await config.initialized;
@@ -40,8 +37,7 @@ class Magento {
         body: jsonEncode(<String, String>{
           'username': request.username,
           'password': request.password
-        })
-    );
+        }));
 
     if (response.statusCode == 200) {
       // login success
@@ -52,45 +48,39 @@ class Magento {
       var customer = await getMe(token, request.password);
 
       // ensure the user is a seller
-      if(customer.vendorId == -1) {
+      if (customer.vendorId == -1) {
         var vendorId = await ResoldRest.createVendor(customer.token);
         customer.vendorId = int.tryParse(vendorId);
-      }// end if user is not a seller
+      } // end if user is not a seller
 
       return customer;
     } else {
       // login error
       var json = jsonDecode(response.body.toString());
       return CustomerResponse(
-          statusCode: response.statusCode,
-          error: json['message']
-      );
+          statusCode: response.statusCode, error: json['message']);
     }
-  }// end function loginCustomer
+  } // end function loginCustomer
 
   /*
   * createCustomer - Creates a customer using Magento service
   * request - CustomerRequest object with information to create a customer
   */
-  static Future<CustomerResponse> createCustomer(CustomerRequest request,
-      String password, String confirmPassword) async {
+  static Future<CustomerResponse> createCustomer(
+      CustomerRequest request, String password, String confirmPassword) async {
     if (request.firstname.isEmpty || request.lastname.isEmpty) {
       return CustomerResponse(
           statusCode: 400,
-          error: 'Please enter both a first name and last name.'
-      );
+          error: 'Please enter both a first name and last name.');
     }
     if (request.email.isEmpty || password.isEmpty) {
       return CustomerResponse(
-          statusCode: 400,
-          error: 'Please enter both an email and a password.'
-      );
+          statusCode: 400, error: 'Please enter both an email and a password.');
     }
     if (password != confirmPassword) {
       return CustomerResponse(
           statusCode: 400,
-          error: 'Confirmation password should match password.'
-      );
+          error: 'Confirmation password should match password.');
     }
 
     await config.initialized;
@@ -98,29 +88,22 @@ class Magento {
     var requestJson = jsonEncode(
         <String, dynamic>{'customer': request, 'password': password});
 
-    final response = await client.post(
-        '${config.baseUrl}/customers',
-        headers: config.adminHeaders,
-        body: requestJson
-    );
+    final response = await client.post('${config.baseUrl}/customers',
+        headers: config.adminHeaders, body: requestJson);
 
     var responseJson = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
       // sign up success
       // make another call to get the token
-      return await loginCustomer(LoginRequest(
-          username: request.email,
-          password: password
-      ));
+      return await loginCustomer(
+          LoginRequest(username: request.email, password: password));
     } else {
       // sign up error
       return CustomerResponse(
-          statusCode: response.statusCode,
-          error: responseJson['message']
-      );
+          statusCode: response.statusCode, error: responseJson['message']);
     }
-  }// end function createCustomer
+  } // end function createCustomer
 
   /*
   * getMe - Return information about the currently signed in customer
@@ -130,19 +113,15 @@ class Magento {
   static Future<CustomerResponse> getMe(String token, String password) async {
     if (token.isEmpty) {
       return CustomerResponse(
-        statusCode: 400,
-        error: 'Please enter both an email and a password.'
-      );
+          statusCode: 400, error: 'Please enter both an email and a password.');
     }
 
     await config.initialized;
 
-    config.customerHeaders['Authorization'] = 'Bearer ${token}';
+    config.customerHeaders['Authorization'] = 'Bearer $token';
 
-    final response = await client.get(
-      '${config.baseUrl}/customers/me',
-      headers: config.customerHeaders
-    );
+    final response = await client.get('${config.baseUrl}/customers/me',
+        headers: config.customerHeaders);
 
     var responseJson = jsonDecode(response.body.toString());
 
@@ -153,25 +132,22 @@ class Magento {
       var vendorId = await Resold.getVendorId(customerId);
 
       return CustomerResponse(
-        statusCode: response.statusCode,
-        id: customerId,
-        email: responseJson['email'].toString(),
-        password: password,
-        firstName: responseJson['firstname'].toString(),
-        lastName: responseJson['lastname'].toString(),
-        addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
-        token: token,
-        vendorId: int.tryParse(vendorId)
-      );
+          statusCode: response.statusCode,
+          id: customerId,
+          email: responseJson['email'].toString(),
+          password: password,
+          firstName: responseJson['firstname'].toString(),
+          lastName: responseJson['lastname'].toString(),
+          addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
+          token: token,
+          vendorId: int.tryParse(vendorId));
     } else {
       // error
       var json = jsonDecode(response.body.toString());
       return CustomerResponse(
-          statusCode: response.statusCode,
-          error: json['message']
-      );
+          statusCode: response.statusCode, error: json['message']);
     }
-  }// end function getMe
+  } // end function getMe
 
   /*
   * createOrder - Return the order ID for the customer
@@ -179,16 +155,14 @@ class Magento {
   * shippingAddress - Customer shipping address
   * product - Product to be added to the cart
   */
-  static Future<int> createOrder(String token, CustomerAddress shippingAddress, Product product) async {
-
+  static Future<int> createOrder(
+      String token, CustomerAddress shippingAddress, Product product) async {
     await config.initialized;
 
-    config.customerHeaders['Authorization'] = 'Bearer ${token}';
+    config.customerHeaders['Authorization'] = 'Bearer $token';
 
-    var response = await client.post(
-      '${config.baseUrl}/carts/mine',
-      headers: config.customerHeaders
-    );
+    var response = await client.post('${config.baseUrl}/carts/mine',
+        headers: config.customerHeaders);
 
     var responseText = response.body.toString().replaceAll("\"", "");
     if (response.statusCode == 200) {
@@ -196,18 +170,13 @@ class Magento {
       int cartId = int.tryParse(responseText);
 
       // setup the cart item request
-      var requestJson = jsonEncode(<String, dynamic>{'cartItem': {
-        'sku': product.sku,
-        'qty': 1,
-        'quote_id': cartId
-      }});
+      var requestJson = jsonEncode(<String, dynamic>{
+        'cartItem': {'sku': product.sku, 'qty': 1, 'quote_id': cartId}
+      });
 
       // add the product to the cart
-      response = await client.post(
-        '${config.baseUrl}/carts/mine/items',
-        headers: config.customerHeaders,
-        body: requestJson
-      );
+      response = await client.post('${config.baseUrl}/carts/mine/items',
+          headers: config.customerHeaders, body: requestJson);
 
       // setup shipping estimate request
       var address = shippingAddress.toJson();
@@ -222,15 +191,14 @@ class Magento {
 
       // estimate shipping methods
       response = await client.post(
-        '${config.baseUrl}/carts/mine/estimate-shipping-methods',
-        headers: config.customerHeaders,
-        body: requestJson
-      );
+          '${config.baseUrl}/carts/mine/estimate-shipping-methods',
+          headers: config.customerHeaders,
+          body: requestJson);
 
       responseText = response.body.toString();
 
       // setup shipping information request
-      requestJson = jsonEncode(<String, dynamic> {
+      requestJson = jsonEncode(<String, dynamic>{
         'addressInformation': {
           'shipping_address': address,
           'billing_address': address,
@@ -241,14 +209,13 @@ class Magento {
 
       // set shipping information
       response = await client.post(
-        '${config.baseUrl}/carts/mine/shipping-information',
-        headers: config.customerHeaders,
-        body: requestJson
-      );
+          '${config.baseUrl}/carts/mine/shipping-information',
+          headers: config.customerHeaders,
+          body: requestJson);
 
       // setup shipping information request
       // todo: include Stripe cc_type, cc_number, etc...
-      requestJson = jsonEncode(<String, dynamic> {
+      requestJson = jsonEncode(<String, dynamic>{
         'paymentMethod': {
           'method': 'stripe',
           'additional_data': {
@@ -264,10 +231,9 @@ class Magento {
 
       // set payment information and create order
       response = await client.post(
-        '${config.baseUrl}/carts/mine/payment-information',
-        headers: config.customerHeaders,
-        body: requestJson
-      );
+          '${config.baseUrl}/carts/mine/payment-information',
+          headers: config.customerHeaders,
+          body: requestJson);
 
       responseText = response.body.toString();
 
@@ -280,7 +246,7 @@ class Magento {
       // error
       return -1;
     }
-  }// end function getMe
+  } // end function getMe
 
   /*
   * getPurchasedOrders - Returns a list of orders for the customer
@@ -290,10 +256,8 @@ class Magento {
     await config.initialized;
 
     final response = await client.get(
-        '${config
-            .baseUrl}/orders?searchCriteria[filterGroups][0][filters][0][field]=customer_id&searchCriteria[filterGroups][0][filters][0][value]=$customerId&searchCriteria[filterGroups][0][filters][0][condition_type]==',
-        headers: config.adminHeaders
-    );
+        '${config.baseUrl}/orders?searchCriteria[filterGroups][0][filters][0][field]=customer_id&searchCriteria[filterGroups][0][filters][0][value]=$customerId&searchCriteria[filterGroups][0][filters][0][condition_type]==',
+        headers: config.adminHeaders);
 
     if (response.statusCode == 200) {
       // success
@@ -310,19 +274,18 @@ class Magento {
       var json = jsonDecode(response.body.toString());
       return [json['message']];
     }
-  }// end function getPurchasedOrders
+  } // end function getPurchasedOrders
 
   /*
   * getCustomerAddressById - Get a particular customer by ID
   * customerId - Customer Id
   */
   static Future<CustomerResponse> getCustomerById(int customerId) async {
-
     await config.initialized;
 
     final response = await client.get(
-        '${config.baseUrl}/customers/$customerId',
-        headers: config.adminHeaders,
+      '${config.baseUrl}/customers/$customerId',
+      headers: config.adminHeaders,
     );
 
     var responseJson = jsonDecode(response.body.toString());
@@ -335,17 +298,14 @@ class Magento {
           firstName: responseJson['firstname'].toString(),
           lastName: responseJson['lastname'].toString(),
           addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
-          vendorId: int.tryParse(vendorId)
-      );
+          vendorId: int.tryParse(vendorId));
     } else {
       return CustomerResponse(
-          statusCode: response.statusCode,
-          error: responseJson['message']
-      );
+          statusCode: response.statusCode, error: responseJson['message']);
     }
-  }// end function getCustomerAddressById
+  } // end function getCustomerAddressById
 
-}// end class Magento
+} // end class Magento
 
 /*
  * Config - Configuration class for Resold Magento specific API calls
@@ -370,9 +330,10 @@ class Config {
     baseUrl = config['base_url'];
     accessToken = config['access_token'];
     adminHeaders['Authorization'] = 'Bearer ${this.accessToken}';
-    adminHeaders['User-Agent'] = customerHeaders['User-Agent'] = 'Resold - Mobile Application';
-    adminHeaders['Content-Type'] = customerHeaders['Content-Type'] = 'application/json';
-  }// end function init
+    adminHeaders['User-Agent'] =
+        customerHeaders['User-Agent'] = 'Resold - Mobile Application';
+    adminHeaders['Content-Type'] =
+        customerHeaders['Content-Type'] = 'application/json';
+  } // end function init
 
-}// end class Config
-
+} // end class Config

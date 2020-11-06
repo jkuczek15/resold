@@ -14,10 +14,9 @@ Future<void> main() async {
 
   // setup Stripe
   StripePayment.setOptions(StripeOptions(
-    publishableKey: 'pk_test_6QOUWv18fiwTf0QzwAzudvxK',
-    merchantId: 'Test',
-    androidPayMode: 'test')
-  );
+      publishableKey: 'pk_test_6QOUWv18fiwTf0QzwAzudvxK',
+      merchantId: 'Test',
+      androidPayMode: 'test'));
 
   // clear from disk
   await CustomerResponse.clear();
@@ -28,4 +27,3 @@ Future<void> main() async {
   // run the app
   runApp(MaterialApp(home: customer.isLoggedIn() ? Home(customer) : Landing()));
 }
-
