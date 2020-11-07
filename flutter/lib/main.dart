@@ -21,6 +21,12 @@ Future<void> main() async {
   // clear from disk
   await CustomerResponse.clear();
 
+  // auto-login
+  await CustomerResponse.save(
+      CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Bigjoe3092'));
+  // await CustomerResponse.save(
+  //     CustomerResponse(email: 'jim.smith@gmail.com', password: 'Bigjoe3092'));
+
   // get from disk and login
   CustomerResponse customer = await CustomerResponse.load();
 

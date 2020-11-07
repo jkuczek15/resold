@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
+import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/request/postmates/delivery-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -286,34 +288,15 @@ class MessagePageState extends State<MessagePage> {
 
   Widget buildItem(int index, DocumentSnapshot document) {
     var currency = Currency.create('USD', 2);
-    var quoteId, fee, expectedPickup, expectedDropoff = '';
     var deliveryQuoteStatus = DeliveryQuoteStatus.none;
+    FirebaseDeliveryQuote deliveryQuoteMessage = new FirebaseDeliveryQuote();
 
     if (document['messageType'] == MessageType.deliveryQuote.index) {
       if (document['status'] != null) {
         deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
       }
-      var content = document['content'].split('|');
-      quoteId = content[0];
-      fee = Money.fromInt(int.tryParse(content[1]), currency);
-      expectedPickup = DateFormat('h:mm a on MM/dd/yyyy.')
-          .format(DateTime.tryParse(DateTime.now()
-              .add(Duration(minutes: int.tryParse(content[2])))
-              .toString()))
-          .replaceAll(
-              new RegExp(r'on ' +
-                  DateFormat('MM/dd/yyyy').format(DateTime.now()) +
-                  '.'),
-              '');
-      expectedDropoff = DateFormat('h:mm a on MM/dd/yyyy.')
-          .format(DateTime.tryParse(DateTime.now()
-              .add(Duration(minutes: int.tryParse(content[3])))
-              .toString()))
-          .replaceAll(
-              new RegExp(r'on ' +
-                  DateFormat('MM/dd/yyyy').format(DateTime.now()) +
-                  '.'),
-              '');
+      deliveryQuoteMessage =
+          FirebaseHelper.readDeliveryQuoteMessageContent(document['content']);
     } // end if delivery request
 
     if (document['idFrom'] == fromCustomer.id) {
@@ -406,9 +389,10 @@ class MessagePageState extends State<MessagePage> {
                                           ? Text(
                                               'You have requested a delivery.' +
                                                   '\n\nPickup ETA: ' +
-                                                  expectedPickup +
+                                                  deliveryQuoteMessage
+                                                      .expectedPickup +
                                                   '\n\nYour profit: ' +
-                                                  (fee +
+                                                  (deliveryQuoteMessage.fee +
                                                           Money.from(
                                                               double.tryParse(
                                                                   product
@@ -426,31 +410,27 @@ class MessagePageState extends State<MessagePage> {
                                               ? Text(
                                                   '${toCustomer.fullName} has confirmed your delivery request.' +
                                                       '\n\nDelivery ETA: ' +
-                                                      expectedDropoff +
+                                                      deliveryQuoteMessage
+                                                          .expectedDropoff +
                                                       '\n\nDelivery fee: ' +
-                                                      fee.toString() +
+                                                      deliveryQuoteMessage.fee
+                                                          .toString() +
                                                       '\n\nTotal: ' +
-                                                      (fee +
-                                                              Money.from(
-                                                                  double.tryParse(
-                                                                      product
-                                                                          .price),
-                                                                  currency))
+                                                      (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                           .toString(),
                                                   style: TextStyle(
                                                       color: Colors.white))
                                               : Text(
                                                   'You have requested a delivery.' +
                                                       '\n\nDelivery ETA: ' +
-                                                      expectedDropoff +
+                                                      deliveryQuoteMessage
+                                                          .expectedDropoff +
                                                       '\n\nDelivery fee: ' +
-                                                      fee.toString() +
+                                                      deliveryQuoteMessage.fee
+                                                          .toString() +
                                                       '\n\nTotal: ' +
-                                                      (fee +
-                                                              Money.from(
-                                                                  double.tryParse(
-                                                                      product.price),
-                                                                  currency))
+                                                      (deliveryQuoteMessage.fee +
+                                                              Money.from(double.tryParse(product.price), currency))
                                                           .toString(),
                                                   style: TextStyle(color: Colors.white)),
                                     ),
@@ -477,7 +457,9 @@ class MessagePageState extends State<MessagePage> {
                                                       } else {
                                                         // user is the buyer
                                                         handlePaymentFlow(
-                                                            fee, currency);
+                                                            deliveryQuoteMessage
+                                                                .fee,
+                                                            currency);
                                                       } // end if user is seller
                                                     },
                                                     child: const Text(
@@ -655,13 +637,13 @@ class MessagePageState extends State<MessagePage> {
                                                       ? Text(
                                                           'You have received a delivery request.' +
                                                               '\n\nPickup ETA: ' +
-                                                              expectedPickup +
+                                                              deliveryQuoteMessage
+                                                                  .expectedPickup +
                                                               '\n\nYour Profit: ' +
-                                                              (fee + Money.from(double.tryParse(product.price), currency))
+                                                              (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                                   .toString(),
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .black
+                                                              color: Colors.black
                                                                   .withOpacity(
                                                                       0.6)))
                                                       :
@@ -673,17 +655,17 @@ class MessagePageState extends State<MessagePage> {
                                                           ? Text(
                                                               'You have accepted the delivery. Please wait for ${toCustomer.fullName} to complete payment.' +
                                                                   '\n\nPickup ETA: ' +
-                                                                  expectedPickup +
+                                                                  deliveryQuoteMessage
+                                                                      .expectedPickup +
                                                                   '\n\nYour Profit: ' +
-                                                                  (fee + Money.from(double.tryParse(product.price), currency))
+                                                                  (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                                       .toString(),
-                                                              style:
-                                                                  TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                              style: TextStyle(color: Colors.black.withOpacity(0.6)))
                                                           :
                                                           // buyer with opened delivery quote
                                                           !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none
-                                                              ? Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + expectedDropoff + '\n\nDelivery fee: ' + fee.toString() + '\n\nTotal: ' + (fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
-                                                              : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + expectedDropoff + '\n\nDelivery fee: ' + fee.toString() + '\n\nTotal: ' + (fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
+                                                              ? Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                              : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
                                           ButtonBar(
                                             alignment: MainAxisAlignment.start,
                                             children: isSeller &&
@@ -718,7 +700,9 @@ class MessagePageState extends State<MessagePage> {
                                                         } else {
                                                           // user is the buyer
                                                           handlePaymentFlow(
-                                                              fee, currency);
+                                                              deliveryQuoteMessage
+                                                                  .fee,
+                                                              currency);
                                                         } // end if user is seller
                                                       },
                                                       child: const Text(
