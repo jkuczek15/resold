@@ -342,11 +342,12 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 								// echo $paytovendor;echo "<br>";echo $paytoadmin; die("lkh");
 								$createtoken1 = \Stripe\Token::create ( $Tokenparams );
 								$createtoken2 = \Stripe\Token::create ( $Tokenparams );
+
 								try {
 									$charge1 = \Stripe\Charge::create ( array (
 											"amount" => $paytovendor * 100, // amount in cents
 											"currency" => $currencyCode,
-											"source" => $createtoken1->id,
+											"source" => isset($_POST['stripe_token']) ? $_POST['stripe_token'] : $createtoken1->id,
 											"description" => "Create Payment",
 											"application_fee" => $appFee
 									)
@@ -362,7 +363,7 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 										$charge2 = \Stripe\Charge::create ( array (
 												"amount" => $paytoadmin * 100, // Amount in cents
 												"currency" => $currencyCode,
-												"source" => $createtoken2->id,
+												"source" => isset($_POST['stripe_token']) ? $_POST['stripe_token'] : $createtoken2->id,
 												"description" => "Create Payment",
 												"application_fee" => $appFee
 										// amount in cent
