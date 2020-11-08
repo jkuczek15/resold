@@ -25,6 +25,7 @@ class AccountPageState extends State<AccountPage> {
   Future<List<Product>> futureSoldVendorProducts;
   Future<Vendor> futureVendor;
   final CustomerResponse customer;
+  bool displayForSale = true;
   Position currentLocation;
 
   AccountPageState(CustomerResponse customer) : customer = customer;
@@ -104,7 +105,8 @@ class AccountPageState extends State<AccountPage> {
                                                           children: [
                                                             Row (
                                                                 children: [
-                                                                  Column (
+                                                                  InkWell(
+                                                                    child: Column (
                                                                       children: [
                                                                         Text(forSaleProducts.length.toString(), style: new TextStyle(
                                                                             fontSize: 24.0,
@@ -118,10 +120,16 @@ class AccountPageState extends State<AccountPage> {
                                                                             fontWeight: FontWeight.normal,
                                                                             color: Colors.white
                                                                         ))
-                                                                      ]
+                                                                      ]),
+                                                                    onTap: () => {
+                                                                      setState(() => {
+                                                                        displayForSale = true
+                                                                      })
+                                                                    },
                                                                   ),
                                                                   SizedBox(width: 35),
-                                                                  Column (
+                                                                  InkWell(
+                                                                    child: Column (
                                                                     children: [
                                                                       Text(soldProducts.length.toString(), style: new TextStyle(
                                                                           fontSize: 24.0,
@@ -135,13 +143,18 @@ class AccountPageState extends State<AccountPage> {
                                                                           fontWeight: FontWeight.normal,
                                                                           color: Colors.white
                                                                       ))
-                                                                    ]
+                                                                    ]),
+                                                                    onTap: () => {
+                                                                      setState(() => {
+                                                                        displayForSale = false
+                                                                      })
+                                                                    }
                                                                   ),
                                                                   SizedBox(width: 35),
                                                                   Column (
                                                                     children: [
                                                                       Icon(MdiIcons.tshirtCrew, color: Colors.white, size: 29.0),
-                                                                      Text('best seller', style: new TextStyle(
+                                                                      Text('reviews', style: new TextStyle(
                                                                           fontSize: 14.0,
                                                                           fontFamily: 'Roboto',
                                                                           fontWeight: FontWeight.normal,
@@ -217,10 +230,15 @@ class AccountPageState extends State<AccountPage> {
                       child: GridView.count(
                         shrinkWrap: true,
                         crossAxisCount: 2,
-                        children: List.generate(forSaleProducts.length, (index) {
+                        children: displayForSale ?
+                        List.generate(forSaleProducts.length, (index) {
                           var product = forSaleProducts[index];
                           return ProductListBuilder.buildProductGridTile(context, currentLocation, product, customer, index);
-                        })
+                        }) : 
+                        List.generate(soldProducts.length, (index) {
+                          var product = soldProducts[index];
+                          return ProductListBuilder.buildProductGridTile(context, currentLocation, product, customer, index);
+                        }) 
                       )
                     ),
                   ],
