@@ -63,6 +63,10 @@ class Paymethod extends \Magento\Payment\Model\Method\AbstractMethod {
 			$data = new DataObject ( $data );
 		}
 		$Cardinfo = $this->getInfoInstance ();
+		if (!empty($data['additional_data']['cc_saved']) && $data['additional_data']['cc_saved'] != 'new_card'){
+			$infoinstance->setAdditionalInformation('token', $data['additional_data']['cc_saved']);
+			return $this;
+		}
 		$Cardinfo->setCcType ( $data ['additional_data'] ['cc_type'] )->setCcLast4 ( substr ( $data ['additional_data'] ['cc_number'], - 4 ) )->setCcNumber ( $data ['additional_data'] ['cc_number'] )->setCcCid ( $data ['additional_data'] ['cc_cid'] )->setCcExpMonth ( $data ['additional_data'] ['cc_exp_month'] )->setCcExpYear ( $data ['additional_data'] ['cc_exp_year'] );
 		return $this;
 	}
