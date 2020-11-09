@@ -224,8 +224,8 @@ class Config {
 
   init() async {
     final config = {
-      // 'base_url': 'https://resold.us/api'
-      'base_url': 'https://4c776f9f0de9.ngrok.io/api'
+      'base_url': 'https://resold.us/api'
+      // 'base_url': 'https://4c776f9f0de9.ngrok.io/api'
     };
 
     baseUrl = config['base_url'];
