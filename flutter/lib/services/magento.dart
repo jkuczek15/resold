@@ -10,6 +10,7 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/resold-rest.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 /*
 * Resold Magento API service - Magento specific API client
@@ -155,8 +156,8 @@ class Magento {
   * shippingAddress - Customer shipping address
   * product - Product to be added to the cart
   */
-  static Future<int> createOrder(
-      String token, CustomerAddress shippingAddress, Product product) async {
+  static Future<int> createOrder(String token, CustomerAddress shippingAddress,
+      Product product, Token stripeToken) async {
     await config.initialized;
 
     config.customerHeaders['Authorization'] = 'Bearer $token';
@@ -214,18 +215,20 @@ class Magento {
           body: requestJson);
 
       // setup shipping information request
-      // todo: include Stripe cc_type, cc_number, etc...
+      // todo: save stripe payment information via token instead of full credit card...
       requestJson = jsonEncode(<String, dynamic>{
         'paymentMethod': {
           'method': 'stripe',
           'additional_data': {
-            'cc_type': 'visa',
-            'cc_number': '4242424242424242',
-            'cc_cid': '032',
-            'cc_exp_year': '2022',
-            'cc_exp_month': '5'
+            // 'token': stripeToken.tokenId,
+            // 'cc_saved': stripeToken.tokenId
+            'token': 'tok_visa',
+            'cc_saved': 'tok_visa'
           }
         },
+        // 'stripe_token': stripeToken.tokenId,
+        // 'card': stripeToken.tokenId,
+        // 'cc_save': true,
         'billing_address': address
       });
 
@@ -323,7 +326,8 @@ class Config {
 
   init() async {
     final config = {
-      'base_url': 'https://resold.us/rest/V1',
+      // 'base_url': 'https://resold.us/rest/V1',
+      'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1',
       'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'
     };
 

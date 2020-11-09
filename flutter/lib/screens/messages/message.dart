@@ -844,12 +844,11 @@ class MessagePageState extends State<MessagePage> {
       // todo: include Stripe credit card in Magento order
       // todo: include delivery quote amount as fee
       // todo: send the user to the order details page
-      DeliveryQuoteResponse quote = await getDeliveryQuote();
       int orderId = await Magento.createOrder(
-          fromCustomer.token, fromCustomer.addresses.first, product);
-      DeliveryResponse delivery = await getDelivery();
-      await Firebase.updateDeliveryQuoteStatus(
-          chatId, DeliveryQuoteStatus.paid);
+          fromCustomer.token, fromCustomer.addresses.first, product, token);
+      // DeliveryResponse delivery = await getDelivery();
+      // await Firebase.updateDeliveryQuoteStatus(
+      //     chatId, DeliveryQuoteStatus.paid);
 
       print(token);
     }).catchError((err) {

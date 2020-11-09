@@ -75,7 +75,10 @@ class Config {
   }
 
   init() async {
-    final config = {'base_url': 'https://resold.us/rest/V1/resold'};
+    final config = {
+      // 'base_url': 'https://resold.us/rest/V1/resold',
+      'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1/resold'
+    };
 
     baseUrl = config['base_url'];
     headers['User-Agent'] = 'Resold - Mobile Application';
