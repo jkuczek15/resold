@@ -1,4 +1,5 @@
 import 'package:http/http.dart' show Client;
+import 'package:money2/money2.dart';
 import 'package:resold/models/customer/customer-address-region.dart';
 import 'package:resold/models/customer/customer-address.dart';
 import 'package:resold/models/product.dart';
@@ -155,9 +156,11 @@ class Magento {
   * token - Customer API token
   * shippingAddress - Customer shipping address
   * product - Product to be added to the cart
+  * stripeToken - Stripe payment token
+  * deliveryFee - Delivery fee
   */
   static Future<int> createOrder(String token, CustomerAddress shippingAddress,
-      Product product, Token stripeToken) async {
+      Product product, Token stripeToken, Money deliveryFee) async {
     await config.initialized;
 
     config.customerHeaders['Authorization'] = 'Bearer $token';
@@ -214,8 +217,7 @@ class Magento {
           headers: config.customerHeaders,
           body: requestJson);
 
-      // setup shipping information request
-      // todo: save stripe payment information via token instead of full credit card...
+      // setup payment information request
       requestJson = jsonEncode(<String, dynamic>{
         'paymentMethod': {
           'method': 'stripe',
@@ -224,6 +226,8 @@ class Magento {
             'cc_saved': stripeToken.tokenId
           }
         },
+        'delivery_fee':
+            deliveryFee.toString().replaceAll('\$', '').replaceAll('.', ''),
         'billing_address': address
       });
 
@@ -321,8 +325,8 @@ class Config {
 
   init() async {
     final config = {
-      'base_url': 'https://resold.us/rest/V1',
-      // 'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1',
+      // 'base_url': 'https://resold.us/rest/V1',
+      'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1',
       'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'
     };
 
