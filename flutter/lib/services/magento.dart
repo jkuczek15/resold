@@ -220,15 +220,10 @@ class Magento {
         'paymentMethod': {
           'method': 'stripe',
           'additional_data': {
-            // 'token': stripeToken.tokenId,
-            // 'cc_saved': stripeToken.tokenId
-            'token': 'tok_visa',
-            'cc_saved': 'tok_visa'
+            'token': stripeToken.tokenId,
+            'cc_saved': stripeToken.tokenId
           }
         },
-        // 'stripe_token': stripeToken.tokenId,
-        // 'card': stripeToken.tokenId,
-        // 'cc_save': true,
         'billing_address': address
       });
 
@@ -326,8 +321,8 @@ class Config {
 
   init() async {
     final config = {
-      // 'base_url': 'https://resold.us/rest/V1',
-      'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1',
+      'base_url': 'https://resold.us/rest/V1',
+      // 'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1',
       'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'
     };
 
