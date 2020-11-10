@@ -44,6 +44,24 @@ class ResoldRest {
   } // end function postProduct
 
   /*
+   * getProduct - Get a product
+   * token - Customer token
+   * productId - Product ID
+   */
+  static Future<Product> getProduct(String token, int productId) async {
+    await config.initialized;
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    var response = await dio.get('${config.baseUrl}/product/$productId');
+
+    if (response.data != null) {
+      return Product.fromJson(response.data[0]);
+    } else {
+      return Product();
+    } // end if response data success
+  } // end function postProduct
+
+  /*
    * createVendor - Create a seller account
    * token - Customer identification token
    */
