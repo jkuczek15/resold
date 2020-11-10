@@ -1,5 +1,4 @@
 import 'package:money2/money2.dart';
-import 'package:resold/services/firebase.dart';
 
 class FirebaseDeliveryQuote {
   String quoteId;

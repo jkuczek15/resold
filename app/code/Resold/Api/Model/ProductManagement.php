@@ -42,19 +42,6 @@ class ProductManagement
 	/**
 	 * {@inheritdoc}
 	 */
-  public function setDelivery($productId, $deliveryId)
-	{
-    // set the postmates delivery ID on the product
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $product = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
-    $product->setCustomAttribute('delivery_id', $deliveryId);
-    $product->save();
-    return 1;
-  }// end function setDeliveryId
-
-	/**
-	 * {@inheritdoc}
-	 */
   public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude, $itemSize)
 	{
     $customerId = $this->userContext->getUserId();
@@ -65,7 +52,7 @@ class ProductManagement
     ###################################
     // Ensure user is logged in
     if ($customerId == null) {
-      return ['error' => 'You must be logged in to sell items.'];
+      return [['error' => 'You must be logged in to sell items.']];
     }// end if user not logged in
 
     ####################################
@@ -73,22 +60,22 @@ class ProductManagement
     ###################################
     // determine whether we need to skip price validation
     if(!is_numeric($price) || $price < 5){
-      return ['error' => 'Price must be an integer greater than 5.'];
+      return [['error' => 'Price must be an integer greater than 5.']];
     }// end if invalid price
 
     // location validation
     if(!is_numeric($latitude) || !is_numeric($longitude)){
-      return ['error' => 'Invalid location.'];
+      return [['error' => 'Invalid location.']];
     }// end if latitude longitude not set
 
     // item size validation
     if(!is_numeric($itemSize) || !is_numeric($itemSize)){
-      return ['error' => 'Invalid item size.'];
+      return [['error' => 'Invalid item size.']];
     }// end if latitude longitude not set
 
     // image validation
     if($imagePaths == ''){
-      return ['error' => 'At least one image is required.'];
+      return [['error' => 'At least one image is required.']];
     }// end if no images uploaded
 
     ####################################
@@ -222,6 +209,71 @@ class ProductManagement
       'vendor_id' => $vendorId
     ]);
 
-    return ['success' => 'Y', 'productId' => $_product->getId()];
-	}// end function createProduct
+    return [['success' => 'Y', 'productId' => $_product->getId()]];
+  }// end function createProduct
+
+	/**
+	 * {@inheritdoc}
+	 */
+  public function getProduct($productId)
+	{
+    // set the postmates delivery ID on the product
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+    $productsResult = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
+      ->addAttributeToSelect($objectManager->create('Magento\Catalog\Model\Config')->getProductAttributes())
+      ->addAttributeToSelect('latitude')
+      ->addAttributeToSelect('longitude')
+      ->addAttributeToSelect('description')
+      ->addAttributeToSelect('title_description')
+      ->addAttributeToSelect('local_global')
+      ->addAttributeToSelect('charge_id')
+      ->addAttributeToSelect('delivery_id')
+      ->addAttributeToSelect('condition')
+      ->addAttributeToFilter('entity_id', $productId)
+      ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+
+    foreach($productsResult as $product) {
+      $titleDescription = $product->getCustomAttribute('title_description');
+      $localGlobal = $product->getCustomAttribute('local_global');
+      $condition = $product->getCustomAttribute('condition');
+      $latitude = $product->getCustomAttribute('latitude');
+      $longitude = $product->getCustomAttribute('longitude');
+      $chargeId = $product->getCustomAttribute('charge_id');
+      $deliveryId = $product->getCustomAttribute('delivery_id');
+      $categoryIds = $product->getCategoryIds();
+
+      return [[
+        'id' => $product->getId(),
+        'name' => $product->getName(),
+        'price' => $product->getPrice(),
+        'description' => $product->getDescription(),
+        'image' => $product->getImage(),
+        'small_image' => $product->getSmallImage(),
+        'thumbnail' => $product->getThumbnail(),
+        'category_ids' => $product->getCategoryIds(),
+        'title_description' => $titleDescription ? $titleDescription->getValue() : null,
+        'local_global' => $localGlobal ? $localGlobal->getValue() : null,
+        'condition' => $condition ? $condition->getValue() : null,
+        'latitude' => $latitude ? $latitude->getValue() : null,
+        'longitude' => $longitude ? $longitude->getValue() : null,
+        'charge_id' => $chargeId ? $chargeId->getValue() : null,
+        'delivery_id' => $deliveryId ? $deliveryId->getValue() : null
+      ]];
+    }// end foreach over products
+    return [['error' => 'Could not find product.']];
+  }// end function getProduct
+
+	/**
+	 * {@inheritdoc}
+	 */
+  public function setDelivery($productId, $deliveryId)
+	{
+    // set the postmates delivery ID on the product
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
+    $product->setCustomAttribute('delivery_id', $deliveryId);
+    $product->save();
+    return 1;
+  }// end function setDeliveryId
 }

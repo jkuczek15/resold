@@ -35,6 +35,14 @@ interface ProductManagementInterface
 	public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude, $itemSize);
 
 	/**
+	 * Get a product
+	 *
+	 * @param int $productId
+	 * @return mixed[]
+	 */
+	public function getProduct($productId);
+
+	/**
 	 * Set delivery ID
 	 *
 	 * @param int $productId
