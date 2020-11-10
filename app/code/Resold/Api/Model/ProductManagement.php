@@ -42,6 +42,19 @@ class ProductManagement
 	/**
 	 * {@inheritdoc}
 	 */
+  public function setDelivery($productId, $deliveryId)
+	{
+    // set the postmates delivery ID on the product
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
+    $product->setCustomAttribute('delivery_id', $deliveryId);
+    $product->save();
+    return 1;
+  }// end function setDeliveryId
+
+	/**
+	 * {@inheritdoc}
+	 */
   public function createProduct($name, $price, $topCategory, $condition, $details, $localGlobal, $imagePaths, $latitude, $longitude, $itemSize)
 	{
     $customerId = $this->userContext->getUserId();
@@ -210,5 +223,5 @@ class ProductManagement
     ]);
 
     return ['success' => 'Y', 'productId' => $_product->getId()];
-	}
+	}// end function createProduct
 }

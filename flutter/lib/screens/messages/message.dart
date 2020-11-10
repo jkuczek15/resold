@@ -6,6 +6,7 @@ import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/request/postmates/delivery-request.dart';
@@ -392,12 +393,7 @@ class MessagePageState extends State<MessagePage> {
                                                   deliveryQuoteMessage
                                                       .expectedPickup +
                                                   '\n\nYour profit: ' +
-                                                  (deliveryQuoteMessage.fee +
-                                                          Money.from(
-                                                              double.tryParse(
-                                                                  product
-                                                                      .price),
-                                                              currency))
+                                                  (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                       .toString(),
                                               style: TextStyle(
                                                   color: Colors.white))
@@ -420,19 +416,24 @@ class MessagePageState extends State<MessagePage> {
                                                           .toString(),
                                                   style: TextStyle(
                                                       color: Colors.white))
-                                              : Text(
-                                                  'You have requested a delivery.' +
-                                                      '\n\nDelivery ETA: ' +
-                                                      deliveryQuoteMessage
-                                                          .expectedDropoff +
-                                                      '\n\nDelivery fee: ' +
-                                                      deliveryQuoteMessage.fee
-                                                          .toString() +
-                                                      '\n\nTotal: ' +
-                                                      (deliveryQuoteMessage.fee +
-                                                              Money.from(double.tryParse(product.price), currency))
-                                                          .toString(),
-                                                  style: TextStyle(color: Colors.white)),
+                                              : !isSeller &&
+                                                      deliveryQuoteStatus ==
+                                                          DeliveryQuoteStatus
+                                                              .paid
+                                                  ? Text('Delivery is on the way. You will receive: ' + product.name + ' by ' + deliveryQuoteMessage.expectedDropoff.trim() + '.',
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                  : Text(
+                                                      'You have requested a delivery.' +
+                                                          '\n\nDelivery ETA: ' +
+                                                          deliveryQuoteMessage
+                                                              .expectedDropoff +
+                                                          '\n\nDelivery fee: ' +
+                                                          deliveryQuoteMessage.fee
+                                                              .toString() +
+                                                          '\n\nTotal: ' +
+                                                          (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(),
+                                                      style: TextStyle(color: Colors.white)),
                                     ),
                                     Align(
                                         alignment: Alignment.centerLeft,
@@ -480,21 +481,26 @@ class MessagePageState extends State<MessagePage> {
                                                         'Decline Delivery'),
                                                   ),
                                                 ]
-                                              : [
-                                                  FlatButton(
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                    onPressed: () async {
-                                                      await Firebase
-                                                          .deleteProductMessage(
-                                                              chatId,
-                                                              document
-                                                                  .documentID);
-                                                    },
-                                                    child: const Text(
-                                                        'Cancel Delivery'),
-                                                  ),
-                                                ],
+                                              : !isSeller &&
+                                                      deliveryQuoteStatus ==
+                                                          DeliveryQuoteStatus
+                                                              .paid
+                                                  ? []
+                                                  : [
+                                                      FlatButton(
+                                                        color: Colors.black,
+                                                        textColor: Colors.white,
+                                                        onPressed: () async {
+                                                          await Firebase
+                                                              .deleteProductMessage(
+                                                                  chatId,
+                                                                  document
+                                                                      .documentID);
+                                                        },
+                                                        child: const Text(
+                                                            'Cancel Delivery'),
+                                                      ),
+                                                    ],
                                         ))
                                   ])),
                           width: 260.0,
@@ -665,7 +671,9 @@ class MessagePageState extends State<MessagePage> {
                                                           // buyer with opened delivery quote
                                                           !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none
                                                               ? Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
-                                                              : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
+                                                              : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                                  ? Text('Delivery is on the way.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                                  : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
                                           ButtonBar(
                                             alignment: MainAxisAlignment.start,
                                             children: isSeller &&
@@ -841,16 +849,24 @@ class MessagePageState extends State<MessagePage> {
     ).then((Token token) async {
       await StripePayment.completeNativePayRequest();
 
-      // todo: include Stripe credit card in Magento order
-      // todo: include delivery quote amount as fee
-      // todo: send the user to the order details page
       int orderId = await Magento.createOrder(fromCustomer.token,
           fromCustomer.addresses.first, product, token, fee);
-      // DeliveryResponse delivery = await getDelivery();
-      // await Firebase.updateDeliveryQuoteStatus(
-      //     chatId, DeliveryQuoteStatus.paid);
 
-      print(token);
+      if (orderId != -1) {
+        // order was successful
+        // update the message as paid
+        await Firebase.updateDeliveryQuoteStatus(
+            chatId, DeliveryQuoteStatus.paid);
+
+        // create a Postmates delivery
+        DeliveryResponse delivery = await getDelivery();
+
+        // save the delivery ID to the product
+        await ResoldRest.setDeliveryId(
+            fromCustomer.token, product.id, delivery.id);
+
+        // todo: send the user to the order details page
+      } // end if order successful
     }).catchError((err) {
       print(err);
     });

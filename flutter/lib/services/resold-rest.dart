@@ -58,7 +58,23 @@ class ResoldRest {
     } else {
       return 'Error: ' + response.data;
     } // end if response data success
-  } // end function postProduct
+  } // end function createVendor
+
+  /*
+   * setDeliveryId - Set the product's delivery ID
+   * token - Customer identification token
+   * productId - ID of the product to be delivered
+   * deliverId - Postmates delivery
+   */
+  static Future setDeliveryId(
+      String token, int productId, String deliveryId) async {
+    await config.initialized;
+
+    FormData formData = new FormData.fromMap(
+        {'productId': productId, 'deliveryId': deliveryId});
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    await dio.post('${config.baseUrl}/product/delivery', data: formData);
+  } // end function setDeliveryId
 
 } // end class Resold
 
