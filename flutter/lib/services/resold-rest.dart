@@ -36,8 +36,8 @@ class ResoldRest {
     dio.options.headers['Authorization'] = 'Bearer $token';
     var response = await dio.post('${config.baseUrl}/product', data: formData);
 
-    if (response.data.length > 1) {
-      return response.data[1];
+    if (response.data[0].length > 1) {
+      return response.data[0]['productId'];
     } else {
       return 'Error: ' + response.data;
     } // end if response data success

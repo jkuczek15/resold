@@ -420,7 +420,8 @@ class MessagePageState extends State<MessagePage> {
                                                       deliveryQuoteStatus ==
                                                           DeliveryQuoteStatus
                                                               .paid
-                                                  ? Text('Delivery is on the way. You will receive: ' + product.name + ' by ' + deliveryQuoteMessage.expectedDropoff.trim() + '.',
+                                                  ? Text(
+                                                      'Please wait for a driver to deliver your ${product.name}.\n\nDelivery ETA: ${deliveryQuoteMessage.expectedDropoff.trim()}.\n\nTotal: ${(deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString()}',
                                                       style: TextStyle(
                                                           color: Colors.white))
                                                   : Text(
@@ -668,67 +669,76 @@ class MessagePageState extends State<MessagePage> {
                                                                       .toString(),
                                                               style: TextStyle(color: Colors.black.withOpacity(0.6)))
                                                           :
-                                                          // buyer with opened delivery quote
-                                                          !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none
-                                                              ? Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
-                                                              : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
-                                                                  ? Text('Delivery is on the way.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
-                                                                  : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
+                                                          // seller with paid delivery quote
+                                                          isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                              ? Text('${toCustomer.fullName} has completed payment. Please wait for a driver to pickup your ${product.name}.' + '\n\nPickup ETA: ' + deliveryQuoteMessage.expectedPickup + '\n\nYour Profit: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                              :
+                                                              // buyer with opened delivery quote
+                                                              !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none
+                                                                  ? Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                                  : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                                      ? Text('Please wait for a driver to deliver your ${product.name}.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                                      : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
                                           ButtonBar(
                                             alignment: MainAxisAlignment.start,
                                             children: isSeller &&
                                                     deliveryQuoteStatus ==
-                                                        DeliveryQuoteStatus
-                                                            .accepted
-                                                ? [
-                                                    FlatButton(
-                                                      color: Colors.black,
-                                                      textColor: Colors.white,
-                                                      onPressed: () async {
-                                                        await Firebase
-                                                            .deleteProductMessage(
-                                                                chatId,
-                                                                document
-                                                                    .documentID);
-                                                      },
-                                                      child: const Text(
-                                                          'Cancel Delivery'),
-                                                    ),
-                                                  ]
-                                                : [
-                                                    FlatButton(
-                                                      onPressed: () async {
-                                                        if (isSeller) {
-                                                          // user is the seller
-                                                          await Firebase
-                                                              .updateDeliveryQuoteStatus(
-                                                                  chatId,
-                                                                  DeliveryQuoteStatus
-                                                                      .accepted);
-                                                        } else {
-                                                          // user is the buyer
-                                                          handlePaymentFlow(
-                                                              deliveryQuoteMessage
-                                                                  .fee,
-                                                              currency);
-                                                        } // end if user is seller
-                                                      },
-                                                      child: const Text(
-                                                          'Accept Delivery'),
-                                                    ),
-                                                    FlatButton(
-                                                      onPressed: () async {
-                                                        // Perform some action
-                                                        await Firebase
-                                                            .deleteProductMessage(
-                                                                chatId,
-                                                                document
-                                                                    .documentID);
-                                                      },
-                                                      child: const Text(
-                                                          'Decline Delivery'),
-                                                    ),
-                                                  ],
+                                                        DeliveryQuoteStatus.paid
+                                                ? []
+                                                : isSeller &&
+                                                        deliveryQuoteStatus ==
+                                                            DeliveryQuoteStatus
+                                                                .accepted
+                                                    ? [
+                                                        FlatButton(
+                                                          color: Colors.black,
+                                                          textColor:
+                                                              Colors.white,
+                                                          onPressed: () async {
+                                                            await Firebase
+                                                                .deleteProductMessage(
+                                                                    chatId,
+                                                                    document
+                                                                        .documentID);
+                                                          },
+                                                          child: const Text(
+                                                              'Cancel Delivery'),
+                                                        ),
+                                                      ]
+                                                    : [
+                                                        FlatButton(
+                                                          onPressed: () async {
+                                                            if (isSeller) {
+                                                              // user is the seller
+                                                              await Firebase
+                                                                  .updateDeliveryQuoteStatus(
+                                                                      chatId,
+                                                                      DeliveryQuoteStatus
+                                                                          .accepted);
+                                                            } else {
+                                                              // user is the buyer
+                                                              handlePaymentFlow(
+                                                                  deliveryQuoteMessage
+                                                                      .fee,
+                                                                  currency);
+                                                            } // end if user is seller
+                                                          },
+                                                          child: const Text(
+                                                              'Accept Delivery'),
+                                                        ),
+                                                        FlatButton(
+                                                          onPressed: () async {
+                                                            // Perform some action
+                                                            await Firebase
+                                                                .deleteProductMessage(
+                                                                    chatId,
+                                                                    document
+                                                                        .documentID);
+                                                          },
+                                                          child: const Text(
+                                                              'Decline Delivery'),
+                                                        ),
+                                                      ],
                                           )
                                         ],
                                       ),
