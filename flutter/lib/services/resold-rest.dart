@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:resold/models/product.dart';
 import 'package:dio/dio.dart';
+import 'package:resold/environment.dart';
 
 /*
 * Resold service - Resold Rest specific API client
@@ -16,8 +17,7 @@ class ResoldRest {
    * product - Product to post
    * imagePaths - List of image paths
    */
-  static Future<String> postProduct(
-      String token, Product product, List<String> imagePaths) async {
+  static Future<String> postProduct(String token, Product product, List<String> imagePaths) async {
     await config.initialized;
 
     FormData formData = new FormData.fromMap({
@@ -84,12 +84,10 @@ class ResoldRest {
    * productId - ID of the product to be delivered
    * deliverId - Postmates delivery
    */
-  static Future setDeliveryId(
-      String token, int productId, String deliveryId) async {
+  static Future setDeliveryId(String token, int productId, String deliveryId) async {
     await config.initialized;
 
-    FormData formData = new FormData.fromMap(
-        {'productId': productId, 'deliveryId': deliveryId});
+    FormData formData = new FormData.fromMap({'productId': productId, 'deliveryId': deliveryId});
     dio.options.headers['Authorization'] = 'Bearer $token';
     await dio.post('${config.baseUrl}/product/delivery', data: formData);
   } // end function setDeliveryId
@@ -109,10 +107,7 @@ class Config {
   }
 
   init() async {
-    final config = {
-      // 'base_url': 'https://resold.us/rest/V1/resold',
-      'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1/resold'
-    };
+    final config = {'base_url': '${env.baseUrl}/rest/V1/resold'};
 
     baseUrl = config['base_url'];
     headers['User-Agent'] = 'Resold - Mobile Application';
