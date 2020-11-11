@@ -49,12 +49,8 @@ class OrdersPageState extends State<OrdersPage> {
             bottom: TabBar(
               indicatorColor: const Color(0xff41b8ea),
               tabs: [
-                Tab(
-                    icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'),
-                    text: 'Purchased'),
-                Tab(
-                    icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'),
-                    text: 'Sold')
+                Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
+                Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
               ],
             )),
         body: TabBarView(
@@ -80,22 +76,16 @@ class OrdersPageState extends State<OrdersPage> {
                                     });
 
                                 // fetch the product
-                                Product product = await ResoldRest.getProduct(
-                                    customer.token, line.productId);
+                                Product product = await ResoldRest.getProduct(customer.token, line.productId);
 
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop('dialog');
+                                Navigator.of(context, rootNavigator: true).pop('dialog');
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OrderDetails(
-                                            customer, order, product)));
+                                // navigate to order details page
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product)));
                               },
                               child: Card(
                                   child: ListTile(
-                                      trailing: Text(
-                                          formatter.format(line.price.round())),
+                                      trailing: Text(formatter.format(line.price.round())),
                                       title: Container(
                                         height: 50,
                                         child: Row(
@@ -105,8 +95,7 @@ class OrdersPageState extends State<OrdersPage> {
                         },
                       ));
                 } else if (snapshot.hasData && snapshot.data.length == 0) {
-                  return Center(
-                      child: Text('You have not purchased any items.'));
+                  return Center(child: Text('You have not purchased any items.'));
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
@@ -133,23 +122,16 @@ class OrdersPageState extends State<OrdersPage> {
                                   });
 
                               // fetch the product
-                              Product product = await ResoldRest.getProduct(
-                                  customer.token, line.productId);
+                              Product product = await ResoldRest.getProduct(customer.token, line.productId);
 
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop('dialog');
+                              Navigator.of(context, rootNavigator: true).pop('dialog');
 
                               // navigate
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => OrderDetails(
-                                          customer, order, product)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product)));
                             },
                             child: Card(
                                 child: ListTile(
-                                    trailing: Text(
-                                        formatter.format(line.price.round())),
+                                    trailing: Text(formatter.format(line.price.round())),
                                     title: Container(
                                       height: 50,
                                       child: Row(

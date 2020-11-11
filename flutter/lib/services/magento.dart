@@ -12,6 +12,7 @@ import 'package:resold/models/order.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+import 'package:resold/environment.dart';
 
 /*
 * Resold Magento API service - Magento specific API client
@@ -27,19 +28,13 @@ class Magento {
   */
   static Future<CustomerResponse> loginCustomer(LoginRequest request) async {
     if (request.username.isEmpty || request.password.isEmpty) {
-      return CustomerResponse(
-          statusCode: 400, error: 'Please enter both an email and a password.');
+      return CustomerResponse(statusCode: 400, error: 'Please enter both an email and a password.');
     }
 
     await config.initialized;
 
-    final response = await client.post(
-        '${config.baseUrl}/integration/customer/token',
-        headers: config.adminHeaders,
-        body: jsonEncode(<String, String>{
-          'username': request.username,
-          'password': request.password
-        }));
+    final response = await client.post('${config.baseUrl}/integration/customer/token',
+        headers: config.adminHeaders, body: jsonEncode(<String, String>{'username': request.username, 'password': request.password}));
 
     if (response.statusCode == 200) {
       // login success
@@ -59,8 +54,7 @@ class Magento {
     } else {
       // login error
       var json = jsonDecode(response.body.toString());
-      return CustomerResponse(
-          statusCode: response.statusCode, error: json['message']);
+      return CustomerResponse(statusCode: response.statusCode, error: json['message']);
     }
   } // end function loginCustomer
 
@@ -68,42 +62,32 @@ class Magento {
   * createCustomer - Creates a customer using Magento service
   * request - CustomerRequest object with information to create a customer
   */
-  static Future<CustomerResponse> createCustomer(
-      CustomerRequest request, String password, String confirmPassword) async {
+  static Future<CustomerResponse> createCustomer(CustomerRequest request, String password, String confirmPassword) async {
     if (request.firstname.isEmpty || request.lastname.isEmpty) {
-      return CustomerResponse(
-          statusCode: 400,
-          error: 'Please enter both a first name and last name.');
+      return CustomerResponse(statusCode: 400, error: 'Please enter both a first name and last name.');
     }
     if (request.email.isEmpty || password.isEmpty) {
-      return CustomerResponse(
-          statusCode: 400, error: 'Please enter both an email and a password.');
+      return CustomerResponse(statusCode: 400, error: 'Please enter both an email and a password.');
     }
     if (password != confirmPassword) {
-      return CustomerResponse(
-          statusCode: 400,
-          error: 'Confirmation password should match password.');
+      return CustomerResponse(statusCode: 400, error: 'Confirmation password should match password.');
     }
 
     await config.initialized;
 
-    var requestJson = jsonEncode(
-        <String, dynamic>{'customer': request, 'password': password});
+    var requestJson = jsonEncode(<String, dynamic>{'customer': request, 'password': password});
 
-    final response = await client.post('${config.baseUrl}/customers',
-        headers: config.adminHeaders, body: requestJson);
+    final response = await client.post('${config.baseUrl}/customers', headers: config.adminHeaders, body: requestJson);
 
     var responseJson = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
       // sign up success
       // make another call to get the token
-      return await loginCustomer(
-          LoginRequest(username: request.email, password: password));
+      return await loginCustomer(LoginRequest(username: request.email, password: password));
     } else {
       // sign up error
-      return CustomerResponse(
-          statusCode: response.statusCode, error: responseJson['message']);
+      return CustomerResponse(statusCode: response.statusCode, error: responseJson['message']);
     }
   } // end function createCustomer
 
@@ -114,16 +98,14 @@ class Magento {
   */
   static Future<CustomerResponse> getMe(String token, String password) async {
     if (token.isEmpty) {
-      return CustomerResponse(
-          statusCode: 400, error: 'Please enter both an email and a password.');
+      return CustomerResponse(statusCode: 400, error: 'Please enter both an email and a password.');
     }
 
     await config.initialized;
 
     config.customerHeaders['Authorization'] = 'Bearer $token';
 
-    final response = await client.get('${config.baseUrl}/customers/me',
-        headers: config.customerHeaders);
+    final response = await client.get('${config.baseUrl}/customers/me', headers: config.customerHeaders);
 
     var responseJson = jsonDecode(response.body.toString());
 
@@ -146,8 +128,7 @@ class Magento {
     } else {
       // error
       var json = jsonDecode(response.body.toString());
-      return CustomerResponse(
-          statusCode: response.statusCode, error: json['message']);
+      return CustomerResponse(statusCode: response.statusCode, error: json['message']);
     }
   } // end function getMe
 
@@ -159,14 +140,12 @@ class Magento {
   * stripeToken - Stripe payment token
   * deliveryFee - Delivery fee
   */
-  static Future<int> createOrder(String token, CustomerAddress shippingAddress,
-      Product product, Token stripeToken, Money deliveryFee) async {
+  static Future<int> createOrder(String token, CustomerAddress shippingAddress, Product product, Token stripeToken, Money deliveryFee) async {
     await config.initialized;
 
     config.customerHeaders['Authorization'] = 'Bearer $token';
 
-    var response = await client.post('${config.baseUrl}/carts/mine',
-        headers: config.customerHeaders);
+    var response = await client.post('${config.baseUrl}/carts/mine', headers: config.customerHeaders);
 
     var responseText = response.body.toString().replaceAll("\"", "");
     if (response.statusCode == 200) {
@@ -179,8 +158,7 @@ class Magento {
       });
 
       // add the product to the cart
-      response = await client.post('${config.baseUrl}/carts/mine/items',
-          headers: config.customerHeaders, body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/items', headers: config.customerHeaders, body: requestJson);
 
       // setup shipping estimate request
       var address = shippingAddress.toJson();
@@ -194,10 +172,7 @@ class Magento {
       requestJson = jsonEncode(<String, dynamic>{'address': address});
 
       // estimate shipping methods
-      response = await client.post(
-          '${config.baseUrl}/carts/mine/estimate-shipping-methods',
-          headers: config.customerHeaders,
-          body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/estimate-shipping-methods', headers: config.customerHeaders, body: requestJson);
 
       responseText = response.body.toString();
 
@@ -212,30 +187,20 @@ class Magento {
       });
 
       // set shipping information
-      response = await client.post(
-          '${config.baseUrl}/carts/mine/shipping-information',
-          headers: config.customerHeaders,
-          body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/shipping-information', headers: config.customerHeaders, body: requestJson);
 
       // setup payment information request
       requestJson = jsonEncode(<String, dynamic>{
         'paymentMethod': {
           'method': 'stripe',
-          'additional_data': {
-            'token': stripeToken.tokenId,
-            'cc_saved': stripeToken.tokenId
-          }
+          'additional_data': {'token': stripeToken.tokenId, 'cc_saved': stripeToken.tokenId}
         },
-        'delivery_fee':
-            deliveryFee.toString().replaceAll('\$', '').replaceAll('.', ''),
+        'delivery_fee': deliveryFee.toString().replaceAll('\$', '').replaceAll('.', ''),
         'billing_address': address
       });
 
       // set payment information and create order
-      response = await client.post(
-          '${config.baseUrl}/carts/mine/payment-information',
-          headers: config.customerHeaders,
-          body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/payment-information', headers: config.customerHeaders, body: requestJson);
 
       responseText = response.body.toString();
 
@@ -302,10 +267,29 @@ class Magento {
           addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
           vendorId: int.tryParse(vendorId));
     } else {
-      return CustomerResponse(
-          statusCode: response.statusCode, error: responseJson['message']);
+      return CustomerResponse(statusCode: response.statusCode, error: responseJson['message']);
     }
   } // end function getCustomerAddressById
+
+  /*
+  * getOrderById - Get an order by ID
+  * orderId - Order ID
+  */
+  static Future<Order> getOrderById(int orderId) async {
+    await config.initialized;
+
+    final response = await client.get(
+      '${config.baseUrl}/orders/$orderId',
+      headers: config.adminHeaders,
+    );
+
+    var responseJson = jsonDecode(response.body.toString());
+    if (response.statusCode == 200) {
+      return Order.fromJson(responseJson);
+    } else {
+      return Order();
+    }
+  } // end function getCustomerAddressByI
 
 } // end class Magento
 
@@ -324,19 +308,13 @@ class Config {
   }
 
   init() async {
-    final config = {
-      // 'base_url': 'https://resold.us/rest/V1',
-      'base_url': 'https://4c776f9f0de9.ngrok.io/rest/V1',
-      'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'
-    };
+    final config = {'base_url': '${env.baseUrl}/rest/V1', 'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'};
 
     baseUrl = config['base_url'];
     accessToken = config['access_token'];
     adminHeaders['Authorization'] = 'Bearer ${this.accessToken}';
-    adminHeaders['User-Agent'] =
-        customerHeaders['User-Agent'] = 'Resold - Mobile Application';
-    adminHeaders['Content-Type'] =
-        customerHeaders['Content-Type'] = 'application/json';
+    adminHeaders['User-Agent'] = customerHeaders['User-Agent'] = 'Resold - Mobile Application';
+    adminHeaders['Content-Type'] = customerHeaders['Content-Type'] = 'application/json';
   } // end function init
 
 } // end class Config

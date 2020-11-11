@@ -6,6 +6,7 @@ import 'package:resold/models/vendor.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:resold/environment.dart';
 
 /*
 * Resold service - Resold specific API client
@@ -28,12 +29,8 @@ class Resold {
 
     await config.initialized;
 
-    final response = await client.post('${config.baseUrl}/region',
-        headers: config.headers,
-        body: <String, dynamic>{
-          'regionCode': regionCode,
-          'countryId': countryId
-        });
+    final response = await client
+        .post('${config.baseUrl}/region', headers: config.headers, body: <String, dynamic>{'regionCode': regionCode, 'countryId': countryId});
 
     if (response.statusCode == 200) {
       // success
@@ -57,9 +54,8 @@ class Resold {
 
     await config.initialized;
 
-    final response = await client.post('${config.baseUrl}/vendor',
-        headers: config.headers,
-        body: <String, dynamic>{'customerId': customerId.toString()});
+    final response =
+        await client.post('${config.baseUrl}/vendor', headers: config.headers, body: <String, dynamic>{'customerId': customerId.toString()});
 
     if (response.statusCode == 200) {
       // success
@@ -83,9 +79,8 @@ class Resold {
 
     await config.initialized;
 
-    final response = await client.post('${config.baseUrl}/Product/Customer',
-        headers: config.headers,
-        body: <String, dynamic>{'productId': productId.toString()});
+    final response = await client
+        .post('${config.baseUrl}/Product/Customer', headers: config.headers, body: <String, dynamic>{'productId': productId.toString()});
 
     if (response.statusCode == 200) {
       // success
@@ -105,9 +100,8 @@ class Resold {
   static Future<Vendor> getVendor(int vendorId) async {
     await config.initialized;
 
-    final response = await client.post('${config.baseUrl}/vendor/details',
-        headers: config.headers,
-        body: <String, dynamic>{'vendorId': vendorId.toString()});
+    final response =
+        await client.post('${config.baseUrl}/vendor/details', headers: config.headers, body: <String, dynamic>{'vendorId': vendorId.toString()});
 
     if (response.statusCode == 200) {
       // success
@@ -127,9 +121,7 @@ class Resold {
   static Future<List<String>> getProductImages(int productId) async {
     await config.initialized;
 
-    final response = await client.get(
-        '${config.baseUrl}/image/get?product_id=$productId',
-        headers: config.headers);
+    final response = await client.get('${config.baseUrl}/image/get?product_id=$productId', headers: config.headers);
 
     if (response.statusCode == 200) {
       // success
@@ -147,18 +139,15 @@ class Resold {
    * vendorId - ID of the vendor
    * type - Either for-sale or sold products
    */
-  static Future<List<Product>> getVendorProducts(
-      int vendorId, String type) async {
+  static Future<List<Product>> getVendorProducts(int vendorId, String type) async {
     await config.initialized;
 
     final response = await client.post('${config.baseUrl}/vendor/products',
-        headers: config.headers,
-        body: <String, dynamic>{'vendorId': vendorId.toString(), 'type': type});
+        headers: config.headers, body: <String, dynamic>{'vendorId': vendorId.toString(), 'type': type});
 
     if (response.statusCode == 200) {
       // success
-      List<dynamic> vendorProducts =
-          jsonDecode(response.body.toString()).toList();
+      List<dynamic> vendorProducts = jsonDecode(response.body.toString()).toList();
       List<Product> products = new List<Product>();
       vendorProducts.forEach((vendorProduct) {
         products.add(Product.fromJson(vendorProduct));
@@ -180,15 +169,11 @@ class Resold {
     var imagePaths = List<String>();
 
     await Future.forEach(images, (asset) async {
-      var filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      FormData formData = new FormData.fromMap({
-        'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)
-      });
+      var filePath = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      FormData formData = new FormData.fromMap({'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)});
 
       // upload the image
-      var response =
-          await dio.post('${config.baseUrl}/image/upload', data: formData);
+      var response = await dio.post('${config.baseUrl}/image/upload', data: formData);
 
       if (response.statusCode == 200 && response.data['success'] == 'Y') {
         imagePaths.add(response.data['path']);
@@ -223,10 +208,7 @@ class Config {
   }
 
   init() async {
-    final config = {
-      // 'base_url': 'https://resold.us/api'
-      'base_url': 'https://4c776f9f0de9.ngrok.io/api'
-    };
+    final config = {'base_url': '${env.baseUrl}/api'};
 
     baseUrl = config['base_url'];
     headers['User-Agent'] = 'Resold - Mobile Application';
