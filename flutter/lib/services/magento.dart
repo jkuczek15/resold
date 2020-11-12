@@ -308,7 +308,7 @@ class Config {
   }
 
   init() async {
-    final config = {'base_url': '${env.baseUrl}/rest/V1', 'access_token': 'frlf1x1o9edlk8q77reqmfdlbk54fycl'};
+    final config = {'base_url': '${env.baseUrl}/rest/V1', 'access_token': env.magentoAdminAccessToken};
 
     baseUrl = config['base_url'];
     accessToken = config['access_token'];
