@@ -9,6 +9,7 @@ import 'package:resold/services/resold.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/screens/account-editing/edit.dart';
 
 class AccountPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -207,6 +208,7 @@ class AccountPageState extends State<AccountPage> {
                                               }
                                           );
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProPage(customer)));
                                         },
                                         child: Text('Edit Profile',
                                           style: new TextStyle(
