@@ -77,8 +77,8 @@ class AccountPageState extends State<AccountPage> {
                                                   width: 115,
                                                   child: Padding (
                                                       padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                                      child: CircleAvatar (
-                                                        backgroundImage: NetworkImage(baseImagePath + '/' + vendor.profilePicture),
+                                                      child: CircleAvatar ( 
+                                                        backgroundImage: vendor.profilePicture != 'null' ? NetworkImage(baseImagePath + '/' + vendor.profilePicture) : AssetImage('assets/images/avatar-placeholder.png'),
                                                       )
                                                   )
                                               ),
