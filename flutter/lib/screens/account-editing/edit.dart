@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/services/resold.dart';
@@ -8,14 +7,10 @@ import 'package:resold/constants/url-config.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
-import 'package:resold/models/customer/customer-address.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:resold/services/firebase.dart';
-import 'package:resold/services/magento.dart';
-import 'package:resold/view-models/request/magento/customer-request.dart';
-import 'package:resold/screens/home.dart';
-import 'package:flutter/src/rendering/box.dart';
-import 'package:resold/widgets/scroll/scroll-column-expandable.dart';
+import 'package:resold/screens/landing/landing.dart';
+
+
 
 
 
@@ -136,9 +131,9 @@ class EditProPageState extends State<EditProPage> {
                       width: 115,
                       child: Padding (
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: CircleAvatar (
-                          backgroundImage: NetworkImage(baseImagePath + '/' + vendor.profilePicture),
-                        )
+                        child: CircleAvatar(
+                            backgroundImage: vendor.profilePicture != 'null' ? NetworkImage(baseImagePath + '/' + vendor.profilePicture) : AssetImage('assets/images/avatar-placeholder.png'),
+                        ),
                       )
                     ),
                   ),
@@ -332,6 +327,7 @@ class EditProPageState extends State<EditProPage> {
       case 'Manage Payments':
         break;
       case 'Logout':
+        Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
         break;
       case 'Delete Profile':
         break;
