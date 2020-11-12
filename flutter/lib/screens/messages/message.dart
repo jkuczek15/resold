@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
@@ -63,6 +64,7 @@ class MessagePageState extends State<MessagePage> {
   ImagePicker picker = ImagePicker();
   String imageUrl;
   bool isSeller;
+  Position currentLocation;
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
@@ -84,6 +86,14 @@ class MessagePageState extends State<MessagePage> {
     // determine if this is the seller
     var chatIdParts = this.chatId.split('-');
     isSeller = fromCustomer.id.toString() != chatIdParts[0];
+
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
+      if (this.mounted) {
+        setState(() {
+          currentLocation = location;
+        });
+      }
+    });
   }
 
   @override
@@ -693,7 +703,7 @@ class MessagePageState extends State<MessagePage> {
         margin: EdgeInsets.only(bottom: 10.0),
       );
     }
-  }
+  } // end function buildItem
 
   Future<DeliveryQuoteResponse> getDeliveryQuote() async {
     DateTime now = DateTime.now();
@@ -709,29 +719,31 @@ class MessagePageState extends State<MessagePage> {
         dropoff_address: toCustomer.addresses.first.toString(),
         dropoff_ready_dt: now.toUtc().toIso8601String(),
         dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()));
-  }
+  } // end function getDeliveryQuote
 
-  Future<DeliveryResponse> getDelivery() async {
+  Future<DeliveryResponse> getDelivery({useRobot = false}) async {
     DateTime now = DateTime.now();
 
     var pickupDeadline = now.add(Duration(minutes: 30));
     var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
 
     // create a Postmates delivery
-    return await Postmates.createDelivery(DeliveryRequest(
-        pickup_name: toCustomer.fullName,
-        pickup_phone_number: toCustomer.addresses.first.telephone,
-        pickup_address: toCustomer.addresses.first.toString(),
-        pickup_ready_dt: now.toUtc().toIso8601String(),
-        pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
-        dropoff_name: fromCustomer.fullName,
-        dropoff_phone_number: fromCustomer.addresses.first.telephone,
-        dropoff_address: fromCustomer.addresses.first.toString(),
-        dropoff_ready_dt: now.toUtc().toIso8601String(),
-        dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String(),
-        manifest: product.name,
-        manifest_items: [new ManifestItem(name: product.name, quantity: 1, size: product.getPostmatesItemSize())]));
-  }
+    return await Postmates.createDelivery(
+        DeliveryRequest(
+            pickup_name: toCustomer.fullName,
+            pickup_phone_number: toCustomer.addresses.first.telephone,
+            pickup_address: toCustomer.addresses.first.toString(),
+            pickup_ready_dt: now.toUtc().toIso8601String(),
+            pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+            dropoff_name: fromCustomer.fullName,
+            dropoff_phone_number: fromCustomer.addresses.first.telephone,
+            dropoff_address: fromCustomer.addresses.first.toString(),
+            dropoff_ready_dt: now.toUtc().toIso8601String(),
+            dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String(),
+            manifest: product.name,
+            manifest_items: [new ManifestItem(name: product.name, quantity: 1, size: product.getPostmatesItemSize())]),
+        useRobot: useRobot);
+  } // end function getDelivery
 
   handlePaymentFlow(Money fee, Currency currency) async {
     StripePayment.paymentRequestWithNativePay(
@@ -763,7 +775,7 @@ class MessagePageState extends State<MessagePage> {
         await Firebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.paid);
 
         // create a Postmates delivery
-        DeliveryResponse delivery = await getDelivery();
+        DeliveryResponse delivery = await getDelivery(useRobot: true);
 
         // save the delivery ID to the product
         await ResoldRest.setDeliveryId(fromCustomer.token, product.id, delivery.id);
