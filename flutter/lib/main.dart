@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:resold/environment.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -18,7 +19,8 @@ Future<void> main() async {
   await Firebase.configure();
 
   // setup Stripe
-  StripePayment.setOptions(StripeOptions(publishableKey: 'pk_test_6QOUWv18fiwTf0QzwAzudvxK', merchantId: 'Test', androidPayMode: 'test'));
+  StripePayment.setOptions(
+      StripeOptions(publishableKey: env.stripeApiPublicKey, merchantId: env.stripeMerchantId, androidPayMode: env.stripeAndroidPayMode));
 
   // clear from disk
   await CustomerResponse.clear();
@@ -33,4 +35,4 @@ Future<void> main() async {
 
   // run the app
   runApp(MaterialApp(home: customer.isLoggedIn() ? Home(customer) : Landing()));
-}
+} // end function main
