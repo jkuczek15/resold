@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:geocoder/geocoder.dart';
 import 'package:resold/screens/landing/landing.dart';
+import 'package:resold/services/magento.dart';
 
 class EditProPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -32,6 +33,8 @@ class EditProPageState extends State<EditProPage> {
   final emailController = TextEditingController();
   final newpasswordController = TextEditingController();
   final newconfirmPasswordController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   Future<List<Address>> futureAddresses;
   Future locationInitialized;
 
@@ -110,138 +113,151 @@ class EditProPageState extends State<EditProPage> {
                     ),
                   ],
                 ),
-                body: Center(
+                body: 
+                SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start, 
                     children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                        child: Container(
-                            height: 115,
-                            width: 115,
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                              child: CircleAvatar(
-                                backgroundImage: vendor.profilePicture != 'null'
-                                    ? NetworkImage(baseImagePath + '/' + vendor.profilePicture)
-                                    : AssetImage('assets/images/avatar-placeholder.png'),
+                      Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                              child: Container(
+                                  height: 115,
+                                  width: 115,
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                    child: CircleAvatar(
+                                      backgroundImage: vendor.profilePicture != 'null'
+                                          ? NetworkImage(baseImagePath + '/' + vendor.profilePicture)
+                                          : AssetImage('assets/images/avatar-placeholder.png'),
+                                    ),
+                                  )),
+                            ),
+                            InkWell(
+                              child: Column(children: [
+                                Text('Change Profile Picture',
+                                    style:
+                                        new TextStyle(fontSize: 16.0, fontFamily: 'Roboto', fontWeight: FontWeight.normal, color: Color(0xff41b8ea))),
+                              ]),
+                              onTap: () => {
+                                // TODO: Get and upload new picture to profile
+                              },
+                            ),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                child: TextField(
+                                    controller: firstNameController,
+                                    decoration: InputDecoration(
+                                        helperText: 'First Name',
+                                        labelStyle: new TextStyle(
+                                          color: ResoldBlue,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        )),
+                                    style: TextStyle(color: Colors.black))),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
+                                child: TextField(
+                                    controller: lastNameController,
+                                    decoration: InputDecoration(
+                                        helperText: 'Last Name',
+                                        labelStyle: new TextStyle(
+                                          color: ResoldBlue,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        )),
+                                    style: TextStyle(color: Colors.black))),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
+                                child: TextField(
+                                    controller: emailController,
+                                    decoration: InputDecoration(
+                                        helperText: 'Email Address',
+                                        labelStyle: new TextStyle(
+                                          color: ResoldBlue,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        )),
+                                    style: TextStyle(color: Colors.black))),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
+                                child: TextField(
+                                    controller: newpasswordController,
+                                    decoration: InputDecoration(
+                                        hintText: 'Enter your new password...',
+                                        hintStyle: TextStyle(color: ResoldBlue),
+                                        helperText: 'New Password',
+                                        labelStyle: new TextStyle(
+                                          color: ResoldBlue,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        )),
+                                    style: TextStyle(color: Colors.black))),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
+                                child: TextField(
+                                    controller: newconfirmPasswordController,
+                                    decoration: InputDecoration(
+                                        hintText: 'Confirm your new password...',
+                                        hintStyle: TextStyle(color: ResoldBlue),
+                                        helperText: 'Confirm New Password',
+                                        labelStyle: new TextStyle(
+                                          color: ResoldBlue,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: ResoldBlue, width: 1.5),
+                                        )),
+                                    style: TextStyle(color: Colors.black))),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
+                              child: ButtonTheme (
+                                minWidth: double.infinity,
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                                  onPressed: () async {
+                                    //TODO: Submit new data
+                                  },
+                                  child: Text('Submit', style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                  padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                                  color: Colors.black,
+                                  textColor: Colors.white,
+                                ),
                               ),
-                            )),
-                      ),
-                      InkWell(
-                        child: Column(children: [
-                          Text('Change Profile Picture',
-                              style:
-                                  new TextStyle(fontSize: 16.0, fontFamily: 'Roboto', fontWeight: FontWeight.normal, color: Color(0xff41b8ea))),
-                        ]),
-                        onTap: () => {
-                          // TODO: Get and upload new picture to profile
-                        },
-                      ),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                          child: TextField(
-                              controller: firstNameController,
-                              decoration: InputDecoration(
-                                  helperText: 'First Name',
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.black))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
-                          child: TextField(
-                              controller: lastNameController,
-                              decoration: InputDecoration(
-                                  helperText: 'Last Name',
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.black))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
-                          child: TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                  helperText: 'Email Address',
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.black))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
-                          child: TextField(
-                              controller: newpasswordController,
-                              decoration: InputDecoration(
-                                  hintText: 'Enter your new password...',
-                                  hintStyle: TextStyle(color: ResoldBlue),
-                                  helperText: 'New Password',
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.black))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
-                          child: TextField(
-                              controller: newconfirmPasswordController,
-                              decoration: InputDecoration(
-                                  hintText: 'Confirm your new password...',
-                                  hintStyle: TextStyle(color: ResoldBlue),
-                                  helperText: 'Confirm New Password',
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: ResoldBlue, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.black))),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(50, 20, 50, 10),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                          onPressed: () async {
-                            //TODO: Submit new data
-                          },
-                          child: Text('Submit', style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                          padding: EdgeInsets.fromLTRB(105, 20, 105, 20),
-                          color: Colors.black,
-                          textColor: Colors.white,
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ));
+                      )
+                    ]
+                  )
+                )
+            );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -258,9 +274,122 @@ class EditProPageState extends State<EditProPage> {
       case 'Manage Payments':
         break;
       case 'Logout':
-        Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Logout'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[Text("Are you sure you want to logout?")],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Yes',
+                style: TextStyle(color: ResoldBlue)),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+                },
+              ),
+              FlatButton(
+                child: Text('No', 
+                style: TextStyle(color: ResoldBlue),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
         break;
       case 'Delete Profile':
+      return showDialog<void> (
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog (
+            title: Text('Delete Profile'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text("Are you sure you want to delete your profile?",),
+                  Form(
+                    key: formKey,
+                    child: TextFormField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Enter Current Password *',
+                        labelStyle: TextStyle(color: ResoldBlue),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                        border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                      validator: (value) {
+                        if (value.isEmpty || value != customer.password) {
+                          return 'Please enter your correct current password.';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget> [
+              FlatButton (
+                child: Text('Delete Profile',
+                style: TextStyle(
+                  color: ResoldBlue),
+                  ),
+                onPressed: () async {
+                  if (formKey.currentState.validate()) {
+                    Future<bool> complete = Magento.deleteCustomer(customer.id);
+                    if (await complete){ 
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+                    }
+                    else {
+                      print("Couldn't complete request");
+                      Navigator.of(context).pop();
+                      return showDialog<void>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Couldn't complete request"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('ok',
+                                style: TextStyle(
+                                  color: ResoldBlue),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                }
+                              )
+                            ]);
+                        });
+                    }
+                  }
+                },
+              ),
+              FlatButton(
+                child: Text('Cancel',
+                style: TextStyle(
+                  color: ResoldBlue),),
+                onPressed: () {
+                  passwordController.value = TextEditingValue();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
         break;
     } // end switch on menu click
   }

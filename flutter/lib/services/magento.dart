@@ -291,6 +291,28 @@ class Magento {
     }
   } // end function getCustomerAddressByI
 
+  /*
+  * deleteCustomer - deletes a customer using Magento service
+  * request - CustomerRequest object with information to delete a customer
+  */
+static Future<bool> deleteCustomer(int customerId) async {
+  await config.initialized;
+
+  final response = await client.delete(
+      '${config.baseUrl}/customers/$customerId',
+      headers: config.adminHeaders,
+    );
+  
+  var responseJson = jsonDecode(response.body.toString());
+
+    if (response.statusCode == 200) {
+      return Future<bool>.value(true);
+    } else {
+      print(responseJson);
+      return Future<bool>.value(false);
+    }
+  } // end function deleteCustomer
+
 } // end class Magento
 
 /*
