@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:resold/constants/ui-constants.dart';
 
 class FullPhoto extends StatelessWidget {
   final String title;
   final String url;
 
-  FullPhoto(String title, {Key key, @required this.url}) : title = title, super(key: key);
+  FullPhoto(String title, {Key key, @required this.url})
+      : title = title,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class FullPhoto extends StatelessWidget {
         iconTheme: IconThemeData(
           color: Colors.white, //change your color here
         ),
-        backgroundColor: const Color(0xff41b8ea),
+        backgroundColor: ResoldBlue,
       ),
       body: FullPhotoScreen(url: url),
     );

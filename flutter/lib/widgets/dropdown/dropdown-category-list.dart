@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:resold/constants/ui-constants.dart';
 
 class DropdownCategoryList extends StatefulWidget {
-
   final DropdownCategoryListState state = new DropdownCategoryListState();
 
   DropdownCategoryList({Key key}) : super(key: key);
@@ -12,19 +12,9 @@ class DropdownCategoryList extends StatefulWidget {
 }
 
 class DropdownCategoryListState extends State<DropdownCategoryList> {
-
   String categorySelected;
 
-  final List<String> categories = [
-    'Electronics',
-    'Fashion',
-    'Home & Lawn',
-    'Outdoors',
-    'Sporting Goods',
-    'Music',
-    'Collectibles',
-    'Handmade'
-  ];
+  final List<String> categories = ['Electronics', 'Fashion', 'Home & Lawn', 'Outdoors', 'Sporting Goods', 'Music', 'Collectibles', 'Handmade'];
 
   @override
   void initState() {
@@ -39,7 +29,7 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
       iconSize: 20,
       elevation: 16,
       style: TextStyle(color: Colors.black),
-      focusColor: const Color(0xff41b8ea),
+      focusColor: ResoldBlue,
       hint: Text('Category'),
       validator: (value) {
         if (value == null) {
@@ -58,19 +48,17 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
       ),
       items: categories.asMap().entries.map<DropdownMenuItem<String>>((entry) {
         return DropdownMenuItem<String>(
-          value: getSelectedCategoryId(entry.key).toString(),
-          child: Container (
-            width: 250,
-            child: Row (
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(getSelectedCategoryIcon(entry.key)),
-                SizedBox(width: 20),
-                Text(entry.value.toString()),
-              ],
-            )
-          )
-        );
+            value: getSelectedCategoryId(entry.key).toString(),
+            child: Container(
+                width: 250,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(getSelectedCategoryIcon(entry.key)),
+                    SizedBox(width: 20),
+                    Text(entry.value.toString()),
+                  ],
+                )));
       }).toList(),
     );
   }
@@ -78,31 +66,31 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
   int getSelectedCategoryId(int index) {
     switch (index) {
       case 0:
-      // Electronics
+        // Electronics
         return 42;
       case 1:
-      // Fashion
+        // Fashion
         return 93;
       case 2:
-      // Home and Lawn
+        // Home and Lawn
         return 100;
       case 3:
-      // Outdoors
+        // Outdoors
         return 101;
       case 4:
-      // Sporting Goods
+        // Sporting Goods
         return 102;
       case 5:
-      // Music
+        // Music
         return 103;
       case 6:
-      // Collectibles
+        // Collectibles
         return 104;
       case 7:
-      // Handmade
+        // Handmade
         return 105;
       default:
-      // Electronics
+        // Electronics
         return 42;
     }
   }
@@ -110,31 +98,31 @@ class DropdownCategoryListState extends State<DropdownCategoryList> {
   IconData getSelectedCategoryIcon(int index) {
     switch (index) {
       case 0:
-      // Electronics
+        // Electronics
         return Icons.computer;
       case 1:
-      // Fashion
+        // Fashion
         return MdiIcons.tshirtCrew;
       case 2:
-      // Home and Lawn
+        // Home and Lawn
         return MdiIcons.sofa;
       case 3:
-      // Outdoors
+        // Outdoors
         return Icons.directions_bike;
       case 4:
-      // Sporting Goods
+        // Sporting Goods
         return MdiIcons.basketball;
       case 5:
-      // Music
+        // Music
         return MdiIcons.guitarAcoustic;
       case 6:
-      // Collectibles
+        // Collectibles
         return MdiIcons.cards;
       case 7:
-      // Handmade
+        // Handmade
         return MdiIcons.handHeart;
       default:
-      // Electronics
+        // Electronics
         return Icons.computer;
     }
   }

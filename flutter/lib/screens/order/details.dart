@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/environment.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
@@ -11,26 +12,30 @@ import 'package:resold/view-models/response/postmates/delivery-response.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/extensions/string-extension.dart';
+import 'package:steps_indicator/steps_indicator.dart';
 
 class OrderDetails extends StatefulWidget {
   final Order order;
   final Product product;
   final CustomerResponse customer;
+  final bool isSeller;
 
-  OrderDetails(customer, order, product, {Key key})
+  OrderDetails(customer, order, product, {Key key, isSeller = false})
       : customer = customer,
         order = order,
         product = product,
+        isSeller = isSeller,
         super(key: key);
 
   @override
-  OrderDetailsState createState() => OrderDetailsState(customer, order, product);
+  OrderDetailsState createState() => OrderDetailsState(customer, order, product, isSeller);
 }
 
 class OrderDetailsState extends State<OrderDetails> {
   final Order order;
   final Product product;
   final CustomerResponse customer;
+  final bool isSeller;
 
   Position currentLocation;
   Future<DeliveryResponse> futureDelivery;
@@ -41,10 +46,11 @@ class OrderDetailsState extends State<OrderDetails> {
   List<maps.LatLng> polylineCoordinates = [];
   Map<maps.PolylineId, maps.Polyline> polylines = {};
 
-  OrderDetailsState(CustomerResponse customer, Order order, Product product)
+  OrderDetailsState(CustomerResponse customer, Order order, Product product, bool isSeller)
       : customer = customer,
         order = order,
-        product = product;
+        product = product,
+        isSeller = isSeller;
 
   @override
   void initState() {
@@ -100,9 +106,22 @@ class OrderDetailsState extends State<OrderDetails> {
                               ),
                               markers: markers.values.toSet(),
                               polylines: Set<maps.Polyline>.of(polylines.values))),
-                      Text('Status: ${delivery.status.capitalize()}'),
-                      Text('Delivery ETA: ${delivery.dropoff_eta}'),
-                      Text('Total: \$${order.total.toString()}')
+                      Card(
+                        child: Column(children: [
+                          Text('${delivery.status.capitalize()}'),
+                          Text('Arriving in: ${delivery.dropoff_eta}'),
+                          StepsIndicator(
+                            selectedStep: 1,
+                            nbSteps: 4,
+                            unselectedStepColorIn: ResoldBlue,
+                            unselectedStepColorOut: ResoldBlue,
+                            doneStepColor: ResoldBlue,
+                          ),
+                          Text('Total: \$${order.total.toString()}'),
+                          Text('Order Details:'),
+                          Text(product.name)
+                        ]),
+                      )
                     ]);
                   } else {
                     // By default, show a loading spinner.
@@ -187,7 +206,7 @@ class OrderDetailsState extends State<OrderDetails> {
     // Initializing Polyline
     maps.Polyline polyline = maps.Polyline(
       polylineId: id,
-      color: const Color(0xff41b8ea),
+      color: ResoldBlue,
       points: polylineCoordinates,
       width: 3,
     );

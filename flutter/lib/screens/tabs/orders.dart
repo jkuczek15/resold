@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/screens/order/details.dart';
@@ -47,7 +48,7 @@ class OrdersPageState extends State<OrdersPage> {
             backgroundColor: Colors.white,
             toolbarHeight: 74,
             bottom: TabBar(
-              indicatorColor: const Color(0xff41b8ea),
+              indicatorColor: ResoldBlue,
               tabs: [
                 Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
                 Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
@@ -81,7 +82,8 @@ class OrdersPageState extends State<OrdersPage> {
                                 Navigator.of(context, rootNavigator: true).pop('dialog');
 
                                 // navigate to order details page
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product)));
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product, isSeller: false)));
                               },
                               child: Card(
                                   child: ListTile(
@@ -127,7 +129,8 @@ class OrdersPageState extends State<OrdersPage> {
                               Navigator.of(context, rootNavigator: true).pop('dialog');
 
                               // navigate
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product)));
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product, isSeller: true)));
                             },
                             child: Card(
                                 child: ListTile(

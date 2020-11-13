@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
@@ -114,7 +115,7 @@ class MessagePageState extends State<MessagePage> {
           iconTheme: IconThemeData(
             color: Colors.white, //change your color here
           ),
-          backgroundColor: const Color(0xff41b8ea),
+          backgroundColor: ResoldBlue,
           actions: <Widget>[
             PopupMenuButton<String>(
               onSelected: handleMenuClick,
@@ -310,7 +311,7 @@ class MessagePageState extends State<MessagePage> {
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: 200.0,
-                  decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
                 )
               : document['messageType'] == MessageType.image.index
@@ -449,7 +450,7 @@ class MessagePageState extends State<MessagePage> {
                               ])),
                           width: 260.0,
                           margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-                          decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+                          decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
                         )
                       :
                       // Offer
@@ -460,7 +461,7 @@ class MessagePageState extends State<MessagePage> {
                           ),
                           padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 200.0,
-                          decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+                          decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
                           margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
                         )
         ],
@@ -682,7 +683,7 @@ class MessagePageState extends State<MessagePage> {
                                 ),
                                 padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                                 width: 200.0,
-                                decoration: BoxDecoration(color: const Color(0xff41b8ea), borderRadius: BorderRadius.circular(8.0)),
+                                decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
                                 margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
                               )
               ],
@@ -782,7 +783,7 @@ class MessagePageState extends State<MessagePage> {
         product.deliveryId = delivery.id;
 
         // send the user to the order details page
-        await Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(fromCustomer, order, product)));
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(fromCustomer, order, product, isSeller: false)));
       } // end if order successful
     }).catchError((err) {
       print(err);
