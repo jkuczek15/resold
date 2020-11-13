@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/screens/tabs/browse.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';
@@ -32,8 +33,8 @@ class Home extends StatelessWidget {
           }),
           brightness: Brightness.light,
           accentColor: Colors.white,
-          primaryColor: const Color(0xff41b8ea),
-          splashColor: const Color(0xff41b8ea),
+          primaryColor: ResoldBlue,
+          splashColor: ResoldBlue,
         ),
         home: HomePage(customer));
   }
@@ -52,19 +53,13 @@ class HomePageState extends State<HomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Image.asset('assets/images/resold-white-logo.png',
-                    width: 145, height: 145)),
+            Align(alignment: Alignment.centerLeft, child: Image.asset('assets/images/resold-white-logo.png', width: 145, height: 145)),
             Align(
                 alignment: Alignment.centerRight,
                 child: InkWell(
                   child: Icon(Icons.message, color: Colors.white),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InboxPage(customer)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => InboxPage(customer)));
                   },
                 ))
           ],
@@ -72,7 +67,7 @@ class HomePageState extends State<HomePage> {
         iconTheme: IconThemeData(
           color: Colors.white, //change your color here
         ),
-        backgroundColor: const Color(0xff41b8ea),
+        backgroundColor: ResoldBlue,
       ),
       body: Center(
         child: getContent(context),
@@ -82,13 +77,12 @@ class HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Buy'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money), label: 'Sell'),
+          BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
           BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Orders'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
         ],
         currentIndex: selectedTab,
-        fixedColor: const Color(0xff41b8ea),
+        fixedColor: ResoldBlue,
         unselectedItemColor: Colors.black,
         onTap: onItemTapped,
       ),

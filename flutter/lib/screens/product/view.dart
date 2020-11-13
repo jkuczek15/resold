@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
@@ -63,7 +64,7 @@ class ProductPageState extends State<ProductPage> {
         child: Scaffold(
             appBar: AppBar(
               title: Text(product.name, style: new TextStyle(color: Colors.white)),
-              backgroundColor: const Color(0xff41b8ea),
+              backgroundColor: ResoldBlue,
               iconTheme: IconThemeData(
                 color: Colors.white, //change your color here
               ),
@@ -169,7 +170,7 @@ class ProductPageState extends State<ProductPage> {
                                     child: ReadMoreText(
                                       cleanDescription(product.description),
                                       trimLength: 200,
-                                      colorClickableText: const Color(0xff41b8ea),
+                                      colorClickableText: ResoldBlue,
                                       textAlign: TextAlign.left,
                                     ),
                                   ),

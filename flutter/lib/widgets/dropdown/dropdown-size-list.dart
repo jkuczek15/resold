@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:resold/constants/ui-constants.dart';
 
 class DropdownSizeList extends StatefulWidget {
-
   final DropdownSizeListState state = new DropdownSizeListState();
 
   DropdownSizeList({Key key}) : super(key: key);
@@ -12,7 +12,6 @@ class DropdownSizeList extends StatefulWidget {
 }
 
 class DropdownSizeListState extends State<DropdownSizeList> {
-
   String sizeSelected;
 
   final List<String> sizes = [
@@ -35,7 +34,7 @@ class DropdownSizeListState extends State<DropdownSizeList> {
       iconSize: 20,
       elevation: 16,
       style: TextStyle(color: Colors.black),
-      focusColor: const Color(0xff41b8ea),
+      focusColor: ResoldBlue,
       hint: Text('Vehicle Required'),
       validator: (value) {
         if (value == null) {
@@ -54,39 +53,37 @@ class DropdownSizeListState extends State<DropdownSizeList> {
       ),
       items: sizes.asMap().entries.map<DropdownMenuItem<String>>((entry) {
         return DropdownMenuItem<String>(
-          value: getSelectedSizeId(entry.key).toString(),
-          child: Container (
-            width: 250,
-            child: Row (
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(getSelectedSizeIcon(entry.key)),
-                SizedBox(width: 20),
-                Text(entry.value.toString()),
-              ],
-            )
-          )
-        );
+            value: getSelectedSizeId(entry.key).toString(),
+            child: Container(
+                width: 250,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(getSelectedSizeIcon(entry.key)),
+                    SizedBox(width: 20),
+                    Text(entry.value.toString()),
+                  ],
+                )));
       }).toList(),
     );
   }
 
   int getSelectedSizeId(int index) {
-    switch(index) {
+    switch (index) {
       case 0:
-      // Small
+        // Small
         return 239;
       case 1:
-      // Medium
+        // Medium
         return 240;
       case 2:
-      // Large
+        // Large
         return 241;
       case 3:
-      // XLarge
+        // XLarge
         return 242;
       default:
-      // Electronics
+        // Electronics
         return 240;
     }
   }
@@ -94,19 +91,19 @@ class DropdownSizeListState extends State<DropdownSizeList> {
   IconData getSelectedSizeIcon(int index) {
     switch (index) {
       case 0:
-      // Small
+        // Small
         return MdiIcons.carSide;
       case 1:
-      // Medium
+        // Medium
         return MdiIcons.carPickup;
       case 2:
-      // Large
+        // Large
         return MdiIcons.vanUtility;
       case 3:
-      // XLarge
+        // XLarge
         return MdiIcons.truck;
       default:
-      // Medium
+        // Medium
         return MdiIcons.carSide;
     }
   }

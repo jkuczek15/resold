@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:resold/constants/ui-constants.dart';
 
 class DropdownConditionList extends StatefulWidget {
-
   final DropdownConditionListState state = new DropdownConditionListState();
 
   DropdownConditionList({Key key}) : super(key: key);
@@ -12,7 +12,6 @@ class DropdownConditionList extends StatefulWidget {
 }
 
 class DropdownConditionListState extends State<DropdownConditionList> {
-
   String conditionSelected;
 
   final List<String> conditions = [
@@ -35,7 +34,7 @@ class DropdownConditionListState extends State<DropdownConditionList> {
       iconSize: 20,
       elevation: 16,
       style: TextStyle(color: Colors.black),
-      focusColor: const Color(0xff41b8ea),
+      focusColor: ResoldBlue,
       validator: (value) {
         if (value == null) {
           return 'Please select a condition.';
@@ -54,24 +53,22 @@ class DropdownConditionListState extends State<DropdownConditionList> {
       ),
       items: conditions.asMap().entries.map<DropdownMenuItem<String>>((entry) {
         return DropdownMenuItem<String>(
-          value: getSelectedConditionId(entry.key).toString(),
-          child: Container (
-            child: Row (
+            value: getSelectedConditionId(entry.key).toString(),
+            child: Container(
+                child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(getSelectedConditionIcon(entry.key)),
                 SizedBox(width: 20),
                 Text(entry.value.toString()),
               ],
-            )
-          )
-        );
+            )));
       }).toList(),
     );
   }
 
   int getSelectedConditionId(int index) {
-    switch(index) {
+    switch (index) {
       case 0:
         return 235;
       case 1:
@@ -88,19 +85,19 @@ class DropdownConditionListState extends State<DropdownConditionList> {
   IconData getSelectedConditionIcon(int index) {
     switch (index) {
       case 0:
-      // New
+        // New
         return MdiIcons.emoticonExcitedOutline;
       case 1:
-      // Like New
+        // Like New
         return MdiIcons.emoticonHappyOutline;
       case 2:
-      // Good
+        // Good
         return MdiIcons.emoticonNeutralOutline;
       case 3:
-      // Used
+        // Used
         return MdiIcons.emoticonSadOutline;
       default:
-      // New
+        // New
         return MdiIcons.emoticonExcitedOutline;
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/services/magento.dart';
@@ -46,7 +47,7 @@ class InboxPageState extends State<InboxPage> {
           iconTheme: IconThemeData(
             color: Colors.white, //change your color here
           ),
-          backgroundColor: const Color(0xff41b8ea),
+          backgroundColor: ResoldBlue,
         ),
         body: Column(
           children: [
