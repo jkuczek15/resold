@@ -11,8 +11,6 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/view-models/response/postmates/delivery-response.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/extensions/string-extension.dart';
-import 'package:steps_indicator/steps_indicator.dart';
 
 class OrderDetails extends StatefulWidget {
   final Order order;
@@ -45,6 +43,10 @@ class OrderDetailsState extends State<OrderDetails> {
   PolylinePoints polylinePoints;
   List<maps.LatLng> polylineCoordinates = [];
   Map<maps.PolylineId, maps.Polyline> polylines = {};
+
+  // step counter
+  int currentStep = 0;
+  List<Step> steps;
 
   OrderDetailsState(CustomerResponse customer, Order order, Product product, bool isSeller)
       : customer = customer,
@@ -91,6 +93,21 @@ class OrderDetailsState extends State<OrderDetails> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     DeliveryResponse delivery = snapshot.data;
+                    DateTime now = DateTime.now();
+                    Duration difference;
+
+                    // setup the steps
+                    setupSteps(delivery);
+
+                    if (this.currentStep == 0 && isSeller) {
+                      if (delivery.pickup_eta != null) {
+                        difference = delivery.pickup_eta.difference(now);
+                      } // end if pickup eta not null
+                    } else if (this.currentStep == 1) {
+                      if (delivery.dropoff_eta != null) {
+                        difference = delivery.dropoff_eta.difference(now);
+                      } // end if dropoff eta not null
+                    } // end if pickup and is seller
 
                     return Column(children: [
                       Container(
@@ -108,18 +125,35 @@ class OrderDetailsState extends State<OrderDetails> {
                               polylines: Set<maps.Polyline>.of(polylines.values))),
                       Card(
                         child: Column(children: [
-                          Text('${delivery.status.capitalize()}'),
-                          Text('Arriving in: ${delivery.dropoff_eta}'),
-                          StepsIndicator(
-                            selectedStep: 1,
-                            nbSteps: 4,
-                            unselectedStepColorIn: ResoldBlue,
-                            unselectedStepColorOut: ResoldBlue,
-                            doneStepColor: ResoldBlue,
+                          SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints.tightFor(height: 125, width: 400),
+                              child: Stepper(
+                                  currentStep: this.currentStep, steps: steps, type: StepperType.horizontal, controlsBuilder: getStepControls),
+                            ),
                           ),
-                          Text('Total: \$${order.total.toString()}'),
-                          Text('Order Details:'),
-                          Text(product.name)
+                          difference != null
+                              ? Align(alignment: Alignment.centerLeft, child: Text('Arriving in ${difference.inMinutes} minutes.'))
+                              : SizedBox(),
+                          Divider(
+                            color: Colors.grey.shade400,
+                            height: 20,
+                            thickness: 2,
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(25, 9, 0, 0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                  Text('Order Details:'),
+                                  Text(product.name),
+                                  SizedBox(height: 10),
+                                  Text('Total: \$${order.total.toString()}'),
+                                  SizedBox(height: 20)
+                                ]),
+                              ))
                         ]),
                       )
                     ]);
@@ -180,7 +214,7 @@ class OrderDetailsState extends State<OrderDetails> {
   } // end function onMapCreated
 
   // Create the polylines for showing the route between two places
-  createPolylines(Position start, Position destination) async {
+  Future createPolylines(Position start, Position destination) async {
     // Initializing PolylinePoints
     polylinePoints = PolylinePoints();
 
@@ -216,4 +250,52 @@ class OrderDetailsState extends State<OrderDetails> {
       polylines[id] = polyline;
     });
   } // end function createPolylines
+
+  Widget getStepControls(BuildContext context, {void onStepCancel, void onStepContinue}) {
+    return SizedBox(height: 0);
+  } // end function getStepControls
+
+  void setupSteps(DeliveryResponse delivery) {
+    bool pickupInProgress = delivery.status == 'pickup';
+    bool deliveryInProgress = delivery.status == 'pickup_complete' || delivery.status == 'dropoff' || delivery.status == 'ongoing';
+    bool delivered = delivery.status == 'delivered';
+
+    if (pickupInProgress) {
+      this.currentStep = 0;
+    } else if (deliveryInProgress) {
+      this.currentStep = 1;
+    } else if (delivered) {
+      this.currentStep = 2;
+    } // end if pickup in progress
+
+    Widget driverWidget = SizedBox();
+    if (delivery.courier != null) {
+      driverWidget = Column(children: [
+        Text('Driver: ${delivery.courier.name}'),
+      ]);
+    } // end if we have a delivery driver
+
+    steps = [
+      Step(
+        title: Text('Pickup'),
+        content: Text('Driver is on the way to pickup your item.'),
+        state: pickupInProgress ? StepState.indexed : StepState.complete,
+        isActive: pickupInProgress,
+      ),
+      Step(
+        title: Text('On the way'),
+        content: Column(children: [Text('Driver is on the way to deliver your item.'), driverWidget]),
+        state: (pickupInProgress || deliveryInProgress) ? StepState.indexed : StepState.complete,
+        isActive: deliveryInProgress,
+      ),
+      Step(
+        title: Text('Delivered'),
+        content: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Delivery was completed.'),
+        ]),
+        state: delivered ? StepState.complete : StepState.indexed,
+        isActive: delivered,
+      ),
+    ];
+  } // end function setupSteps
 }

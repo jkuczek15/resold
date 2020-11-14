@@ -55,6 +55,7 @@ dependencies:
   stripe_sdk: ^3.0.1+1
   flutter_polyline_points: ^0.2.1
   steps_indicator: ^1.1.0
+  twilio_flutter: ^0.0.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
