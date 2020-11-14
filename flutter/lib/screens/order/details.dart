@@ -109,9 +109,10 @@ class OrderDetailsState extends State<OrderDetails> {
                       } // end if dropoff eta not null
                     } // end if pickup and is seller
 
-                    return Column(children: [
+                    return SingleChildScrollView(
+                        child: Column(children: [
                       Container(
-                          height: 400,
+                          height: 380,
                           child: maps.GoogleMap(
                               onMapCreated: (maps.GoogleMapController controller) => this.onMapCreated(controller, delivery),
                               mapType: maps.MapType.normal,
@@ -124,39 +125,38 @@ class OrderDetailsState extends State<OrderDetails> {
                               markers: markers.values.toSet(),
                               polylines: Set<maps.Polyline>.of(polylines.values))),
                       Card(
-                        child: Column(children: [
-                          SingleChildScrollView(
-                            child: ConstrainedBox(
+                        child: SingleChildScrollView(
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            ConstrainedBox(
                               constraints: BoxConstraints.tightFor(height: 125, width: 400),
                               child: Stepper(
                                   currentStep: this.currentStep, steps: steps, type: StepperType.horizontal, controlsBuilder: getStepControls),
                             ),
-                          ),
-                          difference != null
-                              ? Align(alignment: Alignment.centerLeft, child: Text('Arriving in ${difference.inMinutes} minutes.'))
-                              : SizedBox(),
-                          Divider(
-                            color: Colors.grey.shade400,
-                            height: 20,
-                            thickness: 2,
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(25, 9, 0, 0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  Text('Order Details:'),
-                                  Text(product.name),
-                                  SizedBox(height: 10),
-                                  Text('Total: \$${order.total.toString()}'),
-                                  SizedBox(height: 20)
-                                ]),
-                              ))
-                        ]),
+                            difference != null
+                                ? Padding(padding: EdgeInsets.fromLTRB(23, 3, 0, 0), child: Text('Arriving in ${difference.inMinutes} minutes.'))
+                                : SizedBox(),
+                            Divider(
+                              color: Colors.grey.shade400,
+                              height: 20,
+                              thickness: 2,
+                              indent: 10,
+                              endIndent: 10,
+                            ),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    Text('Order Details:'),
+                                    Text(product.name),
+                                    Text('Total: \$${order.total.toString()}'),
+                                    SizedBox(height: 20)
+                                  ]),
+                                ))
+                          ]),
+                        ),
                       )
-                    ]);
+                    ]));
                   } else {
                     // By default, show a loading spinner.
                     return Center(child: Loading());
@@ -181,7 +181,7 @@ class OrderDetailsState extends State<OrderDetails> {
           position: maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
           infoWindow: infoWindow);
 
-      final String currentLocationTitle = "You";
+      final String currentLocationTitle = 'You';
       final currentLocationMarker = maps.Marker(
         markerId: maps.MarkerId(currentLocationTitle),
         position: maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng),
@@ -197,9 +197,9 @@ class OrderDetailsState extends State<OrderDetails> {
         final courierMarker = maps.Marker(
           markerId: maps.MarkerId(courierTitle),
           position: maps.LatLng(delivery.courier.location.lat, delivery.courier.location.lng),
-          icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
+          icon: maps.BitmapDescriptor.defaultMarkerWithHue(22),
           infoWindow: maps.InfoWindow(
-            title: currentLocationTitle,
+            title: courierTitle,
           ),
         );
         markers[courierTitle] = courierMarker;
@@ -256,6 +256,7 @@ class OrderDetailsState extends State<OrderDetails> {
   } // end function getStepControls
 
   void setupSteps(DeliveryResponse delivery) {
+    bool driverUnassigned = delivery.status == 'pending';
     bool pickupInProgress = delivery.status == 'pickup';
     bool deliveryInProgress = delivery.status == 'pickup_complete' || delivery.status == 'dropoff' || delivery.status == 'ongoing';
     bool delivered = delivery.status == 'delivered';
@@ -270,21 +271,25 @@ class OrderDetailsState extends State<OrderDetails> {
 
     Widget driverWidget = SizedBox();
     if (delivery.courier != null) {
-      driverWidget = Column(children: [
-        Text('Driver: ${delivery.courier.name}'),
-      ]);
+      driverWidget = Column(children: [Text('Driver: ${delivery.courier.name}'), Text('${delivery.courier.vehicle_type}')]);
     } // end if we have a delivery driver
 
     steps = [
       Step(
         title: Text('Pickup'),
-        content: Text('Driver is on the way to pickup your item.'),
+        content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:
+                driverUnassigned ? [Text('Driver hasn\'t been assigned.')] : [Text('Driver is on the way to pickup your item.'), driverWidget]),
         state: pickupInProgress ? StepState.indexed : StepState.complete,
         isActive: pickupInProgress,
       ),
       Step(
         title: Text('On the way'),
-        content: Column(children: [Text('Driver is on the way to deliver your item.'), driverWidget]),
+        content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [Text('Driver is on the way to deliver your item.'), driverWidget]),
         state: (pickupInProgress || deliveryInProgress) ? StepState.indexed : StepState.complete,
         isActive: deliveryInProgress,
       ),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:dio/dio.dart';
 import 'package:resold/environment.dart';
@@ -79,10 +80,29 @@ class ResoldRest {
   } // end function createVendor
 
   /*
+   * getVendorOrders - Retrieve the vendor orders
+   * token - Customer identification token
+   */
+  static Future<List<Order>> getVendorOrders(String token) async {
+    await config.initialized;
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    var response = await dio.get('${config.baseUrl}/vendor/orders');
+
+    List<Order> orders = new List<Order>();
+
+    response.data.forEach((order) {
+      orders.add(Order.fromJson(order));
+    });
+
+    return orders;
+  } // end function getVendorOrders
+
+  /*
    * setDeliveryId - Set the product's delivery ID
    * token - Customer identification token
    * productId - ID of the product to be delivered
-   * deliverId - Postmates delivery
+   * deliveryId - Postmates delivery ID
    */
   static Future setDeliveryId(String token, int productId, String deliveryId) async {
     await config.initialized;

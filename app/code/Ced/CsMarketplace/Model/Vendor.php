@@ -476,7 +476,6 @@ class Vendor extends \Ced\CsMarketplace\Model\AbstractModel
         return $this->_getResource()->getEntityType();
     }
 
-
     /**
      * Return Entity Type ID
      * @return mixed

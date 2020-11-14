@@ -216,7 +216,7 @@ class Magento {
   } // end function getMe
 
   /*
-  * getPurchasedOrders - Returns a list of orders for the customer
+  * getPurchasedOrders - Returns a list of purchased orders for the customer
   * customerId - ID of the customer
   */
   static Future<List<Order>> getPurchasedOrders(int customerId) async {
