@@ -8,25 +8,12 @@ class FirebaseHelper {
 
     return FirebaseDeliveryQuote(
         quoteId: contentParts[0],
-        fee: Money.fromInt(
-            int.tryParse(contentParts[1]), Currency.create('USD', 2)),
+        fee: Money.fromInt(int.tryParse(contentParts[1]), Currency.create('USD', 2)),
         expectedPickup: DateFormat('h:mm a on MM/dd/yyyy.')
-            .format(DateTime.tryParse(DateTime.now()
-                .add(Duration(minutes: int.tryParse(contentParts[2])))
-                .toString()))
-            .replaceAll(
-                new RegExp(r'on ' +
-                    DateFormat('MM/dd/yyyy').format(DateTime.now()) +
-                    '.'),
-                ''),
+            .format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(contentParts[2]))).toString()))
+            .replaceAll(new RegExp(r'on ' + DateFormat('MM/dd/yyyy').format(DateTime.now()) + '.'), ''),
         expectedDropoff: DateFormat('h:mm a on MM/dd/yyyy.')
-            .format(DateTime.tryParse(DateTime.now()
-                .add(Duration(minutes: int.tryParse(contentParts[3])))
-                .toString()))
-            .replaceAll(
-                new RegExp(r'on ' +
-                    DateFormat('MM/dd/yyyy').format(DateTime.now()) +
-                    '.'),
-                ''));
+            .format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(contentParts[3]))).toString()))
+            .replaceAll(new RegExp(r'on ' + DateFormat('MM/dd/yyyy').format(DateTime.now()) + '.'), ''));
   }
 }
