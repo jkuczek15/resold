@@ -23,4 +23,10 @@ interface VendorManagementInterface
 	 * @return mixed[]
 	 */
 	public function createVendor();
+
+	/**
+	 * Get vendor orders
+	 * @return mixed[]
+	 */
+	public function getVendorOrders();
 }
