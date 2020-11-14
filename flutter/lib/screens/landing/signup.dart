@@ -194,10 +194,17 @@ class SignUpPageState extends State<SignUpPage> {
 
                   // show dialog
                   handleSmsVerification(() async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Center(child: Loading());
+                        });
                     // create customer
                     var addresses = await futureAddresses;
                     var address = addresses.first;
-                    var customerAddress = CustomerAddress.fromAddress(address, firstNameController.text, lastNameController.text);
+
+                    var customerAddress =
+                        CustomerAddress.fromAddress(address, firstNameController.text, lastNameController.text, phoneController.text);
                     var regionId = await Resold.getRegionId(customerAddress.region.regionCode, customerAddress.countryId);
                     customerAddress.region.regionId = int.parse(regionId);
 
@@ -220,7 +227,7 @@ class SignUpPageState extends State<SignUpPage> {
 
                       // navigate
                       Navigator.of(context, rootNavigator: true).pop('dialog');
-                      // Navigator.pop(context);
+                      Navigator.pop(context);
                       Navigator.pushReplacement(
                           context,
                           PageRouteBuilder(
@@ -274,7 +281,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   Future handleSmsVerification(Function phoneNumberVerifiedCallback) async {
     // verify phone number
-    String phoneNumber = phoneController.value.text;
+    String phoneNumber = phoneController.text;
     String verificationCode = generateVerificationCode();
 
     await twilioFlutter.sendSMS(toNumber: phoneNumber, messageBody: 'Your Resold verification code is: $verificationCode');

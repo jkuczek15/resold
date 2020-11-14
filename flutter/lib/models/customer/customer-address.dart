@@ -17,19 +17,26 @@ class CustomerAddress {
 
   String postcode;
   String city;
-  String telephone;  // todo: get the user's phone number in-app
+  String telephone;
   String countryId;
 
-  CustomerAddress({this.defaultBilling, this.defaultShipping, this.firstname, this.lastname, this.region,
-    this.street, this.postcode, this.city, this.countryId});
+  CustomerAddress(
+      {this.defaultBilling,
+      this.defaultShipping,
+      this.firstname,
+      this.lastname,
+      this.region,
+      this.street,
+      this.postcode,
+      this.city,
+      this.countryId});
 
   @override
   String toString() {
     return this.street.first + ', ' + this.city + ', ' + this.region.regionCode + ', ' + this.postcode;
   }
 
-  factory CustomerAddress.fromAddress(Address address, String firstName, String lastName) {
-
+  factory CustomerAddress.fromAddress(Address address, String firstName, String lastName, String phoneNumber) {
     var customerAddress = CustomerAddress();
     var customerAddressRegion = CustomerAddressRegion();
 
@@ -39,27 +46,28 @@ class CustomerAddress {
     customerAddress.postcode = address.postalCode;
     customerAddress.city = address.locality;
     customerAddress.street = [address.featureName + ' ' + address.thoroughfare];
+    customerAddress.telephone = phoneNumber;
     customerAddress.defaultShipping = true;
     customerAddress.defaultBilling = true;
 
     var addressParts = address.addressLine.split(',');
 
-    if(addressParts.length > 1) {
+    if (addressParts.length > 1) {
       // we have a full address from geo-coding
       customerAddress.street = [addressParts[0]];
       customerAddress.city = addressParts[1];
 
-      if(addressParts.length > 2) {
+      if (addressParts.length > 2) {
         // we have a state and postal code
         var stateParts = addressParts[2].trim().split(' ');
 
-        if(stateParts.length > 1) {
+        if (stateParts.length > 1) {
           customerAddressRegion.regionCode = stateParts[0];
           customerAddressRegion.region = address.adminArea;
           customerAddress.postcode = stateParts[1];
-        }// end if we have a state part in the address
-      }// end if we have state and postal code
-    }// end if we have a full address line
+        } // end if we have a state part in the address
+      } // end if we have state and postal code
+    } // end if we have a full address line
 
     customerAddress.region = customerAddressRegion;
 
@@ -70,7 +78,7 @@ class CustomerAddress {
     var customerAddress = CustomerAddress();
     var customerAddressRegion = CustomerAddressRegion();
 
-    if(addresses.length > 0) {
+    if (addresses.length > 0) {
       var address = addresses[0];
       customerAddress.defaultBilling = true;
       customerAddress.defaultShipping = true;
@@ -82,7 +90,7 @@ class CustomerAddress {
       customerAddress.street = [address['street'][0].toString()];
       customerAddress.telephone = address['telephone'];
 
-      if(address['region'] != null) {
+      if (address['region'] != null) {
         var region = address['region'];
         customerAddressRegion.region = region['region'];
         customerAddressRegion.regionCode = region['region_code'];
