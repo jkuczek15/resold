@@ -242,17 +242,10 @@ class OrderDetailsState extends State<OrderDetails> {
     List<Marker> markers = <Marker>[];
     markers.clear();
     maps.InfoWindow infoWindow;
-    if (product.titleDescription == null) {
-      infoWindow = maps.InfoWindow(title: product.name);
-    } else {
-      infoWindow = maps.InfoWindow(title: product.name, snippet: product.titleDescription);
-    }
 
-    final productMarker = maps.Marker(
-        markerId: maps.MarkerId(product.name),
-        position: maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
-        infoWindow: infoWindow);
+    infoWindow = maps.InfoWindow(title: product.name);
 
+    // add the current location marker
     final String currentLocationTitle = 'You';
     final currentLocationMarker = maps.Marker(
       markerId: maps.MarkerId(currentLocationTitle),
@@ -262,6 +255,17 @@ class OrderDetailsState extends State<OrderDetails> {
         title: currentLocationTitle,
       ),
     );
+
+    markers.add(currentLocationMarker);
+
+    if (delivery.status != 'delivered') {
+      // add the product marker
+      final productMarker = maps.Marker(
+          markerId: maps.MarkerId(product.name),
+          position: maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
+          infoWindow: infoWindow);
+      markers.add(productMarker);
+    } // end if not delivered
 
     if (delivery.courier != null) {
       // place a marker on the map for the delivery driver
@@ -277,15 +281,14 @@ class OrderDetailsState extends State<OrderDetails> {
       markers.add(courierMarker);
     } // end if we have a delivery driver
 
-    markers.add(productMarker);
-    markers.add(currentLocationMarker);
-
     return markers.toSet();
   } // end function generateMarkers
 
   Future<void> onMapCreated(maps.GoogleMapController controller, DeliveryResponse delivery) async {
-    await createPolylines(Position(latitude: delivery.pickup.location.lat, longitude: delivery.pickup.location.lng),
-        Position(latitude: delivery.dropoff.location.lat, longitude: delivery.dropoff.location.lng));
+    if (delivery.status != 'delivered') {
+      await createPolylines(Position(latitude: delivery.pickup.location.lat, longitude: delivery.pickup.location.lng),
+          Position(latitude: delivery.dropoff.location.lat, longitude: delivery.dropoff.location.lng));
+    } // end if not delivered
   } // end function onMapCreated
 
   // Create the polylines for showing the route between two places
