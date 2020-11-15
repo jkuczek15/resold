@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
@@ -111,6 +113,12 @@ class OrderDetailsState extends State<OrderDetails> {
                       } // end if dropoff eta not null
                     } // end if pickup and is seller
 
+                    double total = order.total;
+                    double fee = delivery.fee.toDouble() / 100;
+                    if (!isSeller) {
+                      total += fee;
+                    } // end if buyer
+
                     return SingleChildScrollView(
                         child: Column(children: [
                       Container(
@@ -126,42 +134,44 @@ class OrderDetailsState extends State<OrderDetails> {
                                 zoom: 13.0,
                               ),
                               markers: markers.values.toSet(),
+                              gestureRecognizers: Set()
+                                ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
                               polylines: Set<maps.Polyline>.of(polylines.values))),
                       Card(
-                        child: SingleChildScrollView(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            ConstrainedBox(
-                              constraints: BoxConstraints.tightFor(height: 125, width: 400),
-                              child: Stepper(
-                                  currentStep: this.currentStep,
-                                  steps: steps,
-                                  type: StepperType.horizontal,
-                                  controlsBuilder: getStepControls),
-                            ),
-                            difference != null
-                                ? Padding(
-                                    padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
-                                    child: Text('Arriving in ${difference.inMinutes} minutes.'))
-                                : SizedBox(),
-                            Divider(
-                              color: Colors.grey.shade400,
-                              height: 20,
-                              thickness: 2,
-                              indent: 10,
-                              endIndent: 10,
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-                                child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                        Text(product.description),
-                                        isSeller
-                                            ? Text('Your Profit: \$${order.total.toStringAsFixed(2)}')
-                                            : Text('Total: \$${order.total.toStringAsFixed(2)}'),
-                                        SizedBox(height: 20)
-                                      ]),
+                        ConstrainedBox(
+                          constraints: BoxConstraints.tightFor(height: 125, width: 400),
+                          child: Stepper(
+                              currentStep: this.currentStep,
+                              steps: steps,
+                              physics: NeverScrollableScrollPhysics(),
+                              type: StepperType.horizontal,
+                              controlsBuilder: getStepControls),
+                        ),
+                        difference != null
+                            ? Padding(
+                                padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
+                                child: Text('Arriving in ${difference.inMinutes} minutes.'))
+                            : SizedBox(),
+                        Divider(
+                          color: Colors.grey.shade400,
+                          height: 20,
+                          thickness: 2,
+                          indent: 23,
+                          endIndent: 15,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                      Text(product.description),
+                                      SizedBox(width: 195),
                                       Padding(
                                           child: Container(
                                               height: 90,
@@ -171,10 +181,43 @@ class OrderDetailsState extends State<OrderDetails> {
                                                   placeholder: AssetImage('assets/images/placeholder-image.png'),
                                                   fit: BoxFit.cover)),
                                           padding: EdgeInsets.fromLTRB(10, 10, 10, 10))
-                                    ])))
-                          ]),
+                                    ]),
+                                    Row(children: [
+                                      Container(
+                                          width: 345,
+                                          child: Divider(
+                                            color: Colors.grey.shade400,
+                                            height: 20,
+                                            thickness: 2,
+                                            indent: 0,
+                                            endIndent: 0,
+                                          ))
+                                    ]),
+                                    Row(children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: isSeller
+                                            ? [Text('Your Profit:')]
+                                            : [Text('Subtotal:'), Text('Delivery Fee:'), Text('Total:')],
+                                      ),
+                                      SizedBox(width: 25),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: isSeller
+                                            ? [Text('\$${order.total.toStringAsFixed(2)}')]
+                                            : [
+                                                Text('\$${order.total.toStringAsFixed(2)}'),
+                                                Text('\$$fee'),
+                                                Text('\$$total')
+                                              ],
+                                      )
+                                    ]),
+                                    SizedBox(height: 20)
+                                  ]),
+                            ]),
+                          ),
                         ),
-                      )
+                      ]))
                     ]));
                   } else {
                     // By default, show a loading spinner.
