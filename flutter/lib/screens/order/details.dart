@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/constants/url-config.dart';
 import 'package:resold/environment.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
@@ -80,7 +81,8 @@ class OrderDetailsState extends State<OrderDetails> {
                       alignment: Alignment.centerLeft,
                       child: Container(
                           width: 250,
-                          child: Text('Order - ' + product.name, overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
+                          child: Text(product.name,
+                              overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
                 ],
               ),
               iconTheme: IconThemeData(
@@ -114,7 +116,8 @@ class OrderDetailsState extends State<OrderDetails> {
                       Container(
                           height: 380,
                           child: maps.GoogleMap(
-                              onMapCreated: (maps.GoogleMapController controller) => this.onMapCreated(controller, delivery),
+                              onMapCreated: (maps.GoogleMapController controller) =>
+                                  this.onMapCreated(controller, delivery),
                               mapType: maps.MapType.normal,
                               initialCameraPosition: maps.CameraPosition(
                                 target: delivery.complete
@@ -130,10 +133,15 @@ class OrderDetailsState extends State<OrderDetails> {
                             ConstrainedBox(
                               constraints: BoxConstraints.tightFor(height: 125, width: 400),
                               child: Stepper(
-                                  currentStep: this.currentStep, steps: steps, type: StepperType.horizontal, controlsBuilder: getStepControls),
+                                  currentStep: this.currentStep,
+                                  steps: steps,
+                                  type: StepperType.horizontal,
+                                  controlsBuilder: getStepControls),
                             ),
                             difference != null
-                                ? Padding(padding: EdgeInsets.fromLTRB(23, 3, 0, 0), child: Text('Arriving in ${difference.inMinutes} minutes.'))
+                                ? Padding(
+                                    padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
+                                    child: Text('Arriving in ${difference.inMinutes} minutes.'))
                                 : SizedBox(),
                             Divider(
                               color: Colors.grey.shade400,
@@ -145,14 +153,25 @@ class OrderDetailsState extends State<OrderDetails> {
                             Padding(
                                 padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
                                 child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    Text('Order Details:'),
-                                    Text(product.name),
-                                    Text('Total: \$${order.total.toString()}'),
-                                    SizedBox(height: 20)
-                                  ]),
-                                ))
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                        Text(product.description),
+                                        isSeller
+                                            ? Text('Your Profit: \$${order.total.toStringAsFixed(2)}')
+                                            : Text('Total: \$${order.total.toStringAsFixed(2)}'),
+                                        SizedBox(height: 20)
+                                      ]),
+                                      Padding(
+                                          child: Container(
+                                              height: 90,
+                                              width: 90,
+                                              child: FadeInImage(
+                                                  image: NetworkImage(baseProductImagePath + product.thumbnail),
+                                                  placeholder: AssetImage('assets/images/placeholder-image.png'),
+                                                  fit: BoxFit.cover)),
+                                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10))
+                                    ])))
                           ]),
                         ),
                       )
@@ -258,7 +277,8 @@ class OrderDetailsState extends State<OrderDetails> {
   void setupSteps(DeliveryResponse delivery) {
     bool driverUnassigned = delivery.status == 'pending';
     bool pickupInProgress = delivery.status == 'pickup';
-    bool deliveryInProgress = delivery.status == 'pickup_complete' || delivery.status == 'dropoff' || delivery.status == 'ongoing';
+    bool deliveryInProgress =
+        delivery.status == 'pickup_complete' || delivery.status == 'dropoff' || delivery.status == 'ongoing';
     bool delivered = delivery.status == 'delivered';
 
     if (pickupInProgress) {
@@ -271,7 +291,8 @@ class OrderDetailsState extends State<OrderDetails> {
 
     Widget driverWidget = SizedBox();
     if (delivery.courier != null) {
-      driverWidget = Column(children: [Text('Driver: ${delivery.courier.name}'), Text('${delivery.courier.vehicle_type}')]);
+      driverWidget =
+          Column(children: [Text('Driver: ${delivery.courier.name}'), Text('${delivery.courier.vehicle_type}')]);
     } // end if we have a delivery driver
 
     steps = [
@@ -279,8 +300,9 @@ class OrderDetailsState extends State<OrderDetails> {
         title: Text('Pickup'),
         content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-                driverUnassigned ? [Text('Driver hasn\'t been assigned.')] : [Text('Driver is on the way to pickup your item.'), driverWidget]),
+            children: driverUnassigned
+                ? [Text('Driver hasn\'t been assigned.')]
+                : [Text('Driver is on the way to pickup your item.'), driverWidget]),
         state: pickupInProgress ? StepState.indexed : StepState.complete,
         isActive: pickupInProgress,
       ),

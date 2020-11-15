@@ -19,15 +19,17 @@ Future<void> main() async {
   await Firebase.configure();
 
   // setup Stripe
-  StripePayment.setOptions(
-      StripeOptions(publishableKey: env.stripeApiPublicKey, merchantId: env.stripeMerchantId, androidPayMode: env.stripeAndroidPayMode));
+  StripePayment.setOptions(StripeOptions(
+      publishableKey: env.stripeApiPublicKey,
+      merchantId: env.stripeMerchantId,
+      androidPayMode: env.stripeAndroidPayMode));
 
   // clear from disk
   await CustomerResponse.clear();
 
   // auto-login
-  await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
-  // await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
+  // await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
+  await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
   // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
 
   // get from disk and login
