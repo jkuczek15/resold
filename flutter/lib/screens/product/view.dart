@@ -24,28 +24,34 @@ class ProductPage extends StatefulWidget {
   final Product product;
   final CustomerResponse customer;
   final Position currentLocation;
+  final bool fromMessagePage;
 
-  ProductPage(Product product, CustomerResponse customer, Position currentLocation, {Key key})
+  ProductPage(Product product, CustomerResponse customer, Position currentLocation,
+      {Key key, bool fromMessagePage = false})
       : product = product,
         customer = customer,
         currentLocation = currentLocation,
+        fromMessagePage = fromMessagePage,
         super(key: key);
 
   @override
-  ProductPageState createState() => ProductPageState(this.customer, this.product, this.currentLocation);
+  ProductPageState createState() =>
+      ProductPageState(this.customer, this.product, this.currentLocation, this.fromMessagePage);
 }
 
 class ProductPageState extends State<ProductPage> {
   final Product product;
   final CustomerResponse customer;
   final Position currentLocation;
+  final bool fromMessagePage;
   Future<List<String>> futureImages;
   final Map<String, Marker> markers = {};
 
-  ProductPageState(CustomerResponse customer, Product product, Position currentLocation)
+  ProductPageState(CustomerResponse customer, Product product, Position currentLocation, bool fromMessagePage)
       : customer = customer,
         product = product,
-        currentLocation = currentLocation;
+        currentLocation = currentLocation,
+        fromMessagePage = fromMessagePage;
 
   @override
   void initState() {
@@ -160,8 +166,11 @@ class ProductPageState extends State<ProductPage> {
                                                   width: 70,
                                                   child: Align(
                                                       alignment: Alignment.centerRight,
-                                                      child: LocationBuilder.calculateDistance(currentLocation.latitude,
-                                                          currentLocation.longitude, product.latitude, product.longitude)))
+                                                      child: LocationBuilder.calculateDistance(
+                                                          currentLocation.latitude,
+                                                          currentLocation.longitude,
+                                                          product.latitude,
+                                                          product.longitude)))
                                             ])
                                       ]),
                                   SizedBox(height: 10),
@@ -179,7 +188,8 @@ class ProductPageState extends State<ProductPage> {
                                       minWidth: 340.0,
                                       height: 70.0,
                                       child: RaisedButton(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                                        shape:
+                                            RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                                         onPressed: () async {
                                           // show a loading indicator
                                           showDialog(
@@ -193,42 +203,23 @@ class ProductPageState extends State<ProductPage> {
                                           CustomerResponse toCustomer = await Magento.getCustomerById(toId);
                                           String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                          // get a Postmates delivery quote
-                                          DateTime now = DateTime.now();
-
-                                          var pickupDeadline = now.add(Duration(minutes: 30));
-                                          var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
-
-                                          // create a Postmates delivery quote
-                                          DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(DeliveryQuoteRequest(
-                                              pickup_address: customer.addresses.first.toString(),
-                                              pickup_ready_dt: now.toUtc().toIso8601String(),
-                                              pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
-                                              dropoff_address: toCustomer.addresses.first.toString(),
-                                              dropoff_ready_dt: now.toUtc().toIso8601String(),
-                                              dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()));
-
-                                          // prepare message content for delivery request
-                                          String content = quote.id +
-                                              '|' +
-                                              quote.fee.toString() +
-                                              '|' +
-                                              quote.pickup_duration.toString() +
-                                              '|' +
-                                              quote.duration.toString();
-
-                                          await Firebase.sendProductMessage(
-                                              chatId, customer.id, toCustomer.id, product, content, MessageType.deliveryQuote);
-
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          if (fromMessagePage) {
+                                            // go back
+                                            Navigator.of(context, rootNavigator: true).pop(context);
+                                            Navigator.pop(context);
+                                          } else {
+                                            // push a new message page
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => MessagePage(
+                                                        customer, toCustomer, product, chatId, UserMessageType.buyer)));
+                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          } // end if from message page
                                         },
-                                        child: Text('Request Delivery',
-                                            style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                        child: Text('Contact Seller',
+                                            style: new TextStyle(
+                                                fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                                         color: Colors.black,
                                         textColor: Colors.white,
                                       )),
@@ -251,15 +242,24 @@ class ProductPageState extends State<ProductPage> {
                                         CustomerResponse toCustomer = await Magento.getCustomerById(toId);
                                         String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        if (fromMessagePage) {
+                                          // go back
+                                          Navigator.of(context, rootNavigator: true).pop(context);
+                                          Navigator.pop(context);
+                                        } else {
+                                          // todo: create an offer dialog
+                                          // push a new message page
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => MessagePage(
+                                                      customer, toCustomer, product, chatId, UserMessageType.buyer)));
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        } // end if not from message page
                                       },
                                       child: Text('Send Offer',
-                                          style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                          style: new TextStyle(
+                                              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                                       color: Colors.black,
                                       textColor: Colors.white,
                                     ),
@@ -269,7 +269,8 @@ class ProductPageState extends State<ProductPage> {
                                       minWidth: 340.0,
                                       height: 70.0,
                                       child: RaisedButton(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                                        shape:
+                                            RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                                         onPressed: () async {
                                           // show a loading indicator
                                           showDialog(
@@ -283,15 +284,51 @@ class ProductPageState extends State<ProductPage> {
                                           CustomerResponse toCustomer = await Magento.getCustomerById(toId);
                                           String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MessagePage(customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          // get a Postmates delivery quote
+                                          DateTime now = DateTime.now();
+
+                                          var pickupDeadline = now.add(Duration(minutes: 30));
+                                          var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+
+                                          // create a Postmates delivery quote
+                                          DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(
+                                              DeliveryQuoteRequest(
+                                                  pickup_address: customer.addresses.first.toString(),
+                                                  pickup_ready_dt: now.toUtc().toIso8601String(),
+                                                  pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+                                                  dropoff_address: toCustomer.addresses.first.toString(),
+                                                  dropoff_ready_dt: now.toUtc().toIso8601String(),
+                                                  dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()));
+
+                                          // prepare message content for delivery request
+                                          String content = quote.id +
+                                              '|' +
+                                              quote.fee.toString() +
+                                              '|' +
+                                              quote.pickup_duration.toString() +
+                                              '|' +
+                                              quote.duration.toString();
+
+                                          await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product,
+                                              content, MessageType.deliveryQuote);
+
+                                          if (fromMessagePage) {
+                                            // go back
+                                            Navigator.of(context, rootNavigator: true).pop(context);
+                                            Navigator.pop(context);
+                                          } else {
+                                            // push a new message page
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => MessagePage(
+                                                        customer, toCustomer, product, chatId, UserMessageType.buyer)));
+                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          } // end if not from message page
                                         },
-                                        child: Text('Contact Seller',
-                                            style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                        child: Text('Request Delivery',
+                                            style: new TextStyle(
+                                                fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                                         color: Colors.black,
                                         textColor: Colors.white,
                                       )),
@@ -336,8 +373,10 @@ class ProductPageState extends State<ProductPage> {
         infoWindow = InfoWindow(title: product.name, snippet: product.titleDescription);
       }
 
-      final productMarker =
-          Marker(markerId: MarkerId(product.name), position: LatLng(product.latitude, product.longitude), infoWindow: infoWindow);
+      final productMarker = Marker(
+          markerId: MarkerId(product.name),
+          position: LatLng(product.latitude, product.longitude),
+          infoWindow: infoWindow);
 
       final String currentLocationTitle = "You";
       final currentLocationMarker = Marker(
@@ -355,6 +394,8 @@ class ProductPageState extends State<ProductPage> {
   }
 
   String cleanDescription(String description) {
-    return description.isNotEmpty ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n").trim() : '';
+    return description.isNotEmpty
+        ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n").trim()
+        : '';
   }
 }
