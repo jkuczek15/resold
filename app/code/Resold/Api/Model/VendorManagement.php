@@ -25,14 +25,20 @@ class VendorManagement
     \Ced\CsMarketplace\Model\VendorFactory $vendorFactory,
     \Ced\CsMarketplace\Model\Vendor $vendor,
     \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
-    \Magento\Framework\App\ResourceConnection $resource
+    \Magento\Framework\App\ResourceConnection $resource,
+    \Magento\Reports\Model\ResourceModel\Product\Sold\Collection $ordersCollection,
+    \Magento\Catalog\Model\ResourceModel\Product $productResource,
+    \Magento\Catalog\Model\Product\Type $productType 
   )
   {
       $this->userContext = $userContext;
       $this->vendorFactory = $vendorFactory;
       $this->vendor = $vendor;
-      $this->resource = $resouce;
+      $this->resource = $resource;
       $this->customerRepository = $customerRepository;
+      $this->ordersCollection = $ordersCollection;
+      $this->productType = $productType;
+      $this->productResource = $productResource;
   }
 
 	/**
@@ -72,26 +78,52 @@ class VendorManagement
     // load the seller by the customer ID
     $vendor = $this->vendor->loadByCustomerId($this->userContext->getUserId());
 
-    // ced_csmarketplace_vendor_sales_order
-    $ordersCollection = $vendor->getAssociatedOrders()->setOrder('id', 'DESC');
-    
-    // todo: format this data so that we get the order items
-    $ordersCollection->from(
-        array('order_items' => $resource->getTableName('sales_order_item')),
+    $compositeTypeIds = $this->productType->getCompositeTypes();
+    $adapter = $this->resource->getConnection('read');
+    $orderTableAliasName = $adapter->quoteIdentifier('order');
+
+    $orderJoinCondition = [
+      $orderTableAliasName . '.entity_id = order_items.order_id',
+      $adapter->quoteInto("{$orderTableAliasName}.state <> ?", \Magento\Sales\Model\Order::STATE_CANCELED),
+    ];
+
+    $productJoinCondition = [
+      $adapter->quoteInto('(e.type_id NOT IN (?))', $compositeTypeIds),
+      'e.entity_id = order_items.product_id'
+    ];
+
+    $vendorOrdersSelect = $vendor->getAssociatedOrders()->getSelect()->reset()
+    ->from(
+        array('order_items' =>$this->resource->getTableName('sales_order_item')),
         array(
-          'ordered_qty' => 'SUM(order_items.qty_ordered)',
-          'order_item_name' => 'order_items.name',
-          'order_item_total_sales' => 'SUM(order_items.row_total)',
-          'sku'=>'order_items.sku'
-        )
+        'order.*',
+        'product_id' => 'order_items.product_id',
+        'product_name' => 'order_items.name',
+        'product_price' => 'order_items.row_total',
+        'product_sku' => 'order_items.sku'
+      )
     )
     ->joinInner(
-        array('order' => $resource->getTableName('sales_order')),
+        array('order' => $this->resource->getTableName('sales_order')),
         implode(' AND ', $orderJoinCondition),
         array()
-    );
-    var_dump(get_class($ordersCollection));
-    exit;
-    return $ordersCollection->getData();
+    )
+    ->joinLeft(
+        array('e' => $this->productResource->getEntityTable()),
+        implode(' AND ', $productJoinCondition),
+        array(
+        'entity_id' => 'order_items.product_id',
+        'type_id' => 'e.type_id',
+      )
+    )
+    ->where('parent_item_id IS NULL')
+    ->where('vendor_id="'.$vendor->getId().'"');
+
+    // echo $ordersSelect->__toString();
+    // exit;
+
+    $vendorOrders = $adapter->fetchAll($vendorOrdersSelect);
+
+    return $vendorOrders;
   }// end function getVendorOrders
 }
