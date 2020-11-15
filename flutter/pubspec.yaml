@@ -83,6 +83,7 @@ flutter:
      - assets/images/avatar-placeholder.png
      - assets/images/resold-logo.png
      - assets/images/resold-white-logo.png
+     - assets/images/car-location-icon.png
      - assets/images/categories/electronics.jpg
      - assets/images/login/resold-app-loginpage-background.jpg
 

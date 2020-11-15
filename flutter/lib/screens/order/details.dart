@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/environment.dart';
@@ -51,6 +52,9 @@ class OrderDetailsState extends State<OrderDetails> {
   int currentStep = 0;
   List<Step> steps;
 
+  // icon for the driver
+  maps.BitmapDescriptor carLocationIcon = maps.BitmapDescriptor.defaultMarker;
+
   OrderDetailsState(CustomerResponse customer, Order order, Product product, bool isSeller)
       : customer = customer,
         order = order,
@@ -60,13 +64,18 @@ class OrderDetailsState extends State<OrderDetails> {
   @override
   void initState() {
     super.initState();
-    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
+    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) async {
       futureDelivery = Postmates.getDelivery(product.deliveryId);
       if (this.mounted) {
         setState(() {
           currentLocation = location;
         });
       }
+    });
+    maps.BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/car-location-icon.png').then((icon) {
+      setState(() {
+        carLocationIcon = icon;
+      });
     });
   }
 
@@ -230,7 +239,6 @@ class OrderDetailsState extends State<OrderDetails> {
   Future<void> onMapCreated(maps.GoogleMapController controller, DeliveryResponse delivery) async {
     setState(() {
       markers.clear();
-
       maps.InfoWindow infoWindow;
       if (product.titleDescription == null) {
         infoWindow = maps.InfoWindow(title: product.name);
@@ -247,7 +255,8 @@ class OrderDetailsState extends State<OrderDetails> {
       final currentLocationMarker = maps.Marker(
         markerId: maps.MarkerId(currentLocationTitle),
         position: maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng),
-        icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
+        // icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
+        icon: carLocationIcon,
         infoWindow: maps.InfoWindow(
           title: currentLocationTitle,
         ),
@@ -259,7 +268,8 @@ class OrderDetailsState extends State<OrderDetails> {
         final courierMarker = maps.Marker(
           markerId: maps.MarkerId(courierTitle),
           position: maps.LatLng(delivery.courier.location.lat, delivery.courier.location.lng),
-          icon: maps.BitmapDescriptor.defaultMarkerWithHue(22),
+          // icon: maps.BitmapDescriptor.defaultMarkerWithHue(22),
+          icon: carLocationIcon,
           infoWindow: maps.InfoWindow(
             title: courierTitle,
           ),

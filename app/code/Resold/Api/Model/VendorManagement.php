@@ -119,9 +119,6 @@ class VendorManagement
     ->where('parent_item_id IS NULL')
     ->where('vendor_id="'.$vendor->getId().'"');
 
-    // echo $ordersSelect->__toString();
-    // exit;
-
     $vendorOrders = $adapter->fetchAll($vendorOrdersSelect);
 
     return $vendorOrders;
