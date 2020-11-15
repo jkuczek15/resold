@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -52,7 +56,6 @@ class OrderDetailsState extends State<OrderDetails> {
   int currentStep = 0;
   List<Step> steps;
 
-  // icon for the driver
   maps.BitmapDescriptor carLocationIcon = maps.BitmapDescriptor.defaultMarker;
 
   OrderDetailsState(CustomerResponse customer, Order order, Product product, bool isSeller)
@@ -72,11 +75,7 @@ class OrderDetailsState extends State<OrderDetails> {
         });
       }
     });
-    maps.BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/car-location-icon.png').then((icon) {
-      setState(() {
-        carLocationIcon = icon;
-      });
-    });
+    setCustomMapPin();
   }
 
   @override
@@ -132,20 +131,23 @@ class OrderDetailsState extends State<OrderDetails> {
                         child: Column(children: [
                       Container(
                           height: 380,
-                          child: maps.GoogleMap(
-                              onMapCreated: (maps.GoogleMapController controller) =>
-                                  this.onMapCreated(controller, delivery),
-                              mapType: maps.MapType.normal,
-                              initialCameraPosition: maps.CameraPosition(
-                                target: delivery.complete
-                                    ? maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng)
-                                    : maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
-                                zoom: 13.0,
-                              ),
-                              markers: markers.values.toSet(),
-                              gestureRecognizers: Set()
-                                ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
-                              polylines: Set<maps.Polyline>.of(polylines.values))),
+                          child: FutureBuilder(
+                              future: this.generateMarkers(delivery),
+                              initialData: Set.of(<Marker>[]),
+                              builder: (context, snapshot) => maps.GoogleMap(
+                                  onMapCreated: (maps.GoogleMapController controller) =>
+                                      this.onMapCreated(controller, delivery),
+                                  mapType: maps.MapType.normal,
+                                  initialCameraPosition: maps.CameraPosition(
+                                    target: delivery.complete
+                                        ? maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng)
+                                        : maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
+                                    zoom: 13.0,
+                                  ),
+                                  markers: snapshot.data,
+                                  gestureRecognizers: Set()
+                                    ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
+                                  polylines: Set<maps.Polyline>.of(polylines.values)))),
                       Card(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         ConstrainedBox(
@@ -236,51 +238,52 @@ class OrderDetailsState extends State<OrderDetails> {
                 )));
   } // end function build
 
-  Future<void> onMapCreated(maps.GoogleMapController controller, DeliveryResponse delivery) async {
-    setState(() {
-      markers.clear();
-      maps.InfoWindow infoWindow;
-      if (product.titleDescription == null) {
-        infoWindow = maps.InfoWindow(title: product.name);
-      } else {
-        infoWindow = maps.InfoWindow(title: product.name, snippet: product.titleDescription);
-      }
+  Future<Set<Marker>> generateMarkers(DeliveryResponse delivery) async {
+    List<Marker> markers = <Marker>[];
+    markers.clear();
+    maps.InfoWindow infoWindow;
+    if (product.titleDescription == null) {
+      infoWindow = maps.InfoWindow(title: product.name);
+    } else {
+      infoWindow = maps.InfoWindow(title: product.name, snippet: product.titleDescription);
+    }
 
-      final productMarker = maps.Marker(
-          markerId: maps.MarkerId(product.name),
-          position: maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
-          infoWindow: infoWindow);
+    final productMarker = maps.Marker(
+        markerId: maps.MarkerId(product.name),
+        position: maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
+        infoWindow: infoWindow);
 
-      final String currentLocationTitle = 'You';
-      final currentLocationMarker = maps.Marker(
-        markerId: maps.MarkerId(currentLocationTitle),
-        position: maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng),
-        // icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
+    final String currentLocationTitle = 'You';
+    final currentLocationMarker = maps.Marker(
+      markerId: maps.MarkerId(currentLocationTitle),
+      position: maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng),
+      icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
+      infoWindow: maps.InfoWindow(
+        title: currentLocationTitle,
+      ),
+    );
+
+    if (delivery.courier != null) {
+      // place a marker on the map for the delivery driver
+      final String courierTitle = delivery.courier.name;
+      final courierMarker = maps.Marker(
+        markerId: maps.MarkerId(courierTitle),
+        position: maps.LatLng(delivery.courier.location.lat, delivery.courier.location.lng),
         icon: carLocationIcon,
         infoWindow: maps.InfoWindow(
-          title: currentLocationTitle,
+          title: courierTitle,
         ),
       );
+      markers.add(courierMarker);
+    } // end if we have a delivery driver
 
-      if (delivery.courier != null) {
-        // place a marker on the map for the delivery driver
-        final String courierTitle = delivery.courier.name;
-        final courierMarker = maps.Marker(
-          markerId: maps.MarkerId(courierTitle),
-          position: maps.LatLng(delivery.courier.location.lat, delivery.courier.location.lng),
-          // icon: maps.BitmapDescriptor.defaultMarkerWithHue(22),
-          icon: carLocationIcon,
-          infoWindow: maps.InfoWindow(
-            title: courierTitle,
-          ),
-        );
-        markers[courierTitle] = courierMarker;
-      } // end if we have a delivery driver
+    markers.add(productMarker);
+    markers.add(currentLocationMarker);
 
-      markers[product.name] = productMarker;
-      markers[currentLocationTitle] = currentLocationMarker;
-    });
-    // create directions between two points
+    return markers.toSet();
+  } // end function generateMarkers
+
+  Future<void> onMapCreated(maps.GoogleMapController controller, DeliveryResponse delivery) async {
     await createPolylines(Position(latitude: delivery.pickup.location.lat, longitude: delivery.pickup.location.lng),
         Position(latitude: delivery.dropoff.location.lat, longitude: delivery.dropoff.location.lng));
   } // end function onMapCreated
@@ -378,4 +381,16 @@ class OrderDetailsState extends State<OrderDetails> {
       ),
     ];
   } // end function setupSteps
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  } // end function getBytesFromAsset
+
+  void setCustomMapPin() async {
+    final Uint8List markerIcon = await getBytesFromAsset('assets/images/car-location-icon.png', 100);
+    carLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
+  } // end function setCustomMapPin
 }
