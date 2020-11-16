@@ -61,7 +61,7 @@ class ProductPageState extends State<ProductPage> {
         futureImages = Resold.getProductImages(product.id);
       }
     });
-  }
+  } // end function initState
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +310,7 @@ class ProductPageState extends State<ProductPage> {
                                               quote.duration.toString();
 
                                           await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product,
-                                              content, MessageType.deliveryQuote);
+                                              content, MessageType.deliveryQuote, toId == customer.id);
 
                                           if (fromMessagePage) {
                                             // go back
@@ -360,7 +360,7 @@ class ProductPageState extends State<ProductPage> {
           Navigator.pop(context);
           return false;
         });
-  }
+  } // end function build
 
   Future<void> onMapCreated(GoogleMapController controller) async {
     setState(() {
@@ -391,11 +391,11 @@ class ProductPageState extends State<ProductPage> {
       markers[product.name] = productMarker;
       markers[currentLocationTitle] = currentLocationMarker;
     });
-  }
+  } // end function onMapCreated
 
   String cleanDescription(String description) {
     return description.isNotEmpty
         ? description.replaceAll("<br />", "\n").replaceAll("\n\n\n", "\n").replaceAll("\n\n", "\n").trim()
         : '';
-  }
+  } // end function cleanDescription
 }

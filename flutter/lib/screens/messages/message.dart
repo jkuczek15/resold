@@ -97,7 +97,7 @@ class MessagePageState extends State<MessagePage> {
         });
       }
     });
-  }
+  } // end function initState
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +133,7 @@ class MessagePageState extends State<MessagePage> {
           ],
         ),
         body: getContent());
-  }
+  } // end function build
 
   Widget getContent() {
     return Container(
@@ -147,17 +147,17 @@ class MessagePageState extends State<MessagePage> {
         ],
       ),
     );
-  }
+  } // end function getContent
 
   Future onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type);
+      await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
-    }
-  }
+    } // end if content is not null
+  } // end function onSendMessage
 
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -176,7 +176,7 @@ class MessagePageState extends State<MessagePage> {
       });
       Fluttertoast.showToast(msg: 'This file is not an image');
     });
-  }
+  } // end function uploadFile
 
   void handleMenuClick(String value) async {
     switch (value) {
@@ -201,7 +201,7 @@ class MessagePageState extends State<MessagePage> {
 
         // send a Firebase message
         await Firebase.sendProductMessage(
-            chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote);
+            chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
         break;
       case 'Send Offer':
         break;
