@@ -110,7 +110,7 @@ class MessagePageState extends State<MessagePage> {
                   alignment: Alignment.centerLeft,
                   child: Container(
                       width: 250,
-                      child: Text(product.name + ' - ' + toCustomer.fullName,
+                      child: Text(product.name,
                           overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
             ],
           ),
