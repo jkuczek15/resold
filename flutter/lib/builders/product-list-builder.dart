@@ -138,6 +138,11 @@ class ProductListBuilder {
   static Widget buildProductGridTile(
       BuildContext context, Position currentLocation, Product product, CustomerResponse customer, int index) {
     return Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
         child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
             onTap: () {
@@ -149,7 +154,6 @@ class ProductListBuilder {
                 child: Loading(),
                 width: 200.0,
                 height: 200.0,
-                padding: EdgeInsets.all(70.0),
                 decoration: BoxDecoration(
                   color: Colors.blueGrey,
                   borderRadius: BorderRadius.all(

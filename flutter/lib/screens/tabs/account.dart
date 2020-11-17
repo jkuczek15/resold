@@ -57,128 +57,125 @@ class AccountPageState extends State<AccountPage> {
             var forSaleProducts = snapshot.data[1];
             var soldProducts = snapshot.data[2];
 
-            return ListView(children: [
+            return SingleChildScrollView(
+                child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
               Container(
-                  height: 210.0,
                   child: Stack(children: [
-                    Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
-                        fit: BoxFit.cover, width: 500),
-                    Column(children: [
-                      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.contain, width: 500),
+                Column(children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Container(
+                          height: 115,
+                          width: 115,
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                              child: CircleAvatar(
+                                backgroundImage: vendor.profilePicture != 'null'
+                                    ? NetworkImage(baseImagePath + '/' + vendor.profilePicture)
+                                    : AssetImage('assets/images/avatar-placeholder.png'),
+                              ))),
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
+                          child: Text(vendor.name,
+                              style: new TextStyle(
+                                  fontSize: 14.0,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)))
+                    ]),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Container(
-                              height: 115,
-                              width: 115,
                               child: Padding(
-                                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: CircleAvatar(
-                                    backgroundImage: vendor.profilePicture != 'null'
-                                        ? NetworkImage(baseImagePath + '/' + vendor.profilePicture)
-                                        : AssetImage('assets/images/avatar-placeholder.png'),
-                                  ))),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
-                              child: Text(vendor.name,
-                                  style: new TextStyle(
-                                      fontSize: 14.0,
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white)))
-                        ]),
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  child: Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
-                                      child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(children: [
-                                              InkWell(
-                                                child: Column(children: [
-                                                  Text(forSaleProducts.length.toString(),
-                                                      style: new TextStyle(
-                                                          fontSize: 24.0,
-                                                          fontFamily: 'Roboto',
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white)),
-                                                  Text('for sale',
-                                                      style: new TextStyle(
-                                                          fontSize: 14.0,
-                                                          fontFamily: 'Roboto',
-                                                          fontWeight: FontWeight.normal,
-                                                          color: Colors.white))
-                                                ]),
-                                                onTap: () => {
-                                                  setState(() => {displayForSale = true})
-                                                },
-                                              ),
-                                              SizedBox(width: 35),
-                                              InkWell(
-                                                  child: Column(children: [
-                                                    Text(soldProducts.length.toString(),
-                                                        style: new TextStyle(
-                                                            fontSize: 24.0,
-                                                            fontFamily: 'Roboto',
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.white)),
-                                                    Text('sold',
-                                                        style: new TextStyle(
-                                                            fontSize: 14.0,
-                                                            fontFamily: 'Roboto',
-                                                            fontWeight: FontWeight.normal,
-                                                            color: Colors.white))
-                                                  ]),
-                                                  onTap: () => {
-                                                        setState(() => {displayForSale = false})
-                                                      }),
-                                              SizedBox(width: 35),
-                                              Column(children: [
-                                                Icon(MdiIcons.tshirtCrew, color: Colors.white, size: 29.0),
-                                                Text('reviews',
+                                  padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          InkWell(
+                                            child: Column(children: [
+                                              Text(forSaleProducts.length.toString(),
+                                                  style: new TextStyle(
+                                                      fontSize: 24.0,
+                                                      fontFamily: 'Roboto',
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white)),
+                                              Text('for sale',
+                                                  style: new TextStyle(
+                                                      fontSize: 14.0,
+                                                      fontFamily: 'Roboto',
+                                                      fontWeight: FontWeight.normal,
+                                                      color: Colors.white))
+                                            ]),
+                                            onTap: () => {
+                                              setState(() => {displayForSale = true})
+                                            },
+                                          ),
+                                          SizedBox(width: 45),
+                                          InkWell(
+                                              child: Column(children: [
+                                                Text(soldProducts.length.toString(),
+                                                    style: new TextStyle(
+                                                        fontSize: 24.0,
+                                                        fontFamily: 'Roboto',
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white)),
+                                                Text('sold',
                                                     style: new TextStyle(
                                                         fontSize: 14.0,
                                                         fontFamily: 'Roboto',
                                                         fontWeight: FontWeight.normal,
                                                         color: Colors.white))
-                                              ])
-                                            ])
-                                          ]))),
-                              Container(
-                                height: 60,
-                              )
-                            ])
-                      ]),
-                      SizedBox(height: 10),
-                      ButtonTheme(
-                          minWidth: 340.0,
-                          height: 50.0,
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                            onPressed: () async {
-                              // show a loading indicator
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Center(child: Loading());
-                                  });
-                              Navigator.of(context, rootNavigator: true).pop('dialog');
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditProPage(customer)));
-                            },
-                            child: Text('Edit Profile',
-                                style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                            color: Colors.black,
-                            textColor: Colors.white,
-                          )),
-                    ])
-                  ])),
-              Column(
-                children: [
-                  SingleChildScrollView(
-                      child: GridView.count(
+                                              ]),
+                                              onTap: () => {
+                                                    setState(() => {displayForSale = false})
+                                                  }),
+                                          SizedBox(width: 45),
+                                          Column(children: [
+                                            Icon(MdiIcons.tshirtCrew, color: Colors.white, size: 29.0),
+                                            Text('reviews',
+                                                style: new TextStyle(
+                                                    fontSize: 14.0,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Colors.white))
+                                          ])
+                                        ])
+                                      ]))),
+                          Container(
+                            height: 60,
+                          )
+                        ])
+                  ]),
+                  SizedBox(height: 10),
+                  ButtonTheme(
+                      minWidth: 340.0,
+                      height: 50.0,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                        onPressed: () async {
+                          // show a loading indicator
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Center(child: Loading());
+                              });
+                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProPage(customer)));
+                        },
+                        child: Text('Edit Profile',
+                            style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                        color: Colors.black,
+                        textColor: Colors.white,
+                      )),
+                  SizedBox(height: 10),
+                  Column(
+                    children: [
+                      GridView.count(
                           shrinkWrap: true,
                           crossAxisCount: 2,
                           children: displayForSale
@@ -191,10 +188,12 @@ class AccountPageState extends State<AccountPage> {
                                   var product = soldProducts[index];
                                   return ProductListBuilder.buildProductGridTile(
                                       context, currentLocation, product, customer, index);
-                                }))),
-                ],
-              )
-            ]);
+                                })),
+                    ],
+                  )
+                ]),
+              ])),
+            ]));
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
