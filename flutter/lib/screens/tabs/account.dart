@@ -45,7 +45,7 @@ class AccountPageState extends State<AccountPage> {
         });
       }
     });
-  }
+  } // end function initState
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,8 @@ class AccountPageState extends State<AccountPage> {
                 child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
               Container(
                   child: Stack(children: [
-                Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.contain, width: 500),
+                Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
+                    fit: BoxFit.cover, height: 602, width: 500),
                 Column(children: [
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -200,5 +201,5 @@ class AccountPageState extends State<AccountPage> {
           // By default, show a loading spinner.
           return Center(child: Loading());
         });
-  }
+  } // end function build
 }
