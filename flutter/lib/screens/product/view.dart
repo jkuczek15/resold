@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/user-message-type.dart';
@@ -83,11 +84,33 @@ class ProductPageState extends State<ProductPage> {
                       if (snapshot.hasData) {
                         Widget imageElement;
                         if (snapshot.data.length == 1) {
-                          imageElement = FadeInImage(
+                          imageElement = CachedNetworkImage(
+                            placeholder: (context, url) => Container(
+                              child: Loading(),
                               width: MediaQuery.of(context).size.width,
-                              image: NetworkImage(baseProductImagePath + snapshot.data[0]),
-                              placeholder: AssetImage('assets/images/placeholder-image.png'),
-                              fit: BoxFit.cover);
+                              padding: EdgeInsets.all(70.0),
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Material(
+                              child: Image.asset(
+                                'images/placeholder-image.png',
+                                width: 200.0,
+                                height: 200.0,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                            ),
+                            imageUrl: baseProductImagePath + snapshot.data[0],
+                            fit: BoxFit.cover,
+                          );
                         } else {
                           imageElement = CarouselSlider(
                               options: CarouselOptions(height: 400.0),
@@ -96,10 +119,33 @@ class ProductPageState extends State<ProductPage> {
                                   return Container(
                                       width: MediaQuery.of(context).size.width,
                                       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                                      child: FadeInImage(
-                                          image: NetworkImage(baseProductImagePath + image),
-                                          placeholder: AssetImage('assets/images/placeholder-image.png'),
-                                          fit: BoxFit.cover));
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) => Container(
+                                          child: Loading(),
+                                          width: MediaQuery.of(context).size.width,
+                                          padding: EdgeInsets.all(70.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueGrey,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) => Material(
+                                          child: Image.asset(
+                                            'images/placeholder-image.png',
+                                            width: 200.0,
+                                            height: 200.0,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8.0),
+                                          ),
+                                          clipBehavior: Clip.hardEdge,
+                                        ),
+                                        imageUrl: baseProductImagePath + image,
+                                        fit: BoxFit.cover,
+                                      ));
                                 });
                               }).toList());
                         } // end if we are displaying one image

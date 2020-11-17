@@ -5,14 +5,13 @@ import 'package:resold/services/search.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ProductUiModel extends ChangeNotifier {
-
   int itemRequestThreshold = 20;
   static int currentPage = 0;
   List<Product> items;
   int lastLoadingIndex = 0;
   Position currentLocation;
 
-  ProductUiModel (Position currentLocation, List<Product> data) {
+  ProductUiModel(Position currentLocation, List<Product> data) {
     items = data;
     this.currentLocation = currentLocation;
   }
@@ -29,23 +28,23 @@ class ProductUiModel extends ChangeNotifier {
       currentPage = pageToRequest;
       showLoadingIndicator();
 
-      var newItems = await Search.fetchLocalProducts(currentLocation.latitude, currentLocation.longitude, offset: pageToRequest * itemRequestThreshold);
+      // todo: include the search term here instead of blank
+      var newItems = await Search.fetchSearchProducts('', currentLocation.latitude, currentLocation.longitude,
+          offset: pageToRequest * itemRequestThreshold);
       items.addAll(newItems);
 
       removeLoadingIndicator();
-    }
-  }
+    } // end if requesting more data
+  } // end function handleItemCreated
 
   void showLoadingIndicator() {
-    items.add(Product(
-      name: LoadingIndicatorTitle
-    ));
-    lastLoadingIndex = items.length-1;
+    items.add(Product(name: LoadingIndicatorTitle));
+    lastLoadingIndex = items.length - 1;
     notifyListeners();
-  }
+  } // end function showLoadingIndicator
 
   void removeLoadingIndicator() {
     items.removeAt(lastLoadingIndex);
     notifyListeners();
-  }
+  } // end function removeLoadingIndicator
 }

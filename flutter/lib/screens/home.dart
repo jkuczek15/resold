@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/screens/tabs/browse.dart';
+import 'package:resold/screens/tabs/map.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';
 import 'package:resold/screens/tabs/orders.dart';
@@ -118,8 +118,8 @@ class HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Buy'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
           BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Orders'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
@@ -135,9 +135,9 @@ class HomePageState extends State<HomePage> {
   Widget getContent(BuildContext context) {
     switch (selectedTab) {
       case 0:
-        return BrowsePage(customer);
-      case 1:
         return SearchPage(customer);
+      case 1:
+        return MapPage(customer);
       case 2:
         return SellPage(customer);
       case 3:
