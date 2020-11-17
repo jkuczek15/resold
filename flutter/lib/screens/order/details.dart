@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -184,14 +185,38 @@ class OrderDetailsState extends State<OrderDetails> {
                                       Text(product.description),
                                       SizedBox(width: 195),
                                       Padding(
+                                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                                           child: Container(
-                                              height: 90,
-                                              width: 90,
-                                              child: FadeInImage(
-                                                  image: NetworkImage(baseProductImagePath + product.thumbnail),
-                                                  placeholder: AssetImage('assets/images/placeholder-image.png'),
-                                                  fit: BoxFit.cover)),
-                                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10))
+                                            height: 90,
+                                            width: 90,
+                                            child: CachedNetworkImage(
+                                              placeholder: (context, url) => Container(
+                                                child: Loading(),
+                                                width: MediaQuery.of(context).size.width,
+                                                padding: EdgeInsets.all(70.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blueGrey,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              errorWidget: (context, url, error) => Material(
+                                                child: Image.asset(
+                                                  'images/placeholder-image.png',
+                                                  width: 200.0,
+                                                  height: 200.0,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0),
+                                                ),
+                                                clipBehavior: Clip.hardEdge,
+                                              ),
+                                              imageUrl: baseProductImagePath + product.thumbnail,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ))
                                     ]),
                                     Row(children: [
                                       Container(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
@@ -16,46 +17,38 @@ import 'package:resold/widgets/loading.dart';
 import 'package:resold/widgets/scroll/scrollable-category-list.dart';
 
 class ProductListBuilder {
-
-  static ChangeNotifierProvider<ProductUiModel> buildProductList(
-      BuildContext context, List<Product> products, Position currentLocation, CustomerResponse customer, bool showCategoryHeader) {
+  static ChangeNotifierProvider<ProductUiModel> buildProductList(BuildContext context, List<Product> products,
+      Position currentLocation, CustomerResponse customer, bool showCategoryHeader) {
     return ChangeNotifierProvider<ProductUiModel>(
         create: (_) => new ProductUiModel(currentLocation, products),
         child: Consumer<ProductUiModel>(
-            builder: (context, model, child) =>
-                ListView.builder(
-                    itemCount: model.items.length,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return showCategoryHeader ? ScrollableCategoryList() : Column();
-                      }
-                      index -= 1;
-                      return CreationAwareListItem(
-                          itemCreated: () {
-                            SchedulerBinding.instance.addPostFrameCallback((
-                                duration) => model.handleItemCreated(index));
-                          },
-                          child: model.items[index + 1].name ==
-                              LoadingIndicatorTitle
-                              ? Center(child: Loading()) : buildProductListTile(context, currentLocation, model.items[index], customer, index)
-                      );
-                    }
-                )
-        )
-    );
-  }
+            builder: (context, model, child) => ListView.builder(
+                itemCount: model.items.length,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return showCategoryHeader ? ScrollableCategoryList() : Column();
+                  }
+                  index -= 1;
+                  return CreationAwareListItem(
+                      itemCreated: () {
+                        SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
+                      },
+                      child: model.items[index + 1].name == LoadingIndicatorTitle
+                          ? Center(child: Loading())
+                          : buildProductListTile(context, currentLocation, model.items[index], customer, index));
+                })));
+  } // end function buildProductList
 
-  static Widget buildProductListTile(BuildContext context,
-      Position currentLocation, Product product, CustomerResponse customer, int index) {
+  static Widget buildProductListTile(
+      BuildContext context, Position currentLocation, Product product, CustomerResponse customer, int index) {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return ListTile(
         title: Card(
             child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) =>
-                          ProductPage(product, customer, currentLocation)));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
                 },
                 child: Container(
                     decoration: BoxDecoration(color: Colors.white),
@@ -63,107 +56,123 @@ class ProductListBuilder {
                         padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
                         child: Column(
                           children: [
-                            Row(
-                                children: [
-                                  Column(
-                                      children: [
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                                height: 270,
-                                                width: 270,
-                                                child: FadeInImage(
-                                                    image: NetworkImage(
-                                                        baseProductImagePath +
-                                                            product.thumbnail),
-                                                    placeholder: AssetImage(
-                                                        'assets/images/placeholder-image.png'),
-                                                    fit: BoxFit.cover)
-                                            )
-                                        ),
-                                        SizedBox(height: 5),
-                                      ]
-                                  )
-                                ]
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        Container(
-                                          padding: new EdgeInsets.only(
-                                              right: 13.0),
-                                          width: 200,
-                                          child: new Text(
-                                            product.name,
-                                            overflow: TextOverflow.fade,
-                                            style: new TextStyle(
-                                              fontSize: 14.0,
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.normal,
+                            Row(children: [
+                              Column(children: [
+                                Align(
+                                    alignment: Alignment.center,
+                                    child: SizedBox(
+                                        height: 270,
+                                        width: 270,
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) => Container(
+                                            child: Loading(),
+                                            width: 200.0,
+                                            height: 200.0,
+                                            padding: EdgeInsets.all(70.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blueGrey,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0),
+                                              ),
                                             ),
                                           ),
+                                          errorWidget: (context, url, error) => Material(
+                                            child: Image.asset(
+                                              'images/placeholder-image.png',
+                                              width: 200.0,
+                                              height: 200.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                          ),
+                                          imageUrl: baseProductImagePath + product.thumbnail,
+                                          width: 200.0,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        ))),
+                                SizedBox(height: 5),
+                              ])
+                            ]),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    Container(
+                                      padding: new EdgeInsets.only(right: 13.0),
+                                      width: 200,
+                                      child: new Text(
+                                        product.name,
+                                        overflow: TextOverflow.fade,
+                                        style: new TextStyle(
+                                          fontSize: 14.0,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.normal,
                                         ),
-                                        SizedBox(height: 5),
-                                        Text(formatter.format(
-                                            double.parse(product.price)
-                                                .round()),
-                                            style: new TextStyle(
-                                              fontSize: 12.0,
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.bold,
-                                            )
-                                        )
-                                      ]
-                                  ),
-                                  Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        Container(
-                                            width: 70,
-                                            child: Align(
-                                                alignment: Alignment
-                                                    .centerRight,
-                                                child: LocationBuilder
-                                                    .calculateDistance(
-                                                    currentLocation.latitude,
-                                                    currentLocation.longitude,
-                                                    product.latitude,
-                                                    product.longitude)
-                                            )
-                                        )
-                                      ]
-                                  )
-                                ]
-                            )
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(formatter.format(double.parse(product.price).round()),
+                                        style: new TextStyle(
+                                          fontSize: 12.0,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.bold,
+                                        ))
+                                  ]),
+                                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    Container(
+                                        width: 70,
+                                        child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: LocationBuilder.calculateDistance(currentLocation.latitude,
+                                                currentLocation.longitude, product.latitude, product.longitude)))
+                                  ])
+                                ])
                           ],
-                        )
-                    )
-                )
-            )
-        )
-    );
-  }
+                        ))))));
+  } // end function buildProductListTile
 
-  static Widget buildProductGridTile(BuildContext context, Position currentLocation, Product product, CustomerResponse customer, int index) {
+  static Widget buildProductGridTile(
+      BuildContext context, Position currentLocation, Product product, CustomerResponse customer, int index) {
     return Card(
         child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
-          },
-          child: FadeInImage(
-              image: NetworkImage(baseProductImagePath + product.image),
-              placeholder: AssetImage('assets/images/placeholder-image.png'),
-              fit: BoxFit.cover
-          )
-      )
-    );
-  }
+            splashColor: Colors.blue.withAlpha(30),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ProductPage(product, customer, currentLocation)));
+            },
+            child: CachedNetworkImage(
+              placeholder: (context, url) => Container(
+                child: Loading(),
+                width: 200.0,
+                height: 200.0,
+                padding: EdgeInsets.all(70.0),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Material(
+                child: Image.asset(
+                  'images/placeholder-image.png',
+                  width: 200.0,
+                  height: 200.0,
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                clipBehavior: Clip.hardEdge,
+              ),
+              imageUrl: baseProductImagePath + product.thumbnail,
+              width: 200.0,
+              height: 200.0,
+              fit: BoxFit.cover,
+            )));
+  } // end function buildProductGridTile
 }

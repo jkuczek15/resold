@@ -50,10 +50,8 @@ class Product {
           condition: doc['condition_raw'][0].toString(),
           localGlobal: doc['local_global_raw'][0].toString());
 
-      if (doc['title_description_raw'] != null &&
-          doc['title_description_raw'][0] != null) {
-        product.titleDescription =
-            doc['title_description_raw'][0].toString().trim();
+      if (doc['title_description_raw'] != null && doc['title_description_raw'][0] != null) {
+        product.titleDescription = doc['title_description_raw'][0].toString().trim();
       }
 
       if (doc['latitude_raw'] != null && doc['longitude_raw'] != null) {
@@ -68,8 +66,8 @@ class Product {
       return product;
     } catch (exception) {
       return Product();
-    }
-  }
+    } // end try-catch parse doc
+  } // end function fromDoc
 
   factory Product.fromJson(dynamic doc, {bool parseId = true}) {
     try {
@@ -85,8 +83,7 @@ class Product {
           condition: doc['condition'].toString(),
           localGlobal: doc['local_global'].toString());
 
-      if (doc['title_description'] != null &&
-          doc['title_description'] != null) {
+      if (doc['title_description'] != null && doc['title_description'] != null) {
         product.titleDescription = doc['title_description'].toString().trim();
       }
 
@@ -110,8 +107,8 @@ class Product {
       return product;
     } catch (exception) {
       return Product();
-    }
-  }
+    } // end try-catch parse json
+  } // end function fromJson
 
   Map<String, dynamic> toJson() {
     try {
@@ -133,8 +130,8 @@ class Product {
       };
     } catch (exception) {
       return {};
-    }
-  }
+    } // end try-catch toJson
+  } // end function toJson
 
   String getPostmatesItemSize() {
     switch (this.itemSize) {
@@ -148,6 +145,6 @@ class Product {
         return 'xlarge';
       default:
         return 'medium';
-    }
-  }
+    } // end switch-case on item size
+  } // end function getPostmatesItemSize
 }
