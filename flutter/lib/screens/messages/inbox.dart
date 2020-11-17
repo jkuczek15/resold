@@ -164,6 +164,7 @@ class InboxPageState extends State<InboxPage> {
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
+                                                      SizedBox(width: 5),
                                                       Container(
                                                           width: 160,
                                                           child: Text(product.name,
@@ -171,20 +172,23 @@ class InboxPageState extends State<InboxPage> {
                                                               style: item['unread']
                                                                   ? TextStyle(fontWeight: FontWeight.bold)
                                                                   : TextStyle(fontWeight: FontWeight.normal))),
-                                                      SizedBox(width: 25),
+                                                      SizedBox(width: 50),
                                                       Container(
                                                           child: Text(formattedDate,
                                                               overflow: TextOverflow.ellipsis,
                                                               style: new TextStyle(color: Colors.grey)))
                                                     ],
                                                   ),
-                                                  SizedBox(height: 4),
-                                                  Container(
-                                                      width: 280,
-                                                      child: Text(item['messagePreview'],
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: new TextStyle(color: Colors.grey))),
-                                                  SizedBox(height: 4)
+                                                  SizedBox(height: 5),
+                                                  Row(children: [
+                                                    SizedBox(width: 5),
+                                                    Container(
+                                                        width: 280,
+                                                        child: Text(item['messagePreview'],
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: new TextStyle(color: Colors.grey))),
+                                                    SizedBox(height: 4)
+                                                  ])
                                                 ])
                                           ],
                                         ),
