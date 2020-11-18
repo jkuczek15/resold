@@ -47,6 +47,8 @@ class ProductPageState extends State<ProductPage> {
   final bool fromMessagePage;
   Future<List<String>> futureImages;
   final Map<String, Marker> markers = {};
+  final offerController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   ProductPageState(CustomerResponse customer, Product product, Position currentLocation, bool fromMessagePage)
       : customer = customer,
@@ -288,20 +290,99 @@ class ProductPageState extends State<ProductPage> {
                                         CustomerResponse toCustomer = await Magento.getCustomerById(toId);
                                         String chatId = customer.id.toString() + '-' + product.id.toString();
 
-                                        if (fromMessagePage) {
-                                          // go back
-                                          Navigator.of(context, rootNavigator: true).pop(context);
-                                          Navigator.pop(context);
-                                        } else {
-                                          // todo: create an offer dialog
-                                          // push a new message page
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => MessagePage(
-                                                      customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                          Navigator.of(context, rootNavigator: true).pop('dialog');
-                                        } // end if not from message page
+                                        await showDialog<void>(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Send an offer'),
+                                                content: SingleChildScrollView(
+                                                  child: ListBody(
+                                                    children: <Widget>[
+                                                      Form(
+                                                        key: formKey,
+                                                        child: TextFormField(
+                                                            controller: offerController,
+                                                            keyboardType: TextInputType.number,
+                                                            decoration: InputDecoration(
+                                                                labelText: 'Enter an offer price *',
+                                                                labelStyle: TextStyle(color: ResoldBlue),
+                                                                enabledBorder: UnderlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(color: ResoldBlue, width: 1.5)),
+                                                                focusedBorder: UnderlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(color: ResoldBlue, width: 1.5)),
+                                                                border: UnderlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(color: ResoldBlue, width: 1.5))),
+                                                            validator: (value) {
+                                                              int offerPrice = int.tryParse(value);
+                                                              if (value.isEmpty || offerPrice < 1) {
+                                                                return 'Please enter a valid offer.';
+                                                              }
+                                                              return null;
+                                                            },
+                                                            style: TextStyle(color: Colors.black)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text(
+                                                      'OK',
+                                                      style: TextStyle(color: ResoldBlue),
+                                                    ),
+                                                    onPressed: () async {
+                                                      if (formKey.currentState.validate()) {
+                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                                                        await Firebase.sendProductMessage(
+                                                            chatId,
+                                                            customer.id,
+                                                            toCustomer.id,
+                                                            product,
+                                                            offerController.text,
+                                                            MessageType.offer,
+                                                            toId == customer.id,
+                                                            firstMessage: true);
+
+                                                        if (fromMessagePage) {
+                                                          // go back
+                                                          Navigator.of(context, rootNavigator: true).pop(context);
+                                                          Navigator.pop(context);
+                                                        } else {
+                                                          // push a new message page
+                                                          offerController.value = TextEditingValue();
+                                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => MessagePage(
+                                                                      customer,
+                                                                      toCustomer,
+                                                                      product,
+                                                                      chatId,
+                                                                      UserMessageType.buyer)));
+                                                        } // end if not from message page
+                                                      } // end if valid verification code
+                                                    },
+                                                  ),
+                                                  FlatButton(
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(color: ResoldBlue),
+                                                    ),
+                                                    onPressed: () {
+                                                      offerController.value = TextEditingValue();
+                                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       },
                                       child: Text('Send Offer',
                                           style: new TextStyle(
@@ -356,7 +437,8 @@ class ProductPageState extends State<ProductPage> {
                                               quote.duration.toString();
 
                                           await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product,
-                                              content, MessageType.deliveryQuote, toId == customer.id);
+                                              content, MessageType.deliveryQuote, toId == customer.id,
+                                              firstMessage: true);
 
                                           if (fromMessagePage) {
                                             // go back

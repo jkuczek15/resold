@@ -60,10 +60,15 @@ class InboxPageState extends State<InboxPage> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: Loading());
-                      } else if (snapshot.hasData && snapshot.data.documents.length == 0) {
-                        return Center(child: Text('You don\'t have any messages'));
                       } else {
-                        messages = snapshot.data.documents;
+                        List<DocumentSnapshot> messages = new List<DocumentSnapshot>();
+                        messages.addAll(snapshot.data[0].documents);
+                        messages.addAll(snapshot.data[1].documents);
+
+                        if (messages.length == 0) {
+                          return Center(child: Text('You don\'t have any messages'));
+                        } // end if no messages
+
                         messages.sort((DocumentSnapshot a, DocumentSnapshot b) {
                           var dateA = new DateTime.fromMillisecondsSinceEpoch(int.parse(a['lastMessageTimestamp']));
                           var dateB = new DateTime.fromMillisecondsSinceEpoch(int.parse(b['lastMessageTimestamp']));
@@ -72,7 +77,7 @@ class InboxPageState extends State<InboxPage> {
                         return SingleChildScrollView(
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: snapshot.data.documents.length,
+                                itemCount: messages.length,
                                 padding: EdgeInsets.fromLTRB(2, 10, 2, 10),
                                 itemBuilder: (context, index) {
                                   var item = messages[index];
@@ -99,7 +104,7 @@ class InboxPageState extends State<InboxPage> {
                                         CustomerResponse toCustomer = await Magento.getCustomerById(item['toId']);
 
                                         // mark the message as read
-                                        await Firebase.markInboxMessageRead(item['chatId']);
+                                        await Firebase.markInboxMessageRead(item.documentID);
 
                                         Navigator.push(
                                             context,
@@ -194,7 +199,7 @@ class InboxPageState extends State<InboxPage> {
                                         ),
                                       ))));
                                 }));
-                      }
+                      } // end if we have query snapshot data
                     }))
           ],
         ));

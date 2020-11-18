@@ -7,6 +7,7 @@ import 'package:resold/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/helpers/firebase-helper.dart';
+import 'package:rxdart/rxdart.dart';
 
 /*
 * Resold Firebase API service - Firebase specific API client
@@ -49,13 +50,17 @@ class Firebase {
       messagePreview = content.substring(0, 50);
     } // end if content length > 50
 
+    if (messageType == MessageType.offer) {
+      messagePreview = 'Offer has been requested for \$$content.';
+    } // end if message type is offer
+
     if (userMessageType == UserMessageType.buyer) {
       userMessageId = fromId.toString() + '-' + product.id.toString();
 
       // custom message preview for delivery quote
       if (messageType == MessageType.deliveryQuote) {
         FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
-        messagePreview = 'A delivery has been requested for ' + deliveryQuoteMessage.expectedDropoff;
+        messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedDropoff;
       } // end if delivery quote message type
     } else {
       userMessageId = toId.toString() + '-' + product.id.toString();
@@ -63,7 +68,7 @@ class Firebase {
       // custom message preview for delivery quote
       if (messageType == MessageType.deliveryQuote) {
         FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
-        messagePreview = 'A delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
+        messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
       } // end if delivery quote message type
     } // end if type is buyer
 
@@ -101,13 +106,16 @@ class Firebase {
   * content - Content of the message for message preview
   * type - Type of the message (buyer or seller)
   */
-  static Future sendProductMessage(String chatId, int fromId, int toId, Product product, String content,
-      MessageType messageType, bool isSeller) async {
-    // mark buyer's inbox message as unread if sender is the seller
-    await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.buyer, messageType, !isSeller);
+  static Future sendProductMessage(
+      String chatId, int fromId, int toId, Product product, String content, MessageType messageType, bool isSeller,
+      {bool firstMessage = false}) async {
+    // mark buyer's inbox message as unread if sender is the seller and not the first message
+    await createUserInboxMessage(
+        fromId, toId, chatId, content, product, UserMessageType.buyer, messageType, isSeller && !firstMessage);
 
     // mark seller's inbox message as unread if sender is the buyer
-    await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.seller, messageType, isSeller);
+    await createUserInboxMessage(
+        fromId, toId, chatId, content, product, UserMessageType.seller, messageType, !isSeller);
 
     var documentReference = Firestore.instance.collection('messages').document(chatId).collection(chatId);
 
@@ -118,7 +126,7 @@ class Firebase {
         Firestore.instance.runTransaction((transaction) async {
           await transaction.delete(deliveryQuoteDocuments.documents[0].reference);
         });
-      }
+      } // end if we have an existing delivery quote
     } // end if message type delivery quote
 
     Firestore.instance.runTransaction((transaction) async {
@@ -155,13 +163,28 @@ class Firebase {
   * getUserMessagesStream - Returns a real time messages stream for the inbox
   * customerId - Customer from ID for messages
   */
-  static Stream getUserMessagesStream(int customerId) {
-    return Firestore.instance
+  static Stream<List<QuerySnapshot>> getUserMessagesStream(int customerId) {
+    // get the to stream messages
+    Stream toStream = Firestore.instance
         .collection('inbox_messages')
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: customerId.toString())
+        .where(FieldPath.documentId, isLessThan: (customerId + 1).toString())
         .where('toId', isEqualTo: customerId)
         .orderBy(FieldPath.documentId)
         .limit(20)
         .snapshots();
+
+    // get the from stream messages
+    Stream fromStream = Firestore.instance
+        .collection('inbox_messages')
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: customerId.toString())
+        .where(FieldPath.documentId, isLessThan: (customerId + 1).toString())
+        .where('fromId', isEqualTo: customerId)
+        .orderBy(FieldPath.documentId)
+        .limit(20)
+        .snapshots();
+
+    return CombineLatestStream.list([toStream, fromStream]);
   } // end function getUserMessagesStream
 
   /*
@@ -194,7 +217,7 @@ class Firebase {
   static Stream getUnreadMessageCount(int customerId) {
     return Firestore.instance
         .collection('inbox_messages')
-        .where('toId', isEqualTo: customerId)
+        .where('fromId', isEqualTo: customerId)
         .where('unread', isEqualTo: true)
         .snapshots();
   } // end function getUnreadMessageCount
@@ -203,8 +226,8 @@ class Firebase {
   * markInboxMessageRead - Marks the inbox message as read
   * chatId - Inbox message chat id
   */
-  static Future markInboxMessageRead(String chatId) async {
-    var documentReference = Firestore.instance.collection('inbox_messages').document(chatId);
+  static Future markInboxMessageRead(String documentId) async {
+    var documentReference = Firestore.instance.collection('inbox_messages').document(documentId);
     await documentReference.updateData(<String, dynamic>{'unread': false});
   } // end function markInboxMessageRead
 

@@ -67,6 +67,8 @@ class MessagePageState extends State<MessagePage> {
   String imageUrl;
   bool isSeller;
   Position currentLocation;
+  final offerController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
@@ -204,6 +206,67 @@ class MessagePageState extends State<MessagePage> {
             chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
         break;
       case 'Send Offer':
+        await showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Send an offer'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Form(
+                        key: formKey,
+                        child: TextFormField(
+                            controller: offerController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                labelText: 'Enter an offer price *',
+                                labelStyle: TextStyle(color: ResoldBlue),
+                                enabledBorder:
+                                    UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                focusedBorder:
+                                    UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5))),
+                            validator: (value) {
+                              int offerPrice = int.tryParse(value);
+                              if (value.isEmpty || offerPrice < 1) {
+                                return 'Please enter a valid offer.';
+                              }
+                              return null;
+                            },
+                            style: TextStyle(color: Colors.black)),
+                      )
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(
+                      'OK',
+                      style: TextStyle(color: ResoldBlue),
+                    ),
+                    onPressed: () async {
+                      if (formKey.currentState.validate()) {
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product,
+                            offerController.text, MessageType.offer, isSeller);
+                      } // end if valid verification code
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: ResoldBlue),
+                    ),
+                    onPressed: () {
+                      offerController.value = TextEditingValue();
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                    },
+                  ),
+                ],
+              );
+            });
         break;
     } // end switch on menu click
   } // end function handleMenuClick
@@ -380,7 +443,7 @@ class MessagePageState extends State<MessagePage> {
                     )
                   : document['messageType'] == MessageType.deliveryQuote.index
                       ?
-                      // Purchase Request
+                      // Delivery Request
                       Container(
                           child: Padding(
                               padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
@@ -483,14 +546,57 @@ class MessagePageState extends State<MessagePage> {
                       :
                       // Offer
                       Container(
-                          child: Text(
-                            'Offer received for ${product.name}.',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                          width: 200.0,
-                          decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
+                                        child: isSeller
+                                            ? Text('You have received an offer for \$${document['content']}.',
+                                                style: TextStyle(color: Colors.white))
+                                            : Text('You have sent an offer for \$${document['content']}.',
+                                                style: TextStyle(color: Colors.white))),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: ButtonBar(
+                                          alignment: MainAxisAlignment.start,
+                                          children: isSeller
+                                              ? [
+                                                  FlatButton(
+                                                    color: Colors.black,
+                                                    textColor: Colors.white,
+                                                    onPressed: () async {
+                                                      // todo: change the price and create a delivery
+                                                    },
+                                                    child: const Text('Accept Offer'),
+                                                  ),
+                                                  FlatButton(
+                                                    color: Colors.black,
+                                                    textColor: Colors.white,
+                                                    onPressed: () async {
+                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
+                                                    },
+                                                    child: const Text('Decline Offer'),
+                                                  )
+                                                ]
+                                              : [
+                                                  FlatButton(
+                                                    color: Colors.black,
+                                                    textColor: Colors.white,
+                                                    onPressed: () async {
+                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
+                                                    },
+                                                    child: const Text('Cancel Offer'),
+                                                  ),
+                                                ],
+                                        ))
+                                  ])),
+                          width: 260.0,
                           margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                          decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
                         )
         ],
         mainAxisAlignment: MainAxisAlignment.end,
@@ -694,14 +800,58 @@ class MessagePageState extends State<MessagePage> {
                             :
                             // Offer
                             Container(
-                                child: Text(
-                                  'Offer received for ${product.name}.',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                                width: 200.0,
-                                decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
+                                child: Padding(
+                                    padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
+                                    child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
+                                              child: isSeller
+                                                  ? Text('You have sent an offer for \$${document['content']}.',
+                                                      style: TextStyle(color: Colors.white))
+                                                  : Text('You have received an offer for \$${document['content']}.',
+                                                      style: TextStyle(color: Colors.white))),
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: ButtonBar(
+                                                  alignment: MainAxisAlignment.start,
+                                                  children: isSeller
+                                                      ? [
+                                                          FlatButton(
+                                                            color: Colors.black,
+                                                            textColor: Colors.white,
+                                                            onPressed: () async {
+                                                              await Firebase.deleteProductMessage(
+                                                                  chatId, document.documentID);
+                                                            },
+                                                            child: const Text('Cancel Offer'),
+                                                          ),
+                                                        ]
+                                                      : [
+                                                          FlatButton(
+                                                            color: Colors.black,
+                                                            textColor: Colors.white,
+                                                            onPressed: () async {
+                                                              // todo: change the price and create a delivery
+                                                            },
+                                                            child: const Text('Accept Offer'),
+                                                          ),
+                                                          FlatButton(
+                                                            color: Colors.black,
+                                                            textColor: Colors.white,
+                                                            onPressed: () async {
+                                                              await Firebase.deleteProductMessage(
+                                                                  chatId, document.documentID);
+                                                            },
+                                                            child: const Text('Decline Offer'),
+                                                          )
+                                                        ]))
+                                        ])),
+                                width: 260.0,
                                 margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                                decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
                               )
               ],
             ),
