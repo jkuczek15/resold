@@ -1,5 +1,1 @@
-enum MessageType {
-  text,
-  image,
-  deliveryQuote
-}
+enum MessageType { text, image, offer, deliveryQuote }
