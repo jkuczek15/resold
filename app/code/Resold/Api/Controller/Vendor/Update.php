@@ -110,9 +110,6 @@ class Update extends \Magento\Framework\App\Action\Action
           move_uploaded_file($tmpPath, $newPath);
         }// end if valid tmp path
 
-        var_dump($newPath);
-        exit;
-
         $vendor->addData([
           'profile_picture' => $newPath
         ]);
