@@ -29,8 +29,8 @@ class Resold {
 
     await config.initialized;
 
-    final response = await client
-        .post('${config.baseUrl}/region', headers: config.headers, body: <String, dynamic>{'regionCode': regionCode, 'countryId': countryId});
+    final response = await client.post('${config.baseUrl}/region',
+        headers: config.headers, body: <String, dynamic>{'regionCode': regionCode, 'countryId': countryId});
 
     if (response.statusCode == 200) {
       // success
@@ -54,8 +54,8 @@ class Resold {
 
     await config.initialized;
 
-    final response =
-        await client.post('${config.baseUrl}/vendor', headers: config.headers, body: <String, dynamic>{'customerId': customerId.toString()});
+    final response = await client.post('${config.baseUrl}/vendor',
+        headers: config.headers, body: <String, dynamic>{'customerId': customerId.toString()});
 
     if (response.statusCode == 200) {
       // success
@@ -79,8 +79,8 @@ class Resold {
 
     await config.initialized;
 
-    final response = await client
-        .post('${config.baseUrl}/Product/Customer', headers: config.headers, body: <String, dynamic>{'productId': productId.toString()});
+    final response = await client.post('${config.baseUrl}/Product/Customer',
+        headers: config.headers, body: <String, dynamic>{'productId': productId.toString()});
 
     if (response.statusCode == 200) {
       // success
@@ -100,8 +100,8 @@ class Resold {
   static Future<Vendor> getVendor(int vendorId) async {
     await config.initialized;
 
-    final response =
-        await client.post('${config.baseUrl}/vendor/details', headers: config.headers, body: <String, dynamic>{'vendorId': vendorId.toString()});
+    final response = await client.post('${config.baseUrl}/vendor/details',
+        headers: config.headers, body: <String, dynamic>{'vendorId': vendorId.toString()});
 
     if (response.statusCode == 200) {
       // success
@@ -170,7 +170,8 @@ class Resold {
 
     await Future.forEach(images, (asset) async {
       var filePath = await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      FormData formData = new FormData.fromMap({'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)});
+      FormData formData =
+          new FormData.fromMap({'qqfile': await MultipartFile.fromFile(filePath, filename: asset.name)});
 
       // upload the image
       var response = await dio.post('${config.baseUrl}/image/upload', data: formData);
@@ -182,6 +183,29 @@ class Resold {
 
     return imagePaths;
   } // end function uploadImages
+
+  /*
+   * updateVendor - Update a seller account
+   * token - Customer identification token
+   * filePath - Image file path
+   */
+  static Future<String> updateVendor(String token, int customerId, String filePath) async {
+    await config.initialized;
+
+    FormData formData = new FormData.fromMap({
+      'customerId': customerId,
+      'profilePicture': await MultipartFile.fromFile(filePath, filename: 'profilePicture')
+    });
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    var response = await dio.post('${config.baseUrl}/vendor/update', data: formData);
+
+    if (response.data.length > 1) {
+      return response.data[1];
+    } else {
+      return 'Error: ' + response.data;
+    } // end if response data success
+  } // end function createVendor
 
   /*
    * Delete Image - Delete an uploaded image
