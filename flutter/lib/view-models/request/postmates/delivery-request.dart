@@ -2,9 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'delivery-request.g.dart';
 
+// ignore_for_file: non_constant_identifier_names
 @JsonSerializable(nullable: true)
 class DeliveryRequest {
-
   // delivery defaults
   final String deliverable_action = 'deliverable_action_leave_at_door';
   final String undeliverable_action = 'leave_at_door';
@@ -41,10 +41,29 @@ class DeliveryRequest {
   final String manifest;
   final List<ManifestItem> manifest_items;
 
-  DeliveryRequest({this.dropoff_address, this.pickup_address, this.dropoff_deadline_dt, this.dropoff_latitude, this.dropoff_longitude,
-  this.dropoff_phone_number, this.dropoff_ready_dt, this.pickup_deadline_dt, this.pickup_latitude, this.pickup_longitude, this.pickup_phone_number, this.pickup_ready_dt,
-  this.manifest, this.manifest_items, this.dropoff_notes, this.dropoff_name, this.pickup_name, this.robo_delivered, this.robo_dropoff, this.robo_pickup, this.robo_pickup_complete,
-  this.robo_undeliverable_action});
+  DeliveryRequest(
+      {this.dropoff_address,
+      this.pickup_address,
+      this.dropoff_deadline_dt,
+      this.dropoff_latitude,
+      this.dropoff_longitude,
+      this.dropoff_phone_number,
+      this.dropoff_ready_dt,
+      this.pickup_deadline_dt,
+      this.pickup_latitude,
+      this.pickup_longitude,
+      this.pickup_phone_number,
+      this.pickup_ready_dt,
+      this.manifest,
+      this.manifest_items,
+      this.dropoff_notes,
+      this.dropoff_name,
+      this.pickup_name,
+      this.robo_delivered,
+      this.robo_dropoff,
+      this.robo_pickup,
+      this.robo_pickup_complete,
+      this.robo_undeliverable_action});
 
   factory DeliveryRequest.fromJson(Map<String, dynamic> json) => _$DeliveryRequestFromJson(json);
   Map<String, dynamic> toJson() => _$DeliveryRequestToJson(this);
@@ -54,7 +73,7 @@ class DeliveryRequest {
 class ManifestItem {
   final String name;
   final int quantity;
-  final String size;  // small, medium, large, xlarge
+  final String size; // small, medium, large, xlarge
 
   ManifestItem({this.name, this.quantity, this.size});
 
