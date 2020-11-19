@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -73,7 +74,7 @@ class AccountPageState extends State<AccountPage> {
                               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                               child: CircleAvatar(
                                 backgroundImage: vendor.profilePicture != 'null'
-                                    ? NetworkImage(baseImagePath + '/' + vendor.profilePicture)
+                                    ? CachedNetworkImageProvider(baseImagePath + '/' + vendor.profilePicture)
                                     : AssetImage('assets/images/avatar-placeholder.png'),
                               ))),
                       Padding(
