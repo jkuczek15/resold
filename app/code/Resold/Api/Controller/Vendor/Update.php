@@ -96,6 +96,7 @@ class Update extends \Magento\Framework\App\Action\Action
           'profile_picture' => $newPath
         ]);
 
+        // todo: not the correct way to save the image, Magento somehow saves to S3
         $vendor->save();
       }// end if we have an image
 
