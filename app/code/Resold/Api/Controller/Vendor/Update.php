@@ -102,6 +102,7 @@ class Update extends \Magento\Framework\App\Action\Action
         ]);
 
         // todo: not the correct way to save the image, Magento somehow saves to S3
+        // todo: check Thai S3 namespace and save picture to S3 prior to setting the path
         $vendor->save();
       }// end if we have an image
 
