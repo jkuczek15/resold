@@ -52,9 +52,11 @@ class Update extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+      // tempory location for vendor images
+      $mediaDir = '/var/www/html/pub/media/ced/csmaketplace/vendor';
+
       // load the seller by the customer ID
       $vendor = $this->vendor->loadByCustomerId(isset($_POST['customerId']) ? $_POST['customerId'] : -1);
-      $newPath = '';
       if($vendor != null && isset($_FILES['profilePicture']) && $_FILES['profilePicture']['name'] != null){
 
         // we have an image
@@ -63,9 +65,30 @@ class Update extends \Magento\Framework\App\Action\Action
         // temp server image path
         $tmpPath = $image['tmp_name'];
 
-        // move the uploaded image to the media directory
-        $newPath ='vendor'.$tmpPath; 
+        // type of image
+        $type = $image['type'];
+        switch($type){
+          case 'image/jpeg':
+            $extension = 'jpeg';
+            break;
+          case 'image/jpg':
+            $extension = 'jpg';
+            break;
+          case 'image/png':
+            $extension = 'png';
+            break;
+          default:
+            $extension = 'png';
+            break;
+        }// end switch on type
 
+        // in this case extension is already set
+        $tmpPathExt = 'profile_picture'.$vendor->getId().'.'.$extension;
+
+        // new path for the image stored in the media directory
+        $newPath = $mediaDir.'/'.$tmpPathExt;
+
+        // move the uploaded image to the media directory
         move_uploaded_file($tmpPath, $newPath);
 
         // save the vendor profile picture
@@ -77,6 +100,6 @@ class Update extends \Magento\Framework\App\Action\Action
       }// end if we have an image
 
       // on success, redirect user to their listing page
-      return $this->resultJsonFactory->create()->setData(['success' => 'Y', 'path' => $newPath]);
+      return $this->resultJsonFactory->create()->setData(['success' => 'Y', 'path' => $tmpPathExt]);
     }// end function execute
 }

@@ -194,7 +194,7 @@ class Resold {
 
     FormData formData = new FormData.fromMap({
       'customerId': customerId,
-      'profilePicture': await MultipartFile.fromFile(filePath, filename: 'profilePicture.png')
+      'profilePicture': await MultipartFile.fromFile(filePath, filename: 'profilePicture')
     });
 
     dio.options.headers['Authorization'] = 'Bearer $token';
