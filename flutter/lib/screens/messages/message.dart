@@ -13,6 +13,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
+import 'package:resold/view-models/firebase/firebase-offer.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/request/postmates/delivery-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -250,7 +251,7 @@ class MessagePageState extends State<MessagePage> {
                       if (formKey.currentState.validate()) {
                         Navigator.of(context, rootNavigator: true).pop('dialog');
                         await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product,
-                            offerController.text, MessageType.offer, isSeller);
+                            fromCustomer.id.toString() + '|' + offerController.text, MessageType.offer, isSeller);
                       } // end if valid verification code
                     },
                   ),
@@ -367,12 +368,15 @@ class MessagePageState extends State<MessagePage> {
     var currency = Currency.create('USD', 2);
     var deliveryQuoteStatus = DeliveryQuoteStatus.none;
     FirebaseDeliveryQuote deliveryQuoteMessage = new FirebaseDeliveryQuote();
+    FirebaseOffer offerMessage = new FirebaseOffer();
 
     if (document['messageType'] == MessageType.deliveryQuote.index) {
       if (document['status'] != null) {
         deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
       }
       deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(document['content']);
+    } else if (document['messageType'] == MessageType.offer.index) {
+      offerMessage = FirebaseHelper.readOfferMessageContent(document['content']);
     } // end if delivery request
 
     if (document['idFrom'] == fromCustomer.id) {
@@ -554,17 +558,28 @@ class MessagePageState extends State<MessagePage> {
                                   children: [
                                     Padding(
                                         padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
-                                        child: isSeller
-                                            ? Text('You have received an offer for \$${document['content']}.',
+                                        child: offerMessage.fromId == fromCustomer.id
+                                            ? Text('You have sent an offer for \$${offerMessage.price}.',
                                                 style: TextStyle(color: Colors.white))
-                                            : Text('You have sent an offer for \$${document['content']}.',
+                                            : Text('You have received an offer for \$${offerMessage.price}.',
                                                 style: TextStyle(color: Colors.white))),
                                     Align(
                                         alignment: Alignment.centerLeft,
                                         child: ButtonBar(
                                           alignment: MainAxisAlignment.start,
-                                          children: isSeller
-                                              ? [
+                                          children: offerMessage.fromId == fromCustomer.id
+                                              ? 
+                                              [
+                                                  FlatButton(
+                                                    color: Colors.black,
+                                                    textColor: Colors.white,
+                                                    onPressed: () async {
+                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
+                                                    },
+                                                    child: const Text('Cancel Offer'),
+                                                  ),
+                                                ] :
+                                              [
                                                   FlatButton(
                                                     color: Colors.black,
                                                     textColor: Colors.white,
@@ -582,16 +597,6 @@ class MessagePageState extends State<MessagePage> {
                                                     child: const Text('Decline Offer'),
                                                   )
                                                 ]
-                                              : [
-                                                  FlatButton(
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                    onPressed: () async {
-                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
-                                                    },
-                                                    child: const Text('Cancel Offer'),
-                                                  ),
-                                                ],
                                         ))
                                   ])),
                           width: 260.0,
@@ -808,16 +813,16 @@ class MessagePageState extends State<MessagePage> {
                                         children: [
                                           Padding(
                                               padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
-                                              child: isSeller
-                                                  ? Text('You have sent an offer for \$${document['content']}.',
+                                              child: offerMessage.fromId == fromCustomer.id
+                                                  ? Text('You have sent an offer for \$${offerMessage.price}.',
                                                       style: TextStyle(color: Colors.white))
-                                                  : Text('You have received an offer for \$${document['content']}.',
+                                                  : Text('You have received an offer for \$${offerMessage.price}.',
                                                       style: TextStyle(color: Colors.white))),
                                           Align(
                                               alignment: Alignment.centerLeft,
                                               child: ButtonBar(
                                                   alignment: MainAxisAlignment.start,
-                                                  children: isSeller
+                                                  children: offerMessage.fromId == fromCustomer.id
                                                       ? [
                                                           FlatButton(
                                                             color: Colors.black,
