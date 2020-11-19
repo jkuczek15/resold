@@ -52,8 +52,13 @@ class Update extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-      // tempory location for vendor images
-      $mediaDir = '/var/www/html/pub/media/ced/csmaketplace/vendor';
+      if(strpos($_SERVER['HTTP_HOST'], 'resold') !== false) {
+        // production
+        $mediaDir = 'ced/csmaketplace/vendor';
+      } else {
+        // local
+        $mediaDir = '/var/www/html/pub/media/ced/csmaketplace/vendor';
+      }// end if host contains resold
 
       // load the seller by the customer ID
       $vendor = $this->vendor->loadByCustomerId(isset($_POST['customerId']) ? $_POST['customerId'] : -1);

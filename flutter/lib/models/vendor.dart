@@ -1,5 +1,4 @@
 class Vendor {
-
   final int id;
   final String name;
   final String about;
@@ -18,5 +17,5 @@ class Vendor {
     } catch (exception) {
       return Vendor();
     }
-  }
+  } // end function fromJson
 }
