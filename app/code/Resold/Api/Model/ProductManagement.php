@@ -276,4 +276,17 @@ class ProductManagement
     $product->save();
     return 1;
   }// end function setDeliveryId
+
+	/**
+	 * {@inheritdoc}
+	 */
+  public function setPrice($productId, $newPrice)
+	{
+    // set the postmates delivery ID on the product
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
+    $product->setPrice($newPrice);
+    $product->save();
+    return 1;
+  }// end function setDeliveryId
 }
