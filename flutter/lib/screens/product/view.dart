@@ -343,7 +343,7 @@ class ProductPageState extends State<ProductPage> {
                                                             customer.id,
                                                             toCustomer.id,
                                                             product,
-                                                            offerController.text,
+                                                            customer.id.toString() + '|' + offerController.text,
                                                             MessageType.offer,
                                                             toId == customer.id,
                                                             firstMessage: true);

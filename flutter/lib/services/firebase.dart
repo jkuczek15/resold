@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
+import 'package:resold/view-models/firebase/firebase-offer.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,7 +52,21 @@ class Firebase {
     } // end if content length > 50
 
     if (messageType == MessageType.offer) {
-      messagePreview = 'Offer has been requested for \$$content.';
+      FirebaseOffer offerMessage = FirebaseHelper.readOfferMessageContent(content);
+
+      if (userMessageType == UserMessageType.seller) {
+        if (toId == offerMessage.fromId) {
+          messagePreview = 'You have sent an offer for \$${offerMessage.price}.';
+        } else {
+          messagePreview = 'You have received an offer for \$${offerMessage.price}.';
+        } // end if customer is sending the offer
+      } else {
+        if (fromId == offerMessage.fromId) {
+          messagePreview = 'You have sent an offer for \$${offerMessage.price}.';
+        } else {
+          messagePreview = 'You have received an offer for \$${offerMessage.price}.';
+        } // end if customer is sending the offer
+      } // end if user message type is seller
     } // end if message type is offer
 
     if (userMessageType == UserMessageType.buyer) {
