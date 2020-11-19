@@ -54,10 +54,7 @@ class Update extends \Magento\Framework\App\Action\Action
     {
       // load the seller by the customer ID
       $vendor = $this->vendor->loadByCustomerId(isset($_POST['customerId']) ? $_POST['customerId'] : -1);
-
-      // tempory location for product images
-      $mediaDir = '/var/www/html/pub/media';
-
+      $newPath = '';
       if($vendor != null && isset($_FILES['profilePicture']) && $_FILES['profilePicture']['name'] != null){
 
         // we have an image
@@ -66,50 +63,12 @@ class Update extends \Magento\Framework\App\Action\Action
         // temp server image path
         $tmpPath = $image['tmp_name'];
 
-        $addExt = true;
-        if($tmpPath == '') {
-          $tmpPath = '/tmp/'.$image['name'];
-          $addExt = false;
-        }// end if we don't have a tmp path
+        // move the uploaded image to the media directory
+        $newPath ='vendor'.$tmpPath; 
 
-        // type of image
-        $type = $image['type'];
-        switch($type){
-          case 'image/jpeg':
-            $extension = 'jpeg';
-            break;
-          case 'image/jpg':
-            $extension = 'jpg';
-            break;
-          case 'image/png':
-            $extension = 'png';
-            break;
-          default:
-            $extension = 'png';
-            break;
-        }// end switch on type
+        move_uploaded_file($tmpPath, $newPath);
 
-        $tmpPathExt = '';
-        if($tmpPath != '' && $addExt) {
-          // temporary path with extension for image
-          $tmpPathExt = $tmpPath.'.'.$extension;
-
-          // new path for the image stored in the media directory
-          $newPath = $mediaDir.$tmpPathExt;
-
-          // move the uploaded image to the media directory
-          move_uploaded_file($tmpPath, $newPath);
-        } else {
-          // new path for the image stored in the media directory
-          $newPath = $mediaDir.$tmpPath;
-
-          // in this case extension is already set
-          $tmpPathExt = $tmpPath;
-
-          // move the uploaded image to the media directory
-          move_uploaded_file($tmpPath, $newPath);
-        }// end if valid tmp path
-
+        // save the vendor profile picture
         $vendor->addData([
           'profile_picture' => $newPath
         ]);
