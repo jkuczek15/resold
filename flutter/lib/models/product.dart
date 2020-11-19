@@ -3,7 +3,7 @@ class Product {
   final String sku;
   final String name;
   String titleDescription;
-  final String price;
+  String price;
   final String image;
   final String smallImage;
   final String thumbnail;

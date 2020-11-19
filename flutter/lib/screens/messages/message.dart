@@ -190,21 +190,7 @@ class MessagePageState extends State<MessagePage> {
                 builder: (context) => ProductPage(product, fromCustomer, currentLocation, fromMessagePage: true)));
         break;
       case 'Request Delivery':
-        // get a Postmates delivery quote
-        DeliveryQuoteResponse response = await getDeliveryQuote();
-
-        // prepare message content for delivery request
-        String content = response.id +
-            '|' +
-            response.fee.toString() +
-            '|' +
-            response.pickup_duration.toString() +
-            '|' +
-            response.duration.toString();
-
-        // send a Firebase message
-        await Firebase.sendProductMessage(
-            chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
+        await requestDelivery();
         break;
       case 'Send Offer':
         await showDialog<void>(
@@ -271,6 +257,24 @@ class MessagePageState extends State<MessagePage> {
         break;
     } // end switch on menu click
   } // end function handleMenuClick
+
+  Future requestDelivery() async {
+    // get a Postmates delivery quote
+    DeliveryQuoteResponse response = await getDeliveryQuote();
+
+    // prepare message content for delivery request
+    String content = response.id +
+        '|' +
+        response.fee.toString() +
+        '|' +
+        response.pickup_duration.toString() +
+        '|' +
+        response.duration.toString();
+
+    // send a Firebase message
+    await Firebase.sendProductMessage(
+        chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
+  } // end function requestDelivery
 
   Future getImage() async {
     pickedImage = await picker.getImage(source: ImageSource.camera);
@@ -566,38 +570,59 @@ class MessagePageState extends State<MessagePage> {
                                     Align(
                                         alignment: Alignment.centerLeft,
                                         child: ButtonBar(
-                                          alignment: MainAxisAlignment.start,
-                                          children: offerMessage.fromId == fromCustomer.id
-                                              ? 
-                                              [
-                                                  FlatButton(
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                    onPressed: () async {
-                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
-                                                    },
-                                                    child: const Text('Cancel Offer'),
-                                                  ),
-                                                ] :
-                                              [
-                                                  FlatButton(
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                    onPressed: () async {
-                                                      // todo: change the price and create a delivery
-                                                    },
-                                                    child: const Text('Accept Offer'),
-                                                  ),
-                                                  FlatButton(
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                    onPressed: () async {
-                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
-                                                    },
-                                                    child: const Text('Decline Offer'),
-                                                  )
-                                                ]
-                                        ))
+                                            alignment: MainAxisAlignment.start,
+                                            children: offerMessage.fromId == fromCustomer.id
+                                                ? [
+                                                    FlatButton(
+                                                      color: Colors.black,
+                                                      textColor: Colors.white,
+                                                      onPressed: () async {
+                                                        await Firebase.deleteProductMessage(
+                                                            chatId, document.documentID);
+                                                      },
+                                                      child: const Text('Cancel Offer'),
+                                                    ),
+                                                  ]
+                                                : [
+                                                    FlatButton(
+                                                      color: Colors.black,
+                                                      textColor: Colors.white,
+                                                      onPressed: () async {
+                                                        // show loading dialog
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (BuildContext context) {
+                                                              return Center(child: Loading());
+                                                            });
+
+                                                        // set the new price
+                                                        await ResoldRest.setPrice(
+                                                            fromCustomer.token, product.id, offerMessage.price);
+
+                                                        product.price = offerMessage.price.toString();
+
+                                                        // delete the offer message
+                                                        await Firebase.deleteProductMessage(
+                                                            chatId, document.documentID);
+
+                                                        // create a delivery message
+                                                        await requestDelivery();
+
+                                                        // close loading dialog
+                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                      },
+                                                      child: const Text('Accept Offer'),
+                                                    ),
+                                                    FlatButton(
+                                                      color: Colors.black,
+                                                      textColor: Colors.white,
+                                                      onPressed: () async {
+                                                        await Firebase.deleteProductMessage(
+                                                            chatId, document.documentID);
+                                                      },
+                                                      child: const Text('Decline Offer'),
+                                                    )
+                                                  ]))
                                   ])),
                           width: 260.0,
                           margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
@@ -839,7 +864,28 @@ class MessagePageState extends State<MessagePage> {
                                                             color: Colors.black,
                                                             textColor: Colors.white,
                                                             onPressed: () async {
-                                                              // todo: change the price and create a delivery
+                                                              // show loading dialog
+                                                              showDialog(
+                                                                  context: context,
+                                                                  builder: (BuildContext context) {
+                                                                    return Center(child: Loading());
+                                                                  });
+
+                                                              // set the new price
+                                                              await ResoldRest.setPrice(
+                                                                  fromCustomer.token, product.id, offerMessage.price);
+
+                                                              product.price = offerMessage.price.toString();
+
+                                                              // delete the offer message
+                                                              await Firebase.deleteProductMessage(
+                                                                  chatId, document.documentID);
+
+                                                              // create a delivery message
+                                                              await requestDelivery();
+
+                                                              // close loading dialog
+                                                              Navigator.of(context, rootNavigator: true).pop('dialog');
                                                             },
                                                             child: const Text('Accept Offer'),
                                                           ),

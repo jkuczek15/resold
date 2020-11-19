@@ -106,10 +106,22 @@ class ResoldRest {
    */
   static Future setDeliveryId(String token, int productId, String deliveryId) async {
     await config.initialized;
-
     FormData formData = new FormData.fromMap({'productId': productId, 'deliveryId': deliveryId});
     dio.options.headers['Authorization'] = 'Bearer $token';
     await dio.post('${config.baseUrl}/product/delivery', data: formData);
+  } // end function setDeliveryId
+
+  /*
+   * setPrice - Set the product's price
+   * token - Customer identification token
+   * productId - ID of the product to be delivered
+   * newPrice - New price to be set from the offer
+   */
+  static Future setPrice(String token, int productId, int newPrice) async {
+    await config.initialized;
+    FormData formData = new FormData.fromMap({'productId': productId, 'newPrice': newPrice});
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    await dio.post('${config.baseUrl}/product/offer', data: formData);
   } // end function setDeliveryId
 
 } // end class Resold

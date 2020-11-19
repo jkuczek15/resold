@@ -50,4 +50,13 @@ interface ProductManagementInterface
 	 * @return int
 	 */
 	public function setDelivery($productId, $deliveryId);
+
+	/**
+	 * Set price
+	 *
+	 * @param int $productId
+ 	 * @param string $newPrice
+	 * @return int
+	 */
+	public function setPrice($productId, $newPrice);
 }
