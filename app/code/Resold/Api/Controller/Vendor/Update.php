@@ -18,6 +18,7 @@ namespace Resold\Api\Controller\Vendor;
 use \Magento\Framework\App\Action\Context;
 use \Magento\Framework\Controller\Result\JsonFactory;
 use \Ced\CsMarketplace\Model\Vendor;
+use \Thai\S3\Model\MediaStorage\File\Storage\S3;
 
 class Update extends \Magento\Framework\App\Action\Action
 {
@@ -37,10 +38,12 @@ class Update extends \Magento\Framework\App\Action\Action
      public function __construct(
         Context $context,
         Vendor $vendor,
+        S3 $storage,
         JsonFactory $resultJsonFactory
     )
     {
         $this->vendor = $vendor;
+        $this->storage = $storage;
         $this->resultJsonFactory = $resultJsonFactory;
         parent::__construct($context);
     }
@@ -52,13 +55,8 @@ class Update extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-      if(strpos($_SERVER['HTTP_HOST'], 'resold') !== false) {
-        // production
-        $mediaDir = 'ced/csmaketplace/vendor';
-      } else {
-        // local
-        $mediaDir = '/var/www/html/pub/media/ced/csmaketplace/vendor';
-      }// end if host contains resold
+      $vendorDir = 'ced/csmaketplace/vendor'; 
+      $mediaDir = '/var/www/html/pub/media/';
 
       // load the seller by the customer ID
       $vendor = $this->vendor->loadByCustomerId(isset($_POST['customerId']) ? $_POST['customerId'] : -1);
@@ -91,22 +89,24 @@ class Update extends \Magento\Framework\App\Action\Action
         $tmpPathExt = 'profile_picture'.$vendor->getId().'.'.$extension;
 
         // new path for the image stored in the media directory
-        $newPath = $mediaDir.'/'.$tmpPathExt;
+        $s3Path = $vendorDir.'/'.$tmpPathExt;
+        $newPath = $mediaDir.$s3Path;
 
         // move the uploaded image to the media directory
         move_uploaded_file($tmpPath, $newPath);
 
+        // save the uploaded photo to S3
+        $this->storage->saveFile($s3Path);
+
         // save the vendor profile picture
         $vendor->addData([
-          'profile_picture' => $newPath
+          'profile_picture' => $s3Path
         ]);
 
-        // todo: not the correct way to save the image, Magento somehow saves to S3
-        // todo: check Thai S3 namespace and save picture to S3 prior to setting the path
         $vendor->save();
       }// end if we have an image
 
-      // on success, redirect user to their listing page
-      return $this->resultJsonFactory->create()->setData(['success' => 'Y', 'path' => $tmpPathExt]);
+      // on success, return s3 image path
+      return $this->resultJsonFactory->create()->setData(['success' => 'Y', 'path' => $s3Path]);
     }// end function execute
 }
