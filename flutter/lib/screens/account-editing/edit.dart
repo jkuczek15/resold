@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/vendor.dart';
@@ -46,7 +47,7 @@ class EditProPageState extends State<EditProPage> {
 
   File _image;
   final picker = ImagePicker();
-  bool isNewProPic = true;
+  String imagePath;
 
   EditProPageState(CustomerResponse customer) : customer = customer;
 
@@ -98,7 +99,7 @@ class EditProPageState extends State<EditProPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var vendor = snapshot.data[0];
-
+            imagePath = baseImagePath + '/' + vendor.profilePicture + '?d=' + DateTime.now().millisecond.toString();
             return Scaffold(
                 appBar: AppBar(
                   title: Row(
@@ -145,7 +146,7 @@ class EditProPageState extends State<EditProPage> {
                                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                                     child: CircleAvatar(
                                       backgroundImage: vendor.profilePicture != 'null'
-                                          ? CachedNetworkImageProvider(baseImagePath + '/' + vendor.profilePicture)
+                                          ? NetworkImage(imagePath)
                                           : AssetImage('assets/images/avatar-placeholder.png'),
                                     ),
                                   )),
@@ -448,22 +449,29 @@ class EditProPageState extends State<EditProPage> {
                   height: 115,
                   width: 115,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(_image.path),
-                    ),
-                  )),
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Container(
+                              height: 115,
+                              width: 115,
+                              child: FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CircleAvatar(backgroundImage: ResizeImage(FileImage(_image), height: 115)),
+                                  )))))),
             ])),
             actions: <Widget>[
               FlatButton(
                   child: Text('Change Picture', style: TextStyle(color: ResoldBlue)),
                   onPressed: () async {
                     if (_image != null) {
-                      setState(() {
-                        isNewProPic = true;
-                      });
-                      //TODO: Change picture
                       await Resold.updateVendor(customer.token, customer.id, _image.path);
+                      setState(() {
+                        imageCache.clear();
+                        imagePath = imagePath + '?d=' + DateTime.now().millisecond.toString();
+                      });
                       Navigator.of(context).pop();
                     }
                   }),

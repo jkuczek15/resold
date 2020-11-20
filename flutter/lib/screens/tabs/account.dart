@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/builders/product-list-builder.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -30,6 +31,7 @@ class AccountPageState extends State<AccountPage> {
   final CustomerResponse customer;
   bool displayForSale = true;
   Position currentLocation;
+  String imagePath;
 
   AccountPageState(CustomerResponse customer) : customer = customer;
 
@@ -57,6 +59,7 @@ class AccountPageState extends State<AccountPage> {
             var vendor = snapshot.data[0];
             var forSaleProducts = snapshot.data[1];
             var soldProducts = snapshot.data[2];
+            imagePath = baseImagePath + '/' + vendor.profilePicture + '?d=' + DateTime.now().millisecond.toString();
 
             return SingleChildScrollView(
                 child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
@@ -74,7 +77,7 @@ class AccountPageState extends State<AccountPage> {
                               padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                               child: CircleAvatar(
                                 backgroundImage: vendor.profilePicture != 'null'
-                                    ? CachedNetworkImageProvider(baseImagePath + '/' + vendor.profilePicture)
+                                    ? NetworkImage(imagePath)
                                     : AssetImage('assets/images/avatar-placeholder.png'),
                               ))),
                       Padding(
@@ -167,7 +170,13 @@ class AccountPageState extends State<AccountPage> {
                                 return Center(child: Loading());
                               });
                           Navigator.of(context, rootNavigator: true).pop('dialog');
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProPage(customer)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditProPage(customer)))
+                              .then((value) => {
+                                    setState(() {
+                                      imageCache.clear();
+                                      imagePath = imagePath + '?d=' + DateTime.now().millisecond.toString();
+                                    })
+                                  });
                         },
                         child: Text('Edit Profile',
                             style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white)),
