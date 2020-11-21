@@ -145,7 +145,7 @@ class HomePageState extends State<HomePage> {
       case 3:
         return OrdersPage(customer.id, customer.token);
       case 4:
-        return AccountPage(customer.vendorId);
+        return AccountPage();
       default:
         return Text('Unknown tab');
     } // end switch on selected tab
