@@ -368,12 +368,30 @@ class Magento {
       headers: config.adminHeaders,
     );
 
-    var responseJson = jsonDecode(response.body.toString());
+    if (response.statusCode == 200) {
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
+    }
+  } // end function deleteCustomer
+
+  /*
+  * deleteProduct - deletes a product using Magento service
+  * productSku - SKU of the product
+  */
+  static Future<bool> deleteProduct(String productSku) async {
+    await config.initialized;
+
+    final response = await client.delete(
+      '${config.baseUrl}/products/$productSku',
+      headers: config.adminHeaders,
+    );
+
+    // var responseJson = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
       return Future<bool>.value(true);
     } else {
-      print(responseJson);
       return Future<bool>.value(false);
     }
   } // end function deleteCustomer

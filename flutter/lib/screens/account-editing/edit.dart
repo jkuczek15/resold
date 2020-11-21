@@ -610,7 +610,7 @@ class EditProPageState extends State<EditProPage> {
                     if (deleteKey.currentState.validate()) {
                       Future<bool> complete = Magento.deleteCustomer(customer.id);
                       if (await complete) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
                         return showDialog<void>(
                             context: context,
                             barrierDismissible: false,
@@ -623,7 +623,8 @@ class EditProPageState extends State<EditProPage> {
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+                                      Navigator.pushReplacement(
+                                          context, MaterialPageRoute(builder: (context) => LandingPage()));
                                     })
                               ]);
                             });

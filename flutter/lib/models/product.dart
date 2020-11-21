@@ -73,6 +73,10 @@ class Product {
         product.deliveryId = doc['delivery_id'];
       }
 
+      if (doc['vendor_id'] != null) {
+        product.vendorId = doc['vendor_id'];
+      }
+
       return product;
     } catch (exception) {
       return Product();
@@ -114,6 +118,10 @@ class Product {
         product.deliveryId = doc['delivery_id'];
       }
 
+      if (doc['vendor_id'] != null) {
+        product.vendorId = doc['vendor_id'];
+      }
+
       return product;
     } catch (exception) {
       return Product();
@@ -138,7 +146,8 @@ class Product {
         'longitude': this.longitude,
         'item_size': this.itemSize,
         'charge_id': this.chargeId,
-        'delivery_id': this.deliveryId
+        'delivery_id': this.deliveryId,
+        'vendor_id': this.vendorId
       };
     } catch (exception) {
       return {};

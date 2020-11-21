@@ -164,7 +164,6 @@ class ProductManagement
     $vendorModel = $this->vendor->create();
     $vendor = $vendorModel->loadByCustomerId($customerId);
     $vendorId = $vendor->getId();
-    $this->session->setVendorId($vendorId);
 
     $standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
     $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
@@ -249,6 +248,7 @@ class ProductManagement
       $chargeId = $product->getCustomAttribute('charge_id');
       $deliveryId = $product->getCustomAttribute('delivery_id');
       $categoryIds = $product->getCategoryIds();
+      $vendorId = $this->vendorProducts->getVendorIdByProduct($product->getId());
 
       return [[
         'id' => $product->getId(),
@@ -266,6 +266,7 @@ class ProductManagement
         'longitude' => $longitude ? $longitude->getValue() : null,
         'charge_id' => $chargeId ? $chargeId->getValue() : null,
         'delivery_id' => $deliveryId ? $deliveryId->getValue() : null,
+        'vendor_id' => $vendorId
       ]];
     }// end foreach over products
     return [['error' => 'Could not find product.']];
