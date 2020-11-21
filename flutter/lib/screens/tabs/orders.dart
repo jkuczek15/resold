@@ -2,157 +2,172 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/screens/order/details.dart';
 import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:intl/intl.dart';
 
 class OrdersPage extends StatefulWidget {
-  final CustomerResponse customer;
+  final int customerId;
+  final String customerToken;
 
-  OrdersPage(customer, {Key key})
-      : customer = customer,
+  OrdersPage(int customerId, String customerToken, {Key key})
+      : customerId = customerId,
+        customerToken = customerToken,
         super(key: key);
 
   @override
-  OrdersPageState createState() => OrdersPageState(customer);
+  OrdersPageState createState() => OrdersPageState(customerId, customerToken);
 }
 
 class OrdersPageState extends State<OrdersPage> {
   Future<List<Order>> futurePurchasedOrders;
   Future<List<Order>> futureSoldOrders;
-  final CustomerResponse customer;
+  final int customerId;
+  final String customerToken;
 
-  OrdersPageState(CustomerResponse customer) : customer = customer;
+  OrdersPageState(this.customerId, this.customerToken);
 
   @override
   void initState() {
     super.initState();
-    futurePurchasedOrders = Magento.getPurchasedOrders(customer.id);
-    futureSoldOrders = ResoldRest.getVendorOrders(customer.token);
+    futurePurchasedOrders = Magento.getPurchasedOrders(customerId);
+    futureSoldOrders = ResoldRest.getVendorOrders(customerToken);
   }
 
   @override
   Widget build(BuildContext context) {
     var formatter = new NumberFormat("\$###,###", "en_US");
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.white,
-            toolbarHeight: 74,
-            bottom: TabBar(
-              indicatorColor: ResoldBlue,
-              tabs: [
-                Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
-                Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
-              ],
-            )),
-        body: TabBarView(
-          children: [
-            FutureBuilder<List<Order>>(
-              future: futurePurchasedOrders,
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data.length > 0) {
-                  return ListView(
-                      padding: const EdgeInsets.all(8),
-                      children: List.generate(
-                        snapshot.data.length,
-                        (index) {
-                          Order order = snapshot.data[index];
-                          OrderLine line = order.items[0];
-                          return InkWell(
-                              onTap: () async {
-                                // show a loading indicator
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Center(child: Loading());
-                                    });
+    return ViewModelSubscriber<AppState, CustomerResponse>(
+        converter: (state) => state.customer,
+        builder: (context, dispatcher, customer) {
+          return DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  toolbarHeight: 74,
+                  bottom: TabBar(
+                    indicatorColor: ResoldBlue,
+                    tabs: [
+                      Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
+                      Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
+                    ],
+                  )),
+              body: TabBarView(
+                children: [
+                  FutureBuilder<List<Order>>(
+                    future: futurePurchasedOrders,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data.length > 0) {
+                        return ListView(
+                            padding: const EdgeInsets.all(8),
+                            children: List.generate(
+                              snapshot.data.length,
+                              (index) {
+                                Order order = snapshot.data[index];
+                                OrderLine line = order.items[0];
+                                return InkWell(
+                                    onTap: () async {
+                                      // show a loading indicator
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Center(child: Loading());
+                                          });
 
-                                // fetch the product
-                                Product product = await ResoldRest.getProduct(customer.token, line.productId);
+                                      // fetch the product
+                                      Product product = await ResoldRest.getProduct(customer.token, line.productId);
 
-                                Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      Navigator.of(context, rootNavigator: true).pop('dialog');
 
-                                // navigate to order details page
-                                Navigator.push(
-                                    context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product, isSeller: false)));
+                                      // navigate to order details page
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrderDetails(customer, order, product, isSeller: false)));
+                                    },
+                                    child: Card(
+                                        child: ListTile(
+                                            trailing: Text(formatter.format(line.price.round())),
+                                            title: Container(
+                                              height: 50,
+                                              child: Row(
+                                                children: [Text(line.name)],
+                                              ),
+                                            ))));
                               },
-                              child: Card(
-                                  child: ListTile(
-                                      trailing: Text(formatter.format(line.price.round())),
-                                      title: Container(
-                                        height: 50,
-                                        child: Row(
-                                          children: [Text(line.name)],
-                                        ),
-                                      ))));
-                        },
-                      ));
-                } else if (snapshot.hasData && snapshot.data.length == 0) {
-                  return Center(child: Text('You have not purchased any items.'));
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                // By default, show a loading spinner.
-                return Center(child: Loading());
-              },
+                            ));
+                      } else if (snapshot.hasData && snapshot.data.length == 0) {
+                        return Center(child: Text('You have not purchased any items.'));
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      // By default, show a loading spinner.
+                      return Center(child: Loading());
+                    },
+                  ),
+                  FutureBuilder<List<Order>>(
+                    future: futureSoldOrders,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data.length > 0) {
+                        return ListView(
+                            padding: const EdgeInsets.all(8),
+                            children: List.generate(snapshot.data.length, (index) {
+                              Order order = snapshot.data[index];
+                              OrderLine line = order.items[0];
+                              return InkWell(
+                                  onTap: () async {
+                                    // show a loading indicator
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Center(child: Loading());
+                                        });
+
+                                    // fetch the product
+                                    Product product = await ResoldRest.getProduct(customer.token, line.productId);
+
+                                    Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                                    // navigate
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderDetails(customer, order, product, isSeller: true)));
+                                  },
+                                  child: Card(
+                                      child: ListTile(
+                                          trailing: Text(formatter.format(line.price.round())),
+                                          title: Container(
+                                            height: 50,
+                                            child: Row(
+                                              children: [Text(line.name)],
+                                            ),
+                                          ))));
+                            }));
+                      } else if (snapshot.hasData && snapshot.data.length == 0) {
+                        return Center(child: Text('You have not sold any items.'));
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      // By default, show a loading spinner.
+                      return Center(child: Loading());
+                    },
+                  )
+                ],
+              ),
             ),
-            FutureBuilder<List<Order>>(
-              future: futureSoldOrders,
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data.length > 0) {
-                  return ListView(
-                      padding: const EdgeInsets.all(8),
-                      children: List.generate(snapshot.data.length, (index) {
-                        Order order = snapshot.data[index];
-                        OrderLine line = order.items[0];
-                        return InkWell(
-                            onTap: () async {
-                              // show a loading indicator
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Center(child: Loading());
-                                  });
-
-                              // fetch the product
-                              Product product = await ResoldRest.getProduct(customer.token, line.productId);
-
-                              Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                              // navigate
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => OrderDetails(customer, order, product, isSeller: true)));
-                            },
-                            child: Card(
-                                child: ListTile(
-                                    trailing: Text(formatter.format(line.price.round())),
-                                    title: Container(
-                                      height: 50,
-                                      child: Row(
-                                        children: [Text(line.name)],
-                                      ),
-                                    ))));
-                      }));
-                } else if (snapshot.hasData && snapshot.data.length == 0) {
-                  return Center(child: Text('You have not sold any items.'));
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                // By default, show a loading spinner.
-                return Center(child: Loading());
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
+          );
+        });
+  } // end function build
 }

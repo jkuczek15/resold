@@ -34,7 +34,8 @@ class Magento {
     await config.initialized;
 
     final response = await client.post('${config.baseUrl}/integration/customer/token',
-        headers: config.adminHeaders, body: jsonEncode(<String, String>{'username': request.username, 'password': request.password}));
+        headers: config.adminHeaders,
+        body: jsonEncode(<String, String>{'username': request.username, 'password': request.password}));
 
     if (response.statusCode == 200) {
       // login success
@@ -62,7 +63,8 @@ class Magento {
   * createCustomer - Creates a customer using Magento service
   * request - CustomerRequest object with information to create a customer
   */
-  static Future<CustomerResponse> createCustomer(CustomerRequest request, String password, String confirmPassword) async {
+  static Future<CustomerResponse> createCustomer(
+      CustomerRequest request, String password, String confirmPassword) async {
     if (request.firstname.isEmpty || request.lastname.isEmpty) {
       return CustomerResponse(statusCode: 400, error: 'Please enter both a first name and last name.');
     }
@@ -90,6 +92,64 @@ class Magento {
       return CustomerResponse(statusCode: response.statusCode, error: responseJson['message']);
     }
   } // end function createCustomer
+
+  /*
+  * updateCustomer - Creates a customer using Magento service
+  * customerId - Customer Id
+  * customer - Customer request object
+  * existingPassword - Existing customer password
+  */
+  static Future<bool> updateCustomer(
+      String token, int customerId, CustomerRequest customer, String existingPassword) async {
+    await config.initialized;
+
+    config.customerHeaders['Authorization'] = 'Bearer $token';
+
+    var requestJson = jsonEncode(<String, dynamic>{
+      'customer': {
+        'id': customerId,
+        'firstname': customer.firstname,
+        'lastname': customer.lastname,
+        'email': customer.email,
+        'website_id': 1
+      },
+      'password': existingPassword
+    });
+
+    final response =
+        await client.put('${config.baseUrl}/customers/$customerId', headers: config.adminHeaders, body: requestJson);
+
+    if (response.statusCode == 200) {
+      // success
+      return true;
+    } else {
+      // error
+      return false;
+    }
+  } // end function updateCustomer
+
+  /*
+  * updatePassword - Update the customer's password
+  * customer - CustomerRequest object with information to create a customer
+  */
+  static Future<bool> updatePassword(String token, String existingPassword, String newPassword) async {
+    await config.initialized;
+
+    config.customerHeaders['Authorization'] = 'Bearer $token';
+
+    var requestJson = jsonEncode(<String, dynamic>{'currentPassword': existingPassword, 'newPassword': newPassword});
+
+    final response =
+        await client.put('${config.baseUrl}/customers/me/password', headers: config.adminHeaders, body: requestJson);
+
+    if (response.statusCode == 200) {
+      // password changed
+      return true;
+    } else {
+      // password change failed
+      return false;
+    }
+  } // end function updatePassword
 
   /*
   * getMe - Return information about the currently signed in customer
@@ -140,7 +200,8 @@ class Magento {
   * stripeToken - Stripe payment token
   * deliveryFee - Delivery fee
   */
-  static Future<int> createOrder(String token, CustomerAddress shippingAddress, Product product, Token stripeToken, Money deliveryFee) async {
+  static Future<int> createOrder(
+      String token, CustomerAddress shippingAddress, Product product, Token stripeToken, Money deliveryFee) async {
     await config.initialized;
 
     config.customerHeaders['Authorization'] = 'Bearer $token';
@@ -158,7 +219,8 @@ class Magento {
       });
 
       // add the product to the cart
-      response = await client.post('${config.baseUrl}/carts/mine/items', headers: config.customerHeaders, body: requestJson);
+      response =
+          await client.post('${config.baseUrl}/carts/mine/items', headers: config.customerHeaders, body: requestJson);
 
       // setup shipping estimate request
       var address = shippingAddress.toJson();
@@ -172,7 +234,8 @@ class Magento {
       requestJson = jsonEncode(<String, dynamic>{'address': address});
 
       // estimate shipping methods
-      response = await client.post('${config.baseUrl}/carts/mine/estimate-shipping-methods', headers: config.customerHeaders, body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/estimate-shipping-methods',
+          headers: config.customerHeaders, body: requestJson);
 
       responseText = response.body.toString();
 
@@ -187,7 +250,8 @@ class Magento {
       });
 
       // set shipping information
-      response = await client.post('${config.baseUrl}/carts/mine/shipping-information', headers: config.customerHeaders, body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/shipping-information',
+          headers: config.customerHeaders, body: requestJson);
 
       // setup payment information request
       requestJson = jsonEncode(<String, dynamic>{
@@ -200,7 +264,8 @@ class Magento {
       });
 
       // set payment information and create order
-      response = await client.post('${config.baseUrl}/carts/mine/payment-information', headers: config.customerHeaders, body: requestJson);
+      response = await client.post('${config.baseUrl}/carts/mine/payment-information',
+          headers: config.customerHeaders, body: requestJson);
 
       responseText = response.body.toString();
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/helpers/firebase-helper.dart';
@@ -12,6 +13,7 @@ import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
@@ -36,26 +38,24 @@ import 'dart:io';
 
 class MessagePage extends StatefulWidget {
   final Product product;
-  final CustomerResponse fromCustomer;
   final CustomerResponse toCustomer;
   final String chatId;
   final UserMessageType type;
 
-  MessagePage(fromCustomer, toCustomer, product, chatId, type, {Key key})
-      : fromCustomer = fromCustomer,
-        toCustomer = toCustomer,
+  MessagePage(toCustomer, product, chatId, type, {Key key})
+      : toCustomer = toCustomer,
         product = product,
         chatId = chatId,
         type = type,
         super(key: key);
 
   @override
-  MessagePageState createState() => MessagePageState(fromCustomer, toCustomer, product, chatId, type);
+  MessagePageState createState() => MessagePageState(toCustomer, product, chatId, type);
 }
 
 class MessagePageState extends State<MessagePage> {
-  final CustomerResponse fromCustomer;
   final CustomerResponse toCustomer;
+  CustomerResponse fromCustomer;
   final Product product;
   final UserMessageType type;
 
@@ -75,10 +75,8 @@ class MessagePageState extends State<MessagePage> {
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
 
-  MessagePageState(
-      CustomerResponse fromCustomer, CustomerResponse toCustomer, Product product, String chatId, UserMessageType type)
-      : fromCustomer = fromCustomer,
-        toCustomer = toCustomer,
+  MessagePageState(CustomerResponse toCustomer, Product product, String chatId, UserMessageType type)
+      : toCustomer = toCustomer,
         product = product,
         chatId = chatId,
         type = type;
@@ -88,10 +86,6 @@ class MessagePageState extends State<MessagePage> {
     super.initState();
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
-
-    // determine if this is the seller
-    var chatIdParts = this.chatId.split('-');
-    isSeller = fromCustomer.id.toString() != chatIdParts[0];
 
     Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
       if (this.mounted) {
@@ -104,38 +98,49 @@ class MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                      width: 250,
-                      child: Text(product.name,
-                          overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
-            ],
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          backgroundColor: ResoldBlue,
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: handleMenuClick,
-              itemBuilder: (BuildContext context) {
-                return {'View Details', 'Send Offer', 'Request Delivery'}.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
-            ),
-          ],
-        ),
-        body: getContent());
+    return ViewModelSubscriber<AppState, CustomerResponse>(
+        converter: (state) => state.customer,
+        builder: (context, dispatcher, customer) {
+          // update from customer from app state
+          fromCustomer = customer;
+
+          // determine if this is the seller
+          var chatIdParts = this.chatId.split('-');
+          isSeller = fromCustomer.id.toString() != chatIdParts[0];
+
+          return Scaffold(
+              appBar: AppBar(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                            width: 250,
+                            child: Text(product.name,
+                                overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
+                  ],
+                ),
+                iconTheme: IconThemeData(
+                  color: Colors.white, //change your color here
+                ),
+                backgroundColor: ResoldBlue,
+                actions: <Widget>[
+                  PopupMenuButton<String>(
+                    onSelected: handleMenuClick,
+                    itemBuilder: (BuildContext context) {
+                      return {'View Details', 'Send Offer', 'Request Delivery'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ],
+              ),
+              body: getContent());
+        });
   } // end function build
 
   Widget getContent() {
@@ -184,10 +189,8 @@ class MessagePageState extends State<MessagePage> {
   void handleMenuClick(String value) async {
     switch (value) {
       case 'View Details':
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProductPage(product, fromCustomer, currentLocation, fromMessagePage: true)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation, fromMessagePage: true)));
         break;
       case 'Request Delivery':
         await requestDelivery();

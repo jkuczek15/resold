@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/screens/tabs/map.dart';
 import 'package:resold/screens/tabs/sell.dart';
@@ -7,37 +8,36 @@ import 'package:resold/screens/tabs/orders.dart';
 import 'package:resold/screens/tabs/search.dart';
 import 'package:resold/screens/messages/inbox.dart';
 import 'package:resold/services/firebase.dart';
+import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class Home extends StatelessWidget {
-  final CustomerResponse customer;
-
-  Home(CustomerResponse customer) : customer = customer;
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Resold',
-        theme: ThemeData(
-          primarySwatch: const MaterialColor(0xff41b8ea, {
-            50: Color.fromRGBO(25, 72, 92, .1),
-            100: Color.fromRGBO(25, 72, 92, .2),
-            200: Color.fromRGBO(25, 72, 92, .3),
-            300: Color.fromRGBO(25, 72, 92, .4),
-            400: Color.fromRGBO(25, 72, 92, .5),
-            500: Color.fromRGBO(25, 72, 92, .6),
-            600: Color.fromRGBO(25, 72, 92, .7),
-            700: Color.fromRGBO(25, 72, 92, .8),
-            800: Color.fromRGBO(25, 72, 92, .9),
-            900: Color.fromRGBO(25, 72, 92, 1)
-          }),
-          brightness: Brightness.light,
-          accentColor: Colors.white,
-          primaryColor: ResoldBlue,
-          splashColor: ResoldBlue,
-        ),
-        home: HomePage(customer));
+    return ViewModelSubscriber<AppState, CustomerResponse>(
+        converter: (state) => state.customer,
+        builder: (context, dispatcher, customer) => MaterialApp(
+            title: 'Resold',
+            theme: ThemeData(
+              primarySwatch: const MaterialColor(0xff41b8ea, {
+                50: Color.fromRGBO(25, 72, 92, .1),
+                100: Color.fromRGBO(25, 72, 92, .2),
+                200: Color.fromRGBO(25, 72, 92, .3),
+                300: Color.fromRGBO(25, 72, 92, .4),
+                400: Color.fromRGBO(25, 72, 92, .5),
+                500: Color.fromRGBO(25, 72, 92, .6),
+                600: Color.fromRGBO(25, 72, 92, .7),
+                700: Color.fromRGBO(25, 72, 92, .8),
+                800: Color.fromRGBO(25, 72, 92, .9),
+                900: Color.fromRGBO(25, 72, 92, 1)
+              }),
+              brightness: Brightness.light,
+              accentColor: Colors.white,
+              primaryColor: ResoldBlue,
+              splashColor: ResoldBlue,
+            ),
+            home: HomePage(customer)));
   } // end function build
 } // end class Home
 
@@ -135,15 +135,15 @@ class HomePageState extends State<HomePage> {
   Widget getContent(BuildContext context) {
     switch (selectedTab) {
       case 0:
-        return SearchPage(customer);
+        return SearchPage();
       case 1:
-        return MapPage(customer);
+        return MapPage();
       case 2:
-        return SellPage(customer);
+        return SellPage();
       case 3:
-        return OrdersPage(customer);
+        return OrdersPage(customer.id, customer.token);
       case 4:
-        return AccountPage(customer);
+        return AccountPage(customer.vendorId);
       default:
         return Text('Unknown tab');
     } // end switch on selected tab
