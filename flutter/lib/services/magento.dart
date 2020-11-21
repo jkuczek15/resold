@@ -387,8 +387,6 @@ class Magento {
       headers: config.adminHeaders,
     );
 
-    // var responseJson = jsonDecode(response.body.toString());
-
     if (response.statusCode == 200) {
       return Future<bool>.value(true);
     } else {

@@ -6,7 +6,7 @@ class CustomerReducer extends SimpleBloc<AppState> {
   @override
   AppState reducer(AppState state, Action action) {
     if (action is UpdateCustomerAction) {
-      return AppState(action.newCustomer);
+      return AppState(action.newCustomer, state.vendor, state.forSaleProducts, state.soldProducts);
     }
     return state;
   }
