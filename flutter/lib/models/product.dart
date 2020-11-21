@@ -16,6 +16,7 @@ class Product {
   double longitude;
   List<int> categoryIds;
   int itemSize;
+  int vendorId;
 
   Product(
       {this.id,
@@ -34,7 +35,8 @@ class Product {
       this.categoryIds,
       this.chargeId,
       this.deliveryId,
-      this.itemSize});
+      this.itemSize,
+      this.vendorId});
 
   factory Product.fromDoc(Map<dynamic, dynamic> doc) {
     try {
@@ -61,6 +63,14 @@ class Product {
 
       if (doc['item_size'] != null) {
         product.itemSize = doc['item_size'];
+      }
+
+      if (doc['charge_id'] != null) {
+        product.chargeId = doc['charge_id'];
+      }
+
+      if (doc['delivery_id'] != null) {
+        product.deliveryId = doc['delivery_id'];
       }
 
       return product;
@@ -118,15 +128,17 @@ class Product {
         'name': this.name,
         'price': this.price,
         'image': this.image,
-        'smallImage': this.smallImage,
+        'small_image': this.smallImage,
         'thumbnail': this.thumbnail,
         'description': this.description,
-        'titleDescription': this.titleDescription,
+        'title_description': this.titleDescription,
         'condition': this.condition,
-        'localGlobal': this.localGlobal,
+        'local_global': this.localGlobal,
         'latitude': this.latitude,
         'longitude': this.longitude,
-        'itemSize': this.itemSize
+        'item_size': this.itemSize,
+        'charge_id': this.chargeId,
+        'delivery_id': this.deliveryId
       };
     } catch (exception) {
       return {};

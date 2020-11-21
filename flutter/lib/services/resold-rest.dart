@@ -63,6 +63,20 @@ class ResoldRest {
   } // end function postProduct
 
   /*
+   * isProductMine - Check if a product is mine
+   * token - Customer token
+   * productId - Product ID
+   */
+  static Future<bool> isProductMine(String token, int productId) async {
+    await config.initialized;
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    var response = await dio.get('${config.baseUrl}/product/mine/$productId');
+
+    return response.data == true;
+  } // end function postProduct
+
+  /*
    * createVendor - Create a seller account
    * token - Customer identification token
    */

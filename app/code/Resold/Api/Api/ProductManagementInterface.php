@@ -59,4 +59,12 @@ interface ProductManagementInterface
 	 * @return int
 	 */
 	public function setPrice($productId, $newPrice);
+
+	/**
+	 * Check if a product is mine
+	 *
+	 * @param int $productId
+	 * @return mixed[]
+	 */
+	public function isProductMine($productId);
 }

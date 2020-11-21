@@ -179,9 +179,11 @@ class AccountPageState extends State<AccountPage> {
                                     textColor: Colors.white,
                                   )),
                               SizedBox(height: 10),
-                              Column(
+                              Container(
+                                  child: Column(
                                 children: [
                                   GridView.count(
+                                      physics: ScrollPhysics(),
                                       shrinkWrap: true,
                                       crossAxisCount: 2,
                                       children: displayForSale
@@ -196,7 +198,7 @@ class AccountPageState extends State<AccountPage> {
                                                   context, currentLocation, product, customer, index);
                                             })),
                                 ],
-                              )
+                              ))
                             ]),
                           ])),
                         ])),

@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:resold/constants/url-config.dart';
@@ -26,14 +28,16 @@ import 'package:resold/widgets/loading.dart';
 class ProductPage extends StatefulWidget {
   final Product product;
   final bool fromMessagePage;
+  final String customerToken;
 
-  ProductPage(Product product, {Key key, bool fromMessagePage = false})
+  ProductPage(Product product, String customerToken, {Key key, bool fromMessagePage = false})
       : product = product,
+        customerToken = customerToken,
         fromMessagePage = fromMessagePage,
         super(key: key);
 
   @override
-  ProductPageState createState() => ProductPageState(this.product, this.fromMessagePage);
+  ProductPageState createState() => ProductPageState(this.product, this.customerToken, this.fromMessagePage);
 }
 
 class ProductPageState extends State<ProductPage> {
@@ -44,10 +48,14 @@ class ProductPageState extends State<ProductPage> {
   final Map<String, Marker> markers = {};
   final offerController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final String customerToken;
   Future<Position> futureLocation;
+  Future<bool> futureIsMine;
+  bool isMine;
 
-  ProductPageState(Product product, bool fromMessagePage)
+  ProductPageState(Product product, String customerToken, bool fromMessagePage)
       : product = product,
+        customerToken = customerToken,
         fromMessagePage = fromMessagePage;
 
   @override
@@ -59,6 +67,7 @@ class ProductPageState extends State<ProductPage> {
       }
     });
     futureLocation = Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    futureIsMine = ResoldRest.isProductMine(customerToken, product.id);
   } // end function initState
 
   @override
@@ -66,20 +75,21 @@ class ProductPageState extends State<ProductPage> {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return Scaffold(
         appBar: AppBar(
-          title: Text(product.name, style: new TextStyle(color: Colors.white)),
-          backgroundColor: ResoldBlue,
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-        ),
+            title: Text(product.name, style: new TextStyle(color: Colors.white)),
+            backgroundColor: ResoldBlue,
+            iconTheme: IconThemeData(
+              color: Colors.white, //change your color here
+            ),
+            actions: product.chargeId == null ? <Widget>[Icon(MdiIcons.trashCan)] : []),
         body: ViewModelSubscriber<AppState, CustomerResponse>(
             converter: (state) => state.customer,
             builder: (context, dispatcher, customer) {
-              return FutureBuilder<Position>(
-                future: futureLocation,
+              return FutureBuilder<List<Object>>(
+                future: Future.wait([futureLocation, futureIsMine]),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    currentLocation = snapshot.data;
+                    currentLocation = snapshot.data[0];
+                    isMine = snapshot.data[1];
                     return WillPopScope(
                         child: Stack(
                           children: [
@@ -237,261 +247,305 @@ class ProductPageState extends State<ProductPage> {
                                                 ),
                                               ),
                                               SizedBox(height: 10),
-                                              ButtonTheme(
-                                                  minWidth: 340.0,
-                                                  height: 70.0,
-                                                  child: RaisedButton(
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadiusDirectional.circular(8)),
-                                                    onPressed: () async {
-                                                      // show a loading indicator
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext context) {
-                                                            return Center(child: Loading());
-                                                          });
-
-                                                      // get the to customer details
-                                                      int toId =
-                                                          int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                                      CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                                      String chatId =
-                                                          customer.id.toString() + '-' + product.id.toString();
-
-                                                      if (fromMessagePage) {
-                                                        // go back
-                                                        Navigator.of(context, rootNavigator: true).pop(context);
-                                                        Navigator.pop(context);
-                                                      } else {
-                                                        // push a new message page
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => MessagePage(toCustomer, product,
-                                                                    chatId, UserMessageType.buyer)));
-                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                      } // end if from message page
-                                                    },
-                                                    child: Text('Contact Seller',
-                                                        style: new TextStyle(
-                                                            fontSize: 20.0,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.white)),
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                  )),
-                                              SizedBox(height: 5),
-                                              ButtonTheme(
-                                                minWidth: 340.0,
-                                                height: 70.0,
-                                                child: RaisedButton(
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadiusDirectional.circular(8)),
-                                                  onPressed: () async {
-                                                    // show a loading indicator
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          return Center(child: Loading());
-                                                        });
-
-                                                    // get the to customer details
-                                                    int toId =
-                                                        int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                                    CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                                    String chatId =
-                                                        customer.id.toString() + '-' + product.id.toString();
-
-                                                    await showDialog<void>(
-                                                        context: context,
-                                                        barrierDismissible: false,
-                                                        builder: (BuildContext context) {
-                                                          return AlertDialog(
-                                                            title: Text('Send an offer'),
-                                                            content: SingleChildScrollView(
-                                                              child: ListBody(
-                                                                children: <Widget>[
-                                                                  Form(
-                                                                    key: formKey,
-                                                                    child: TextFormField(
-                                                                        controller: offerController,
-                                                                        keyboardType: TextInputType.number,
-                                                                        decoration: InputDecoration(
-                                                                            labelText: 'Enter an offer price *',
-                                                                            labelStyle: TextStyle(color: ResoldBlue),
-                                                                            enabledBorder: UnderlineInputBorder(
-                                                                                borderSide: BorderSide(
-                                                                                    color: ResoldBlue, width: 1.5)),
-                                                                            focusedBorder: UnderlineInputBorder(
-                                                                                borderSide: BorderSide(
-                                                                                    color: ResoldBlue, width: 1.5)),
-                                                                            border: UnderlineInputBorder(
-                                                                                borderSide: BorderSide(
-                                                                                    color: ResoldBlue, width: 1.5))),
-                                                                        validator: (value) {
-                                                                          int offerPrice = int.tryParse(value);
-                                                                          if (value.isEmpty || offerPrice < 1) {
-                                                                            return 'Please enter a valid offer.';
-                                                                          }
-                                                                          return null;
-                                                                        },
-                                                                        style: TextStyle(color: Colors.black)),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            actions: <Widget>[
-                                                              FlatButton(
-                                                                child: Text(
-                                                                  'OK',
-                                                                  style: TextStyle(color: ResoldBlue),
-                                                                ),
+                                              Column(
+                                                  children: isMine
+                                                      ? []
+                                                      : [
+                                                          ButtonTheme(
+                                                              minWidth: 340.0,
+                                                              height: 70.0,
+                                                              child: RaisedButton(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadiusDirectional.circular(8)),
                                                                 onPressed: () async {
-                                                                  if (formKey.currentState.validate()) {
+                                                                  // show a loading indicator
+                                                                  showDialog(
+                                                                      context: context,
+                                                                      builder: (BuildContext context) {
+                                                                        return Center(child: Loading());
+                                                                      });
+
+                                                                  // get the to customer details
+                                                                  int toId = int.tryParse(
+                                                                      await Resold.getCustomerIdByProduct(product.id));
+                                                                  CustomerResponse toCustomer =
+                                                                      await Magento.getCustomerById(toId);
+                                                                  String chatId = customer.id.toString() +
+                                                                      '-' +
+                                                                      product.id.toString();
+
+                                                                  if (fromMessagePage) {
+                                                                    // go back
+                                                                    Navigator.of(context, rootNavigator: true)
+                                                                        .pop(context);
+                                                                    Navigator.pop(context);
+                                                                  } else {
+                                                                    // push a new message page
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => MessagePage(
+                                                                                toCustomer,
+                                                                                product,
+                                                                                chatId,
+                                                                                UserMessageType.buyer)));
                                                                     Navigator.of(context, rootNavigator: true)
                                                                         .pop('dialog');
-
-                                                                    await Firebase.sendProductMessage(
-                                                                        chatId,
-                                                                        customer.id,
-                                                                        toCustomer.id,
-                                                                        product,
-                                                                        customer.id.toString() +
-                                                                            '|' +
-                                                                            offerController.text,
-                                                                        MessageType.offer,
-                                                                        toId == customer.id,
-                                                                        firstMessage: true);
-
-                                                                    if (fromMessagePage) {
-                                                                      // go back
-                                                                      Navigator.of(context, rootNavigator: true)
-                                                                          .pop(context);
-                                                                      Navigator.pop(context);
-                                                                    } else {
-                                                                      // push a new message page
-                                                                      offerController.value = TextEditingValue();
-                                                                      Navigator.of(context, rootNavigator: true)
-                                                                          .pop('dialog');
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => MessagePage(
-                                                                                  toCustomer,
-                                                                                  product,
-                                                                                  chatId,
-                                                                                  UserMessageType.buyer)));
-                                                                    } // end if not from message page
-                                                                  } // end if valid verification code
+                                                                  } // end if from message page
                                                                 },
-                                                              ),
-                                                              FlatButton(
-                                                                child: Text(
-                                                                  'Cancel',
-                                                                  style: TextStyle(color: ResoldBlue),
-                                                                ),
-                                                                onPressed: () {
-                                                                  offerController.value = TextEditingValue();
-                                                                  Navigator.of(context, rootNavigator: true)
-                                                                      .pop('dialog');
-                                                                  Navigator.of(context, rootNavigator: true)
-                                                                      .pop('dialog');
+                                                                child: Text('Contact Seller',
+                                                                    style: new TextStyle(
+                                                                        fontSize: 20.0,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.white)),
+                                                                color: Colors.black,
+                                                                textColor: Colors.white,
+                                                              )),
+                                                          SizedBox(height: 5),
+                                                          ButtonTheme(
+                                                            minWidth: 340.0,
+                                                            height: 70.0,
+                                                            child: RaisedButton(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadiusDirectional.circular(8)),
+                                                              onPressed: () async {
+                                                                // show a loading indicator
+                                                                showDialog(
+                                                                    context: context,
+                                                                    builder: (BuildContext context) {
+                                                                      return Center(child: Loading());
+                                                                    });
+
+                                                                // get the to customer details
+                                                                int toId = int.tryParse(
+                                                                    await Resold.getCustomerIdByProduct(product.id));
+                                                                CustomerResponse toCustomer =
+                                                                    await Magento.getCustomerById(toId);
+                                                                String chatId = customer.id.toString() +
+                                                                    '-' +
+                                                                    product.id.toString();
+
+                                                                await showDialog<void>(
+                                                                    context: context,
+                                                                    barrierDismissible: false,
+                                                                    builder: (BuildContext context) {
+                                                                      return AlertDialog(
+                                                                        title: Text('Send an offer'),
+                                                                        content: SingleChildScrollView(
+                                                                          child: ListBody(
+                                                                            children: <Widget>[
+                                                                              Form(
+                                                                                key: formKey,
+                                                                                child: TextFormField(
+                                                                                    controller: offerController,
+                                                                                    keyboardType: TextInputType.number,
+                                                                                    decoration: InputDecoration(
+                                                                                        labelText:
+                                                                                            'Enter an offer price *',
+                                                                                        labelStyle: TextStyle(
+                                                                                            color: ResoldBlue),
+                                                                                        enabledBorder:
+                                                                                            UnderlineInputBorder(
+                                                                                                borderSide: BorderSide(
+                                                                                                    color: ResoldBlue,
+                                                                                                    width: 1.5)),
+                                                                                        focusedBorder:
+                                                                                            UnderlineInputBorder(
+                                                                                                borderSide: BorderSide(
+                                                                                                    color: ResoldBlue,
+                                                                                                    width: 1.5)),
+                                                                                        border: UnderlineInputBorder(
+                                                                                            borderSide: BorderSide(
+                                                                                                color: ResoldBlue,
+                                                                                                width: 1.5))),
+                                                                                    validator: (value) {
+                                                                                      int offerPrice =
+                                                                                          int.tryParse(value);
+                                                                                      if (value.isEmpty ||
+                                                                                          offerPrice < 1) {
+                                                                                        return 'Please enter a valid offer.';
+                                                                                      }
+                                                                                      return null;
+                                                                                    },
+                                                                                    style:
+                                                                                        TextStyle(color: Colors.black)),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        actions: <Widget>[
+                                                                          FlatButton(
+                                                                            child: Text(
+                                                                              'OK',
+                                                                              style: TextStyle(color: ResoldBlue),
+                                                                            ),
+                                                                            onPressed: () async {
+                                                                              if (formKey.currentState.validate()) {
+                                                                                Navigator.of(context,
+                                                                                        rootNavigator: true)
+                                                                                    .pop('dialog');
+
+                                                                                await Firebase.sendProductMessage(
+                                                                                    chatId,
+                                                                                    customer.id,
+                                                                                    toCustomer.id,
+                                                                                    product,
+                                                                                    customer.id.toString() +
+                                                                                        '|' +
+                                                                                        offerController.text,
+                                                                                    MessageType.offer,
+                                                                                    toId == customer.id,
+                                                                                    firstMessage: true);
+
+                                                                                if (fromMessagePage) {
+                                                                                  // go back
+                                                                                  Navigator.of(context,
+                                                                                          rootNavigator: true)
+                                                                                      .pop(context);
+                                                                                  Navigator.pop(context);
+                                                                                } else {
+                                                                                  // push a new message page
+                                                                                  offerController.value =
+                                                                                      TextEditingValue();
+                                                                                  Navigator.of(context,
+                                                                                          rootNavigator: true)
+                                                                                      .pop('dialog');
+                                                                                  Navigator.push(
+                                                                                      context,
+                                                                                      MaterialPageRoute(
+                                                                                          builder: (context) =>
+                                                                                              MessagePage(
+                                                                                                  toCustomer,
+                                                                                                  product,
+                                                                                                  chatId,
+                                                                                                  UserMessageType
+                                                                                                      .buyer)));
+                                                                                } // end if not from message page
+                                                                              } // end if valid verification code
+                                                                            },
+                                                                          ),
+                                                                          FlatButton(
+                                                                            child: Text(
+                                                                              'Cancel',
+                                                                              style: TextStyle(color: ResoldBlue),
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              offerController.value =
+                                                                                  TextEditingValue();
+                                                                              Navigator.of(context, rootNavigator: true)
+                                                                                  .pop('dialog');
+                                                                              Navigator.of(context, rootNavigator: true)
+                                                                                  .pop('dialog');
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    });
+                                                              },
+                                                              child: Text('Send Offer',
+                                                                  style: new TextStyle(
+                                                                      fontSize: 20.0,
+                                                                      fontWeight: FontWeight.bold,
+                                                                      color: Colors.white)),
+                                                              color: Colors.black,
+                                                              textColor: Colors.white,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 5),
+                                                          ButtonTheme(
+                                                              minWidth: 340.0,
+                                                              height: 70.0,
+                                                              child: RaisedButton(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadiusDirectional.circular(8)),
+                                                                onPressed: () async {
+                                                                  // show a loading indicator
+                                                                  showDialog(
+                                                                      context: context,
+                                                                      builder: (BuildContext context) {
+                                                                        return Center(child: Loading());
+                                                                      });
+
+                                                                  // get the to customer details
+                                                                  int toId = int.tryParse(
+                                                                      await Resold.getCustomerIdByProduct(product.id));
+                                                                  CustomerResponse toCustomer =
+                                                                      await Magento.getCustomerById(toId);
+                                                                  String chatId = customer.id.toString() +
+                                                                      '-' +
+                                                                      product.id.toString();
+
+                                                                  // get a Postmates delivery quote
+                                                                  DateTime now = DateTime.now();
+
+                                                                  var pickupDeadline = now.add(Duration(minutes: 30));
+                                                                  var dropoffDeadline =
+                                                                      pickupDeadline.add(Duration(hours: 2));
+
+                                                                  // create a Postmates delivery quote
+                                                                  DeliveryQuoteResponse quote = await Postmates
+                                                                      .createDeliveryQuote(DeliveryQuoteRequest(
+                                                                          pickup_address:
+                                                                              customer.addresses.first.toString(),
+                                                                          pickup_ready_dt:
+                                                                              now.toUtc().toIso8601String(),
+                                                                          pickup_deadline_dt:
+                                                                              pickupDeadline.toUtc().toIso8601String(),
+                                                                          dropoff_address:
+                                                                              toCustomer.addresses.first.toString(),
+                                                                          dropoff_ready_dt:
+                                                                              now.toUtc().toIso8601String(),
+                                                                          dropoff_deadline_dt: dropoffDeadline
+                                                                              .toUtc()
+                                                                              .toIso8601String()));
+
+                                                                  // prepare message content for delivery request
+                                                                  String content = quote.id +
+                                                                      '|' +
+                                                                      quote.fee.toString() +
+                                                                      '|' +
+                                                                      quote.pickup_duration.toString() +
+                                                                      '|' +
+                                                                      quote.duration.toString();
+
+                                                                  await Firebase.sendProductMessage(
+                                                                      chatId,
+                                                                      customer.id,
+                                                                      toCustomer.id,
+                                                                      product,
+                                                                      content,
+                                                                      MessageType.deliveryQuote,
+                                                                      toId == customer.id,
+                                                                      firstMessage: true);
+
+                                                                  if (fromMessagePage) {
+                                                                    // go back
+                                                                    Navigator.of(context, rootNavigator: true)
+                                                                        .pop(context);
+                                                                    Navigator.pop(context);
+                                                                  } else {
+                                                                    // push a new message page
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => MessagePage(
+                                                                                toCustomer,
+                                                                                product,
+                                                                                chatId,
+                                                                                UserMessageType.buyer)));
+                                                                    Navigator.of(context, rootNavigator: true)
+                                                                        .pop('dialog');
+                                                                  } // end if not from message page
                                                                 },
-                                                              ),
-                                                            ],
-                                                          );
-                                                        });
-                                                  },
-                                                  child: Text('Send Offer',
-                                                      style: new TextStyle(
-                                                          fontSize: 20.0,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white)),
-                                                  color: Colors.black,
-                                                  textColor: Colors.white,
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              ButtonTheme(
-                                                  minWidth: 340.0,
-                                                  height: 70.0,
-                                                  child: RaisedButton(
-                                                    shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadiusDirectional.circular(8)),
-                                                    onPressed: () async {
-                                                      // show a loading indicator
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext context) {
-                                                            return Center(child: Loading());
-                                                          });
-
-                                                      // get the to customer details
-                                                      int toId =
-                                                          int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                                      CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                                      String chatId =
-                                                          customer.id.toString() + '-' + product.id.toString();
-
-                                                      // get a Postmates delivery quote
-                                                      DateTime now = DateTime.now();
-
-                                                      var pickupDeadline = now.add(Duration(minutes: 30));
-                                                      var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
-
-                                                      // create a Postmates delivery quote
-                                                      DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(
-                                                          DeliveryQuoteRequest(
-                                                              pickup_address: customer.addresses.first.toString(),
-                                                              pickup_ready_dt: now.toUtc().toIso8601String(),
-                                                              pickup_deadline_dt:
-                                                                  pickupDeadline.toUtc().toIso8601String(),
-                                                              dropoff_address: toCustomer.addresses.first.toString(),
-                                                              dropoff_ready_dt: now.toUtc().toIso8601String(),
-                                                              dropoff_deadline_dt:
-                                                                  dropoffDeadline.toUtc().toIso8601String()));
-
-                                                      // prepare message content for delivery request
-                                                      String content = quote.id +
-                                                          '|' +
-                                                          quote.fee.toString() +
-                                                          '|' +
-                                                          quote.pickup_duration.toString() +
-                                                          '|' +
-                                                          quote.duration.toString();
-
-                                                      await Firebase.sendProductMessage(
-                                                          chatId,
-                                                          customer.id,
-                                                          toCustomer.id,
-                                                          product,
-                                                          content,
-                                                          MessageType.deliveryQuote,
-                                                          toId == customer.id,
-                                                          firstMessage: true);
-
-                                                      if (fromMessagePage) {
-                                                        // go back
-                                                        Navigator.of(context, rootNavigator: true).pop(context);
-                                                        Navigator.pop(context);
-                                                      } else {
-                                                        // push a new message page
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => MessagePage(toCustomer, product,
-                                                                    chatId, UserMessageType.buyer)));
-                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                      } // end if not from message page
-                                                    },
-                                                    child: Text('Request Delivery',
-                                                        style: new TextStyle(
-                                                            fontSize: 20.0,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.white)),
-                                                    color: Colors.black,
-                                                    textColor: Colors.white,
-                                                  )),
+                                                                child: Text('Request Delivery',
+                                                                    style: new TextStyle(
+                                                                        fontSize: 20.0,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        color: Colors.white)),
+                                                                color: Colors.black,
+                                                                textColor: Colors.white,
+                                                              )),
+                                                        ]),
                                               SizedBox(height: 10),
                                               Container(
                                                   height: 500,

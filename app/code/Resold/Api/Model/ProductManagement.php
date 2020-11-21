@@ -27,7 +27,9 @@ class ProductManagement
     \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
     \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
     \Magento\Customer\Model\Session $customerSession,
-    \Magento\Framework\Event\ManagerInterface $eventManager
+    \Magento\Framework\Event\ManagerInterface $eventManager,
+    \Ced\CsMarketplace\Model\Vproducts $vendorProducts,
+    \Ced\CsMarketplace\Model\Vendor $vendor
   )
   {
       $this->session = $customerSession;
@@ -37,6 +39,8 @@ class ProductManagement
       $this->inlineTranslation = $inlineTranslation;
       $this->_customerRepositoryInterface = $customerRepositoryInterface;
       $this->_eventManager = $eventManager;
+      $this->vendorProducts = $vendorProducts;
+      $this->vendor = $vendor;
   }
 
 	/**
@@ -217,9 +221,12 @@ class ProductManagement
 	 */
   public function getProduct($productId)
 	{
-    // set the postmates delivery ID on the product
+    // get the logged in customer's id
+    $customerId = $this->userContext->getUserId();
+
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
+    // get the product
     $productsResult = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
       ->addAttributeToSelect($objectManager->create('Magento\Catalog\Model\Config')->getProductAttributes())
       ->addAttributeToSelect('latitude')
@@ -258,7 +265,7 @@ class ProductManagement
         'latitude' => $latitude ? $latitude->getValue() : null,
         'longitude' => $longitude ? $longitude->getValue() : null,
         'charge_id' => $chargeId ? $chargeId->getValue() : null,
-        'delivery_id' => $deliveryId ? $deliveryId->getValue() : null
+        'delivery_id' => $deliveryId ? $deliveryId->getValue() : null,
       ]];
     }// end foreach over products
     return [['error' => 'Could not find product.']];
@@ -288,5 +295,16 @@ class ProductManagement
     $product->setPrice($newPrice);
     $product->save();
     return 1;
+  }// end function setDeliveryId
+
+	/**
+	 * {@inheritdoc}
+	 */
+  public function isProductMine($productId)
+	{
+    // get the logged in customer's id
+    $vendor = $this->vendor->loadByCustomerId($this->userContext->getUserId());
+    $vendorId = $this->vendorProducts->getVendorIdByProduct($productId);
+    return $vendor->getId() == $vendorId;
   }// end function setDeliveryId
 }

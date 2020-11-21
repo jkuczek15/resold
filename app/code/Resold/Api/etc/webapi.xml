@@ -12,6 +12,12 @@
             <resource ref="self"/>
         </resources>
     </route>
+    <route url="/V1/resold/product/mine/:productId" method="GET">
+        <service class="Resold\Api\Api\ProductManagementInterface" method="isProductMine"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
     <route url="/V1/resold/product/delivery" method="POST">
         <service class="Resold\Api\Api\ProductManagementInterface" method="setDelivery"/>
         <resources>
