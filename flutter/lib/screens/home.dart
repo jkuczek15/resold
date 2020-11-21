@@ -20,23 +20,24 @@ class Home extends StatelessWidget {
         builder: (context, dispatcher, customer) => MaterialApp(
             title: 'Resold',
             theme: ThemeData(
-              primarySwatch: const MaterialColor(0xff41b8ea, {
-                50: Color.fromRGBO(25, 72, 92, .1),
-                100: Color.fromRGBO(25, 72, 92, .2),
-                200: Color.fromRGBO(25, 72, 92, .3),
-                300: Color.fromRGBO(25, 72, 92, .4),
-                400: Color.fromRGBO(25, 72, 92, .5),
-                500: Color.fromRGBO(25, 72, 92, .6),
-                600: Color.fromRGBO(25, 72, 92, .7),
-                700: Color.fromRGBO(25, 72, 92, .8),
-                800: Color.fromRGBO(25, 72, 92, .9),
-                900: Color.fromRGBO(25, 72, 92, 1)
-              }),
-              brightness: Brightness.light,
-              accentColor: Colors.white,
-              primaryColor: ResoldBlue,
-              splashColor: ResoldBlue,
-            ),
+                primarySwatch: const MaterialColor(0xff41b8ea, {
+                  50: Color.fromRGBO(25, 72, 92, .1),
+                  100: Color.fromRGBO(25, 72, 92, .2),
+                  200: Color.fromRGBO(25, 72, 92, .3),
+                  300: Color.fromRGBO(25, 72, 92, .4),
+                  400: Color.fromRGBO(25, 72, 92, .5),
+                  500: Color.fromRGBO(25, 72, 92, .6),
+                  600: Color.fromRGBO(25, 72, 92, .7),
+                  700: Color.fromRGBO(25, 72, 92, .8),
+                  800: Color.fromRGBO(25, 72, 92, .9),
+                  900: Color.fromRGBO(25, 72, 92, 1)
+                }),
+                scaffoldBackgroundColor: Colors.white,
+                brightness: Brightness.light,
+                accentColor: Colors.white,
+                primaryColor: ResoldBlue,
+                splashColor: ResoldBlue,
+                backgroundColor: Colors.white),
             home: HomePage(customer)));
   } // end function build
 } // end class Home
@@ -125,6 +126,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
         ],
         currentIndex: selectedTab,
+        backgroundColor: Colors.white,
         fixedColor: ResoldBlue,
         unselectedItemColor: Colors.black,
         onTap: onItemTapped,
