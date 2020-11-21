@@ -52,6 +52,7 @@ class ProductPageState extends State<ProductPage> {
   Future<Position> futureLocation;
   Future<bool> futureIsMine;
   bool isMine;
+  bool deleteCanceled;
 
   ProductPageState(Product product, String customerToken, bool fromMessagePage)
       : product = product,
@@ -80,7 +81,78 @@ class ProductPageState extends State<ProductPage> {
             iconTheme: IconThemeData(
               color: Colors.white, //change your color here
             ),
-            actions: product.chargeId == null ? <Widget>[Icon(MdiIcons.trashCan)] : []),
+            actions: product.chargeId == null
+                ? <Widget>[
+                    InkWell(
+                      child: Icon(MdiIcons.trashCan),
+                      onTap: () {
+                        return showDialog<void>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Delete ${product.name}?'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text(
+                                      'Are you sure you want to delete this listing?',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text(
+                                    'Delete',
+                                    style: TextStyle(color: ResoldBlue),
+                                  ),
+                                  onPressed: () async {
+                                    Future<bool> complete = Magento.deleteProduct(product.sku);
+                                    if (await complete) {
+                                      return showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                title: Text("Your listing has been deleted."),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                      child: Text(
+                                                        'Ok',
+                                                        style: TextStyle(color: ResoldBlue),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                        deleteCanceled = false;
+                                                      })
+                                                ]);
+                                          });
+                                    } // end if deleted product success
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(color: ResoldBlue),
+                                  ),
+                                  onPressed: () {
+                                    deleteCanceled = true;
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ).then((value) {
+                          if (!deleteCanceled) {
+                            Navigator.pop(context);
+                          }
+                        });
+                      },
+                    )
+                  ]
+                : []),
         body: ViewModelSubscriber<AppState, CustomerResponse>(
             converter: (state) => state.customer,
             builder: (context, dispatcher, customer) {

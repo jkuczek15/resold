@@ -89,6 +89,7 @@ class Products extends \Magento\Framework\App\Action\Action
 
       $vendorProducts = $objectManager->create('Magento\Catalog\Model\Product')->getCollection()
         ->addAttributeToSelect($objectManager->create('Magento\Catalog\Model\Config')->getProductAttributes())
+        ->addAttributeToSelect('sku')
         ->addAttributeToSelect('latitude')
         ->addAttributeToSelect('longitude')
         ->addAttributeToSelect('description')
@@ -114,6 +115,7 @@ class Products extends \Magento\Framework\App\Action\Action
         $categoryIds = $product->getCategoryIds();
         $productResult = [
           'id' => $product->getId(),
+          'sku' => $product->getSku(),
           'name' => $product->getName(),
           'price' => $product->getPrice(),
           'description' => $product->getDescription(),

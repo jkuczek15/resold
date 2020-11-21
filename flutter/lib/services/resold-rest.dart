@@ -31,7 +31,7 @@ class ResoldRest {
       'latitude': product.latitude,
       'longitude': product.longitude,
       'itemSize': product.itemSize,
-      'imagePaths': imagePaths
+      'imagePaths': imagePaths,
     });
 
     dio.options.headers['Authorization'] = 'Bearer $token';
