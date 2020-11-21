@@ -22,7 +22,7 @@ class ProductManagement
    */
    public function __construct(
     \Magento\Authorization\Model\UserContextInterface $userContext,
-    \Ced\CsMarketplace\Model\VendorFactory $Vendor,
+    \Ced\CsMarketplace\Model\VendorFactory $VendorFactory,
     \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
     \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
     \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
@@ -34,7 +34,7 @@ class ProductManagement
   {
       $this->session = $customerSession;
       $this->userContext = $userContext;
-      $this->vendor = $Vendor;
+      $this->vendorFactory = $VendorFactory;
       $this->_transportBuilder = $transportBuilder;
       $this->inlineTranslation = $inlineTranslation;
       $this->_customerRepositoryInterface = $customerRepositoryInterface;
@@ -161,7 +161,7 @@ class ProductManagement
     $_product->save();
 
     // load the vendor
-    $vendorModel = $this->vendor->create();
+    $vendorModel = $this->vendorFactory->create();
     $vendor = $vendorModel->loadByCustomerId($customerId);
     $vendorId = $vendor->getId();
 
@@ -206,7 +206,7 @@ class ProductManagement
     // creating a new product and linking it to the seller
     // save a vendor product with the seller
     $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);
-    $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE);
+    $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE, $vendorId);
     $this->_eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
       'product' => $_product,
       'vendor_id' => $vendorId
