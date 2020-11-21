@@ -189,8 +189,7 @@ class MessagePageState extends State<MessagePage> {
   void handleMenuClick(String value) async {
     switch (value) {
       case 'View Details':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation, fromMessagePage: true)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, fromMessagePage: true)));
         break;
       case 'Request Delivery':
         await requestDelivery();

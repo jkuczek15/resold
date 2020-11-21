@@ -148,8 +148,8 @@ class SellPageState extends State<SellPage> {
                                         customer.token, product, imageUploaderKey.currentState.imagePaths);
                                     product.id = int.tryParse(response);
                                     Navigator.of(context, rootNavigator: true).pop('dialog');
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => ProductPage(product, currentLocation)));
+                                    Navigator.push(
+                                        context, MaterialPageRoute(builder: (context) => ProductPage(product)));
                                   } // end if form is valid
                                 },
                                 child: Text('Post',
