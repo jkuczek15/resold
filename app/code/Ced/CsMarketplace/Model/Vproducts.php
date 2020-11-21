@@ -232,10 +232,6 @@ class Vproducts extends \Ced\CsMarketplace\Model\FlatAbstractModel
         $productData = $this->_objectManager->get('Magento\Framework\App\RequestInterface')->getParams();
         $productId = $product->getId();
 
-        if(!isset($productData['vendor_id']) || $productData['vendor_id'] == null){
-          $productData['vendor_id'] = 34;
-        }// end if vendor id not set
-
         /**
          * Save Stock data
       *
