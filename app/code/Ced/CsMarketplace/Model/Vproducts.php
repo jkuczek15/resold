@@ -153,7 +153,6 @@ class Vproducts extends \Ced\CsMarketplace\Model\FlatAbstractModel
     }
 
 
-
     /**
      * Validate csmarketplace product attribute values.
      * @return array|bool

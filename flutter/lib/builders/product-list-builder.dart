@@ -47,7 +47,8 @@ class ProductListBuilder {
             child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product)));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => ProductPage(product, customer.token)));
                 },
                 child: Container(
                     decoration: BoxDecoration(color: Colors.white),
@@ -145,7 +146,7 @@ class ProductListBuilder {
         child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product, customer.token)));
             },
             child: CachedNetworkImage(
               placeholder: (context, url) => Container(

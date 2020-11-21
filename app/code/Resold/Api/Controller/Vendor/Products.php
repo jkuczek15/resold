@@ -95,6 +95,8 @@ class Products extends \Magento\Framework\App\Action\Action
         ->addAttributeToSelect('title_description')
         ->addAttributeToSelect('local_global')
         ->addAttributeToSelect('condition')
+        ->addAttributeToSelect('charge_id')
+        ->addAttributeToSelect('delivery_id')
         ->addAttributeToFilter('entity_id',array('in' => $productIds))
         ->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
 
@@ -106,6 +108,8 @@ class Products extends \Magento\Framework\App\Action\Action
         $condition = $product->getCustomAttribute('condition');
         $latitude = $product->getCustomAttribute('latitude');
         $longitude = $product->getCustomAttribute('longitude');
+        $chargeId = $product->getCustomAttribute('charge_id');
+        $deliveryId = $product->getCustomAttribute('delivery_id');
 
         $categoryIds = $product->getCategoryIds();
         $productResult = [
@@ -114,14 +118,16 @@ class Products extends \Magento\Framework\App\Action\Action
           'price' => $product->getPrice(),
           'description' => $product->getDescription(),
           'image' => $product->getImage(),
-          'smallImage' => $product->getSmallImage(),
+          'small_image' => $product->getSmallImage(),
           'thumbnail' => $product->getThumbnail(),
-          'categoryIds' => $product->getCategoryIds(),
-          'titleDescription' => $titleDescription ? $titleDescription->getValue() : null,
-          'localGlobal' => $localGlobal ? $localGlobal->getValue() : null,
+          'category_ids' => $product->getCategoryIds(),
+          'title_description' => $titleDescription ? $titleDescription->getValue() : null,
+          'local_global' => $localGlobal ? $localGlobal->getValue() : null,
           'condition' => $condition ? $condition->getValue() : null,
           'latitude' => $latitude ? $latitude->getValue() : null,
-          'longitude' => $longitude ? $longitude->getValue() : null
+          'longitude' => $longitude ? $longitude->getValue() : null,
+          'charge_id' => $chargeId ? $chargeId->getValue() : null,
+          'delivery_id' => $deliveryId ? $deliveryId->getValue() : null
         ];
 
         if($post['type'] == 'for-sale') {
