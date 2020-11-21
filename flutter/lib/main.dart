@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:rebloc/rebloc.dart';
 import 'package:resold/environment.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
+import 'package:resold/state/app-state.dart';
+import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -35,6 +38,15 @@ Future<void> main() async {
   // get from disk and login
   CustomerResponse customer = await CustomerResponse.load();
 
+  // store app state
+  Store store = Store<AppState>(initialState: AppState(customer), blocs: [
+    CustomerReducer(),
+  ]);
+
   // run the app
-  runApp(MaterialApp(home: customer.isLoggedIn() ? Home(customer) : Landing()));
+  runApp(StoreProvider<AppState>(
+      store: store,
+      child: MaterialApp(
+        home: customer.isLoggedIn() ? Home() : Landing(),
+      )));
 } // end function main

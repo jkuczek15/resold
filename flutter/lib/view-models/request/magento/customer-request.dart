@@ -5,7 +5,6 @@ part 'customer-request.g.dart';
 
 @JsonSerializable(nullable: false)
 class CustomerRequest {
-
   final String email;
   final String firstname;
   final String lastname;

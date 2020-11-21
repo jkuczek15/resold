@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
@@ -8,6 +9,7 @@ import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:intl/intl.dart';
+import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
 import 'package:resold/widgets/text/read-more-text.dart';
@@ -23,26 +25,21 @@ import 'package:resold/widgets/loading.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
-  final CustomerResponse customer;
   final Position currentLocation;
   final bool fromMessagePage;
 
-  ProductPage(Product product, CustomerResponse customer, Position currentLocation,
-      {Key key, bool fromMessagePage = false})
+  ProductPage(Product product, Position currentLocation, {Key key, bool fromMessagePage = false})
       : product = product,
-        customer = customer,
         currentLocation = currentLocation,
         fromMessagePage = fromMessagePage,
         super(key: key);
 
   @override
-  ProductPageState createState() =>
-      ProductPageState(this.customer, this.product, this.currentLocation, this.fromMessagePage);
+  ProductPageState createState() => ProductPageState(this.product, this.currentLocation, this.fromMessagePage);
 }
 
 class ProductPageState extends State<ProductPage> {
   final Product product;
-  final CustomerResponse customer;
   final Position currentLocation;
   final bool fromMessagePage;
   Future<List<String>> futureImages;
@@ -50,9 +47,8 @@ class ProductPageState extends State<ProductPage> {
   final offerController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  ProductPageState(CustomerResponse customer, Product product, Position currentLocation, bool fromMessagePage)
-      : customer = customer,
-        product = product,
+  ProductPageState(Product product, Position currentLocation, bool fromMessagePage)
+      : product = product,
         currentLocation = currentLocation,
         fromMessagePage = fromMessagePage;
 
@@ -69,424 +65,434 @@ class ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     var formatter = new NumberFormat("\$###,###", "en_US");
-    return WillPopScope(
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text(product.name, style: new TextStyle(color: Colors.white)),
-              backgroundColor: ResoldBlue,
-              iconTheme: IconThemeData(
-                color: Colors.white, //change your color here
-              ),
-            ),
-            body: Stack(
-              children: [
-                FutureBuilder<List<String>>(
-                    future: futureImages,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        Widget imageElement;
-                        if (snapshot.data.length == 1) {
-                          imageElement = CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: Loading(),
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/placeholder-image.png',
-                                width: 200.0,
-                                height: 200.0,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            imageUrl: baseProductImagePath + snapshot.data[0],
-                            fit: BoxFit.cover,
-                          );
-                        } else {
-                          imageElement = CarouselSlider(
-                              options: CarouselOptions(height: 400.0),
-                              items: snapshot.data.map((image) {
-                                return Builder(builder: (BuildContext context) {
-                                  return Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) => Container(
-                                          child: Loading(),
-                                          width: MediaQuery.of(context).size.width,
-                                          padding: EdgeInsets.all(70.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blueGrey,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                        ),
-                                        errorWidget: (context, url, error) => Material(
-                                          child: Image.asset(
-                                            'images/placeholder-image.png',
-                                            width: 200.0,
-                                            height: 200.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(8.0),
-                                          ),
-                                          clipBehavior: Clip.hardEdge,
-                                        ),
-                                        imageUrl: baseProductImagePath + image,
-                                        fit: BoxFit.cover,
-                                      ));
-                                });
-                              }).toList());
-                        } // end if we are displaying one image
+    return ViewModelSubscriber<AppState, CustomerResponse>(
+        converter: (state) => state.customer,
+        builder: (context, dispatcher, customer) {
+          return WillPopScope(
+              child: Scaffold(
+                  appBar: AppBar(
+                    title: Text(product.name, style: new TextStyle(color: Colors.white)),
+                    backgroundColor: ResoldBlue,
+                    iconTheme: IconThemeData(
+                      color: Colors.white, //change your color here
+                    ),
+                  ),
+                  body: Stack(
+                    children: [
+                      FutureBuilder<List<String>>(
+                          future: futureImages,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              Widget imageElement;
+                              if (snapshot.data.length == 1) {
+                                imageElement = CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    child: Loading(),
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(70.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blueGrey,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Material(
+                                    child: Image.asset(
+                                      'images/placeholder-image.png',
+                                      width: 200.0,
+                                      height: 200.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                  ),
+                                  imageUrl: baseProductImagePath + snapshot.data[0],
+                                  fit: BoxFit.cover,
+                                );
+                              } else {
+                                imageElement = CarouselSlider(
+                                    options: CarouselOptions(height: 400.0),
+                                    items: snapshot.data.map((image) {
+                                      return Builder(builder: (BuildContext context) {
+                                        return Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                                            child: CachedNetworkImage(
+                                              placeholder: (context, url) => Container(
+                                                child: Loading(),
+                                                width: MediaQuery.of(context).size.width,
+                                                padding: EdgeInsets.all(70.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blueGrey,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0),
+                                                  ),
+                                                ),
+                                              ),
+                                              errorWidget: (context, url, error) => Material(
+                                                child: Image.asset(
+                                                  'images/placeholder-image.png',
+                                                  width: 200.0,
+                                                  height: 200.0,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0),
+                                                ),
+                                                clipBehavior: Clip.hardEdge,
+                                              ),
+                                              imageUrl: baseProductImagePath + image,
+                                              fit: BoxFit.cover,
+                                            ));
+                                      });
+                                    }).toList());
+                              } // end if we are displaying one image
 
-                        return SingleChildScrollView(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            imageElement,
-                            Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                                child: Column(children: [
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
+                              return SingleChildScrollView(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  imageElement,
+                                  Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                                      child: Column(children: [
+                                        Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Container(
-                                                padding: new EdgeInsets.only(right: 13.0),
-                                                width: 250,
-                                                child: new Text(
-                                                  product.name,
-                                                  overflow: TextOverflow.fade,
-                                                  style: new TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontFamily: 'Roboto',
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                padding: new EdgeInsets.only(right: 13.0),
-                                                width: 250,
-                                                child: new Text(
-                                                  product.titleDescription ?? "",
-                                                  overflow: TextOverflow.fade,
-                                                  style: new TextStyle(
-                                                    fontSize: 14.0,
-                                                    fontFamily: 'Roboto',
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ),
+                                              Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      padding: new EdgeInsets.only(right: 13.0),
+                                                      width: 250,
+                                                      child: new Text(
+                                                        product.name,
+                                                        overflow: TextOverflow.fade,
+                                                        style: new TextStyle(
+                                                          fontSize: 14.0,
+                                                          fontFamily: 'Roboto',
+                                                          fontWeight: FontWeight.normal,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      padding: new EdgeInsets.only(right: 13.0),
+                                                      width: 250,
+                                                      child: new Text(
+                                                        product.titleDescription ?? "",
+                                                        overflow: TextOverflow.fade,
+                                                        style: new TextStyle(
+                                                          fontSize: 14.0,
+                                                          fontFamily: 'Roboto',
+                                                          fontWeight: FontWeight.normal,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ]),
+                                              Column(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                        width: 70,
+                                                        child: Align(
+                                                            alignment: Alignment.centerRight,
+                                                            child: Text(
+                                                                formatter.format(double.parse(product.price).round()),
+                                                                style: new TextStyle(
+                                                                  fontSize: 14.0,
+                                                                  fontFamily: 'Roboto',
+                                                                  fontWeight: FontWeight.bold,
+                                                                )))),
+                                                    Container(
+                                                        width: 70,
+                                                        child: Align(
+                                                            alignment: Alignment.centerRight,
+                                                            child: LocationBuilder.calculateDistance(
+                                                                currentLocation.latitude,
+                                                                currentLocation.longitude,
+                                                                product.latitude,
+                                                                product.longitude)))
+                                                  ])
                                             ]),
-                                        Column(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                  width: 70,
-                                                  child: Align(
-                                                      alignment: Alignment.centerRight,
-                                                      child: Text(formatter.format(double.parse(product.price).round()),
-                                                          style: new TextStyle(
-                                                            fontSize: 14.0,
-                                                            fontFamily: 'Roboto',
-                                                            fontWeight: FontWeight.bold,
-                                                          )))),
-                                              Container(
-                                                  width: 70,
-                                                  child: Align(
-                                                      alignment: Alignment.centerRight,
-                                                      child: LocationBuilder.calculateDistance(
-                                                          currentLocation.latitude,
-                                                          currentLocation.longitude,
-                                                          product.latitude,
-                                                          product.longitude)))
-                                            ])
-                                      ]),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 500,
-                                    child: ReadMoreText(
-                                      cleanDescription(product.description),
-                                      trimLength: 200,
-                                      colorClickableText: ResoldBlue,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  ButtonTheme(
-                                      minWidth: 340.0,
-                                      height: 70.0,
-                                      child: RaisedButton(
-                                        shape:
-                                            RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                                        onPressed: () async {
-                                          // show a loading indicator
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return Center(child: Loading());
-                                              });
-
-                                          // get the to customer details
-                                          int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                          CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                          String chatId = customer.id.toString() + '-' + product.id.toString();
-
-                                          if (fromMessagePage) {
-                                            // go back
-                                            Navigator.of(context, rootNavigator: true).pop(context);
-                                            Navigator.pop(context);
-                                          } else {
-                                            // push a new message page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => MessagePage(
-                                                        customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-                                          } // end if from message page
-                                        },
-                                        child: Text('Contact Seller',
-                                            style: new TextStyle(
-                                                fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                                        color: Colors.black,
-                                        textColor: Colors.white,
-                                      )),
-                                  SizedBox(height: 5),
-                                  ButtonTheme(
-                                    minWidth: 340.0,
-                                    height: 70.0,
-                                    child: RaisedButton(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                                      onPressed: () async {
-                                        // show a loading indicator
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Center(child: Loading());
-                                            });
-
-                                        // get the to customer details
-                                        int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                        CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                        String chatId = customer.id.toString() + '-' + product.id.toString();
-
-                                        await showDialog<void>(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text('Send an offer'),
-                                                content: SingleChildScrollView(
-                                                  child: ListBody(
-                                                    children: <Widget>[
-                                                      Form(
-                                                        key: formKey,
-                                                        child: TextFormField(
-                                                            controller: offerController,
-                                                            keyboardType: TextInputType.number,
-                                                            decoration: InputDecoration(
-                                                                labelText: 'Enter an offer price *',
-                                                                labelStyle: TextStyle(color: ResoldBlue),
-                                                                enabledBorder: UnderlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(color: ResoldBlue, width: 1.5)),
-                                                                focusedBorder: UnderlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(color: ResoldBlue, width: 1.5)),
-                                                                border: UnderlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(color: ResoldBlue, width: 1.5))),
-                                                            validator: (value) {
-                                                              int offerPrice = int.tryParse(value);
-                                                              if (value.isEmpty || offerPrice < 1) {
-                                                                return 'Please enter a valid offer.';
-                                                              }
-                                                              return null;
-                                                            },
-                                                            style: TextStyle(color: Colors.black)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                actions: <Widget>[
-                                                  FlatButton(
-                                                    child: Text(
-                                                      'OK',
-                                                      style: TextStyle(color: ResoldBlue),
-                                                    ),
-                                                    onPressed: () async {
-                                                      if (formKey.currentState.validate()) {
-                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                                        await Firebase.sendProductMessage(
-                                                            chatId,
-                                                            customer.id,
-                                                            toCustomer.id,
-                                                            product,
-                                                            customer.id.toString() + '|' + offerController.text,
-                                                            MessageType.offer,
-                                                            toId == customer.id,
-                                                            firstMessage: true);
-
-                                                        if (fromMessagePage) {
-                                                          // go back
-                                                          Navigator.of(context, rootNavigator: true).pop(context);
-                                                          Navigator.pop(context);
-                                                        } else {
-                                                          // push a new message page
-                                                          offerController.value = TextEditingValue();
-                                                          Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) => MessagePage(
-                                                                      customer,
-                                                                      toCustomer,
-                                                                      product,
-                                                                      chatId,
-                                                                      UserMessageType.buyer)));
-                                                        } // end if not from message page
-                                                      } // end if valid verification code
-                                                    },
-                                                  ),
-                                                  FlatButton(
-                                                    child: Text(
-                                                      'Cancel',
-                                                      style: TextStyle(color: ResoldBlue),
-                                                    ),
-                                                    onPressed: () {
-                                                      offerController.value = TextEditingValue();
-                                                      Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                      Navigator.of(context, rootNavigator: true).pop('dialog');
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      child: Text('Send Offer',
-                                          style: new TextStyle(
-                                              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                                      color: Colors.black,
-                                      textColor: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  ButtonTheme(
-                                      minWidth: 340.0,
-                                      height: 70.0,
-                                      child: RaisedButton(
-                                        shape:
-                                            RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                                        onPressed: () async {
-                                          // show a loading indicator
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return Center(child: Loading());
-                                              });
-
-                                          // get the to customer details
-                                          int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
-                                          CustomerResponse toCustomer = await Magento.getCustomerById(toId);
-                                          String chatId = customer.id.toString() + '-' + product.id.toString();
-
-                                          // get a Postmates delivery quote
-                                          DateTime now = DateTime.now();
-
-                                          var pickupDeadline = now.add(Duration(minutes: 30));
-                                          var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
-
-                                          // create a Postmates delivery quote
-                                          DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(
-                                              DeliveryQuoteRequest(
-                                                  pickup_address: customer.addresses.first.toString(),
-                                                  pickup_ready_dt: now.toUtc().toIso8601String(),
-                                                  pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
-                                                  dropoff_address: toCustomer.addresses.first.toString(),
-                                                  dropoff_ready_dt: now.toUtc().toIso8601String(),
-                                                  dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String()));
-
-                                          // prepare message content for delivery request
-                                          String content = quote.id +
-                                              '|' +
-                                              quote.fee.toString() +
-                                              '|' +
-                                              quote.pickup_duration.toString() +
-                                              '|' +
-                                              quote.duration.toString();
-
-                                          await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id, product,
-                                              content, MessageType.deliveryQuote, toId == customer.id,
-                                              firstMessage: true);
-
-                                          if (fromMessagePage) {
-                                            // go back
-                                            Navigator.of(context, rootNavigator: true).pop(context);
-                                            Navigator.pop(context);
-                                          } else {
-                                            // push a new message page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => MessagePage(
-                                                        customer, toCustomer, product, chatId, UserMessageType.buyer)));
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-                                          } // end if not from message page
-                                        },
-                                        child: Text('Request Delivery',
-                                            style: new TextStyle(
-                                                fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                                        color: Colors.black,
-                                        textColor: Colors.white,
-                                      )),
-                                  SizedBox(height: 10),
-                                  Container(
-                                      height: 500,
-                                      child: GoogleMap(
-                                        onMapCreated: onMapCreated,
-                                        initialCameraPosition: CameraPosition(
-                                          target: LatLng(product.latitude, product.longitude),
-                                          zoom: 9.0,
+                                        SizedBox(height: 10),
+                                        Container(
+                                          width: 500,
+                                          child: ReadMoreText(
+                                            cleanDescription(product.description),
+                                            trimLength: 200,
+                                            colorClickableText: ResoldBlue,
+                                            textAlign: TextAlign.left,
+                                          ),
                                         ),
-                                        markers: markers.values.toSet(),
-                                      ))
-                                ]))
-                          ],
-                        ));
-                      } else {
-                        return Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [Center(child: Loading())]);
-                      } // end if we have data
-                    } // end builder function
-                    )
-              ],
-            )),
-        onWillPop: () async {
-          Navigator.pop(context);
-          return false;
+                                        SizedBox(height: 10),
+                                        ButtonTheme(
+                                            minWidth: 340.0,
+                                            height: 70.0,
+                                            child: RaisedButton(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadiusDirectional.circular(8)),
+                                              onPressed: () async {
+                                                // show a loading indicator
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return Center(child: Loading());
+                                                    });
+
+                                                // get the to customer details
+                                                int toId =
+                                                    int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                                CustomerResponse toCustomer = await Magento.getCustomerById(toId);
+                                                String chatId = customer.id.toString() + '-' + product.id.toString();
+
+                                                if (fromMessagePage) {
+                                                  // go back
+                                                  Navigator.of(context, rootNavigator: true).pop(context);
+                                                  Navigator.pop(context);
+                                                } else {
+                                                  // push a new message page
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => MessagePage(
+                                                              toCustomer, product, chatId, UserMessageType.buyer)));
+                                                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                } // end if from message page
+                                              },
+                                              child: Text('Contact Seller',
+                                                  style: new TextStyle(
+                                                      fontSize: 20.0,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white)),
+                                              color: Colors.black,
+                                              textColor: Colors.white,
+                                            )),
+                                        SizedBox(height: 5),
+                                        ButtonTheme(
+                                          minWidth: 340.0,
+                                          height: 70.0,
+                                          child: RaisedButton(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadiusDirectional.circular(8)),
+                                            onPressed: () async {
+                                              // show a loading indicator
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return Center(child: Loading());
+                                                  });
+
+                                              // get the to customer details
+                                              int toId = int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                              CustomerResponse toCustomer = await Magento.getCustomerById(toId);
+                                              String chatId = customer.id.toString() + '-' + product.id.toString();
+
+                                              await showDialog<void>(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text('Send an offer'),
+                                                      content: SingleChildScrollView(
+                                                        child: ListBody(
+                                                          children: <Widget>[
+                                                            Form(
+                                                              key: formKey,
+                                                              child: TextFormField(
+                                                                  controller: offerController,
+                                                                  keyboardType: TextInputType.number,
+                                                                  decoration: InputDecoration(
+                                                                      labelText: 'Enter an offer price *',
+                                                                      labelStyle: TextStyle(color: ResoldBlue),
+                                                                      enabledBorder: UnderlineInputBorder(
+                                                                          borderSide: BorderSide(
+                                                                              color: ResoldBlue, width: 1.5)),
+                                                                      focusedBorder: UnderlineInputBorder(
+                                                                          borderSide: BorderSide(
+                                                                              color: ResoldBlue, width: 1.5)),
+                                                                      border: UnderlineInputBorder(
+                                                                          borderSide: BorderSide(
+                                                                              color: ResoldBlue, width: 1.5))),
+                                                                  validator: (value) {
+                                                                    int offerPrice = int.tryParse(value);
+                                                                    if (value.isEmpty || offerPrice < 1) {
+                                                                      return 'Please enter a valid offer.';
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  style: TextStyle(color: Colors.black)),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                          child: Text(
+                                                            'OK',
+                                                            style: TextStyle(color: ResoldBlue),
+                                                          ),
+                                                          onPressed: () async {
+                                                            if (formKey.currentState.validate()) {
+                                                              Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                                                              await Firebase.sendProductMessage(
+                                                                  chatId,
+                                                                  customer.id,
+                                                                  toCustomer.id,
+                                                                  product,
+                                                                  customer.id.toString() + '|' + offerController.text,
+                                                                  MessageType.offer,
+                                                                  toId == customer.id,
+                                                                  firstMessage: true);
+
+                                                              if (fromMessagePage) {
+                                                                // go back
+                                                                Navigator.of(context, rootNavigator: true).pop(context);
+                                                                Navigator.pop(context);
+                                                              } else {
+                                                                // push a new message page
+                                                                offerController.value = TextEditingValue();
+                                                                Navigator.of(context, rootNavigator: true)
+                                                                    .pop('dialog');
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => MessagePage(toCustomer,
+                                                                            product, chatId, UserMessageType.buyer)));
+                                                              } // end if not from message page
+                                                            } // end if valid verification code
+                                                          },
+                                                        ),
+                                                        FlatButton(
+                                                          child: Text(
+                                                            'Cancel',
+                                                            style: TextStyle(color: ResoldBlue),
+                                                          ),
+                                                          onPressed: () {
+                                                            offerController.value = TextEditingValue();
+                                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  });
+                                            },
+                                            child: Text('Send Offer',
+                                                style: new TextStyle(
+                                                    fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                            color: Colors.black,
+                                            textColor: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(height: 5),
+                                        ButtonTheme(
+                                            minWidth: 340.0,
+                                            height: 70.0,
+                                            child: RaisedButton(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadiusDirectional.circular(8)),
+                                              onPressed: () async {
+                                                // show a loading indicator
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return Center(child: Loading());
+                                                    });
+
+                                                // get the to customer details
+                                                int toId =
+                                                    int.tryParse(await Resold.getCustomerIdByProduct(product.id));
+                                                CustomerResponse toCustomer = await Magento.getCustomerById(toId);
+                                                String chatId = customer.id.toString() + '-' + product.id.toString();
+
+                                                // get a Postmates delivery quote
+                                                DateTime now = DateTime.now();
+
+                                                var pickupDeadline = now.add(Duration(minutes: 30));
+                                                var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
+
+                                                // create a Postmates delivery quote
+                                                DeliveryQuoteResponse quote = await Postmates.createDeliveryQuote(
+                                                    DeliveryQuoteRequest(
+                                                        pickup_address: customer.addresses.first.toString(),
+                                                        pickup_ready_dt: now.toUtc().toIso8601String(),
+                                                        pickup_deadline_dt: pickupDeadline.toUtc().toIso8601String(),
+                                                        dropoff_address: toCustomer.addresses.first.toString(),
+                                                        dropoff_ready_dt: now.toUtc().toIso8601String(),
+                                                        dropoff_deadline_dt:
+                                                            dropoffDeadline.toUtc().toIso8601String()));
+
+                                                // prepare message content for delivery request
+                                                String content = quote.id +
+                                                    '|' +
+                                                    quote.fee.toString() +
+                                                    '|' +
+                                                    quote.pickup_duration.toString() +
+                                                    '|' +
+                                                    quote.duration.toString();
+
+                                                await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id,
+                                                    product, content, MessageType.deliveryQuote, toId == customer.id,
+                                                    firstMessage: true);
+
+                                                if (fromMessagePage) {
+                                                  // go back
+                                                  Navigator.of(context, rootNavigator: true).pop(context);
+                                                  Navigator.pop(context);
+                                                } else {
+                                                  // push a new message page
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => MessagePage(
+                                                              toCustomer, product, chatId, UserMessageType.buyer)));
+                                                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                } // end if not from message page
+                                              },
+                                              child: Text('Request Delivery',
+                                                  style: new TextStyle(
+                                                      fontSize: 20.0,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white)),
+                                              color: Colors.black,
+                                              textColor: Colors.white,
+                                            )),
+                                        SizedBox(height: 10),
+                                        Container(
+                                            height: 500,
+                                            child: GoogleMap(
+                                              onMapCreated: onMapCreated,
+                                              initialCameraPosition: CameraPosition(
+                                                target: LatLng(product.latitude, product.longitude),
+                                                zoom: 9.0,
+                                              ),
+                                              markers: markers.values.toSet(),
+                                            ))
+                                      ]))
+                                ],
+                              ));
+                            } else {
+                              return Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [Center(child: Loading())]);
+                            } // end if we have data
+                          } // end builder function
+                          )
+                    ],
+                  )),
+              onWillPop: () async {
+                Navigator.pop(context);
+                return false;
+              });
         });
   } // end function build
 
