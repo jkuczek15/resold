@@ -3,11 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold.dart';
+import 'package:resold/state/actions/update-customer.dart';
 import 'package:resold/state/app-state.dart';
+import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:iso_countries/iso_countries.dart';
+import 'package:resold/widgets/loading.dart';
 import 'package:us_states/us_states.dart';
 
 class EditAddressPage extends StatefulWidget {
@@ -34,9 +39,11 @@ class EditAddressPageState extends State<EditAddressPage> {
   CustomerResponse customer;
 
   Future<List<Country>> futureCountries;
+  List<Country> countries;
   Country selectedCountry;
   List<DropdownMenuItem<String>> states = new List<DropdownMenuItem<String>>();
   String selectedState;
+  bool firstBuild = true;
 
   EditAddressPageState(this.customer);
 
@@ -214,8 +221,11 @@ class EditAddressPageState extends State<EditAddressPage> {
                                 future: futureCountries,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
-                                    selectedCountry =
-                                        snapshot.data.where((element) => element.countryCode == 'US').first;
+                                    if (firstBuild) {
+                                      countries = snapshot.data;
+                                      selectedCountry = countries.where((country) => country.countryCode == 'US').first;
+                                      firstBuild = false;
+                                    } // end if first build
                                     return Padding(
                                       padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
                                       child: Container(
@@ -253,7 +263,74 @@ class EditAddressPageState extends State<EditAddressPage> {
                                   child: RaisedButton(
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                                     onPressed: () async {
-                                      // TODO: change address
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Center(child: Loading());
+                                          });
+                                      customer.addresses.first.street[0] = addressLine1Controller.text;
+
+                                      if (addressLine2Controller.text.isNotEmpty) {
+                                        if (customer.addresses.first.street.length == 1) {
+                                          customer.addresses.first.street.add(addressLine2Controller.text);
+                                        } else {
+                                          customer.addresses.first.street[1] = addressLine2Controller.text;
+                                        } // end if we have an address line 2
+                                      } // end if we have an address line 2
+
+                                      // set the customer's address
+                                      customer.addresses.first.city = cityController.text;
+                                      customer.addresses.first.countryId = selectedCountry.countryCode;
+                                      customer.addresses.first.region.regionCode = selectedState;
+                                      customer.addresses.first.region.region = USStates.getName(selectedState);
+
+                                      // try to parse the region ID
+                                      try {
+                                        customer.addresses.first.region.regionId = int.tryParse(
+                                            await Resold.getRegionId(selectedState, selectedCountry.countryCode));
+                                      } catch (exception) {
+                                        return showDialog<void>(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                  title: Text('Countries outside of the US are not supported.'),
+                                                  actions: <Widget>[
+                                                    FlatButton(
+                                                        child: Text(
+                                                          'Ok',
+                                                          style: TextStyle(color: ResoldBlue),
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            selectedCountry = countries
+                                                                .where((country) => country.countryCode == 'US')
+                                                                .first;
+                                                          });
+                                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                          Navigator.pop(context);
+                                                        })
+                                                  ]);
+                                            });
+                                      } // end if we were able to parse a region id
+
+                                      // update the customer with the new address
+                                      await Magento.updateCustomer(
+                                          customer.token,
+                                          customer.id,
+                                          CustomerRequest(
+                                              email: customer.email,
+                                              firstname: customer.firstName,
+                                              lastname: customer.lastName,
+                                              addresses: customer.addresses),
+                                          customer.password);
+
+                                      // dispatch update customer state action
+                                      dispatcher(UpdateCustomerAction(customer));
+
+                                      // navigate
+                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      Navigator.pop(context);
                                     },
                                     child: Text('Save',
                                         style: new TextStyle(

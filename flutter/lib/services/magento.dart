@@ -111,6 +111,7 @@ class Magento {
         'firstname': customer.firstname,
         'lastname': customer.lastname,
         'email': customer.email,
+        'addresses': customer.addresses,
         'website_id': 1
       },
       'password': existingPassword
