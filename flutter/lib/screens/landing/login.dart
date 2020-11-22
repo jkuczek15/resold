@@ -23,6 +23,8 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final forgotPasswordController = TextEditingController();
+  final forgotPasswordKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +172,16 @@ class LoginPageState extends State<LoginPage> {
                         color: Colors.black,
                         textColor: Colors.white,
                       ),
+                      SizedBox(height: 15),
+                      InkWell(
+                        onTap: forgotPassword,
+                        child: Text('Forgot password?',
+                            style: new TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                decoration: TextDecoration.underline)),
+                      ),
                       SizedBox(height: 10)
                     ])),
                     SizedBox(height: 5)
@@ -180,4 +192,110 @@ class LoginPageState extends State<LoginPage> {
               return false;
             }));
   } // end function build
+
+  void forgotPassword() async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return ViewModelSubscriber<AppState, CustomerResponse>(
+              converter: (state) => state.customer,
+              builder: (context, dispatcher, model) => AlertDialog(
+                      title: Text('Forgot password?'),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text(
+                              'Enter your email and you will receive a link to change your password.',
+                            ),
+                            Form(
+                              key: forgotPasswordKey,
+                              child: TextFormField(
+                                controller: forgotPasswordController,
+                                decoration: InputDecoration(
+                                  labelText: 'Enter your email...',
+                                  labelStyle: TextStyle(color: ResoldBlue),
+                                  enabledBorder:
+                                      UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                  focusedBorder:
+                                      UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                  border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                ),
+                                style: TextStyle(color: Colors.black),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter a valid email address.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                            child: Text(
+                              'OK',
+                              style: TextStyle(color: ResoldBlue),
+                            ),
+                            onPressed: () async {
+                              if (forgotPasswordKey.currentState.validate()) {
+                                String email = forgotPasswordController.text;
+
+                                // send forgot password email
+                                var response = await Magento.forgotPassword(email);
+
+                                if (response) {
+                                  await showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                            title: Text("A password reset email has been sent to $email."),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                  child: Text(
+                                                    'Ok',
+                                                    style: TextStyle(color: ResoldBlue),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  })
+                                            ]);
+                                      });
+                                  // close the dialog
+                                  forgotPasswordController.value = TextEditingValue();
+                                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                                } else {
+                                  await showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                            title: Text("The email address could not be found."),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                  child: Text(
+                                                    'Ok',
+                                                    style: TextStyle(color: ResoldBlue),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  })
+                                            ]);
+                                      });
+                                } // end if we were able to send a password reset email
+                              } // end if forgot password valid
+                            }),
+                        FlatButton(
+                          child: Text('Cancel', style: TextStyle(color: ResoldBlue)),
+                          onPressed: () {
+                            forgotPasswordController.value = TextEditingValue();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ]));
+        });
+  } // end function forgotPassword
 }

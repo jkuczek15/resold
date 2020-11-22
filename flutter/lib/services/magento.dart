@@ -393,7 +393,26 @@ class Magento {
     } else {
       return Future<bool>.value(false);
     }
-  } // end function deleteCustomer
+  } // end function product
+
+  /*
+  * forgotPassword - Send a forgot password email
+  * email - Customer email
+  */
+  static Future<bool> forgotPassword(String email) async {
+    await config.initialized;
+
+    var requestJson = jsonEncode(<String, dynamic>{'email': email, 'template': 'email_reset', 'websiteId': 1});
+
+    final response =
+        await client.put('${config.baseUrl}/customers/password', headers: config.adminHeaders, body: requestJson);
+
+    if (response.statusCode == 200) {
+      return Future<bool>.value(true);
+    } else {
+      return Future<bool>.value(false);
+    }
+  } // end function product
 
 } // end class Magento
 
