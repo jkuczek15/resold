@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:resold/constants/ui-constants.dart';
@@ -46,6 +47,6 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: PhotoView(imageProvider: NetworkImage(url)));
+    return Container(child: PhotoView(imageProvider: CachedNetworkImageProvider(url)));
   }
 }
