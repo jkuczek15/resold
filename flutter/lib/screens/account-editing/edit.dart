@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
@@ -125,8 +126,7 @@ class EditProPageState extends State<EditProPage> {
                             onSelected: handleMenuClick,
                             icon: Icon(Icons.settings),
                             itemBuilder: (BuildContext context) {
-                              return {'Manage Addresses', 'Manage Payments', 'Logout', 'Delete Profile'}
-                                  .map((String choice) {
+                              return {'Manage Addresses', 'Logout', 'Delete Profile'}.map((String choice) {
                                 return PopupMenuItem<String>(
                                   value: choice,
                                   child: Text(choice),
@@ -153,7 +153,7 @@ class EditProPageState extends State<EditProPage> {
                                           padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                                           child: CircleAvatar(
                                             backgroundImage: vendor.profilePicture != 'null'
-                                                ? NetworkImage(imagePath)
+                                                ? CachedNetworkImageProvider(imagePath)
                                                 : AssetImage('assets/images/avatar-placeholder.png'),
                                           ),
                                         )),
