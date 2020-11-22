@@ -372,7 +372,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 controller: passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Enter Current Password *',
+                                  labelText: 'Enter Current Password...',
                                   labelStyle: TextStyle(color: ResoldBlue),
                                   enabledBorder:
                                       UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
@@ -627,8 +627,6 @@ class EditProfilePageState extends State<EditProfilePage> {
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
-                                      // Navigator.pushReplacement(
-                                      //     context, MaterialPageRoute(builder: (context) => LandingPage()));
                                     })
                               ]);
                             });

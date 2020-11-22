@@ -43,7 +43,7 @@ class SmsHelper {
                         keyboardType: TextInputType.number,
                         obscureText: true,
                         decoration: InputDecoration(
-                            labelText: 'Enter SMS verification code *',
+                            labelText: 'Enter SMS verification code...',
                             labelStyle: TextStyle(color: ResoldBlue),
                             enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                             focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
