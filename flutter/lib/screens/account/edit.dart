@@ -126,7 +126,7 @@ class EditProPageState extends State<EditProPage> {
                             onSelected: handleMenuClick,
                             icon: Icon(Icons.settings),
                             itemBuilder: (BuildContext context) {
-                              return {'Manage Addresses', 'Logout', 'Delete Profile'}.map((String choice) {
+                              return {'Change Address', 'Logout', 'Delete Profile'}.map((String choice) {
                                 return PopupMenuItem<String>(
                                   value: choice,
                                   child: Text(choice),
@@ -524,10 +524,7 @@ class EditProPageState extends State<EditProPage> {
 
   void handleMenuClick(String value) async {
     switch (value) {
-      case 'Manage Addresses':
-        // TODO: handle cases
-        break;
-      case 'Manage Payments':
+      case 'Change Address':
         // TODO: handle cases
         break;
       case 'Logout':

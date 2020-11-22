@@ -265,6 +265,48 @@ class SignUpPageState extends State<SignUpPage> {
                                       return FadeTransition(opacity: animation, child: child);
                                     },
                                   ));
+
+                              // show an address dialog
+                              showDialog<void>(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Save Address'),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Text(
+                                            'We have found this address for your profile. Would you like us to save it?',
+                                          ),
+                                          SizedBox(height: 15),
+                                          Text(customer.addresses.first.toString()),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text(
+                                          'Save',
+                                          style: TextStyle(color: ResoldBlue),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text(
+                                          'Edit',
+                                          style: TextStyle(color: ResoldBlue),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        },
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
                             } else {
                               Navigator.of(context, rootNavigator: true).pop('dialog');
                               return showDialog<void>(
