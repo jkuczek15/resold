@@ -74,3 +74,4 @@ robots.txt
 /scripts/scrape/csv/*.csv
 /scripts/scrape/csv/Imported/*.csv
 /scripts/scrape/email-sender/db/*
+*.lock
