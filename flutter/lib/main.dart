@@ -1,13 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
+import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/environment.dart';
+import 'package:resold/models/order.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
+import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/product-reducer.dart';
+import 'package:resold/state/reducers/tab-reducer..dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -46,18 +51,31 @@ Future<void> main() async {
   Vendor vendor = new Vendor();
   List<Product> forSaleProducts = new List<Product>();
   List<Product> soldProducts = new List<Product>();
+  List<Order> purchasedOrders = new List<Order>();
+  List<Order> soldOrders = new List<Order>();
 
   if (customer.isLoggedIn()) {
     // get the initial state, vendor, for-sale products and sold products
-    vendor = await Resold.getVendor(customer.vendorId);
-    forSaleProducts = await Resold.getVendorProducts(customer.vendorId, 'for-sale');
-    soldProducts = await Resold.getVendorProducts(customer.vendorId, 'sold');
+    await Future.wait([
+      Resold.getVendor(customer.vendorId),
+      Resold.getVendorProducts(customer.vendorId, 'for-sale'),
+      Resold.getVendorProducts(customer.vendorId, 'sold'),
+      Magento.getPurchasedOrders(customer.id),
+      ResoldRest.getVendorOrders(customer.token)
+    ]).then((data) {
+      vendor = data[0];
+      forSaleProducts = data[1];
+      soldProducts = data[2];
+      purchasedOrders = data[3];
+      soldOrders = data[4];
+    });
   } // end if customer is logged in
 
   // store app state
   Store store = Store<AppState>(
-      initialState: AppState(customer, vendor, forSaleProducts, soldProducts),
-      blocs: [CustomerReducer(), ProductReducer()]);
+      initialState:
+          AppState(SelectedTab.home, customer, vendor, forSaleProducts, soldProducts, purchasedOrders, soldOrders),
+      blocs: [CustomerReducer(), ProductReducer(), TabReducer()]);
 
   // run the app
   runApp(StoreProvider<AppState>(

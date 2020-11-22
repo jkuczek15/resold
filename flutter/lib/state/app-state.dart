@@ -1,12 +1,18 @@
+import 'package:resold/enums/selected-tab.dart';
+import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class AppState {
+  SelectedTab selectedTab;
   CustomerResponse customer;
   Vendor vendor;
   List<Product> forSaleProducts;
   List<Product> soldProducts;
+  List<Order> purchasedOrders;
+  List<Order> soldOrders;
 
-  AppState(this.customer, this.vendor, this.forSaleProducts, this.soldProducts);
+  AppState(this.selectedTab, this.customer, this.vendor, this.forSaleProducts, this.soldProducts, this.purchasedOrders,
+      this.soldOrders);
 }
