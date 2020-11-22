@@ -1,9 +1,12 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/helpers/sms-helper.dart';
+import 'package:resold/screens/account/edit-address.dart';
 import 'package:resold/state/actions/update-customer.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
@@ -13,25 +16,23 @@ import 'package:resold/services/resold.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
-import 'dart:async';
 import 'package:geocoder/geocoder.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/services/magento.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
-class EditProPage extends StatefulWidget {
+class EditProfilePage extends StatefulWidget {
   final CustomerResponse customer;
 
-  EditProPage(CustomerResponse customer, {Key key})
+  EditProfilePage(CustomerResponse customer, {Key key})
       : customer = customer,
         super(key: key);
 
   @override
-  EditProPageState createState() => EditProPageState(customer);
+  EditProfilePageState createState() => EditProfilePageState(customer);
 }
 
-class EditProPageState extends State<EditProPage> {
+class EditProfilePageState extends State<EditProfilePage> {
   Future<Vendor> futureVendor;
   Position currentLocation;
 
@@ -55,7 +56,7 @@ class EditProPageState extends State<EditProPage> {
   final picker = ImagePicker();
   String imagePath;
 
-  EditProPageState(this.customer);
+  EditProfilePageState(this.customer);
 
   @override
   void initState() {
@@ -326,7 +327,7 @@ class EditProPageState extends State<EditProPage> {
                                                     confirmPass);
                                               }
                                             },
-                                            child: Text('Submit',
+                                            child: Text('Save',
                                                 style: new TextStyle(
                                                     fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                                             padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
@@ -525,7 +526,7 @@ class EditProPageState extends State<EditProPage> {
   void handleMenuClick(String value) async {
     switch (value) {
       case 'Change Address':
-        // TODO: handle cases
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddressPage(customer)));
         break;
       case 'Logout':
         return showDialog<void>(
