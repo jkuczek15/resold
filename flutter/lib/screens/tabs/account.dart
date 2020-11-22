@@ -9,7 +9,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/screens/account-editing/edit.dart';
+import 'package:resold/screens/account/edit.dart';
 
 class AccountPage extends StatefulWidget {
   AccountPage({Key key}) : super(key: key);
