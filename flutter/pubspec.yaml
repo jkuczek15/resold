@@ -39,7 +39,7 @@ dependencies:
   liquid_pull_to_refresh: ^2.0.0
   multi_image_picker: ^4.7.10
   permission_handler: ^5.0.1+1
-  material_design_icons_flutter: 4.0.5345
+  material_design_icons_flutter: 4.0.5755
   firebase_auth: ^0.16.1
   google_sign_in: ^4.5.1
   cloud_firestore: ^0.13.7
