@@ -3,6 +3,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/sms-helper.dart';
+import 'package:resold/screens/account/edit-address.dart';
 import 'package:resold/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
@@ -301,6 +302,8 @@ class SignUpPageState extends State<SignUpPage> {
                                         ),
                                         onPressed: () async {
                                           Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          Navigator.push(context,
+                                              MaterialPageRoute(builder: (context) => EditAddressPage(customer)));
                                         },
                                       )
                                     ],

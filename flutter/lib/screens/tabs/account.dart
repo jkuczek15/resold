@@ -155,16 +155,17 @@ class AccountPageState extends State<AccountPage> {
                                               shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadiusDirectional.circular(8)),
                                               onPressed: () async {
-                                                Navigator.push(context,
-                                                        MaterialPageRoute(builder: (context) => EditProPage(customer)))
-                                                    .then((value) => {
-                                                          setState(() {
-                                                            imageCache.clear();
-                                                            imagePath = imagePath +
-                                                                '?d=' +
-                                                                DateTime.now().millisecond.toString();
-                                                          })
-                                                        });
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            EditProfilePage(customer))).then((value) => {
+                                                      setState(() {
+                                                        imageCache.clear();
+                                                        imagePath =
+                                                            imagePath + '?d=' + DateTime.now().millisecond.toString();
+                                                      })
+                                                    });
                                               },
                                               child: Text('Edit Profile',
                                                   style: new TextStyle(
