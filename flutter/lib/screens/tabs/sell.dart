@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rebloc/rebloc.dart';
+import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/actions/set-for-sale.dart';
+import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/widgets/image/image-uploader.dart';
 import 'package:resold/widgets/scroll/scroll-column-expandable.dart';
@@ -146,6 +148,7 @@ class SellPageState extends State<SellPage> {
                                         latitude: currentLocation.latitude,
                                         longitude: currentLocation.longitude,
                                         localGlobal: '231,232');
+
                                     var response = await ResoldRest.postProduct(
                                         customer.token, product, imageUploaderKey.currentState.imagePaths);
                                     product.id = int.tryParse(response);
@@ -153,7 +156,9 @@ class SellPageState extends State<SellPage> {
                                     // dispatch new action to set the for-sale products
                                     List<Product> forSaleProducts =
                                         await Resold.getVendorProducts(customer.vendorId, 'for-sale');
+
                                     dispatcher(SetForSaleAction(forSaleProducts));
+                                    dispatcher(SetSelectedTabAction(SelectedTab.account));
 
                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                     Navigator.push(context,
