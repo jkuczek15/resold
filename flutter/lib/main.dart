@@ -40,8 +40,8 @@ Future<void> main() async {
   // await CustomerResponse.clear();
 
   // auto-login
-  // await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
-  await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
+  await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
+  // await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
   // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
 
   // get from disk and login
@@ -55,7 +55,7 @@ Future<void> main() async {
   List<Order> soldOrders = new List<Order>();
 
   if (customer.isLoggedIn()) {
-    // get the initial state, vendor, for-sale products and sold products
+    // initialize application state
     await Future.wait([
       Resold.getVendor(customer.vendorId),
       Resold.getVendorProducts(customer.vendorId, 'for-sale'),
