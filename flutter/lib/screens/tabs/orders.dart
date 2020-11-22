@@ -93,7 +93,7 @@ class OrdersPageState extends State<OrdersPage> {
                                                       ))));
                                         },
                                       ))
-                                  : Center(child: Text('You purchased any items.')),
+                                  : Center(child: Text('You haven\'t purchased any items.')),
                               soldOrders.length > 0
                                   ? ListView(
                                       padding: const EdgeInsets.all(8),

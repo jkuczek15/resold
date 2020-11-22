@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:resold/state/actions/update-customer.dart';
+import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -72,7 +74,7 @@ class SignUpPageState extends State<SignUpPage> {
                               child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
                           padding: EdgeInsets.fromLTRB(30, 40, 30, 20)),
                       Center(
-                          child: Text('Buy & sell locally with delivery.',
+                          child: Text('Buy & sell without leaving your home',
                               style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
                     ]),
                     Center(
@@ -197,18 +199,11 @@ class SignUpPageState extends State<SignUpPage> {
                       RaisedButton(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                         onPressed: () async {
-                          // show a loading indicator
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Center(child: Loading());
-                              });
-
                           await locationInitialized;
-
                           // show dialog
                           await SmsHelper().handleSmsVerification(
                               phoneController, smsVerificationController, formKey, context, () async {
+                            // show a loading indicator
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -224,7 +219,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 await Resold.getRegionId(customerAddress.region.regionCode, customerAddress.countryId);
                             customerAddress.region.regionId = int.parse(regionId);
 
-                            CustomerResponse response = await Magento.createCustomer(
+                            CustomerResponse customer = await Magento.createCustomer(
                                 CustomerRequest(
                                     email: emailController.text,
                                     firstname: firstNameController.text,
@@ -233,20 +228,34 @@ class SignUpPageState extends State<SignUpPage> {
                                 passwordController.text,
                                 confirmPasswordController.text);
 
-                            if (response.statusCode == 200) {
+                            if (customer.statusCode == 200) {
                               // signup was successful
                               // store to disk
-                              await CustomerResponse.save(response);
+                              await CustomerResponse.save(customer);
 
                               // create a firebase user
-                              await Firebase.createUser(response);
+                              await Firebase.createUser(customer);
 
-                              // update customer app state
-                              dispatcher(UpdateCustomerAction(response));
+                              // initialize application state
+                              await Future.wait([
+                                Resold.getVendor(customer.vendorId),
+                                Resold.getVendorProducts(customer.vendorId, 'for-sale'),
+                                Resold.getVendorProducts(customer.vendorId, 'sold'),
+                                Magento.getPurchasedOrders(customer.id),
+                                ResoldRest.getVendorOrders(customer.token)
+                              ]).then((data) {
+                                dispatcher(InitStateAction(AppState(
+                                    selectedTab: SelectedTab.home,
+                                    customer: customer,
+                                    vendor: data[0],
+                                    forSaleProducts: data[1],
+                                    soldProducts: data[2],
+                                    purchasedOrders: data[3],
+                                    soldOrders: data[4])));
+                              });
 
                               // navigate
                               Navigator.of(context, rootNavigator: true).pop('dialog');
-                              Navigator.pop(context);
                               Navigator.pop(context);
                               Navigator.pushReplacement(
                                   context,
@@ -266,7 +275,7 @@ class SignUpPageState extends State<SignUpPage> {
                                     title: Text('Sign Up Error'),
                                     content: SingleChildScrollView(
                                       child: ListBody(
-                                        children: <Widget>[Text(response.error)],
+                                        children: <Widget>[Text(customer.error)],
                                       ),
                                     ),
                                     actions: <Widget>[

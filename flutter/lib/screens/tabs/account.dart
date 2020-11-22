@@ -65,7 +65,7 @@ class AccountPageState extends State<AccountPage> {
                                     Container(
                                         child: Stack(children: [
                                       Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
-                                          fit: BoxFit.cover, height: 650, width: 500),
+                                          fit: BoxFit.cover, height: 600, width: 500),
                                       Column(children: [
                                         Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                                           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -114,7 +114,7 @@ class AccountPageState extends State<AccountPage> {
                                                                         style: new TextStyle(
                                                                             fontSize: 20.0,
                                                                             fontFamily: 'Roboto',
-                                                                            fontWeight: FontWeight.normal,
+                                                                            fontWeight: FontWeight.bold,
                                                                             color: Colors.white))
                                                                   ]),
                                                                   onTap: () => {
@@ -134,7 +134,7 @@ class AccountPageState extends State<AccountPage> {
                                                                           style: new TextStyle(
                                                                               fontSize: 20.0,
                                                                               fontFamily: 'Roboto',
-                                                                              fontWeight: FontWeight.normal,
+                                                                              fontWeight: FontWeight.bold,
                                                                               color: Colors.white))
                                                                     ]),
                                                                     onTap: () => {
@@ -178,21 +178,39 @@ class AccountPageState extends State<AccountPage> {
                                         Container(
                                             child: Column(
                                           children: [
-                                            GridView.count(
-                                                physics: ScrollPhysics(),
-                                                shrinkWrap: true,
-                                                crossAxisCount: 2,
-                                                children: displayForSale
-                                                    ? List.generate(forSaleProducts.length, (index) {
-                                                        var product = forSaleProducts[index];
-                                                        return ProductListBuilder.buildProductGridTile(
-                                                            context, currentLocation, product, customer, index);
-                                                      })
-                                                    : List.generate(soldProducts.length, (index) {
-                                                        var product = soldProducts[index];
-                                                        return ProductListBuilder.buildProductGridTile(
-                                                            context, currentLocation, product, customer, index);
-                                                      })),
+                                            displayForSale && forSaleProducts.length == 0
+                                                ? Center(
+                                                    child: Padding(
+                                                        padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
+                                                        child: Text('You haven\'t listed any items for sale.',
+                                                            style: new TextStyle(
+                                                                fontSize: 16.0,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.white))))
+                                                : !displayForSale && soldProducts.length == 0
+                                                    ? Center(
+                                                        child: Padding(
+                                                            padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
+                                                            child: Text('You haven\'t sold any items.',
+                                                                style: new TextStyle(
+                                                                    fontSize: 16.0,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: Colors.white))))
+                                                    : GridView.count(
+                                                        physics: ScrollPhysics(),
+                                                        shrinkWrap: true,
+                                                        crossAxisCount: 2,
+                                                        children: displayForSale
+                                                            ? List.generate(forSaleProducts.length, (index) {
+                                                                var product = forSaleProducts[index];
+                                                                return ProductListBuilder.buildProductGridTile(
+                                                                    context, currentLocation, product, customer, index);
+                                                              })
+                                                            : List.generate(soldProducts.length, (index) {
+                                                                var product = soldProducts[index];
+                                                                return ProductListBuilder.buildProductGridTile(
+                                                                    context, currentLocation, product, customer, index);
+                                                              })),
                                           ],
                                         ))
                                       ]),

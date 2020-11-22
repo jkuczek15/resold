@@ -12,7 +12,7 @@ import 'package:resold/services/resold.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/product-reducer.dart';
-import 'package:resold/state/reducers/tab-reducer..dart';
+import 'package:resold/state/reducers/home-reducer..dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -37,11 +37,11 @@ Future<void> main() async {
       androidPayMode: env.stripeAndroidPayMode));
 
   // clear from disk
-  await CustomerResponse.clear();
+  // await CustomerResponse.clear();
 
   // auto-login
-  await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
-  // await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
+  // await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
+  await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
   // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
 
   // get from disk and login
@@ -73,9 +73,15 @@ Future<void> main() async {
 
   // store app state
   Store store = Store<AppState>(
-      initialState:
-          AppState(SelectedTab.home, customer, vendor, forSaleProducts, soldProducts, purchasedOrders, soldOrders),
-      blocs: [CustomerReducer(), ProductReducer(), TabReducer()]);
+      initialState: AppState(
+          selectedTab: SelectedTab.home,
+          customer: customer,
+          vendor: vendor,
+          forSaleProducts: forSaleProducts,
+          soldProducts: soldProducts,
+          purchasedOrders: purchasedOrders,
+          soldOrders: soldOrders),
+      blocs: [CustomerReducer(), ProductReducer(), HomeReducer()]);
 
   // run the app
   runApp(StoreProvider<AppState>(

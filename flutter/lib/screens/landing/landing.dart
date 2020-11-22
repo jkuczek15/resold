@@ -27,10 +27,11 @@ class LandingPageState extends State<LandingPage> {
         Column(children: [
           Padding(
               child: Align(
-                  alignment: Alignment.topCenter, child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
+                  alignment: Alignment.topCenter,
+                  child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
               padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
           Center(
-              child: Text('Buy & sell locally with delivery.',
+              child: Text('Buy & sell without leaving your home',
                   style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
         ]),
         Center(
@@ -48,7 +49,8 @@ class LandingPageState extends State<LandingPage> {
                     },
                   ));
             },
-            child: Text('Get Started', style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+            child: Text('Get Started',
+                style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
             padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
             color: Colors.black,
             textColor: Colors.white,
@@ -67,7 +69,8 @@ class LandingPageState extends State<LandingPage> {
                       },
                     ));
               },
-              child: Text('Sign In', style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+              child: Text('Sign In',
+                  style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
               padding: EdgeInsets.fromLTRB(125, 30, 125, 30),
               color: Colors.black,
               textColor: Colors.white),

@@ -545,8 +545,11 @@ class EditProPageState extends State<EditProPage> {
               actions: <Widget>[
                 FlatButton(
                   child: Text('Yes', style: TextStyle(color: ResoldBlue)),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+                  onPressed: () async {
+                    // clear from disk
+                    await CustomerResponse.clear();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
                   },
                 ),
                 FlatButton(
@@ -610,6 +613,9 @@ class EditProPageState extends State<EditProPage> {
                     if (deleteKey.currentState.validate()) {
                       Future<bool> complete = Magento.deleteCustomer(customer.id);
                       if (await complete) {
+                        // clear from disk
+                        await CustomerResponse.clear();
+                        Navigator.of(context).popUntil((route) => route.isFirst);
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
                         return showDialog<void>(
                             context: context,
@@ -623,8 +629,8 @@ class EditProPageState extends State<EditProPage> {
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
-                                      Navigator.pushReplacement(
-                                          context, MaterialPageRoute(builder: (context) => LandingPage()));
+                                      // Navigator.pushReplacement(
+                                      //     context, MaterialPageRoute(builder: (context) => LandingPage()));
                                     })
                               ]);
                             });
