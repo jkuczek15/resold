@@ -38,8 +38,14 @@ class Home extends StatelessWidget {
                   800: Color.fromRGBO(25, 72, 92, .9),
                   900: Color.fromRGBO(25, 72, 92, 1)
                 }),
-                sliderTheme: SliderThemeData(valueIndicatorColor: ResoldBlue, showValueIndicator: ShowValueIndicator.never, valueIndicatorTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+                sliderTheme: SliderThemeData(
+                    valueIndicatorColor: ResoldBlue,
+                    showValueIndicator: ShowValueIndicator.never,
+                    valueIndicatorTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    tickMarkShape: SliderTickMarkShape.noTickMark),
                 scaffoldBackgroundColor: Colors.white,
                 brightness: Brightness.light,
                 accentColor: Colors.white,
