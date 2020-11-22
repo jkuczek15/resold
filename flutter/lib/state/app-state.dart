@@ -13,6 +13,12 @@ class AppState {
   List<Order> purchasedOrders;
   List<Order> soldOrders;
 
-  AppState(this.selectedTab, this.customer, this.vendor, this.forSaleProducts, this.soldProducts, this.purchasedOrders,
-      this.soldOrders);
+  AppState(
+      {this.selectedTab,
+      this.customer,
+      this.vendor,
+      this.forSaleProducts,
+      this.soldProducts,
+      this.purchasedOrders,
+      this.soldOrders});
 }

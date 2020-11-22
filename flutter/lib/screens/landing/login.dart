@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
-import 'package:resold/state/actions/update-customer.dart';
+import 'package:resold/services/resold-rest.dart';
+import 'package:resold/services/resold.dart';
+import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/magento/login-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -40,7 +43,7 @@ class LoginPageState extends State<LoginPage> {
                               child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
                           padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
                       Center(
-                          child: Text('Buy & sell locally with delivery.',
+                          child: Text('Buy & sell without leaving your home',
                               style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
                     ]),
                     Center(
@@ -95,19 +98,34 @@ class LoginPageState extends State<LoginPage> {
                               });
 
                           // attempt to login
-                          CustomerResponse response = await Magento.loginCustomer(
+                          CustomerResponse customer = await Magento.loginCustomer(
                               LoginRequest(username: emailController.text, password: passwordController.text));
 
-                          if (response.statusCode == 200) {
+                          if (customer.statusCode == 200) {
                             // login was successful
                             // store to disk
-                            await CustomerResponse.save(response);
-
-                            // update customer app state
-                            dispatcher(UpdateCustomerAction(response));
+                            await CustomerResponse.save(customer);
 
                             // create a firebase user
-                            await Firebase.createUser(response);
+                            await Firebase.createUser(customer);
+
+                            // initialize application state
+                            await Future.wait([
+                              Resold.getVendor(customer.vendorId),
+                              Resold.getVendorProducts(customer.vendorId, 'for-sale'),
+                              Resold.getVendorProducts(customer.vendorId, 'sold'),
+                              Magento.getPurchasedOrders(customer.id),
+                              ResoldRest.getVendorOrders(customer.token)
+                            ]).then((data) {
+                              dispatcher(InitStateAction(AppState(
+                                  selectedTab: SelectedTab.home,
+                                  customer: customer,
+                                  vendor: data[0],
+                                  forSaleProducts: data[1],
+                                  soldProducts: data[2],
+                                  purchasedOrders: data[3],
+                                  soldOrders: data[4])));
+                            });
 
                             // navigate
                             Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -130,7 +148,7 @@ class LoginPageState extends State<LoginPage> {
                                   title: Text('Sign In Error'),
                                   content: SingleChildScrollView(
                                     child: ListBody(
-                                      children: <Widget>[Text(response.error)],
+                                      children: <Widget>[Text(customer.error)],
                                     ),
                                   ),
                                   actions: <Widget>[
