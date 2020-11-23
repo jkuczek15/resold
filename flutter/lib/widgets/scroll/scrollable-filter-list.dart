@@ -1,17 +1,18 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/services/resold.dart';
+import 'package:resold/enums/sort.dart';
+import 'package:resold/state/search-state.dart';
 
 class ScrollableFilterList extends StatefulWidget {
-  final ScrollableFilterListState state = new ScrollableFilterListState();
+  final SearchState searchState;
 
-  ScrollableFilterList({Key key}) : super(key: key);
+  ScrollableFilterList(SearchState searchState, {Key key})
+      : searchState = searchState,
+        super(key: key);
 
   @override
-  ScrollableFilterListState createState() => state;
+  ScrollableFilterListState createState() => new ScrollableFilterListState(searchState);
 }
 
 class ScrollableFilterListState extends State<ScrollableFilterList> {
@@ -34,27 +35,33 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     'Cancel': MdiIcons.close,
   };
   List basesortlist = ['Newest', '(\$) Low to High', '(\$) High to Low'];
-  double _currentSliderValue = 25;
-  List<bool> checkedSortList = [true, false, false];
+  double _currentSliderValue;
+  int miles;
+  List<bool> checkedSortList;
 
   TextStyle categoryTextStyle = new TextStyle();
 
-  Column dropdownCategory = Column(
-    children: [
-      Icon(MdiIcons.filterMenu),
-      Text('Category'),
-    ],
-  );
-  Column dropdownCondition = Column(
-    children: [
-      Icon(MdiIcons.sparkles),
-      Text('Condition'),
-    ],
-  );
+  Column dropdownCategory;
+  Column dropdownCondition;
+
+  final SearchState searchState;
+  ScrollableFilterListState(this.searchState);
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      miles = int.tryParse(searchState.distance);
+      _currentSliderValue = miles.toDouble();
+
+      onSelectedCategory(PopupMenuItem(value: searchState.selectedCategory, child: Text(searchState.selectedCategory)));
+
+      onSelectedCondition(
+          PopupMenuItem(value: searchState.selectedCondition, child: Text(searchState.selectedCondition)));
+
+      onSelectedSort(
+          PopupMenuItem(value: searchState.selectedSort.index, child: Text(searchState.selectedSort.index.toString())));
+    });
   }
 
   @override
@@ -64,7 +71,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
           PopupMenuButton<PopupMenuItem>(
               child: dropdownCategory,
-              onSelected: selectedCategory,
+              onSelected: onSelectedCategory,
               itemBuilder: (BuildContext context) {
                 var categorylist = List<PopupMenuItem>();
                 categoriesMap.forEach((t, i) => categorylist.add(
@@ -99,7 +106,6 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
                   PopupMenuItem(
                     enabled: false,
                     child: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                      var miles = _currentSliderValue.toInt();
                       return Column(children: [
                         Text('$miles mi'),
                         Slider(
@@ -113,6 +119,8 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
                           onChanged: (double value) {
                             setState(() {
                               _currentSliderValue = value;
+                              miles = _currentSliderValue.toInt();
+                              searchState.distance = miles.toString();
                             });
                           },
                         ),
@@ -123,7 +131,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
               }),
           PopupMenuButton<PopupMenuItem>(
               child: dropdownCondition,
-              onSelected: selectedCondition,
+              onSelected: onSelectedCondition,
               itemBuilder: (BuildContext context) {
                 var conditionList = List<PopupMenuItem>();
                 conditionMap.forEach((t, i) => conditionList.add(
@@ -153,7 +161,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
                   Text('Sort'),
                 ],
               ),
-              onSelected: selectedSort,
+              onSelected: onSelectedSort,
               itemBuilder: (BuildContext context) {
                 var sortlist = List.generate(
                   basesortlist.length,
@@ -184,48 +192,33 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
         ]));
   }
 
-  void selectedCategory(PopupMenuItem choice) async {
+  void onSelectedCategory(PopupMenuItem choice) async {
     setState(() {
-      if (choice.value != 'Cancel') {
-        dropdownCategory = Column(
-          children: [
-            Icon(categoriesMap[choice.value]),
-            Text(choice.value),
-          ],
-        );
-      } else {
-        dropdownCategory = Column(
-          children: [
-            Icon(MdiIcons.filterMenu),
-            Text('Category'),
-          ],
-        );
-      }
+      searchState.selectedCategory = choice.value;
+      dropdownCategory = Column(
+        children: [
+          choice.value == 'Cancel' ? Icon(MdiIcons.filterMenu) : Icon(categoriesMap[choice.value]),
+          choice.value == 'Cancel' ? Text('Category') : Text(choice.value)
+        ],
+      );
     });
   }
 
-  void selectedCondition(PopupMenuItem choice) async {
+  void onSelectedCondition(PopupMenuItem choice) async {
     setState(() {
-      if (choice.value != 'Cancel') {
-        dropdownCondition = Column(
-          children: [
-            Icon(conditionMap[choice.value]),
-            Text(choice.value),
-          ],
-        );
-      } else {
-        dropdownCondition = Column(
-          children: [
-            Icon(MdiIcons.sparkles),
-            Text('Condition'),
-          ],
-        );
-      }
+      searchState.selectedCondition = choice.value;
+      dropdownCondition = Column(
+        children: [
+          choice.value == 'Cancel' ? Icon(MdiIcons.sparkles) : Icon(conditionMap[choice.value]),
+          choice.value == 'Cancel' ? Text('Condition') : Text(choice.value)
+        ],
+      );
     });
   }
 
-  void selectedSort(PopupMenuItem choice) async {
+  void onSelectedSort(PopupMenuItem choice) async {
     setState(() {
+      searchState.selectedSort = Sort.values[choice.value];
       checkedSortList = [false, false, false];
       checkedSortList[choice.value] = true;
     });

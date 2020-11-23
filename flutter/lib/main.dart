@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
@@ -13,9 +14,11 @@ import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/product-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
+import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+import 'enums/sort.dart';
 import 'models/product.dart';
 import 'models/vendor.dart';
 import 'overrides/http-override.dart';
@@ -80,7 +83,13 @@ Future<void> main() async {
           forSaleProducts: forSaleProducts,
           soldProducts: soldProducts,
           purchasedOrders: purchasedOrders,
-          soldOrders: soldOrders),
+          soldOrders: soldOrders,
+          searchState: SearchState(
+              distance: '25',
+              selectedCategory: 'Cancel',
+              selectedCondition: 'Cancel',
+              selectedSort: Sort.newest,
+              searchBarController: TextEditingController())),
       blocs: [CustomerReducer(), ProductReducer(), HomeReducer()]);
 
   // run the app
