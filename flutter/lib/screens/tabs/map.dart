@@ -1,4 +1,3 @@
-import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -54,7 +53,6 @@ class MapPageState extends State<MapPage> {
                           height: 80,
                           springAnimationDurationInMilliseconds: 500,
                           onRefresh: () {
-                            // setState(() {});
                             // return futureLocalProducts = Search.fetchSearchProducts(
                             //     searchTerm, currentLocation.latitude, currentLocation.longitude);
                           },
