@@ -14,6 +14,7 @@ class SearchReducer extends SimpleBloc<AppState> {
           .then((results) {
         state.searchState.searchStream.add(results);
         state.searchState.mapStream.add(results);
+        state.searchState.initialProducts = results;
       });
     }
     return state;

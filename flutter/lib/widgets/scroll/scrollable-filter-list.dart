@@ -41,7 +41,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     'Used': MdiIcons.emoticonSadOutline,
     'Cancel': MdiIcons.close,
   };
-  List basesortlist = ['Newest', 'Distance', '(\$) Low to High', '(\$) High to Low'];
+  List basesortlist = ['Newest', 'Nearby', '(\$) Low to High', '(\$) High to Low'];
   double _currentSliderValue;
   int miles;
   List<bool> checkedSortList;
