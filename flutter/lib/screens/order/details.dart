@@ -204,7 +204,7 @@ class OrderDetailsState extends State<OrderDetails> {
                                                           ),
                                                           errorWidget: (context, url, error) => Material(
                                                             child: Image.asset(
-                                                              'images/placeholder-image.png',
+                                                              'assets/images/placeholder-image.png',
                                                               width: 200.0,
                                                               height: 200.0,
                                                               fit: BoxFit.cover,

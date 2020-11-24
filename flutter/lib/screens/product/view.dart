@@ -167,7 +167,7 @@ class ProductPageState extends State<ProductPage> {
                                 )
                               : SizedBox();
                         } else {
-                          return Center(child: Loading());
+                          return SizedBox();
                         } // end if we have data
                       } // end future builder
                       )
@@ -175,7 +175,7 @@ class ProductPageState extends State<ProductPage> {
             body: Stack(
               children: [
                 FutureBuilder<List<Object>>(
-                    future: Future.wait([futureImages, futureLocation]),
+                    future: Future.wait([futureImages, futureLocation, futureIsMine]),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Widget imageElement;
@@ -197,7 +197,7 @@ class ProductPageState extends State<ProductPage> {
                             ),
                             errorWidget: (context, url, error) => Material(
                               child: Image.asset(
-                                'images/placeholder-image.png',
+                                'assets/images/placeholder-image.png',
                                 width: 200.0,
                                 height: 200.0,
                                 fit: BoxFit.cover,
@@ -232,7 +232,7 @@ class ProductPageState extends State<ProductPage> {
                                         ),
                                         errorWidget: (context, url, error) => Material(
                                           child: Image.asset(
-                                            'images/placeholder-image.png',
+                                            'assets/images/placeholder-image.png',
                                             width: 200.0,
                                             height: 200.0,
                                             fit: BoxFit.cover,
