@@ -330,7 +330,7 @@ class ProductPageState extends State<ProductPage> {
                                   ),
                                   SizedBox(height: 10),
                                   Column(
-                                      children: isMine
+                                      children: isMine == true
                                           ? []
                                           : [
                                               ButtonTheme(

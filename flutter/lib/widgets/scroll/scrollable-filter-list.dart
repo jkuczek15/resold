@@ -41,7 +41,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     'Used': MdiIcons.emoticonSadOutline,
     'Cancel': MdiIcons.close,
   };
-  List basesortlist = ['Newest', '(\$) Low to High', '(\$) High to Low'];
+  List basesortlist = ['Newest', 'Distance', '(\$) Low to High', '(\$) High to Low'];
   double _currentSliderValue;
   int miles;
   List<bool> checkedSortList;
@@ -243,7 +243,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
 
   void onSelectedSort(PopupMenuItem choice, {Function dispatcher}) async {
     setState(() {
-      checkedSortList = [false, false, false];
+      checkedSortList = [false, false, false, false];
       checkedSortList[choice.value] = true;
     });
     if (dispatcher is Function) {
