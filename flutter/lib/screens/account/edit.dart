@@ -34,7 +34,6 @@ class EditProfilePage extends StatefulWidget {
 
 class EditProfilePageState extends State<EditProfilePage> {
   Future<Vendor> futureVendor;
-  Position currentLocation;
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -86,267 +85,266 @@ class EditProfilePageState extends State<EditProfilePage> {
         TextPosition(offset: customer.email.length),
       ),
     );
-    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
-      if (this.mounted) {
-        setState(() {
-          currentLocation = location;
-        });
-      }
-    });
   } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, CustomerResponse>(
-        converter: (state) => state.customer,
-        builder: (context, dispatcher, newCustomer) {
-          customer = newCustomer;
-          return FutureBuilder<List<dynamic>>(
-              future: Future.wait([futureVendor]),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  var vendor = snapshot.data[0];
-                  imagePath =
-                      baseImagePath + '/' + vendor.profilePicture + '?d=' + DateTime.now().millisecond.toString();
-                  return Scaffold(
-                      appBar: AppBar(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text('Edit Profile', style: new TextStyle(color: Colors.white)))
-                          ],
-                        ),
-                        iconTheme: IconThemeData(
-                          color: Colors.white, // change your color here
-                        ),
-                        backgroundColor: ResoldBlue,
-                        actions: <Widget>[
-                          PopupMenuButton<String>(
-                            onSelected: handleMenuClick,
-                            icon: Icon(Icons.settings),
-                            itemBuilder: (BuildContext context) {
-                              return {'Change Address', 'Logout', 'Delete Profile'}.map((String choice) {
-                                return PopupMenuItem<String>(
-                                  value: choice,
-                                  child: Text(choice),
-                                );
-                              }).toList();
-                            },
-                          ),
-                        ],
-                      ),
-                      body: SingleChildScrollView(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                            Center(
-                              child: Column(
+    return ViewModelSubscriber<AppState, Position>(
+        converter: (state) => state.currentLocation,
+        builder: (context, dispatcher, currentLocation) {
+          return ViewModelSubscriber<AppState, CustomerResponse>(
+              converter: (state) => state.customer,
+              builder: (context, dispatcher, newCustomer) {
+                customer = newCustomer;
+                return FutureBuilder<List<dynamic>>(
+                    future: Future.wait([futureVendor]),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var vendor = snapshot.data[0];
+                        imagePath =
+                            baseImagePath + '/' + vendor.profilePicture + '?d=' + DateTime.now().millisecond.toString();
+                        return Scaffold(
+                            appBar: AppBar(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                                    child: Container(
-                                        height: 115,
-                                        width: 115,
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                          child: CircleAvatar(
-                                            backgroundImage: vendor.profilePicture != 'null'
-                                                ? CachedNetworkImageProvider(imagePath)
-                                                : AssetImage('assets/images/avatar-placeholder.png'),
-                                          ),
-                                        )),
-                                  ),
-                                  InkWell(
-                                    child: Column(children: [
-                                      Text('Change Profile Picture',
-                                          style: new TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.normal,
-                                              color: Color(0xff41b8ea))),
-                                    ]),
-                                    onTap: newProPic,
-                                  ),
-                                  Form(
-                                    key: updateinfoKey1,
-                                    child: Column(children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: TextFormField(
-                                          controller: firstNameController,
-                                          decoration: InputDecoration(
-                                            labelText: 'First Name *',
-                                            labelStyle: TextStyle(color: ResoldBlue),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            border: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                          ),
-                                          style: TextStyle(color: Colors.black),
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Please enter your first name.';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: TextFormField(
-                                          controller: lastNameController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Last Name *',
-                                            labelStyle: TextStyle(color: ResoldBlue),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            border: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                          ),
-                                          style: TextStyle(color: Colors.black),
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Please enter your last name.';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: TextFormField(
-                                          controller: emailController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Email Address *',
-                                            labelStyle: TextStyle(color: ResoldBlue),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            border: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                          ),
-                                          style: TextStyle(color: Colors.black),
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Please enter your email name.';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: TextFormField(
-                                          controller: phoneNumController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Phone Number *',
-                                            labelStyle: TextStyle(color: ResoldBlue),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            border: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                          ),
-                                          style: TextStyle(color: Colors.black),
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Please enter a vaild phone number.';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: TextFormField(
-                                          controller: newpasswordController,
-                                          decoration: InputDecoration(
-                                            labelText: 'New Password',
-                                            labelStyle: TextStyle(color: ResoldBlue),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            border: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                          ),
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: TextFormField(
-                                          controller: newconfirmPasswordController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Confirm New Password',
-                                            labelStyle: TextStyle(color: ResoldBlue),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                            border: UnderlineInputBorder(
-                                                borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                          ),
-                                          style: TextStyle(color: Colors.black),
-                                          validator: (value) {
-                                            if (newpasswordController.text.isEmpty && value.isEmpty) {
-                                              return 'Please confirm your new password.';
-                                            } else if (newpasswordController.text !=
-                                                newconfirmPasswordController.text) {
-                                              return 'Please enter the same password as above.';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-                                        child: ButtonTheme(
-                                          minWidth: double.infinity,
-                                          child: RaisedButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadiusDirectional.circular(8)),
-                                            onPressed: () async {
-                                              if (phoneNumController.text == customer.addresses.first.telephone) {
-                                                confirmPass();
-                                              } else {
-                                                await SmsHelper().handleSmsVerification(
-                                                    phoneNumController,
-                                                    smsVerificationController,
-                                                    smsVerificationKey,
-                                                    context,
-                                                    confirmPass);
-                                              }
-                                            },
-                                            child: Text('Save',
-                                                style: new TextStyle(
-                                                    fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                                            padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-                                            color: Colors.black,
-                                            textColor: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                  ),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text('Edit Profile', style: new TextStyle(color: Colors.white)))
                                 ],
                               ),
-                            )
-                          ])));
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                // By default, show a loading spinner.
-                return Center(child: Loading());
+                              iconTheme: IconThemeData(
+                                color: Colors.white, // change your color here
+                              ),
+                              backgroundColor: ResoldBlue,
+                              actions: <Widget>[
+                                PopupMenuButton<String>(
+                                  onSelected: handleMenuClick,
+                                  icon: Icon(Icons.settings),
+                                  itemBuilder: (BuildContext context) {
+                                    return {'Change Address', 'Logout', 'Delete Profile'}.map((String choice) {
+                                      return PopupMenuItem<String>(
+                                        value: choice,
+                                        child: Text(choice),
+                                      );
+                                    }).toList();
+                                  },
+                                ),
+                              ],
+                            ),
+                            body: SingleChildScrollView(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                  Center(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                                          child: Container(
+                                              height: 115,
+                                              width: 115,
+                                              child: Padding(
+                                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                                child: CircleAvatar(
+                                                  backgroundImage: vendor.profilePicture != 'null'
+                                                      ? CachedNetworkImageProvider(imagePath)
+                                                      : AssetImage('assets/images/avatar-placeholder.png'),
+                                                ),
+                                              )),
+                                        ),
+                                        InkWell(
+                                          child: Column(children: [
+                                            Text('Change Profile Picture',
+                                                style: new TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontFamily: 'Roboto',
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Color(0xff41b8ea))),
+                                          ]),
+                                          onTap: newProPic,
+                                        ),
+                                        Form(
+                                          key: updateinfoKey1,
+                                          child: Column(children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: TextFormField(
+                                                controller: firstNameController,
+                                                decoration: InputDecoration(
+                                                  labelText: 'First Name *',
+                                                  labelStyle: TextStyle(color: ResoldBlue),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                ),
+                                                style: TextStyle(color: Colors.black),
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please enter your first name.';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: TextFormField(
+                                                controller: lastNameController,
+                                                decoration: InputDecoration(
+                                                  labelText: 'Last Name *',
+                                                  labelStyle: TextStyle(color: ResoldBlue),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                ),
+                                                style: TextStyle(color: Colors.black),
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please enter your last name.';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: TextFormField(
+                                                controller: emailController,
+                                                decoration: InputDecoration(
+                                                  labelText: 'Email Address *',
+                                                  labelStyle: TextStyle(color: ResoldBlue),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                ),
+                                                style: TextStyle(color: Colors.black),
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please enter your email name.';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: TextFormField(
+                                                controller: phoneNumController,
+                                                decoration: InputDecoration(
+                                                  labelText: 'Phone Number *',
+                                                  labelStyle: TextStyle(color: ResoldBlue),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                ),
+                                                style: TextStyle(color: Colors.black),
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please enter a vaild phone number.';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: TextFormField(
+                                                controller: newpasswordController,
+                                                decoration: InputDecoration(
+                                                  labelText: 'New Password',
+                                                  labelStyle: TextStyle(color: ResoldBlue),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                ),
+                                                style: TextStyle(color: Colors.black),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: TextFormField(
+                                                controller: newconfirmPasswordController,
+                                                decoration: InputDecoration(
+                                                  labelText: 'Confirm New Password',
+                                                  labelStyle: TextStyle(color: ResoldBlue),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  focusedBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                  border: UnderlineInputBorder(
+                                                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                                ),
+                                                style: TextStyle(color: Colors.black),
+                                                validator: (value) {
+                                                  if (newpasswordController.text.isEmpty && value.isEmpty) {
+                                                    return 'Please confirm your new password.';
+                                                  } else if (newpasswordController.text !=
+                                                      newconfirmPasswordController.text) {
+                                                    return 'Please enter the same password as above.';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                                              child: ButtonTheme(
+                                                minWidth: double.infinity,
+                                                child: RaisedButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadiusDirectional.circular(8)),
+                                                  onPressed: () async {
+                                                    if (phoneNumController.text == customer.addresses.first.telephone) {
+                                                      confirmPass();
+                                                    } else {
+                                                      await SmsHelper().handleSmsVerification(
+                                                          phoneNumController,
+                                                          smsVerificationController,
+                                                          smsVerificationKey,
+                                                          context,
+                                                          confirmPass);
+                                                    }
+                                                  },
+                                                  child: Text('Save',
+                                                      style: new TextStyle(
+                                                          fontSize: 20.0,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white)),
+                                                  padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                                                  color: Colors.black,
+                                                  textColor: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ])));
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      // By default, show a loading spinner.
+                      return Center(child: Loading());
+                    });
               });
         });
   } // end function build

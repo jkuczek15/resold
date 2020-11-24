@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/environment.dart';
@@ -9,10 +11,12 @@ import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
+import 'package:resold/services/search.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/product-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
+import 'package:resold/state/reducers/search-reducer.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
@@ -56,8 +60,22 @@ Future<void> main() async {
   List<Order> purchasedOrders = new List<Order>();
   List<Order> soldOrders = new List<Order>();
 
+  // initialize search state
+  SearchState searchState = SearchState(
+      distance: '25',
+      selectedCategory: 'Cancel',
+      selectedCondition: 'Cancel',
+      selectedSort: Sort.newest,
+      searchBarController: TextEditingController(),
+      searchStream: StreamController<List<Product>>.broadcast(),
+      mapStream: StreamController<List<Product>>.broadcast());
+
+  // initialize application state
+  Position currentLocation = Position();
   if (customer.isLoggedIn()) {
-    // initialize application state
+    currentLocation = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    searchState.initialProducts =
+        await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
     await Future.wait([
       Resold.getVendor(customer.vendorId),
       Resold.getVendorProducts(customer.vendorId, 'for-sale'),
@@ -83,13 +101,9 @@ Future<void> main() async {
           soldProducts: soldProducts,
           purchasedOrders: purchasedOrders,
           soldOrders: soldOrders,
-          searchState: SearchState(
-              distance: '25',
-              selectedCategory: 'Cancel',
-              selectedCondition: 'Cancel',
-              selectedSort: Sort.newest,
-              searchBarController: TextEditingController())),
-      blocs: [CustomerReducer(), ProductReducer(), HomeReducer()]);
+          searchState: searchState,
+          currentLocation: currentLocation),
+      blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer()]);
 
   // run the app
   runApp(StoreProvider<AppState>(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
+import 'package:resold/state/search-state.dart';
 import 'package:resold/ui-models/product-ui-model.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
@@ -14,21 +15,16 @@ import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/widgets/loading.dart';
-import 'package:resold/widgets/scroll/scrollable-category-list.dart';
 
 class ProductListBuilder {
   static ChangeNotifierProvider<ProductUiModel> buildProductList(BuildContext context, List<Product> products,
-      Position currentLocation, CustomerResponse customer, bool showCategoryHeader) {
+      Position currentLocation, SearchState searchState, CustomerResponse customer) {
     return ChangeNotifierProvider<ProductUiModel>(
-        create: (_) => new ProductUiModel(currentLocation, products),
+        create: (_) => new ProductUiModel(currentLocation, searchState, products),
         child: Consumer<ProductUiModel>(
             builder: (context, model, child) => ListView.builder(
                 itemCount: model.items.length,
                 itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return showCategoryHeader ? ScrollableCategoryList() : Column();
-                  }
-                  index -= 1;
                   return CreationAwareListItem(
                       itemCreated: () {
                         SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));

@@ -14,10 +14,6 @@ import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class Home extends StatelessWidget {
-  final bool signup;
-
-  Home({this.signup = false});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
