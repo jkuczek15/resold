@@ -8,6 +8,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
+import 'package:resold/state/actions/fetch-search-results.dart';
 import 'package:resold/state/actions/update-search-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
@@ -81,6 +82,7 @@ class MapPageState extends State<MapPage> {
                                         onSearch: (term) async {
                                           searchState.searchBarController.text = term;
                                           dispatcher(UpdateSearchStateAction(searchState));
+                                          dispatcher(FetchSearchResultsAction());
                                           return await Search.fetchSearchProducts(
                                               searchState, currentLocation.latitude, currentLocation.longitude);
                                         },

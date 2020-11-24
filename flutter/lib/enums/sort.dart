@@ -1,1 +1,1 @@
-enum Sort { newest, lowToHigh, highToLow }
+enum Sort { newest, distance, lowToHigh, highToLow }
