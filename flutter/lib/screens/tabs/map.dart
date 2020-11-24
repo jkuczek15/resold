@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +9,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
+import 'package:resold/state/actions/update-search-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -22,48 +25,39 @@ class MapPage extends StatefulWidget {
 }
 
 class MapPageState extends State<MapPage> {
-  Future<Position> futureCurrentLocation;
   final Map<String, Marker> markers = {};
-  List<Product> products = new List<Product>();
-  Future<List<Product>> futureLocalProducts;
-  String searchTerm = '';
 
   @override
   void initState() {
     super.initState();
-    futureCurrentLocation = Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, CustomerResponse>(
-        converter: (state) => state.customer,
-        builder: (context, dispatcher, model) {
-          return ViewModelSubscriber<AppState, SearchState>(
-              converter: (state) => state.searchState,
-              builder: (context, dispatcher, searchState) {
-                return FutureBuilder<Position>(
-                    future: futureCurrentLocation,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        Position currentLocation = snapshot.data;
-                        futureLocalProducts =
-                            Search.fetchSearchProducts(searchTerm, currentLocation.latitude, currentLocation.longitude);
-                        return LiquidPullToRefresh(
-                          height: 80,
-                          springAnimationDurationInMilliseconds: 500,
-                          onRefresh: () {
-                            // return futureLocalProducts = Search.fetchSearchProducts(
-                            //     searchTerm, currentLocation.latitude, currentLocation.longitude);
-                          },
-                          showChildOpacityTransition: false,
-                          color: ResoldBlue,
-                          animSpeedFactor: 5.0,
-                          child: FutureBuilder<List<Product>>(
-                            future: futureLocalProducts,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Stack(
+    return ViewModelSubscriber<AppState, SearchState>(
+        converter: (state) => state.searchState,
+        builder: (context, dispatcher, searchState) {
+          return StreamBuilder<List<Product>>(
+              initialData: searchState.initialProducts,
+              stream: searchState.mapStream.stream,
+              builder: (context, snapshot) {
+                return ViewModelSubscriber<AppState, Position>(
+                    converter: (state) => state.currentLocation,
+                    builder: (context, dispatcher, currentLocation) {
+                      return ViewModelSubscriber<AppState, CustomerResponse>(
+                          converter: (state) => state.customer,
+                          builder: (context, dispatcher, customer) {
+                            return LiquidPullToRefresh(
+                                height: 80,
+                                springAnimationDurationInMilliseconds: 500,
+                                onRefresh: () async {
+                                  return await Search.fetchSearchProducts(
+                                      searchState, currentLocation.latitude, currentLocation.longitude);
+                                },
+                                showChildOpacityTransition: false,
+                                color: ResoldBlue,
+                                animSpeedFactor: 5.0,
+                                child: Stack(
                                   children: [
                                     Container(
                                         height: 650,
@@ -81,37 +75,29 @@ class MapPageState extends State<MapPage> {
                                       height: 130,
                                       child: ResoldSearchBar<Product>(
                                         textEditingController: searchState.searchBarController,
-                                        header: ScrollableFilterList(searchState),
+                                        header: ScrollableFilterList(currentLocation, searchState),
                                         hintText: 'Search entire marketplace here...',
                                         searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
                                         cancellationWidget: Icon(Icons.cancel),
-                                        onSearch: (term) {
-                                          searchTerm = term;
-                                          products = new List<Product>();
-                                          return Search.fetchSearchProducts(
-                                              term, currentLocation.latitude, currentLocation.longitude);
+                                        onSearch: (term) async {
+                                          searchState.searchBarController.text = term;
+                                          dispatcher(UpdateSearchStateAction(searchState));
+                                          return await Search.fetchSearchProducts(
+                                              searchState, currentLocation.latitude, currentLocation.longitude);
                                         },
                                         loader: Center(child: Loading()),
-                                        suggestions: snapshot.data,
+                                        suggestions: snapshot.hasData ? snapshot.data : [],
                                         onItemFound: (Product product, int index) {
-                                          products.add(product);
                                           return SizedBox();
                                         },
                                         emptyWidget: Center(child: Text('Your search returned no results.')),
                                       ),
                                     ),
                                   ],
-                                );
-                              } else {
-                                return Center(child: Loading());
-                              } // end if we have data
-                            },
-                          ),
-                        );
-                      } else {
-                        return Center(child: Loading());
-                      } // end if snapshot has data
-                    });
+                                ));
+                          });
+                    } // end builder
+                    );
               });
         });
   } // end function build

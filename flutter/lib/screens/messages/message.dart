@@ -67,7 +67,6 @@ class MessagePageState extends State<MessagePage> {
   ImagePicker picker = ImagePicker();
   String imageUrl;
   bool isSeller;
-  Position currentLocation;
   final offerController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -86,60 +85,56 @@ class MessagePageState extends State<MessagePage> {
     super.initState();
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
-
-    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
-      if (this.mounted) {
-        setState(() {
-          currentLocation = location;
-        });
-      }
-    });
   } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, CustomerResponse>(
-        converter: (state) => state.customer,
-        builder: (context, dispatcher, customer) {
-          // update from customer from app state
-          fromCustomer = customer;
+    return ViewModelSubscriber<AppState, Position>(
+        converter: (state) => state.currentLocation,
+        builder: (context, dispatcher, currentLocation) {
+          return ViewModelSubscriber<AppState, CustomerResponse>(
+              converter: (state) => state.customer,
+              builder: (context, dispatcher, customer) {
+                // update from customer from app state
+                fromCustomer = customer;
 
-          // determine if this is the seller
-          var chatIdParts = this.chatId.split('-');
-          isSeller = fromCustomer.id.toString() != chatIdParts[0];
+                // determine if this is the seller
+                var chatIdParts = this.chatId.split('-');
+                isSeller = fromCustomer.id.toString() != chatIdParts[0];
 
-          return Scaffold(
-              appBar: AppBar(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                            width: 250,
-                            child: Text(product.name,
-                                overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
-                  ],
-                ),
-                iconTheme: IconThemeData(
-                  color: Colors.white, //change your color here
-                ),
-                backgroundColor: ResoldBlue,
-                actions: <Widget>[
-                  PopupMenuButton<String>(
-                    onSelected: handleMenuClick,
-                    itemBuilder: (BuildContext context) {
-                      return {'View Details', 'Send Offer', 'Request Delivery'}.map((String choice) {
-                        return PopupMenuItem<String>(
-                          value: choice,
-                          child: Text(choice),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ],
-              ),
-              body: getContent());
+                return Scaffold(
+                    appBar: AppBar(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                  width: 250,
+                                  child: Text(product.name,
+                                      overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
+                        ],
+                      ),
+                      iconTheme: IconThemeData(
+                        color: Colors.white, //change your color here
+                      ),
+                      backgroundColor: ResoldBlue,
+                      actions: <Widget>[
+                        PopupMenuButton<String>(
+                          onSelected: handleMenuClick,
+                          itemBuilder: (BuildContext context) {
+                            return {'View Details', 'Send Offer', 'Request Delivery'}.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              );
+                            }).toList();
+                          },
+                        ),
+                      ],
+                    ),
+                    body: getContent());
+              });
         });
   } // end function build
 

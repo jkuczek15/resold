@@ -3,6 +3,7 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/state/search-state.dart';
 
 class ProductUiModel extends ChangeNotifier {
   int itemRequestThreshold = 20;
@@ -10,9 +11,11 @@ class ProductUiModel extends ChangeNotifier {
   List<Product> items;
   int lastLoadingIndex = 0;
   Position currentLocation;
+  SearchState searchState;
 
-  ProductUiModel(Position currentLocation, List<Product> data) {
+  ProductUiModel(Position currentLocation, SearchState searchState, List<Product> data) {
     items = data;
+    searchState = searchState;
     this.currentLocation = currentLocation;
   }
 
@@ -28,8 +31,7 @@ class ProductUiModel extends ChangeNotifier {
       currentPage = pageToRequest;
       showLoadingIndicator();
 
-      // todo: include the search term here instead of blank
-      var newItems = await Search.fetchSearchProducts('', currentLocation.latitude, currentLocation.longitude,
+      var newItems = await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude,
           offset: pageToRequest * itemRequestThreshold);
       items.addAll(newItems);
 

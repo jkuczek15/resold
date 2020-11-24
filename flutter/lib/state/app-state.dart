@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
@@ -14,6 +15,7 @@ class AppState {
   List<Order> purchasedOrders;
   List<Order> soldOrders;
   SearchState searchState;
+  Position currentLocation;
 
   AppState(
       {this.selectedTab,
@@ -23,5 +25,6 @@ class AppState {
       this.soldProducts,
       this.purchasedOrders,
       this.soldOrders,
-      this.searchState});
+      this.searchState,
+      this.currentLocation});
 }

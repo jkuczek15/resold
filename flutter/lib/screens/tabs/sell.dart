@@ -27,7 +27,6 @@ class SellPage extends StatefulWidget {
 }
 
 class SellPageState extends State<SellPage> {
-  Position currentLocation;
   String condition;
 
   // widget keys
@@ -45,13 +44,6 @@ class SellPageState extends State<SellPage> {
   @override
   void initState() {
     super.initState();
-    Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) {
-      if (this.mounted) {
-        setState(() {
-          currentLocation = location;
-        });
-      }
-    });
   } // end function initState
 
   @override
@@ -61,118 +53,127 @@ class SellPageState extends State<SellPage> {
     final dropdownSizeList = DropdownSizeList(key: dropdownSizeKey);
     final dropdownConditionList = DropdownConditionList(key: dropdownConditionKey);
 
-    return ViewModelSubscriber<AppState, CustomerResponse>(
-        converter: (state) => state.customer,
-        builder: (context, dispatcher, customer) {
-          return Padding(
-              padding: EdgeInsets.all(20),
-              child: ScrollColumnExpandable(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Form(
-                        key: formKey,
-                        child: Column(children: <Widget>[
-                          imageUploader,
-                          SizedBox(height: 20),
-                          TextFormField(
-                            controller: nameController,
-                            decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Listing Title'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter some text.';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          dropdownCategoryList,
-                          SizedBox(height: 20),
-                          dropdownSizeList,
-                          SizedBox(height: 20),
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            Container(
-                                width: 125,
-                                height: 60,
-                                child: TextFormField(
-                                  controller: priceController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Price (\$)'),
+    return ViewModelSubscriber<AppState, Position>(
+        converter: (state) => state.currentLocation,
+        builder: (context, dispatcher, currentLocation) {
+          return ViewModelSubscriber<AppState, CustomerResponse>(
+              converter: (state) => state.customer,
+              builder: (context, dispatcher, customer) {
+                return Padding(
+                    padding: EdgeInsets.all(20),
+                    child: ScrollColumnExpandable(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Form(
+                              key: formKey,
+                              child: Column(children: <Widget>[
+                                imageUploader,
+                                SizedBox(height: 20),
+                                TextFormField(
+                                  controller: nameController,
+                                  decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Listing Title'),
                                   validator: (value) {
                                     if (value.isEmpty) {
-                                      return 'Please enter a price.';
+                                      return 'Please enter some text.';
                                     }
                                     return null;
                                   },
-                                )),
-                            Container(width: 150, height: 60, child: dropdownConditionList),
-                          ]),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            controller: detailsController,
-                            maxLines: null,
-                            minLines: null,
-                            keyboardType: TextInputType.multiline,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Details',
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter some text.';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          ButtonTheme(
-                              minWidth: 340.0,
-                              height: 70.0,
-                              child: RaisedButton(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                                onPressed: () async {
-                                  if (formKey.currentState.validate()) {
-                                    // show a loading indicator
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Center(child: Loading());
-                                        });
-                                    var product = Product(
-                                        name: nameController.text,
-                                        price: priceController.text,
-                                        description: detailsController.text,
-                                        condition: dropdownConditionKey.currentState.conditionSelected,
-                                        categoryIds: [int.tryParse(dropdownCategoryKey.currentState.categorySelected)],
-                                        itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
-                                        latitude: currentLocation.latitude,
-                                        longitude: currentLocation.longitude,
-                                        localGlobal: '231,232');
+                                ),
+                                SizedBox(height: 20),
+                                dropdownCategoryList,
+                                SizedBox(height: 20),
+                                dropdownSizeList,
+                                SizedBox(height: 20),
+                                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                  Container(
+                                      width: 125,
+                                      height: 60,
+                                      child: TextFormField(
+                                        controller: priceController,
+                                        keyboardType: TextInputType.number,
+                                        decoration:
+                                            InputDecoration(border: OutlineInputBorder(), labelText: 'Price (\$)'),
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter a price.';
+                                          }
+                                          return null;
+                                        },
+                                      )),
+                                  Container(width: 150, height: 60, child: dropdownConditionList),
+                                ]),
+                                SizedBox(height: 20),
+                                TextFormField(
+                                  controller: detailsController,
+                                  maxLines: null,
+                                  minLines: null,
+                                  keyboardType: TextInputType.multiline,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Details',
+                                  ),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter some text.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(height: 20),
+                                ButtonTheme(
+                                    minWidth: 340.0,
+                                    height: 70.0,
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                                      onPressed: () async {
+                                        if (formKey.currentState.validate()) {
+                                          // show a loading indicator
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Center(child: Loading());
+                                              });
+                                          var product = Product(
+                                              name: nameController.text,
+                                              price: priceController.text,
+                                              description: detailsController.text,
+                                              condition: dropdownConditionKey.currentState.conditionSelected,
+                                              categoryIds: [
+                                                int.tryParse(dropdownCategoryKey.currentState.categorySelected)
+                                              ],
+                                              itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
+                                              latitude: currentLocation.latitude,
+                                              longitude: currentLocation.longitude,
+                                              localGlobal: '231,232');
 
-                                    var response = await ResoldRest.postProduct(
-                                        customer.token, product, imageUploaderKey.currentState.imagePaths);
-                                    product.id = int.tryParse(response);
+                                          var response = await ResoldRest.postProduct(
+                                              customer.token, product, imageUploaderKey.currentState.imagePaths);
+                                          product.id = int.tryParse(response);
 
-                                    // dispatch new action to set the for-sale products
-                                    List<Product> forSaleProducts =
-                                        await Resold.getVendorProducts(customer.vendorId, 'for-sale');
+                                          // dispatch new action to set the for-sale products
+                                          List<Product> forSaleProducts =
+                                              await Resold.getVendorProducts(customer.vendorId, 'for-sale');
 
-                                    dispatcher(SetForSaleAction(forSaleProducts));
-                                    dispatcher(SetSelectedTabAction(SelectedTab.account));
+                                          dispatcher(SetForSaleAction(forSaleProducts));
+                                          dispatcher(SetSelectedTabAction(SelectedTab.account));
 
-                                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => ProductPage(product, customer.token)));
-                                  } // end if form is valid
-                                },
-                                child: Text('Post',
-                                    style: new TextStyle(
-                                        fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                                color: Colors.black,
-                                textColor: Colors.white,
-                              ))
-                        ]))
-                  ]));
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => ProductPage(product, customer.token)));
+                                        } // end if form is valid
+                                      },
+                                      child: Text('Post',
+                                          style: new TextStyle(
+                                              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                      color: Colors.black,
+                                      textColor: Colors.white,
+                                    ))
+                              ]))
+                        ]));
+              });
         });
   } // end function build
 }
