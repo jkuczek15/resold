@@ -99,7 +99,8 @@ class Products extends \Magento\Framework\App\Action\Action
         ->addAttributeToSelect('charge_id')
         ->addAttributeToSelect('delivery_id')
         ->addAttributeToFilter('entity_id',array('in' => $productIds))
-        ->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+        ->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
+        ->setOrder('entity_id', 'DESC');
 
       $result = [];
       foreach($vendorProducts as $product) {
