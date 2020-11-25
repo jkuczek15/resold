@@ -14,6 +14,7 @@ import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
+import 'package:resold/widgets/map/map-pin-pill.dart';
 import 'package:resold/widgets/resold-search-bar.dart';
 import 'package:resold/widgets/scroll/scrollable-filter-list.dart';
 
@@ -26,6 +27,8 @@ class MapPage extends StatefulWidget {
 
 class MapPageState extends State<MapPage> {
   final Map<String, Marker> markers = {};
+  double pinPillPosition = -100;
+  Product selectedProduct = Product(name: '', thumbnail: '', price: '0');
 
   @override
   void initState() {
@@ -44,6 +47,10 @@ class MapPageState extends State<MapPage> {
                 return ViewModelSubscriber<AppState, Position>(
                     converter: (state) => state.currentLocation,
                     builder: (context, dispatcher, currentLocation) {
+                      if (snapshot.hasData) {
+                        setupMarkers(currentLocation, snapshot.data);
+                        // markers =
+                      } // end if we have new products
                       return ViewModelSubscriber<AppState, CustomerResponse>(
                           converter: (state) => state.customer,
                           builder: (context, dispatcher, customer) {
@@ -60,16 +67,28 @@ class MapPageState extends State<MapPage> {
                                 child: Stack(
                                   children: [
                                     Container(
-                                        height: 650,
-                                        child: GoogleMap(
-                                          onMapCreated: (GoogleMapController controller) =>
-                                              onMapCreated(controller, currentLocation),
-                                          initialCameraPosition: CameraPosition(
-                                            target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                                            zoom: 9.0,
-                                          ),
-                                          markers: markers.values.toSet(),
-                                        )),
+                                      height: 650,
+                                      child: GoogleMap(
+                                        myLocationEnabled: true,
+                                        myLocationButtonEnabled: false,
+                                        onMapCreated: (GoogleMapController controller) => onMapCreated(
+                                            controller, currentLocation, snapshot.hasData ? snapshot.data : []),
+                                        initialCameraPosition: CameraPosition(
+                                          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+                                          zoom: 9.0,
+                                        ),
+                                        markers: markers.values.toSet(),
+                                        onTap: (LatLng location) {
+                                          setState(() {
+                                            pinPillPosition = -100;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    MapPinPill(
+                                        pinPillPosition: pinPillPosition,
+                                        selectedProduct: selectedProduct,
+                                        customerToken: customer.token),
                                     Container(
                                       color: Colors.white.withOpacity(0.9),
                                       height: 130,
@@ -103,21 +122,33 @@ class MapPageState extends State<MapPage> {
         });
   } // end function build
 
-  Future<void> onMapCreated(GoogleMapController controller, Position currentLocation) async {
-    setState(() {
-      markers.clear();
-
-      final String currentLocationTitle = "You";
-      final currentLocationMarker = Marker(
-        markerId: MarkerId(currentLocationTitle),
-        position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(198),
-        infoWindow: InfoWindow(
-          title: currentLocationTitle,
-        ),
-      );
-
-      markers[currentLocationTitle] = currentLocationMarker;
-    });
+  Future<void> onMapCreated(GoogleMapController controller, Position currentLocation, List<Product> products) async {
+    setupMarkers(currentLocation, products);
   } // end function onMapCreated
+
+  void setupMarkers(Position currentLocation, List<Product> products) {
+    // setState(() {
+    markers.clear();
+
+    // set product markers
+    products.forEach((product) {
+      if (product.latitude == currentLocation.latitude && product.longitude == currentLocation.longitude) {
+        return;
+      } // end if this my product
+
+      // set product marker
+      String markerId = product.id.toString();
+      markers[markerId] = Marker(
+          markerId: MarkerId(markerId),
+          position: LatLng(product.latitude, product.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(198),
+          onTap: () {
+            setState(() {
+              selectedProduct = product;
+              pinPillPosition = 0;
+            });
+          });
+    });
+    // });
+  }
 }
