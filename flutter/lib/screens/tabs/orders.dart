@@ -80,7 +80,7 @@ class OrdersPageState extends State<OrdersPage> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            OrderDetails(customer, order, product, isSeller: false)));
+                                                            OrderDetails(order, product, isSeller: false)));
                                               },
                                               child: Card(
                                                   child: ListTile(
@@ -120,7 +120,7 @@ class OrdersPageState extends State<OrdersPage> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          OrderDetails(customer, order, product, isSeller: true)));
+                                                          OrderDetails(order, product, isSeller: true)));
                                             },
                                             child: Card(
                                                 child: ListTile(
