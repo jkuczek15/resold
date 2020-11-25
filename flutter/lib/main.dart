@@ -42,13 +42,14 @@ Future<void> main() async {
       merchantId: env.stripeMerchantId,
       androidPayMode: env.stripeAndroidPayMode));
 
-  // clear from disk
-  await CustomerResponse.clear();
-
   // auto-login
-  await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
-  // await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
-  // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
+  if (env.isDevelopment) {
+    // clear from disk
+    await CustomerResponse.clear();
+    // await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
+    await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
+    // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
+  } // end if development
 
   // get from disk and login
   CustomerResponse customer = await CustomerResponse.load();
@@ -74,6 +75,12 @@ Future<void> main() async {
   Position currentLocation = Position();
   if (customer.isLoggedIn()) {
     currentLocation = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    if (env.isDevelopment) {
+      // override location in development mode
+      currentLocation = Position(latitude: 42.052158, longitude: -87.687866);
+    } // end if development
+
     searchState.initialProducts =
         await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
     await Future.wait([

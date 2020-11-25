@@ -69,6 +69,7 @@ class MessagePageState extends State<MessagePage> {
   bool isSeller;
   final offerController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final int deliveryQuoteRefreshMinutes = 15;
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
@@ -380,6 +381,17 @@ class MessagePageState extends State<MessagePage> {
         deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
       }
       deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(document['content']);
+
+      // check if we need to fetch a new delivery quote
+      if (deliveryQuoteStatus != DeliveryQuoteStatus.paid && deliveryQuoteStatus != DeliveryQuoteStatus.accepted) {
+        DateTime deliveryQuoteSent = DateTime.fromMillisecondsSinceEpoch(int.tryParse(document['timestamp']));
+        Duration difference = DateTime.now().difference(deliveryQuoteSent);
+
+        // fetch a new delivery quote
+        if (difference.inMinutes >= deliveryQuoteRefreshMinutes) {
+          requestDelivery();
+        } // end if we need to fetch a new delivery quote
+      } // end if delivery quote status not paid
     } else if (document['messageType'] == MessageType.offer.index) {
       offerMessage = FirebaseHelper.readOfferMessageContent(document['content']);
     } // end if delivery request
