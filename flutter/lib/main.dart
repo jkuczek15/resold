@@ -5,11 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/environment.dart';
-import 'package:resold/models/order.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
-import 'package:resold/services/magento.dart';
-import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/app-state.dart';
@@ -46,8 +43,8 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    // await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
-    await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
+    await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
+    // await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
     // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
   } // end if development
 
@@ -58,8 +55,6 @@ Future<void> main() async {
   Vendor vendor = new Vendor();
   List<Product> forSaleProducts = new List<Product>();
   List<Product> soldProducts = new List<Product>();
-  List<Order> purchasedOrders = new List<Order>();
-  List<Order> soldOrders = new List<Order>();
 
   // initialize search state
   SearchState searchState = SearchState(
@@ -86,15 +81,11 @@ Future<void> main() async {
     await Future.wait([
       Resold.getVendor(customer.vendorId),
       Resold.getVendorProducts(customer.vendorId, 'for-sale'),
-      Resold.getVendorProducts(customer.vendorId, 'sold'),
-      Magento.getPurchasedOrders(customer.id),
-      ResoldRest.getVendorOrders(customer.token)
+      Resold.getVendorProducts(customer.vendorId, 'sold')
     ]).then((data) {
       vendor = data[0];
       forSaleProducts = data[1];
       soldProducts = data[2];
-      purchasedOrders = data[3];
-      soldOrders = data[4];
     });
   } // end if customer is logged in
 
@@ -106,8 +97,6 @@ Future<void> main() async {
           vendor: vendor,
           forSaleProducts: forSaleProducts,
           soldProducts: soldProducts,
-          purchasedOrders: purchasedOrders,
-          soldOrders: soldOrders,
           searchState: searchState,
           currentLocation: currentLocation),
       blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer()]);

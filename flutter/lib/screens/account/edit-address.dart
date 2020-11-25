@@ -5,7 +5,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold.dart';
-import 'package:resold/state/actions/update-customer.dart';
+import 'package:resold/state/actions/set-customer.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -326,7 +326,7 @@ class EditAddressPageState extends State<EditAddressPage> {
                                                 customer.password);
 
                                             // dispatch update customer state action
-                                            dispatcher(UpdateCustomerAction(customer));
+                                            dispatcher(SetCustomerAction(customer));
 
                                             // navigate
                                             Navigator.of(context, rootNavigator: true).pop('dialog');

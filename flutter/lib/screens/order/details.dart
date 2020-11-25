@@ -179,43 +179,46 @@ class OrderDetailsState extends State<OrderDetails> {
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                                  Text(product.description),
-                                                  SizedBox(width: 175),
-                                                  Padding(
-                                                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                                      child: Container(
-                                                        height: 90,
-                                                        width: 90,
-                                                        child: CachedNetworkImage(
-                                                          placeholder: (context, url) => Container(
-                                                            child: Loading(),
-                                                            width: MediaQuery.of(context).size.width,
-                                                            padding: EdgeInsets.all(70.0),
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.blueGrey,
+                                                Container(
+                                                  width: MediaQuery.of(context).size.width - 40,
+                                                  child:
+                                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                    Text(product.description),
+                                                    Padding(
+                                                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                                        child: Container(
+                                                          height: 90,
+                                                          width: 90,
+                                                          child: CachedNetworkImage(
+                                                            placeholder: (context, url) => Container(
+                                                              child: Loading(),
+                                                              width: MediaQuery.of(context).size.width,
+                                                              padding: EdgeInsets.all(70.0),
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.blueGrey,
+                                                                borderRadius: BorderRadius.all(
+                                                                  Radius.circular(8.0),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            errorWidget: (context, url, error) => Material(
+                                                              child: Image.asset(
+                                                                'assets/images/placeholder-image.png',
+                                                                width: 200.0,
+                                                                height: 200.0,
+                                                                fit: BoxFit.cover,
+                                                              ),
                                                               borderRadius: BorderRadius.all(
                                                                 Radius.circular(8.0),
                                                               ),
+                                                              clipBehavior: Clip.hardEdge,
                                                             ),
+                                                            imageUrl: baseProductImagePath + product.thumbnail,
+                                                            fit: BoxFit.cover,
                                                           ),
-                                                          errorWidget: (context, url, error) => Material(
-                                                            child: Image.asset(
-                                                              'assets/images/placeholder-image.png',
-                                                              width: 200.0,
-                                                              height: 200.0,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                            borderRadius: BorderRadius.all(
-                                                              Radius.circular(8.0),
-                                                            ),
-                                                            clipBehavior: Clip.hardEdge,
-                                                          ),
-                                                          imageUrl: baseProductImagePath + product.thumbnail,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ))
-                                                ]),
+                                                        ))
+                                                  ]),
+                                                ),
                                                 Row(children: [
                                                   Container(
                                                       width: 345,

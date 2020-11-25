@@ -1,6 +1,5 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/enums/selected-tab.dart';
-import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/state/search-state.dart';
@@ -12,8 +11,6 @@ class AppState {
   Vendor vendor;
   List<Product> forSaleProducts;
   List<Product> soldProducts;
-  List<Order> purchasedOrders;
-  List<Order> soldOrders;
   SearchState searchState;
   Position currentLocation;
 
@@ -23,8 +20,6 @@ class AppState {
       this.vendor,
       this.forSaleProducts,
       this.soldProducts,
-      this.purchasedOrders,
-      this.soldOrders,
       this.searchState,
       this.currentLocation});
 }
