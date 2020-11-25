@@ -4,7 +4,6 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
-import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
@@ -115,18 +114,14 @@ class LoginPageState extends State<LoginPage> {
                             await Future.wait([
                               Resold.getVendor(customer.vendorId),
                               Resold.getVendorProducts(customer.vendorId, 'for-sale'),
-                              Resold.getVendorProducts(customer.vendorId, 'sold'),
-                              Magento.getPurchasedOrders(customer.id),
-                              ResoldRest.getVendorOrders(customer.token)
+                              Resold.getVendorProducts(customer.vendorId, 'sold')
                             ]).then((data) {
                               dispatcher(InitStateAction(AppState(
                                   selectedTab: SelectedTab.home,
                                   customer: customer,
                                   vendor: data[0],
                                   forSaleProducts: data[1],
-                                  soldProducts: data[2],
-                                  purchasedOrders: data[3],
-                                  soldOrders: data[4])));
+                                  soldProducts: data[2])));
                             });
 
                             // navigate

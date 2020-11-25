@@ -5,7 +5,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/sort.dart';
 import 'package:resold/state/actions/fetch-search-results.dart';
-import 'package:resold/state/actions/update-search-state.dart';
+import 'package:resold/state/actions/set-search-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
 
@@ -135,7 +135,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
                                 },
                                 onChangeEnd: (double value) {
                                   searchState.distance = _currentSliderValue.toInt().toString();
-                                  dispatcher(UpdateSearchStateAction(searchState));
+                                  dispatcher(SetSearchStateAction(searchState));
                                   dispatcher(FetchSearchResultsAction());
                                 },
                               ),
@@ -220,7 +220,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     });
     if (dispatcher is Function) {
       searchState.selectedCategory = choice.value;
-      dispatcher(UpdateSearchStateAction(searchState));
+      dispatcher(SetSearchStateAction(searchState));
       dispatcher(FetchSearchResultsAction());
     } // end if dispatcher is function
   } // end function onSelectedCategory
@@ -236,7 +236,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     });
     if (dispatcher is Function) {
       searchState.selectedCondition = choice.value;
-      dispatcher(UpdateSearchStateAction(searchState));
+      dispatcher(SetSearchStateAction(searchState));
       dispatcher(FetchSearchResultsAction());
     } // end if dispatcher is function
   } // end function onSelectedCondition
@@ -248,7 +248,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     });
     if (dispatcher is Function) {
       searchState.selectedSort = Sort.values[choice.value];
-      dispatcher(UpdateSearchStateAction(searchState));
+      dispatcher(SetSearchStateAction(searchState));
       dispatcher(FetchSearchResultsAction());
     } // end if dispatcher is function
   } // end function onSelectedSort

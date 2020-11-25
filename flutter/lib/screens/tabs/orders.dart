@@ -7,6 +7,7 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/screens/order/details.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -21,6 +22,9 @@ class OrdersPage extends StatefulWidget {
 }
 
 class OrdersPageState extends State<OrdersPage> {
+  Future<List<Order>> futurePurchasedOrders;
+  Future<List<Order>> futureSoldOrders;
+
   @override
   void initState() {
     super.initState();
@@ -32,12 +36,22 @@ class OrdersPageState extends State<OrdersPage> {
     return ViewModelSubscriber<AppState, CustomerResponse>(
         converter: (state) => state.customer,
         builder: (context, dispatcher, customer) {
-          return ViewModelSubscriber<AppState, List<Order>>(
-              converter: (state) => state.purchasedOrders,
-              builder: (context, dispatcher, purchasedOrders) {
-                return ViewModelSubscriber<AppState, List<Order>>(
-                    converter: (state) => state.soldOrders,
-                    builder: (context, dispatcher, soldOrders) {
+          futurePurchasedOrders = Magento.getPurchasedOrders(customer.id);
+          futureSoldOrders = ResoldRest.getVendorOrders(customer.token);
+          return FutureBuilder<List<Order>>(
+              future: futurePurchasedOrders,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: Loading());
+                } // end if loading
+                List<Order> purchasedOrders = snapshot.data;
+                return FutureBuilder<List<Order>>(
+                    future: futureSoldOrders,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: Loading());
+                      } // end if loading
+                      List<Order> soldOrders = snapshot.data;
                       return DefaultTabController(
                         length: 2,
                         child: Scaffold(

@@ -250,9 +250,7 @@ class SignUpPageState extends State<SignUpPage> {
                                     customer: customer,
                                     vendor: data[0],
                                     forSaleProducts: data[1],
-                                    soldProducts: data[2],
-                                    purchasedOrders: data[3],
-                                    soldOrders: data[4])));
+                                    soldProducts: data[2])));
                               });
 
                               // navigate
