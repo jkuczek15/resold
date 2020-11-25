@@ -132,7 +132,7 @@ class HomePageState extends State<HomePage> {
               type: BottomNavigationBarType.fixed,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Map'),
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
                 BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
                 BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Orders'),
                 BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')

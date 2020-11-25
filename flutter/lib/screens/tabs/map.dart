@@ -123,11 +123,12 @@ class MapPageState extends State<MapPage> {
   } // end function build
 
   Future<void> onMapCreated(GoogleMapController controller, Position currentLocation, List<Product> products) async {
-    setupMarkers(currentLocation, products);
+    setState(() {
+      setupMarkers(currentLocation, products);
+    });
   } // end function onMapCreated
 
   void setupMarkers(Position currentLocation, List<Product> products) {
-    // setState(() {
     markers.clear();
 
     // set product markers
@@ -149,6 +150,5 @@ class MapPageState extends State<MapPage> {
             });
           });
     });
-    // });
   }
 }
