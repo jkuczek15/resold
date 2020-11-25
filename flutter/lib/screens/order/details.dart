@@ -131,6 +131,7 @@ class OrderDetailsState extends State<OrderDetails> {
                                           future: this.generateMarkers(delivery),
                                           initialData: Set.of(<Marker>[]),
                                           builder: (context, snapshot) => maps.GoogleMap(
+                                              myLocationEnabled: delivery.status == 'delivered',
                                               onMapCreated: (maps.GoogleMapController controller) =>
                                                   this.onMapCreated(controller, delivery),
                                               mapType: maps.MapType.normal,
@@ -180,7 +181,7 @@ class OrderDetailsState extends State<OrderDetails> {
                                               children: [
                                                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                                   Text(product.description),
-                                                  SizedBox(width: 195),
+                                                  SizedBox(width: 175),
                                                   Padding(
                                                       padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                                                       child: Container(
@@ -269,18 +270,20 @@ class OrderDetailsState extends State<OrderDetails> {
 
     infoWindow = maps.InfoWindow(title: product.name);
 
-    // add the current location marker
-    final String currentLocationTitle = 'You';
-    final currentLocationMarker = maps.Marker(
-      markerId: maps.MarkerId(currentLocationTitle),
-      position: maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng),
-      icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
-      infoWindow: maps.InfoWindow(
-        title: currentLocationTitle,
-      ),
-    );
+    if (delivery.status != 'delivered') {
+      // add the current location marker
+      final String currentLocationTitle = 'You';
+      final currentLocationMarker = maps.Marker(
+        markerId: maps.MarkerId(currentLocationTitle),
+        position: maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng),
+        icon: maps.BitmapDescriptor.defaultMarkerWithHue(198),
+        infoWindow: maps.InfoWindow(
+          title: currentLocationTitle,
+        ),
+      );
 
-    markers.add(currentLocationMarker);
+      markers.add(currentLocationMarker);
+    } // end if delivery not yet complete
 
     if (delivery.status != 'delivered') {
       // add the product marker
