@@ -25,24 +25,21 @@ import 'package:geolocator/geolocator.dart';
 class OrderDetails extends StatefulWidget {
   final Order order;
   final Product product;
-  final CustomerResponse customer;
   final bool isSeller;
 
-  OrderDetails(customer, order, product, {Key key, isSeller = false})
-      : customer = customer,
-        order = order,
+  OrderDetails(order, product, {Key key, isSeller = false})
+      : order = order,
         product = product,
         isSeller = isSeller,
         super(key: key);
 
   @override
-  OrderDetailsState createState() => OrderDetailsState(customer, order, product, isSeller);
+  OrderDetailsState createState() => OrderDetailsState(order, product, isSeller);
 }
 
 class OrderDetailsState extends State<OrderDetails> {
   final Order order;
   final Product product;
-  final CustomerResponse customer;
   final bool isSeller;
 
   Future<DeliveryResponse> futureDelivery;
@@ -59,9 +56,8 @@ class OrderDetailsState extends State<OrderDetails> {
 
   maps.BitmapDescriptor carLocationIcon = maps.BitmapDescriptor.defaultMarker;
 
-  OrderDetailsState(CustomerResponse customer, Order order, Product product, bool isSeller)
-      : customer = customer,
-        order = order,
+  OrderDetailsState(Order order, Product product, bool isSeller)
+      : order = order,
         product = product,
         isSeller = isSeller;
 

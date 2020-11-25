@@ -1019,8 +1019,8 @@ class MessagePageState extends State<MessagePage> {
         await Firebase.setMessageProduct(chatId, product);
 
         // send the user to the order details page
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => OrderDetails(fromCustomer, order, product, isSeller: false)));
+        await Navigator.push(
+            context, MaterialPageRoute(builder: (context) => OrderDetails(order, product, isSeller: false)));
       } // end if order successful
     }).catchError((err) {
       print(err);

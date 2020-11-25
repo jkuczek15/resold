@@ -61,20 +61,20 @@ class Product {
         product.longitude = double.tryParse(doc['longitude_raw'][0].toString());
       }
 
-      if (doc['item_size'] != null) {
-        product.itemSize = doc['item_size'];
+      if (doc['delivery_id'] != null) {
+        product.deliveryId = doc['delivery_id'][0].toString();
       }
 
       if (doc['charge_id'] != null) {
-        product.chargeId = doc['charge_id'];
+        product.chargeId = doc['charge_id'][0].toString();
       }
 
-      if (doc['delivery_id'] != null) {
-        product.deliveryId = doc['delivery_id'];
+      if (doc['item_size'] != null) {
+        product.itemSize = int.tryParse(doc['item_size']);
       }
 
       if (doc['vendor_id'] != null) {
-        product.vendorId = doc['vendor_id'];
+        product.vendorId = int.tryParse(doc['vendor_id']);
       }
 
       return product;
@@ -106,20 +106,20 @@ class Product {
         product.longitude = double.tryParse(doc['longitude'].toString());
       }
 
+      if (doc['charge_id'] != null) {
+        product.chargeId = doc['charge_id'].toString();
+      }
+
+      if (doc['delivery_id'] != null) {
+        product.deliveryId = doc['delivery_id'].toString();
+      }
+
       if (doc['item_size'] != null) {
         product.itemSize = int.tryParse(doc['item_size']);
       }
 
-      if (doc['charge_id'] != null) {
-        product.chargeId = doc['charge_id'];
-      }
-
-      if (doc['delivery_id'] != null) {
-        product.deliveryId = doc['delivery_id'];
-      }
-
       if (doc['vendor_id'] != null) {
-        product.vendorId = doc['vendor_id'];
+        product.vendorId = int.tryParse(doc['vendor_id']);
       }
 
       return product;
