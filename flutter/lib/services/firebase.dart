@@ -159,18 +159,32 @@ class Firebase {
   } // end function sendProductMessage
 
   /*
-  * acceptDeliveryQuote - Accept a delivery quote from a group of messages
+  * updateDeliveryQuoteStatus - Change the status of a delivery quote
   * chatId - Group chat ID
+  * status - Delivery quote status
   */
   static Future updateDeliveryQuoteStatus(String chatId, DeliveryQuoteStatus status) async {
-    var documentReference = Firestore.instance.collection('messages').document(chatId).collection(chatId);
+    CollectionReference documentReference =
+        Firestore.instance.collection('messages').document(chatId).collection(chatId);
 
-    var deliveryQuoteRef = documentReference.where('messageType', isEqualTo: MessageType.deliveryQuote.index);
-    var deliveryQuoteDocuments = await deliveryQuoteRef.getDocuments();
+    Query deliveryQuoteRef = documentReference.where('messageType', isEqualTo: MessageType.deliveryQuote.index);
+    QuerySnapshot deliveryQuoteDocuments = await deliveryQuoteRef.getDocuments();
 
     if (deliveryQuoteDocuments.documents.isNotEmpty) {
-      var deliveryQuote = deliveryQuoteDocuments.documents[0];
+      DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.documents[0];
       await deliveryQuote.reference.updateData(<String, dynamic>{'status': status.index});
+    } // end if we found a delivery quote to accept
+  } // end function for accepting a delivery quote
+
+  /*
+  * setMessageProduct - Set the product for an inbox message
+  * chatId - Group chat ID
+  * product - Product to be set
+  */
+  static Future setMessageProduct(String chatId, Product product) async {
+    DocumentReference documentReference = Firestore.instance.collection('inbox_messages').document(chatId);
+    if (documentReference != null) {
+      await documentReference.updateData(<String, dynamic>{'product': product.toJson()});
     } // end if we found a delivery quote to accept
   } // end function for accepting a delivery quote
 

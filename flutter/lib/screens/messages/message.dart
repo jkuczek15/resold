@@ -123,7 +123,10 @@ class MessagePageState extends State<MessagePage> {
                         PopupMenuButton<String>(
                           onSelected: handleMenuClick,
                           itemBuilder: (BuildContext context) {
-                            return {'View Details', 'Send Offer', 'Request Delivery'}.map((String choice) {
+                            Set<String> items = product.deliveryId != null
+                                ? {'View Details'}
+                                : {'View Details', 'Send Offer', 'Request Delivery'};
+                            return items.map((String choice) {
                               return PopupMenuItem<String>(
                                 value: choice,
                                 child: Text(choice),
@@ -1000,7 +1003,8 @@ class MessagePageState extends State<MessagePage> {
 
         // save the delivery ID to the product
         await ResoldRest.setDeliveryId(fromCustomer.token, product.id, delivery.id);
-        product.deliveryId = delivery.id;
+        setState(() => product.deliveryId = delivery.id);
+        await Firebase.setMessageProduct(chatId, product);
 
         // send the user to the order details page
         await Navigator.push(context,
