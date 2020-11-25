@@ -593,6 +593,7 @@ class ProductPageState extends State<ProductPage> {
                                   Container(
                                       height: 500,
                                       child: GoogleMap(
+                                        myLocationEnabled: true,
                                         onMapCreated: onMapCreated,
                                         initialCameraPosition: CameraPosition(
                                           target: LatLng(product.latitude, product.longitude),
@@ -631,20 +632,10 @@ class ProductPageState extends State<ProductPage> {
       final productMarker = Marker(
           markerId: MarkerId(product.name),
           position: LatLng(product.latitude, product.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(198),
           infoWindow: infoWindow);
 
-      final String currentLocationTitle = "You";
-      final currentLocationMarker = Marker(
-        markerId: MarkerId(currentLocationTitle),
-        position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(198),
-        infoWindow: InfoWindow(
-          title: currentLocationTitle,
-        ),
-      );
-
       markers[product.name] = productMarker;
-      markers[currentLocationTitle] = currentLocationMarker;
     });
   } // end function onMapCreated
 
