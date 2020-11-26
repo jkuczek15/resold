@@ -9,15 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/environment.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
-import 'package:resold/state/app-state.dart';
-import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/view-models/response/postmates/delivery-response.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:geolocator/geolocator.dart';
@@ -70,200 +67,189 @@ class OrderDetailsState extends State<OrderDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, Position>(
-        converter: (state) => state.currentLocation,
-        builder: (context, dispatcher, currentLocation) {
-          return ViewModelSubscriber<AppState, CustomerResponse>(
-              converter: (state) => state.customer,
-              builder: (context, dispatcher, customer) {
-                return DefaultTabController(
-                    length: 2,
-                    child: Scaffold(
-                        appBar: AppBar(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                      width: 250,
-                                      child: Text(product.name,
-                                          overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
-                            ],
-                          ),
-                          iconTheme: IconThemeData(
-                            color: Colors.white, //change your color here
-                          ),
-                          backgroundColor: const Color(0xff41b8ea),
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                          width: 250,
+                          child: Text(product.name,
+                              overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
+                ],
+              ),
+              iconTheme: IconThemeData(
+                color: Colors.white, //change your color here
+              ),
+              backgroundColor: const Color(0xff41b8ea),
+            ),
+            body: FutureBuilder<DeliveryResponse>(
+                future: futureDelivery,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    DeliveryResponse delivery = snapshot.data;
+                    DateTime now = DateTime.now();
+                    Duration difference;
+
+                    // setup the steps
+                    setupSteps(delivery);
+
+                    if (this.currentStep == 0 && isSeller) {
+                      if (delivery.pickup_eta != null) {
+                        difference = delivery.pickup_eta.difference(now);
+                      } // end if pickup eta not null
+                    } else if (this.currentStep == 1) {
+                      if (delivery.dropoff_eta != null) {
+                        difference = delivery.dropoff_eta.difference(now);
+                      } // end if dropoff eta not null
+                    } // end if pickup and is seller
+
+                    double total = order.total;
+                    double fee = delivery.fee.toDouble() / 100;
+                    if (!isSeller) {
+                      total += fee;
+                    } // end if buyer
+
+                    return SingleChildScrollView(
+                        child: Column(children: [
+                      Container(
+                          height: 380,
+                          child: FutureBuilder(
+                              future: this.generateMarkers(delivery),
+                              initialData: Set.of(<Marker>[]),
+                              builder: (context, snapshot) => maps.GoogleMap(
+                                  myLocationEnabled: delivery.status == 'delivered',
+                                  onMapCreated: (maps.GoogleMapController controller) =>
+                                      this.onMapCreated(controller, delivery),
+                                  mapType: maps.MapType.normal,
+                                  initialCameraPosition: maps.CameraPosition(
+                                    target: delivery.complete
+                                        ? maps.LatLng(delivery.dropoff.location.lat, delivery.dropoff.location.lng)
+                                        : maps.LatLng(delivery.pickup.location.lat, delivery.pickup.location.lng),
+                                    zoom: 13.0,
+                                  ),
+                                  markers: snapshot.data,
+                                  gestureRecognizers: Set()
+                                    ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
+                                  polylines: Set<maps.Polyline>.of(polylines.values)))),
+                      Card(
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints.tightFor(height: 125, width: 400),
+                          child: Stepper(
+                              currentStep: this.currentStep,
+                              steps: steps,
+                              physics: NeverScrollableScrollPhysics(),
+                              type: StepperType.horizontal,
+                              controlsBuilder: getStepControls),
                         ),
-                        body: FutureBuilder<DeliveryResponse>(
-                            future: futureDelivery,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                DeliveryResponse delivery = snapshot.data;
-                                DateTime now = DateTime.now();
-                                Duration difference;
-
-                                // setup the steps
-                                setupSteps(delivery);
-
-                                if (this.currentStep == 0 && isSeller) {
-                                  if (delivery.pickup_eta != null) {
-                                    difference = delivery.pickup_eta.difference(now);
-                                  } // end if pickup eta not null
-                                } else if (this.currentStep == 1) {
-                                  if (delivery.dropoff_eta != null) {
-                                    difference = delivery.dropoff_eta.difference(now);
-                                  } // end if dropoff eta not null
-                                } // end if pickup and is seller
-
-                                double total = order.total;
-                                double fee = delivery.fee.toDouble() / 100;
-                                if (!isSeller) {
-                                  total += fee;
-                                } // end if buyer
-
-                                return SingleChildScrollView(
-                                    child: Column(children: [
-                                  Container(
-                                      height: 380,
-                                      child: FutureBuilder(
-                                          future: this.generateMarkers(delivery),
-                                          initialData: Set.of(<Marker>[]),
-                                          builder: (context, snapshot) => maps.GoogleMap(
-                                              myLocationEnabled: delivery.status == 'delivered',
-                                              onMapCreated: (maps.GoogleMapController controller) =>
-                                                  this.onMapCreated(controller, delivery),
-                                              mapType: maps.MapType.normal,
-                                              initialCameraPosition: maps.CameraPosition(
-                                                target: delivery.complete
-                                                    ? maps.LatLng(
-                                                        delivery.dropoff.location.lat, delivery.dropoff.location.lng)
-                                                    : maps.LatLng(
-                                                        delivery.pickup.location.lat, delivery.pickup.location.lng),
-                                                zoom: 13.0,
-                                              ),
-                                              markers: snapshot.data,
-                                              gestureRecognizers: Set()
-                                                ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
-                                              polylines: Set<maps.Polyline>.of(polylines.values)))),
-                                  Card(
-                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints.tightFor(height: 125, width: 400),
-                                      child: Stepper(
-                                          currentStep: this.currentStep,
-                                          steps: steps,
-                                          physics: NeverScrollableScrollPhysics(),
-                                          type: StepperType.horizontal,
-                                          controlsBuilder: getStepControls),
-                                    ),
-                                    difference != null
-                                        ? Padding(
-                                            padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
-                                            child: Text('Arriving in ${difference.inMinutes} minutes.'))
-                                        : SizedBox(),
-                                    Divider(
-                                      color: Colors.grey.shade400,
-                                      height: 20,
-                                      thickness: 2,
-                                      indent: 23,
-                                      endIndent: 15,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                          Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context).size.width - 40,
-                                                  child:
-                                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                                    Text(product.description),
-                                                    Padding(
-                                                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                                        child: Container(
-                                                          height: 90,
-                                                          width: 90,
-                                                          child: CachedNetworkImage(
-                                                            placeholder: (context, url) => Container(
-                                                              child: Loading(),
-                                                              width: MediaQuery.of(context).size.width,
-                                                              padding: EdgeInsets.all(70.0),
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.blueGrey,
-                                                                borderRadius: BorderRadius.all(
-                                                                  Radius.circular(8.0),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            errorWidget: (context, url, error) => Material(
-                                                              child: Image.asset(
-                                                                'assets/images/placeholder-image.png',
-                                                                width: 200.0,
-                                                                height: 200.0,
-                                                                fit: BoxFit.cover,
-                                                              ),
-                                                              borderRadius: BorderRadius.all(
-                                                                Radius.circular(8.0),
-                                                              ),
-                                                              clipBehavior: Clip.hardEdge,
-                                                            ),
-                                                            imageUrl: baseProductImagePath + product.thumbnail,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ))
-                                                  ]),
-                                                ),
-                                                Row(children: [
-                                                  Container(
-                                                      width: 345,
-                                                      child: Divider(
-                                                        color: Colors.grey.shade400,
-                                                        height: 20,
-                                                        thickness: 2,
-                                                        indent: 0,
-                                                        endIndent: 0,
-                                                      ))
-                                                ]),
-                                                Row(children: [
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: isSeller
-                                                        ? [Text('Your Profit:')]
-                                                        : [Text('Subtotal:'), Text('Delivery Fee:'), Text('Total:')],
+                        difference != null
+                            ? Padding(
+                                padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
+                                child: Text('Arriving in ${difference.inMinutes} minutes.'))
+                            : SizedBox(),
+                        Divider(
+                          color: Colors.grey.shade400,
+                          height: 20,
+                          thickness: 2,
+                          indent: 23,
+                          endIndent: 15,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width - 40,
+                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                        Text(product.description),
+                                        Padding(
+                                            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                            child: Container(
+                                              height: 90,
+                                              width: 90,
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) => Container(
+                                                  child: Loading(),
+                                                  width: MediaQuery.of(context).size.width,
+                                                  padding: EdgeInsets.all(70.0),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blueGrey,
+                                                    borderRadius: BorderRadius.all(
+                                                      Radius.circular(8.0),
+                                                    ),
                                                   ),
-                                                  SizedBox(width: 25),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: isSeller
-                                                        ? [Text('\$${order.total.toStringAsFixed(2)}')]
-                                                        : [
-                                                            Text('\$${order.total.toStringAsFixed(2)}'),
-                                                            Text('\$$fee'),
-                                                            Text('\$$total')
-                                                          ],
-                                                  )
-                                                ]),
-                                                SizedBox(height: 20)
-                                              ]),
-                                        ]),
-                                      ),
+                                                ),
+                                                errorWidget: (context, url, error) => Material(
+                                                  child: Image.asset(
+                                                    'assets/images/placeholder-image.png',
+                                                    width: 200.0,
+                                                    height: 200.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0),
+                                                  ),
+                                                  clipBehavior: Clip.hardEdge,
+                                                ),
+                                                imageUrl: baseProductImagePath + product.thumbnail,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ))
+                                      ]),
                                     ),
-                                  ]))
-                                ]));
-                              } else {
-                                // By default, show a loading spinner.
-                                return Center(child: Loading());
-                              }
-                            } // end builder function
-                            )));
-              });
-        });
+                                    Row(children: [
+                                      Container(
+                                          width: 345,
+                                          child: Divider(
+                                            color: Colors.grey.shade400,
+                                            height: 20,
+                                            thickness: 2,
+                                            indent: 0,
+                                            endIndent: 0,
+                                          ))
+                                    ]),
+                                    Row(children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: isSeller
+                                            ? [Text('Your Profit:')]
+                                            : [Text('Subtotal:'), Text('Delivery Fee:'), Text('Total:')],
+                                      ),
+                                      SizedBox(width: 25),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: isSeller
+                                            ? [Text('\$${order.total.toStringAsFixed(2)}')]
+                                            : [
+                                                Text('\$${order.total.toStringAsFixed(2)}'),
+                                                Text('\$$fee'),
+                                                Text('\$$total')
+                                              ],
+                                      )
+                                    ]),
+                                    SizedBox(height: 20)
+                                  ]),
+                            ]),
+                          ),
+                        ),
+                      ]))
+                    ]));
+                  } else {
+                    // By default, show a loading spinner.
+                    return Center(child: Loading());
+                  }
+                } // end builder function
+                )));
   } // end function build
 
   Future<Set<Marker>> generateMarkers(DeliveryResponse delivery) async {

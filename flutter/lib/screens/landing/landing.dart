@@ -3,21 +3,33 @@ import 'package:resold/screens/landing/signup.dart';
 import 'package:resold/screens/landing/login.dart';
 
 class Landing extends StatelessWidget {
+  final Function dispatcher;
+
+  Landing({this.dispatcher});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: LandingPage());
+    return MaterialApp(home: LandingPage(dispatcher));
   }
 }
 
 class LandingPage extends StatefulWidget {
-  LandingPage({Key key}) : super(key: key);
+  final Function dispatcher;
+
+  LandingPage(Function dispatcher, {Key key})
+      : dispatcher = dispatcher,
+        super(key: key);
 
   @override
-  LandingPageState createState() => LandingPageState();
+  LandingPageState createState() => LandingPageState(dispatcher);
 }
 
 class LandingPageState extends State<LandingPage> {
+  final Function dispatcher;
+
+  LandingPageState(this.dispatcher);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +55,7 @@ class LandingPageState extends State<LandingPage> {
               Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => SignUpPage(),
+                    pageBuilder: (context, animation, secondaryAnimation) => SignUpPage(dispatcher),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                       return FadeTransition(opacity: animation, child: child);
                     },
@@ -63,7 +75,7 @@ class LandingPageState extends State<LandingPage> {
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+                      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(dispatcher),
                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                         return FadeTransition(opacity: animation, child: child);
                       },
@@ -78,5 +90,5 @@ class LandingPageState extends State<LandingPage> {
         SizedBox(height: 5)
       ])
     ]));
-  }
+  } // end function build
 }
