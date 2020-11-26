@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
@@ -134,7 +135,7 @@ class HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
                 BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
                 BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
-                BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Orders'),
+                BottomNavigationBarItem(icon: Icon(MdiIcons.truck), label: 'Deliveries'),
                 BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
               ],
               currentIndex: selectedTab,
