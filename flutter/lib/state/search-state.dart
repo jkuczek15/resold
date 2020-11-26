@@ -5,7 +5,7 @@ import 'package:resold/enums/sort.dart';
 import 'package:resold/models/product.dart';
 
 class SearchState {
-  TextEditingController searchBarController;
+  TextEditingController textController;
   StreamController<List<Product>> searchStream;
   StreamController<List<Product>> mapStream;
   List<Product> initialProducts;
@@ -15,7 +15,7 @@ class SearchState {
   String distance;
 
   SearchState(
-      {this.searchBarController,
+      {this.textController,
       this.searchStream,
       this.mapStream,
       this.initialProducts,
