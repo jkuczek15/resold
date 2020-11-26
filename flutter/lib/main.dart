@@ -62,7 +62,7 @@ Future<void> main() async {
       selectedCategory: 'Cancel',
       selectedCondition: 'Cancel',
       selectedSort: Sort.newest,
-      searchBarController: TextEditingController(),
+      textController: TextEditingController(),
       searchStream: StreamController<List<Product>>.broadcast(),
       mapStream: StreamController<List<Product>>.broadcast());
 

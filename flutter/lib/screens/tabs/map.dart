@@ -71,6 +71,7 @@ class MapPageState extends State<MapPage> {
                                       child: GoogleMap(
                                         myLocationEnabled: true,
                                         myLocationButtonEnabled: false,
+                                        mapToolbarEnabled: false,
                                         zoomControlsEnabled: false,
                                         onMapCreated: (GoogleMapController controller) => onMapCreated(
                                             controller, currentLocation, snapshot.hasData ? snapshot.data : []),
@@ -94,13 +95,13 @@ class MapPageState extends State<MapPage> {
                                       color: Colors.white.withOpacity(0.9),
                                       height: 130,
                                       child: ResoldSearchBar<Product>(
-                                        textEditingController: searchState.searchBarController,
+                                        textEditingController: searchState.textController,
                                         header: ScrollableFilterList(currentLocation, searchState),
                                         hintText: 'Search entire marketplace here...',
                                         searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
                                         cancellationWidget: Icon(Icons.cancel),
                                         onSearch: (term) async {
-                                          searchState.searchBarController.text = term;
+                                          searchState.textController.text = term;
                                           dispatcher(SetSearchStateAction(searchState));
                                           dispatcher(FetchSearchResultsAction());
                                           return await Search.fetchSearchProducts(
