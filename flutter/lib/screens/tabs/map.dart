@@ -6,9 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/actions/fetch-search-results.dart';
-import 'package:resold/state/actions/set-pill-position.dart';
 import 'package:resold/state/actions/set-search-state.dart';
-import 'package:resold/state/actions/set-selected-product.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
@@ -16,27 +14,47 @@ import 'package:resold/widgets/map/map-pin-pill.dart';
 import 'package:resold/widgets/resold-search-bar.dart';
 import 'package:resold/widgets/scroll/scrollable-filter-list.dart';
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   final CustomerResponse customer;
   final SearchState searchState;
   final Position currentLocation;
   final List<Product> results;
   final Function dispatcher;
-  final double pinPillPosition;
-  final Product selectedProduct;
-  final Map<String, Marker> markers = new Map<String, Marker>();
 
   MapPage(
-      {this.customer,
-      this.searchState,
-      this.currentLocation,
-      this.results,
-      this.pinPillPosition,
-      this.selectedProduct,
-      this.dispatcher});
+      {CustomerResponse customer,
+      SearchState searchState,
+      Position currentLocation,
+      List<Product> results,
+      Function dispatcher,
+      Key key})
+      : customer = customer,
+        searchState = searchState,
+        currentLocation = currentLocation,
+        results = results,
+        dispatcher = dispatcher,
+        super(key: key);
+
+  @override
+  MapPageState createState() =>
+      MapPageState(this.customer, this.searchState, this.currentLocation, this.results, this.dispatcher);
+}
+
+class MapPageState extends State<MapPage> {
+  final CustomerResponse customer;
+  final SearchState searchState;
+  final Position currentLocation;
+  final Function dispatcher;
+  final Map<String, Marker> markers = new Map<String, Marker>();
+  List<Product> results;
+  double pinPillPosition = -100;
+  Product selectedProduct = Product(name: '', thumbnail: '', price: '0');
+
+  MapPageState(this.customer, this.searchState, this.currentLocation, this.results, this.dispatcher);
 
   @override
   Widget build(BuildContext context) {
+    results = widget.results;
     setupMarkers(currentLocation, results);
     return Stack(
       children: [
@@ -54,7 +72,9 @@ class MapPage extends StatelessWidget {
             ),
             markers: markers.values.toSet(),
             onTap: (LatLng location) {
-              dispatcher(SetPillPositionAction(-100));
+              setState(() {
+                pinPillPosition = -100;
+              });
             },
           ),
         ),
@@ -91,6 +111,9 @@ class MapPage extends StatelessWidget {
   } // end function onMapCreated
 
   void setupMarkers(Position currentLocation, List<Product> products) {
+    // clear markers
+    markers.clear();
+
     // set product markers
     products.forEach((product) {
       if (product.latitude == currentLocation.latitude && product.longitude == currentLocation.longitude) {
@@ -104,8 +127,10 @@ class MapPage extends StatelessWidget {
           position: LatLng(product.latitude, product.longitude),
           icon: BitmapDescriptor.defaultMarkerWithHue(198),
           onTap: () {
-            dispatcher(SetSelectedProductAction(product));
-            dispatcher(SetPillPositionAction(0));
+            setState(() {
+              selectedProduct = product;
+              pinPillPosition = 0;
+            });
           });
     });
   } // end function setupMarkers
