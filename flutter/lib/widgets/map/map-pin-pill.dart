@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:resold/screens/product/view.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class MapPinPill extends StatelessWidget {
   final double pinPillPosition;
   final Product selectedProduct;
-  final String customerToken;
+  final CustomerResponse customer;
+  final Position currentLocation;
+  final Function dispatcher;
 
-  MapPinPill({this.pinPillPosition, this.selectedProduct, this.customerToken});
+  MapPinPill({this.customer, this.currentLocation, this.dispatcher, this.pinPillPosition, this.selectedProduct});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,9 @@ class MapPinPill extends StatelessWidget {
             ),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ProductPage(selectedProduct, customerToken)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProductPage(customer, currentLocation, selectedProduct, dispatcher)));
             },
           )),
     );

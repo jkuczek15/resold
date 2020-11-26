@@ -25,43 +25,51 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelSubscriber<AppState, CustomerResponse>(
         converter: (state) => state.customer,
-        builder: (context, dispatcher, customer) => MaterialApp(
-            title: 'Resold',
-            theme: ThemeData(
-                primarySwatch: const MaterialColor(0xff41b8ea, {
-                  50: Color.fromRGBO(25, 72, 92, .1),
-                  100: Color.fromRGBO(25, 72, 92, .2),
-                  200: Color.fromRGBO(25, 72, 92, .3),
-                  300: Color.fromRGBO(25, 72, 92, .4),
-                  400: Color.fromRGBO(25, 72, 92, .5),
-                  500: Color.fromRGBO(25, 72, 92, .6),
-                  600: Color.fromRGBO(25, 72, 92, .7),
-                  700: Color.fromRGBO(25, 72, 92, .8),
-                  800: Color.fromRGBO(25, 72, 92, .9),
-                  900: Color.fromRGBO(25, 72, 92, 1)
-                }),
-                sliderTheme: SliderThemeData(
-                    valueIndicatorColor: ResoldBlue,
-                    showValueIndicator: ShowValueIndicator.never,
-                    valueIndicatorTextStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    tickMarkShape: SliderTickMarkShape.noTickMark),
-                scaffoldBackgroundColor: Colors.white,
-                brightness: Brightness.light,
-                accentColor: Colors.white,
-                primaryColor: ResoldBlue,
-                splashColor: ResoldBlue,
-                backgroundColor: Colors.white),
-            home: HomePage(customer)));
+        builder: (context, dispatcher, customer) {
+          return ViewModelSubscriber<AppState, Position>(
+              converter: (state) => state.currentLocation,
+              builder: (context, dispatcher, currentLocation) {
+                return MaterialApp(
+                    title: 'Resold',
+                    theme: ThemeData(
+                        primarySwatch: const MaterialColor(0xff41b8ea, {
+                          50: Color.fromRGBO(25, 72, 92, .1),
+                          100: Color.fromRGBO(25, 72, 92, .2),
+                          200: Color.fromRGBO(25, 72, 92, .3),
+                          300: Color.fromRGBO(25, 72, 92, .4),
+                          400: Color.fromRGBO(25, 72, 92, .5),
+                          500: Color.fromRGBO(25, 72, 92, .6),
+                          600: Color.fromRGBO(25, 72, 92, .7),
+                          700: Color.fromRGBO(25, 72, 92, .8),
+                          800: Color.fromRGBO(25, 72, 92, .9),
+                          900: Color.fromRGBO(25, 72, 92, 1)
+                        }),
+                        sliderTheme: SliderThemeData(
+                            valueIndicatorColor: ResoldBlue,
+                            showValueIndicator: ShowValueIndicator.never,
+                            valueIndicatorTextStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            tickMarkShape: SliderTickMarkShape.noTickMark),
+                        scaffoldBackgroundColor: Colors.white,
+                        brightness: Brightness.light,
+                        accentColor: Colors.white,
+                        primaryColor: ResoldBlue,
+                        splashColor: ResoldBlue,
+                        backgroundColor: Colors.white),
+                    home: HomePage(customer, currentLocation, dispatcher));
+              });
+        });
   } // end function build
 } // end class Home
 
 class HomePageState extends State<HomePage> {
   final CustomerResponse customer;
+  final Position currentLocation;
+  final Function dispatcher;
 
-  HomePageState(this.customer);
+  HomePageState(this.customer, this.currentLocation, this.dispatcher);
 
   @override
   void initState() {
@@ -119,7 +127,8 @@ class HomePageState extends State<HomePage> {
                             } // end if we have unread message count
                           }),
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => InboxPage(customer)));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => InboxPage(customer, currentLocation, dispatcher)));
                       },
                     ),
                     // child: Icon(Icons.message, color: Colors.white),
@@ -158,83 +167,55 @@ class HomePageState extends State<HomePage> {
     switch (selectedTab) {
       case SelectedTab.home:
       case SelectedTab.map:
-        return ViewModelSubscriber<AppState, CustomerResponse>(
-            converter: (state) => state.customer,
-            builder: (context, dispatcher, customer) {
-              return ViewModelSubscriber<AppState, Position>(
-                  converter: (state) => state.currentLocation,
-                  builder: (context, dispatcher, currentLocation) {
-                    return ViewModelSubscriber<AppState, SearchState>(
-                        converter: (state) => state.searchState,
-                        builder: (context, dispatcher, searchState) {
-                          return StreamBuilder<List<Product>>(
-                              initialData: searchState.initialProducts,
-                              stream: searchState.searchStream.stream,
-                              builder: (context, snapshot) {
-                                List<Product> results = snapshot.hasData ? snapshot.data : [];
-                                if (selectedTab == SelectedTab.map) {
-                                  return ViewModelSubscriber<AppState, MapState>(
-                                      converter: (state) => state.mapState,
-                                      builder: (context, dispatcher, mapState) {
-                                        return MapPage(
-                                            customer: customer,
-                                            searchState: searchState,
-                                            results: results,
-                                            currentLocation: currentLocation,
-                                            dispatcher: dispatcher);
-                                      });
-                                } else {
-                                  return SearchPage(
-                                      customer: customer,
-                                      searchState: searchState,
-                                      results: results,
-                                      currentLocation: currentLocation,
-                                      dispatcher: dispatcher);
-                                } // end if map tab
-                              });
-                        });
+        return ViewModelSubscriber<AppState, SearchState>(
+            converter: (state) => state.searchState,
+            builder: (context, dispatcher, searchState) {
+              return StreamBuilder<List<Product>>(
+                  initialData: searchState.initialProducts,
+                  stream: searchState.searchStream.stream,
+                  builder: (context, snapshot) {
+                    List<Product> results = snapshot.hasData ? snapshot.data : [];
+                    if (selectedTab == SelectedTab.map) {
+                      return ViewModelSubscriber<AppState, MapState>(
+                          converter: (state) => state.mapState,
+                          builder: (context, dispatcher, mapState) {
+                            return MapPage(
+                                customer: customer,
+                                searchState: searchState,
+                                results: results,
+                                currentLocation: currentLocation,
+                                dispatcher: dispatcher);
+                          });
+                    } else {
+                      return SearchPage(
+                          customer: customer,
+                          searchState: searchState,
+                          results: results,
+                          currentLocation: currentLocation,
+                          dispatcher: dispatcher);
+                    } // end if map tab
                   });
             });
       case SelectedTab.sell:
-        return ViewModelSubscriber<AppState, CustomerResponse>(
-            converter: (state) => state.customer,
-            builder: (context, dispatcher, customer) {
-              return ViewModelSubscriber<AppState, Position>(
-                  converter: (state) => state.currentLocation,
-                  builder: (context, dispatcher, currentLocation) {
-                    return SellPage(customer: customer, currentLocation: currentLocation, dispatcher: dispatcher);
-                  });
-            });
+        return SellPage(customer: customer, currentLocation: currentLocation, dispatcher: dispatcher);
       case SelectedTab.orders:
-        return ViewModelSubscriber<AppState, CustomerResponse>(
-            converter: (state) => state.customer,
-            builder: (context, dispatcher, customer) {
-              return OrdersPage(customer: customer);
-            });
+        return OrdersPage(customer: customer);
       case SelectedTab.account:
-        return ViewModelSubscriber<AppState, CustomerResponse>(
-            converter: (state) => state.customer,
-            builder: (context, dispatcher, customer) {
-              return ViewModelSubscriber<AppState, Vendor>(
-                  converter: (state) => state.vendor,
-                  builder: (context, dispatcher, vendor) {
-                    return ViewModelSubscriber<AppState, Position>(
-                        converter: (state) => state.currentLocation,
-                        builder: (context, dispatcher, currentLocation) {
-                          return ViewModelSubscriber<AppState, List<Product>>(
-                              converter: (state) => state.forSaleProducts,
-                              builder: (context, dispatcher, forSaleProducts) {
-                                return ViewModelSubscriber<AppState, List<Product>>(
-                                    converter: (state) => state.soldProducts,
-                                    builder: (context, dispatcher, soldProducts) {
-                                      return AccountPage(
-                                          customer: customer,
-                                          vendor: vendor,
-                                          currentLocation: currentLocation,
-                                          forSaleProducts: forSaleProducts,
-                                          soldProducts: soldProducts);
-                                    });
-                              });
+        return ViewModelSubscriber<AppState, Vendor>(
+            converter: (state) => state.vendor,
+            builder: (context, dispatcher, vendor) {
+              return ViewModelSubscriber<AppState, List<Product>>(
+                  converter: (state) => state.forSaleProducts,
+                  builder: (context, dispatcher, forSaleProducts) {
+                    return ViewModelSubscriber<AppState, List<Product>>(
+                        converter: (state) => state.soldProducts,
+                        builder: (context, dispatcher, soldProducts) {
+                          return AccountPage(
+                              customer: customer,
+                              vendor: vendor,
+                              currentLocation: currentLocation,
+                              forSaleProducts: forSaleProducts,
+                              soldProducts: soldProducts);
                         });
                   });
             });
@@ -242,14 +223,15 @@ class HomePageState extends State<HomePage> {
         return Text('Unknown tab');
     } // end switch on selected tab
   } // end function getContent
-
 } // end class HomePageState
 
 class HomePage extends StatefulWidget {
   final CustomerResponse customer;
+  final Position currentLocation;
+  final Function dispatcher;
 
-  HomePage(this.customer, {Key key}) : super(key: key);
+  HomePage(this.customer, this.currentLocation, this.dispatcher, {Key key}) : super(key: key);
 
   @override
-  HomePageState createState() => HomePageState(this.customer);
+  HomePageState createState() => HomePageState(this.customer, this.currentLocation, this.dispatcher);
 } // end class HomePage

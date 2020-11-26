@@ -142,8 +142,11 @@ class SellPage extends StatelessWidget {
                               dispatcher(SetSelectedTabAction(SelectedTab.account));
 
                               Navigator.of(context, rootNavigator: true).pop('dialog');
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => ProductPage(product, customer.token)));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductPage(customer, currentLocation, product, dispatcher)));
                             } // end if form is valid
                           },
                           child: Text('Post',

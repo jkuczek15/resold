@@ -15,6 +15,7 @@ class AccountPage extends StatefulWidget {
   final Position currentLocation;
   final List<Product> forSaleProducts;
   final List<Product> soldProducts;
+  final Function dispatcher;
 
   AccountPage(
       {CustomerResponse customer,
@@ -22,17 +23,19 @@ class AccountPage extends StatefulWidget {
       Position currentLocation,
       List<Product> forSaleProducts,
       List<Product> soldProducts,
+      Function dispatcher,
       Key key})
       : customer = customer,
         vendor = vendor,
         currentLocation = currentLocation,
         forSaleProducts = forSaleProducts,
         soldProducts = soldProducts,
+        dispatcher = dispatcher,
         super(key: key);
 
   @override
-  AccountPageState createState() =>
-      AccountPageState(this.customer, this.vendor, this.currentLocation, this.forSaleProducts, this.soldProducts);
+  AccountPageState createState() => AccountPageState(
+      this.customer, this.vendor, this.currentLocation, this.forSaleProducts, this.soldProducts, this.dispatcher);
 }
 
 class AccountPageState extends State<AccountPage> {
@@ -44,7 +47,9 @@ class AccountPageState extends State<AccountPage> {
   final Position currentLocation;
   final List<Product> forSaleProducts;
   final List<Product> soldProducts;
-  AccountPageState(this.customer, this.vendor, this.currentLocation, this.forSaleProducts, this.soldProducts);
+  final Function dispatcher;
+  AccountPageState(
+      this.customer, this.vendor, this.currentLocation, this.forSaleProducts, this.soldProducts, this.dispatcher);
 
   @override
   void initState() {
@@ -147,7 +152,10 @@ class AccountPageState extends State<AccountPage> {
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(customer)))
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfilePage(customer, vendor, currentLocation, dispatcher)))
                         .then((value) => {
                               setState(() {
                                 imageCache.clear();
@@ -186,12 +194,12 @@ class AccountPageState extends State<AccountPage> {
                                 ? List.generate(forSaleProducts.length, (index) {
                                     var product = forSaleProducts[index];
                                     return ProductListBuilder.buildProductGridTile(
-                                        context, currentLocation, product, customer, index);
+                                        context, currentLocation, product, customer, dispatcher, index);
                                   })
                                 : List.generate(soldProducts.length, (index) {
                                     var product = soldProducts[index];
                                     return ProductListBuilder.buildProductGridTile(
-                                        context, currentLocation, product, customer, index);
+                                        context, currentLocation, product, customer, dispatcher, index);
                                   })),
               ],
             ))

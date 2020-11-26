@@ -78,13 +78,18 @@ class MapPageState extends State<MapPage> {
             },
           ),
         ),
-        MapPinPill(pinPillPosition: pinPillPosition, selectedProduct: selectedProduct, customerToken: customer.token),
+        MapPinPill(
+            customer: customer,
+            currentLocation: currentLocation,
+            dispatcher: dispatcher,
+            pinPillPosition: pinPillPosition,
+            selectedProduct: selectedProduct),
         Container(
           color: Colors.white.withOpacity(0.9),
           height: 131,
           child: ResoldSearchBar<Product>(
             textEditingController: searchState.textController,
-            header: ScrollableFilterList(currentLocation, searchState),
+            header: ScrollableFilterList(searchState, currentLocation, dispatcher),
             hintText: 'Search entire marketplace here...',
             searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
             cancellationWidget: Icon(Icons.cancel),

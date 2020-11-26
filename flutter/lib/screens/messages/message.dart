@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/helpers/firebase-helper.dart';
@@ -13,7 +12,6 @@ import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
-import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
@@ -37,27 +35,38 @@ import 'package:stripe_payment/stripe_payment.dart';
 import 'dart:io';
 
 class MessagePage extends StatefulWidget {
-  final Product product;
+  final CustomerResponse fromCustomer;
   final CustomerResponse toCustomer;
+  final Position currentLocation;
+  final Product product;
   final String chatId;
   final UserMessageType type;
+  final Function dispatcher;
 
-  MessagePage(toCustomer, product, chatId, type, {Key key})
-      : toCustomer = toCustomer,
+  MessagePage(CustomerResponse fromCustomer, CustomerResponse toCustomer, Position currentLocation, Product product,
+      String chatId, UserMessageType type, Function dispatcher,
+      {Key key})
+      : fromCustomer = fromCustomer,
+        toCustomer = toCustomer,
+        currentLocation = currentLocation,
         product = product,
         chatId = chatId,
         type = type,
+        dispatcher = dispatcher,
         super(key: key);
 
   @override
-  MessagePageState createState() => MessagePageState(toCustomer, product, chatId, type);
+  MessagePageState createState() =>
+      MessagePageState(fromCustomer, toCustomer, currentLocation, product, chatId, type, dispatcher);
 }
 
 class MessagePageState extends State<MessagePage> {
-  final CustomerResponse toCustomer;
   CustomerResponse fromCustomer;
+  final CustomerResponse toCustomer;
+  final Position currentLocation;
   final Product product;
   final UserMessageType type;
+  final Function dispatcher;
 
   var listMessage;
   bool isLoading;
@@ -75,71 +84,63 @@ class MessagePageState extends State<MessagePage> {
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
 
-  MessagePageState(CustomerResponse toCustomer, Product product, String chatId, UserMessageType type)
-      : toCustomer = toCustomer,
+  MessagePageState(CustomerResponse fromCustomer, CustomerResponse toCustomer, Position currentLocation,
+      Product product, String chatId, UserMessageType type, Function dispatcher)
+      : fromCustomer = fromCustomer,
+        toCustomer = toCustomer,
+        currentLocation = currentLocation,
         product = product,
         chatId = chatId,
-        type = type;
+        type = type,
+        dispatcher = dispatcher;
 
   @override
   void initState() {
     super.initState();
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
+    // determine if this is the seller
+    var chatIdParts = this.chatId.split('-');
+    isSeller = fromCustomer.id.toString() != chatIdParts[0];
   } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, Position>(
-        converter: (state) => state.currentLocation,
-        builder: (context, dispatcher, currentLocation) {
-          return ViewModelSubscriber<AppState, CustomerResponse>(
-              converter: (state) => state.customer,
-              builder: (context, dispatcher, customer) {
-                // update from customer from app state
-                fromCustomer = customer;
-
-                // determine if this is the seller
-                var chatIdParts = this.chatId.split('-');
-                isSeller = fromCustomer.id.toString() != chatIdParts[0];
-
-                return Scaffold(
-                    appBar: AppBar(
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                  width: 250,
-                                  child: Text(product.name,
-                                      overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
-                        ],
-                      ),
-                      iconTheme: IconThemeData(
-                        color: Colors.white, //change your color here
-                      ),
-                      backgroundColor: ResoldBlue,
-                      actions: <Widget>[
-                        PopupMenuButton<String>(
-                          onSelected: handleMenuClick,
-                          itemBuilder: (BuildContext context) {
-                            Set<String> items = product.deliveryId != null
-                                ? {'View Details'}
-                                : {'View Details', 'Send Offer', 'Request Delivery'};
-                            return items.map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Text(choice),
-                              );
-                            }).toList();
-                          },
-                        ),
-                      ],
-                    ),
-                    body: getContent());
-              });
-        });
+    fromCustomer = widget.toCustomer;
+    return Scaffold(
+        appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                      width: 250,
+                      child: Text(product.name,
+                          overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
+            ],
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
+          backgroundColor: ResoldBlue,
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: handleMenuClick,
+              itemBuilder: (BuildContext context) {
+                Set<String> items =
+                    product.deliveryId != null ? {'View Details'} : {'View Details', 'Send Offer', 'Request Delivery'};
+                return items.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+          ],
+        ),
+        body: getContent());
   } // end function build
 
   Widget getContent() {
@@ -188,8 +189,11 @@ class MessagePageState extends State<MessagePage> {
   void handleMenuClick(String value) async {
     switch (value) {
       case 'View Details':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ProductPage(product, fromCustomer.token, fromMessagePage: true)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ProductPage(fromCustomer, currentLocation, product, dispatcher, fromMessagePage: true)));
         break;
       case 'Request Delivery':
         await requestDelivery();

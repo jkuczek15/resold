@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/screens/home.dart';
@@ -13,179 +12,184 @@ import 'package:resold/services/firebase.dart';
 import 'package:resold/widgets/loading.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+  final Function dispatcher;
+
+  LoginPage(Function dispatcher, {Key key})
+      : dispatcher = dispatcher,
+        super(key: key);
 
   @override
-  LoginPageState createState() => LoginPageState();
+  LoginPageState createState() => LoginPageState(dispatcher);
 }
 
 class LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final forgotPasswordController = TextEditingController();
-  final forgotPasswordKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController forgotPasswordController = TextEditingController();
+  final GlobalKey<FormState> forgotPasswordKey = GlobalKey<FormState>();
+  final Function dispatcher;
+
+  LoginPageState(this.dispatcher);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, CustomerResponse>(
-        converter: (state) => state.customer,
-        builder: (context, dispatcher, model) => WillPopScope(
-            child: Scaffold(
-                body: Stack(children: [
-              Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(children: [
-                      Padding(
-                          child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
-                          padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
-                      Center(
-                          child: Text('Buy & sell without leaving your home',
-                              style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
-                    ]),
-                    Center(
-                        child: Column(children: [
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-                          child: TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                  hintText: 'Enter your email...',
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                  ),
-                                  focusedBorder:
-                                      UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.white))),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
-                          child: TextField(
-                              obscureText: true,
-                              controller: passwordController,
-                              decoration: InputDecoration(
-                                  hintText: 'Enter your password...',
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  labelStyle: new TextStyle(
-                                    color: ResoldBlue,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                  ),
-                                  focusedBorder:
-                                      UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
-                                  border: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                  )),
-                              style: TextStyle(color: Colors.white))),
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                        onPressed: () async {
-                          // show a loading indicator
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Center(child: Loading());
-                              });
+    return WillPopScope(
+        child: Scaffold(
+            body: Stack(children: [
+          Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
+          Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(children: [
+                  Padding(
+                      child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
+                      padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
+                  Center(
+                      child: Text('Buy & sell without leaving your home',
+                          style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
+                ]),
+                Center(
+                    child: Column(children: [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                      child: TextField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                              hintText: 'Enter your email...',
+                              hintStyle: TextStyle(color: Colors.white),
+                              labelStyle: new TextStyle(
+                                color: ResoldBlue,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                              ),
+                              focusedBorder:
+                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                              )),
+                          style: TextStyle(color: Colors.white))),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
+                      child: TextField(
+                          obscureText: true,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                              hintText: 'Enter your password...',
+                              hintStyle: TextStyle(color: Colors.white),
+                              labelStyle: new TextStyle(
+                                color: ResoldBlue,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                              ),
+                              focusedBorder:
+                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                              )),
+                          style: TextStyle(color: Colors.white))),
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                    onPressed: () async {
+                      // show a loading indicator
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(child: Loading());
+                          });
 
-                          // attempt to login
-                          CustomerResponse customer = await Magento.loginCustomer(
-                              LoginRequest(username: emailController.text, password: passwordController.text));
+                      // attempt to login
+                      CustomerResponse customer = await Magento.loginCustomer(
+                          LoginRequest(username: emailController.text, password: passwordController.text));
 
-                          if (customer.statusCode == 200) {
-                            // login was successful
-                            // store to disk
-                            await CustomerResponse.save(customer);
+                      if (customer.statusCode == 200) {
+                        // login was successful
+                        // store to disk
+                        await CustomerResponse.save(customer);
 
-                            // create a firebase user
-                            await Firebase.createUser(customer);
+                        // create a firebase user
+                        await Firebase.createUser(customer);
 
-                            // initialize application state
-                            await Future.wait([
-                              Resold.getVendor(customer.vendorId),
-                              Resold.getVendorProducts(customer.vendorId, 'for-sale'),
-                              Resold.getVendorProducts(customer.vendorId, 'sold')
-                            ]).then((data) {
-                              dispatcher(InitStateAction(AppState(
-                                  selectedTab: SelectedTab.home,
-                                  customer: customer,
-                                  vendor: data[0],
-                                  forSaleProducts: data[1],
-                                  soldProducts: data[2])));
-                            });
+                        // initialize application state
+                        await Future.wait([
+                          Resold.getVendor(customer.vendorId),
+                          Resold.getVendorProducts(customer.vendorId, 'for-sale'),
+                          Resold.getVendorProducts(customer.vendorId, 'sold')
+                        ]).then((data) {
+                          dispatcher(InitStateAction(AppState(
+                              selectedTab: SelectedTab.home,
+                              customer: customer,
+                              vendor: data[0],
+                              forSaleProducts: data[1],
+                              soldProducts: data[2])));
+                        });
 
-                            // navigate
-                            Navigator.of(context, rootNavigator: true).pop('dialog');
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => Home(),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    return FadeTransition(opacity: animation, child: child);
-                                  },
-                                ));
-                          } else {
-                            Navigator.of(context, rootNavigator: true).pop('dialog');
-                            return showDialog<void>(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Sign In Error'),
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: <Widget>[Text(customer.error)],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Ok'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
+                        // navigate
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => Home(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                return FadeTransition(opacity: animation, child: child);
                               },
+                            ));
+                      } else {
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        return showDialog<void>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Sign In Error'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[Text(customer.error)],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Ok'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
                             );
-                          }
-                        },
-                        child: Text('Sign In',
-                            style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                        padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
-                        color: Colors.black,
-                        textColor: Colors.white,
-                      ),
-                      SizedBox(height: 15),
-                      InkWell(
-                        onTap: forgotPassword,
-                        child: Text('Forgot password?',
-                            style: new TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                decoration: TextDecoration.underline)),
-                      ),
-                      SizedBox(height: 10)
-                    ])),
-                    SizedBox(height: 5)
-                  ])
-            ])),
-            onWillPop: () async {
-              Navigator.pop(context);
-              return false;
-            }));
+                          },
+                        );
+                      }
+                    },
+                    child: Text('Sign In',
+                        style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                    padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
+                    color: Colors.black,
+                    textColor: Colors.white,
+                  ),
+                  SizedBox(height: 15),
+                  InkWell(
+                    onTap: forgotPassword,
+                    child: Text('Forgot password?',
+                        style: new TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            decoration: TextDecoration.underline)),
+                  ),
+                  SizedBox(height: 10)
+                ])),
+                SizedBox(height: 5)
+              ])
+        ])),
+        onWillPop: () async {
+          Navigator.pop(context);
+          return false;
+        });
   } // end function build
 
   void forgotPassword() async {
@@ -193,104 +197,100 @@ class LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return ViewModelSubscriber<AppState, CustomerResponse>(
-              converter: (state) => state.customer,
-              builder: (context, dispatcher, model) => AlertDialog(
-                      title: Text('Forgot password?'),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text(
-                              'Enter your email and you will receive a link to change your password.',
-                            ),
-                            Form(
-                              key: forgotPasswordKey,
-                              child: TextFormField(
-                                controller: forgotPasswordController,
-                                decoration: InputDecoration(
-                                  labelText: 'Enter your email...',
-                                  labelStyle: TextStyle(color: ResoldBlue),
-                                  enabledBorder:
-                                      UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  focusedBorder:
-                                      UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                  border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter a valid email address.';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
+          return AlertDialog(
+              title: Text('Forgot password?'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text(
+                      'Enter your email and you will receive a link to change your password.',
+                    ),
+                    Form(
+                      key: forgotPasswordKey,
+                      child: TextFormField(
+                        controller: forgotPasswordController,
+                        decoration: InputDecoration(
+                          labelText: 'Enter your email...',
+                          labelStyle: TextStyle(color: ResoldBlue),
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                          border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                         ),
+                        style: TextStyle(color: Colors.black),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter a valid email address.';
+                          }
+                          return null;
+                        },
                       ),
-                      actions: <Widget>[
-                        FlatButton(
-                            child: Text(
-                              'OK',
-                              style: TextStyle(color: ResoldBlue),
-                            ),
-                            onPressed: () async {
-                              if (forgotPasswordKey.currentState.validate()) {
-                                String email = forgotPasswordController.text;
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text(
+                      'OK',
+                      style: TextStyle(color: ResoldBlue),
+                    ),
+                    onPressed: () async {
+                      if (forgotPasswordKey.currentState.validate()) {
+                        String email = forgotPasswordController.text;
 
-                                // send forgot password email
-                                var response = await Magento.forgotPassword(email);
+                        // send forgot password email
+                        var response = await Magento.forgotPassword(email);
 
-                                if (response) {
-                                  await showDialog<void>(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                            title: Text("A password reset email has been sent to $email."),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                  child: Text(
-                                                    'Ok',
-                                                    style: TextStyle(color: ResoldBlue),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  })
-                                            ]);
-                                      });
-                                  // close the dialog
-                                  forgotPasswordController.value = TextEditingValue();
-                                  Navigator.of(context, rootNavigator: true).pop('dialog');
-                                } else {
-                                  await showDialog<void>(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                            title: Text("The email address could not be found."),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                  child: Text(
-                                                    'Ok',
-                                                    style: TextStyle(color: ResoldBlue),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  })
-                                            ]);
-                                      });
-                                } // end if we were able to send a password reset email
-                              } // end if forgot password valid
-                            }),
-                        FlatButton(
-                          child: Text('Cancel', style: TextStyle(color: ResoldBlue)),
-                          onPressed: () {
-                            forgotPasswordController.value = TextEditingValue();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ]));
+                        if (response) {
+                          await showDialog<void>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                    title: Text("A password reset email has been sent to $email."),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                          child: Text(
+                                            'Ok',
+                                            style: TextStyle(color: ResoldBlue),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          })
+                                    ]);
+                              });
+                          // close the dialog
+                          forgotPasswordController.value = TextEditingValue();
+                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                        } else {
+                          await showDialog<void>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                    title: Text("The email address could not be found."),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                          child: Text(
+                                            'Ok',
+                                            style: TextStyle(color: ResoldBlue),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          })
+                                    ]);
+                              });
+                        } // end if we were able to send a password reset email
+                      } // end if forgot password valid
+                    }),
+                FlatButton(
+                  child: Text('Cancel', style: TextStyle(color: ResoldBlue)),
+                  onPressed: () {
+                    forgotPasswordController.value = TextEditingValue();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ]);
         });
   } // end function forgotPassword
 }
