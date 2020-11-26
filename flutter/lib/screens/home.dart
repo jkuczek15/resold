@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
+import 'package:resold/models/product.dart';
+import 'package:resold/models/vendor.dart';
 import 'package:resold/screens/tabs/map.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';
@@ -12,6 +15,8 @@ import 'package:resold/screens/messages/inbox.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
+import 'package:resold/state/map-state.dart';
+import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class Home extends StatelessWidget {
@@ -127,7 +132,7 @@ class HomePageState extends State<HomePage> {
               backgroundColor: ResoldBlue,
             ),
             body: Center(
-              child: getContent(context, selectedTab),
+              child: getContent(context, SelectedTab.values[selectedTab]),
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
@@ -149,22 +154,97 @@ class HomePageState extends State<HomePage> {
         );
   } // end function build
 
-  Widget getContent(BuildContext context, int selectedTab) {
+  Widget getContent(BuildContext context, SelectedTab selectedTab) {
     switch (selectedTab) {
-      case 0:
-        return SearchPage();
-      case 1:
-        return MapPage();
-      case 2:
-        return SellPage();
-      case 3:
-        return OrdersPage();
-      case 4:
-        return AccountPage();
+      case SelectedTab.home:
+      case SelectedTab.map:
+        return ViewModelSubscriber<AppState, CustomerResponse>(
+            converter: (state) => state.customer,
+            builder: (context, dispatcher, customer) {
+              return ViewModelSubscriber<AppState, Position>(
+                  converter: (state) => state.currentLocation,
+                  builder: (context, dispatcher, currentLocation) {
+                    return ViewModelSubscriber<AppState, SearchState>(
+                        converter: (state) => state.searchState,
+                        builder: (context, dispatcher, searchState) {
+                          return StreamBuilder<List<Product>>(
+                              initialData: searchState.initialProducts,
+                              stream: searchState.searchStream.stream,
+                              builder: (context, snapshot) {
+                                List<Product> results = snapshot.hasData ? snapshot.data : [];
+                                if (selectedTab == SelectedTab.map) {
+                                  return ViewModelSubscriber<AppState, MapState>(
+                                      converter: (state) => state.mapState,
+                                      builder: (context, dispatcher, mapState) {
+                                        return MapPage(
+                                            customer: customer,
+                                            searchState: searchState,
+                                            results: results,
+                                            currentLocation: currentLocation,
+                                            pinPillPosition: mapState.pillPosition,
+                                            selectedProduct: mapState.selectedProduct,
+                                            dispatcher: dispatcher);
+                                      });
+                                } else {
+                                  return SearchPage(
+                                      customer: customer,
+                                      searchState: searchState,
+                                      results: results,
+                                      currentLocation: currentLocation,
+                                      dispatcher: dispatcher);
+                                } // end if map tab
+                              });
+                        });
+                  });
+            });
+      case SelectedTab.sell:
+        return ViewModelSubscriber<AppState, CustomerResponse>(
+            converter: (state) => state.customer,
+            builder: (context, dispatcher, customer) {
+              return ViewModelSubscriber<AppState, Position>(
+                  converter: (state) => state.currentLocation,
+                  builder: (context, dispatcher, currentLocation) {
+                    return SellPage(customer: customer, currentLocation: currentLocation, dispatcher: dispatcher);
+                  });
+            });
+      case SelectedTab.orders:
+        return ViewModelSubscriber<AppState, CustomerResponse>(
+            converter: (state) => state.customer,
+            builder: (context, dispatcher, customer) {
+              return OrdersPage(customer: customer);
+            });
+      case SelectedTab.account:
+        return ViewModelSubscriber<AppState, CustomerResponse>(
+            converter: (state) => state.customer,
+            builder: (context, dispatcher, customer) {
+              return ViewModelSubscriber<AppState, Vendor>(
+                  converter: (state) => state.vendor,
+                  builder: (context, dispatcher, vendor) {
+                    return ViewModelSubscriber<AppState, Position>(
+                        converter: (state) => state.currentLocation,
+                        builder: (context, dispatcher, currentLocation) {
+                          return ViewModelSubscriber<AppState, List<Product>>(
+                              converter: (state) => state.forSaleProducts,
+                              builder: (context, dispatcher, forSaleProducts) {
+                                return ViewModelSubscriber<AppState, List<Product>>(
+                                    converter: (state) => state.soldProducts,
+                                    builder: (context, dispatcher, soldProducts) {
+                                      return AccountPage(
+                                          customer: customer,
+                                          vendor: vendor,
+                                          currentLocation: currentLocation,
+                                          forSaleProducts: forSaleProducts,
+                                          soldProducts: soldProducts);
+                                    });
+                              });
+                        });
+                  });
+            });
       default:
         return Text('Unknown tab');
     } // end switch on selected tab
   } // end function getContent
+
 } // end class HomePageState
 
 class HomePage extends StatefulWidget {

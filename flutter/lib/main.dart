@@ -10,7 +10,9 @@ import 'package:resold/screens/home.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/app-state.dart';
+import 'package:resold/state/map-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
+import 'package:resold/state/reducers/map-reducer.dart';
 import 'package:resold/state/reducers/product-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
 import 'package:resold/state/reducers/search-reducer.dart';
@@ -98,8 +100,9 @@ Future<void> main() async {
           forSaleProducts: forSaleProducts,
           soldProducts: soldProducts,
           searchState: searchState,
-          currentLocation: currentLocation),
-      blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer()]);
+          currentLocation: currentLocation,
+          mapState: MapState(pillPosition: -100, selectedProduct: Product(name: '', thumbnail: '', price: '0'))),
+      blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer(), MapReducer()]);
 
   // run the app
   runApp(StoreProvider<AppState>(

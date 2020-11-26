@@ -6,7 +6,7 @@ import 'package:resold/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:resold/screens/product/view.dart';
 
-class MapPinPill extends StatefulWidget {
+class MapPinPill extends StatelessWidget {
   final double pinPillPosition;
   final Product selectedProduct;
   final String customerToken;
@@ -14,15 +14,10 @@ class MapPinPill extends StatefulWidget {
   MapPinPill({this.pinPillPosition, this.selectedProduct, this.customerToken});
 
   @override
-  State<StatefulWidget> createState() => MapPinPillState();
-}
-
-class MapPinPillState extends State<MapPinPill> {
-  @override
   Widget build(BuildContext context) {
     var formatter = new NumberFormat("\$###,###", "en_US");
     return AnimatedPositioned(
-      bottom: widget.pinPillPosition,
+      bottom: pinPillPosition,
       right: 0,
       left: 0,
       duration: Duration(milliseconds: 200),
@@ -46,10 +41,10 @@ class MapPinPillState extends State<MapPinPill> {
                       width: 50,
                       height: 50,
                       margin: EdgeInsets.only(left: 10),
-                      child: widget.selectedProduct.thumbnail.isNotEmpty
+                      child: selectedProduct.thumbnail.isNotEmpty
                           ? ClipOval(
                               child: CachedNetworkImage(
-                              imageUrl: baseProductImagePath + widget.selectedProduct.thumbnail,
+                              imageUrl: baseProductImagePath + selectedProduct.thumbnail,
                             ))
                           : SizedBox()),
                   Expanded(
@@ -59,8 +54,8 @@ class MapPinPillState extends State<MapPinPill> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(widget.selectedProduct.name, style: TextStyle(color: ResoldBlue)),
-                          Text('${formatter.format(double.parse(widget.selectedProduct.price).round())}',
+                          Text(selectedProduct.name, style: TextStyle(color: ResoldBlue)),
+                          Text('${formatter.format(double.parse(selectedProduct.price).round())}',
                               style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ],
                       ),
@@ -70,8 +65,8 @@ class MapPinPillState extends State<MapPinPill> {
               ),
             ),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProductPage(widget.selectedProduct, widget.customerToken)));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ProductPage(selectedProduct, customerToken)));
             },
           )),
     );
