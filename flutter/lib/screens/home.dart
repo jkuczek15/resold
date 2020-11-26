@@ -181,8 +181,6 @@ class HomePageState extends State<HomePage> {
                                             searchState: searchState,
                                             results: results,
                                             currentLocation: currentLocation,
-                                            pinPillPosition: mapState.pillPosition,
-                                            selectedProduct: mapState.selectedProduct,
                                             dispatcher: dispatcher);
                                       });
                                 } else {
