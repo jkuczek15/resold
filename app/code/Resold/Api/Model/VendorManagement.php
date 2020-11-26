@@ -117,7 +117,8 @@ class VendorManagement
       )
     )
     ->where('parent_item_id IS NULL')
-    ->where('vendor_id="'.$vendor->getId().'"');
+    ->where('vendor_id="'.$vendor->getId().'"')
+    ->order('order.entity_id DESC');
 
     $vendorOrders = $adapter->fetchAll($vendorOrdersSelect);
 
