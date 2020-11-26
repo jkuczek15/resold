@@ -71,6 +71,7 @@ class MapPageState extends State<MapPage> {
                                       child: GoogleMap(
                                         myLocationEnabled: true,
                                         myLocationButtonEnabled: false,
+                                        zoomControlsEnabled: false,
                                         onMapCreated: (GoogleMapController controller) => onMapCreated(
                                             controller, currentLocation, snapshot.hasData ? snapshot.data : []),
                                         initialCameraPosition: CameraPosition(
