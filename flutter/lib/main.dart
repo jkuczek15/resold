@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/environment.dart';
@@ -105,8 +106,10 @@ Future<void> main() async {
 
   // run the app
   runApp(StoreProvider<AppState>(
-      store: store,
-      child: MaterialApp(
-        home: customer.isLoggedIn() ? Home() : Landing(),
-      )));
+    store: store,
+    child: OverlaySupport(
+        child: MaterialApp(
+      home: customer.isLoggedIn() ? Home() : Landing(),
+    )),
+  ));
 } // end function main
