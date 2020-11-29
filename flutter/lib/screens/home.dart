@@ -29,47 +29,52 @@ class Home extends StatelessWidget {
           return ViewModelSubscriber<AppState, Position>(
               converter: (state) => state.currentLocation,
               builder: (context, dispatcher, currentLocation) {
-                return MaterialApp(
-                    title: 'Resold',
-                    theme: ThemeData(
-                        primarySwatch: const MaterialColor(0xff41b8ea, {
-                          50: Color.fromRGBO(25, 72, 92, .1),
-                          100: Color.fromRGBO(25, 72, 92, .2),
-                          200: Color.fromRGBO(25, 72, 92, .3),
-                          300: Color.fromRGBO(25, 72, 92, .4),
-                          400: Color.fromRGBO(25, 72, 92, .5),
-                          500: Color.fromRGBO(25, 72, 92, .6),
-                          600: Color.fromRGBO(25, 72, 92, .7),
-                          700: Color.fromRGBO(25, 72, 92, .8),
-                          800: Color.fromRGBO(25, 72, 92, .9),
-                          900: Color.fromRGBO(25, 72, 92, 1)
-                        }),
-                        sliderTheme: SliderThemeData(
-                            valueIndicatorColor: ResoldBlue,
-                            showValueIndicator: ShowValueIndicator.never,
-                            valueIndicatorTextStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            tickMarkShape: SliderTickMarkShape.noTickMark),
-                        scaffoldBackgroundColor: Colors.white,
-                        brightness: Brightness.light,
-                        accentColor: Colors.white,
-                        primaryColor: ResoldBlue,
-                        splashColor: ResoldBlue,
-                        backgroundColor: Colors.white),
-                    home: HomePage(customer, currentLocation, dispatcher));
+                return ViewModelSubscriber<AppState, SelectedTab>(
+                    converter: (state) => state.selectedTab,
+                    builder: (context, dispatcher, selectedTab) {
+                      return MaterialApp(
+                          title: 'Resold',
+                          theme: ThemeData(
+                              primarySwatch: const MaterialColor(0xff41b8ea, {
+                                50: Color.fromRGBO(25, 72, 92, .1),
+                                100: Color.fromRGBO(25, 72, 92, .2),
+                                200: Color.fromRGBO(25, 72, 92, .3),
+                                300: Color.fromRGBO(25, 72, 92, .4),
+                                400: Color.fromRGBO(25, 72, 92, .5),
+                                500: Color.fromRGBO(25, 72, 92, .6),
+                                600: Color.fromRGBO(25, 72, 92, .7),
+                                700: Color.fromRGBO(25, 72, 92, .8),
+                                800: Color.fromRGBO(25, 72, 92, .9),
+                                900: Color.fromRGBO(25, 72, 92, 1)
+                              }),
+                              sliderTheme: SliderThemeData(
+                                  valueIndicatorColor: ResoldBlue,
+                                  showValueIndicator: ShowValueIndicator.never,
+                                  valueIndicatorTextStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  tickMarkShape: SliderTickMarkShape.noTickMark),
+                              scaffoldBackgroundColor: Colors.white,
+                              brightness: Brightness.light,
+                              accentColor: Colors.white,
+                              primaryColor: ResoldBlue,
+                              splashColor: ResoldBlue,
+                              backgroundColor: Colors.white),
+                          home: HomePage(customer, currentLocation, selectedTab, dispatcher));
+                    });
               });
         });
   } // end function build
 } // end class Home
 
 class HomePageState extends State<HomePage> {
-  final CustomerResponse customer;
-  final Position currentLocation;
   final Function dispatcher;
+  CustomerResponse customer;
+  Position currentLocation;
+  SelectedTab selectedTab;
 
-  HomePageState(this.customer, this.currentLocation, this.dispatcher);
+  HomePageState(this.customer, this.currentLocation, this.selectedTab, this.dispatcher);
 
   @override
   void initState() {
@@ -78,89 +83,87 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelSubscriber<AppState, int>(
-        converter: (state) => state.selectedTab.index,
-        builder: (context, dispatcher, selectedTab) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Image.asset('assets/images/resold-white-logo.png', width: 145, height: 145)),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      child: StreamBuilder(
-                          stream: Firebase.getUnreadMessageCount(customer.id),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data.documents.length != 0) {
-                              return Stack(
-                                children: <Widget>[
-                                  Icon(Icons.message, color: Colors.white),
-                                  new Positioned(
-                                    right: 0,
-                                    child: new Container(
-                                        padding: EdgeInsets.all(1),
-                                        decoration: new BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        constraints: BoxConstraints(
-                                          minWidth: 12,
-                                          minHeight: 12,
-                                        ),
-                                        child: Text(
-                                          '${snapshot.data.documents.length}',
-                                          style: new TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 8,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        )),
-                                  )
-                                ],
-                              );
-                            } else {
-                              return Icon(Icons.message, color: Colors.white);
-                            } // end if we have unread message count
-                          }),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => InboxPage(customer, currentLocation, dispatcher)));
-                      },
-                    ),
-                    // child: Icon(Icons.message, color: Colors.white),
-                  )
-                ],
+    customer = widget.customer;
+    currentLocation = widget.currentLocation;
+    selectedTab = widget.selectedTab;
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Image.asset('assets/images/resold-white-logo.png', width: 145, height: 145)),
+            Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                child: StreamBuilder(
+                    stream: Firebase.getUnreadMessageCount(customer.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data.documents.length != 0) {
+                        return Stack(
+                          children: <Widget>[
+                            Icon(Icons.message, color: Colors.white),
+                            new Positioned(
+                              right: 0,
+                              child: new Container(
+                                  padding: EdgeInsets.all(1),
+                                  decoration: new BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  constraints: BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: Text(
+                                    '${snapshot.data.documents.length}',
+                                    style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )),
+                            )
+                          ],
+                        );
+                      } else {
+                        return Icon(Icons.message, color: Colors.white);
+                      } // end if we have unread message count
+                    }),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => InboxPage(customer, currentLocation, dispatcher)));
+                },
               ),
-              iconTheme: IconThemeData(
-                color: Colors.white, //change your color here
-              ),
-              backgroundColor: ResoldBlue,
-            ),
-            body: Center(
-              child: getContent(context, SelectedTab.values[selectedTab]),
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-                BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
-                BottomNavigationBarItem(icon: Icon(MdiIcons.truck), label: 'Deliveries'),
-                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
-              ],
-              currentIndex: selectedTab,
-              backgroundColor: Colors.white,
-              fixedColor: ResoldBlue,
-              unselectedItemColor: Colors.black,
-              onTap: (int index) => dispatcher(SetSelectedTabAction(SelectedTab.values[index])),
-            ),
-          );
-        } // end selected tab builder
-        );
+              // child: Icon(Icons.message, color: Colors.white),
+            )
+          ],
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
+        backgroundColor: ResoldBlue,
+      ),
+      body: Center(
+        child: getContent(context, selectedTab),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
+          BottomNavigationBarItem(icon: Icon(MdiIcons.truck), label: 'Deliveries'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
+        ],
+        currentIndex: selectedTab.index,
+        backgroundColor: Colors.white,
+        fixedColor: ResoldBlue,
+        unselectedItemColor: Colors.black,
+        onTap: (int index) => dispatcher(SetSelectedTabAction(SelectedTab.values[index])),
+      ),
+    );
   } // end function build
 
   Widget getContent(BuildContext context, SelectedTab selectedTab) {
@@ -228,10 +231,11 @@ class HomePageState extends State<HomePage> {
 class HomePage extends StatefulWidget {
   final CustomerResponse customer;
   final Position currentLocation;
+  final SelectedTab selectedTab;
   final Function dispatcher;
 
-  HomePage(this.customer, this.currentLocation, this.dispatcher, {Key key}) : super(key: key);
+  HomePage(this.customer, this.currentLocation, this.selectedTab, this.dispatcher, {Key key}) : super(key: key);
 
   @override
-  HomePageState createState() => HomePageState(this.customer, this.currentLocation, this.dispatcher);
+  HomePageState createState() => HomePageState(this.customer, this.currentLocation, this.selectedTab, this.dispatcher);
 } // end class HomePage
