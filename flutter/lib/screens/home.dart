@@ -259,6 +259,7 @@ class HomePageState extends State<HomePage> {
                 trailing: IconButton(
                     icon: Icon(Icons.close),
                     onPressed: () {
+                      // todo: open message/order page depending on the notification
                       OverlaySupportEntry.of(context).dismiss();
                     }),
               ),
