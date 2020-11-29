@@ -1,7 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
@@ -233,12 +235,33 @@ class HomePageState extends State<HomePage> {
     } // end switch on selected tab
   } // end function getContent
 
-  void setupPushNotifications() {
+  void setupPushNotifications() async {
     // handle Firebase push notifications
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        // _showItemDialog(message);
+        // display notification when app in foreground
+        showOverlayNotification((context) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            child: SafeArea(
+              child: ListTile(
+                leading: SizedBox.fromSize(
+                    size: const Size(40, 40),
+                    child: ClipOval(
+                        child: Container(
+                      color: Colors.black,
+                    ))),
+                title: Text('Hello world!'),
+                subtitle: Text('This is a test push notification in foreground'),
+                trailing: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      OverlaySupportEntry.of(context).dismiss();
+                    }),
+              ),
+            ),
+          );
+        }, duration: Duration(milliseconds: 4000));
       },
       onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
@@ -250,7 +273,7 @@ class HomePageState extends State<HomePage> {
         // _navigateToItemDetail(message);
       },
     );
-    firebaseMessaging.requestNotificationPermissions();
+    await firebaseMessaging.requestNotificationPermissions();
     firebaseMessaging.onTokenRefresh.listen((String newToken) {
       customer.deviceToken = newToken;
       ResoldFirebase.createOrUpdateUser(customer);
@@ -263,6 +286,7 @@ class HomePageState extends State<HomePage> {
     currentLocation = widget.currentLocation;
     selectedTab = widget.selectedTab;
   } // end function onBuild
+
 } // end class HomePageState
 
 class HomePage extends StatefulWidget {
