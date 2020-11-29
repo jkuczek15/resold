@@ -42,12 +42,6 @@
             <resource ref="self"/>
         </resources>
     </route>
-    <route url="/V1/resold/notifications/register" method="POST">
-        <service class="Resold\Api\Api\NotificationManagementInterface" method="registerDevice"/>
-        <resources>
-            <resource ref="self"/>
-        </resources>
-    </route>
     <route url="/V1/resold/notifications/send" method="POST">
         <service class="Resold\Api\Api\NotificationManagementInterface" method="sendNotificationMessage"/>
         <resources>

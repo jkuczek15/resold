@@ -15,28 +15,32 @@
  */
 namespace Resold\Api\Model;
 
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+
 class NotificationManagement
 {
   /**
    * @param \Magento\Framework\App\Action\Context $context
    */
-   public function __construct()
+   public function __construct(
+    \Kreait\Firebase\Factory $factory
+   )
   {
+    $this->factory = $factory->withServiceAccount('/var/www/html/firebase-adminsdk-key.json');
   }
 
 	/**
 	 * {@inheritdoc}
 	 */
-  public function registerDevice()
+  public function sendNotificationMessage($deviceToken)
 	{
+    $messaging = $this->factory->createMessaging();
 
-  }// end function registerDevice
+    $message = CloudMessage::withTarget('token', $deviceToken)
+    ->withNotification(Notification::create('Title', 'Body'))
+    ->withData(['key' => 'value']);
 
-	/**
-	 * {@inheritdoc}
-	 */
-  public function sendNotificationMessage()
-	{
-
+    $messaging->send($message);
   }// end function sendNotificationMessage
 }

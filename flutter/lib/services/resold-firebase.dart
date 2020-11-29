@@ -263,9 +263,9 @@ class ResoldFirebase {
   * getDeviceToken - Get the device token for a specific user
   * customerId - Customer ID
   */
-  static Future getDeviceToken(int customerId) async {
+  static Future<String> getDeviceToken(int customerId) async {
     DocumentSnapshot document = await firestore.collection('users').doc(customerId.toString()).get();
-    return document['deviceToken'];
+    return document.exists ? document['deviceToken'] : null;
   } // end function markInboxMessageRead
 
   /*

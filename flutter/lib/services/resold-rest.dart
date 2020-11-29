@@ -138,6 +138,18 @@ class ResoldRest {
     await dio.post('${config.baseUrl}/product/offer', data: formData);
   } // end function setDeliveryId
 
+  /*
+   * sendNotificationMessage - Set the product's price
+   * token - Customer identification token
+   * deviceToken - Device identification token
+   */
+  static Future sendNotificationMessage(String token, String deviceToken) async {
+    await config.initialized;
+    FormData formData = new FormData.fromMap({'deviceToken': deviceToken});
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    await dio.post('${config.baseUrl}/notifications/send', data: formData);
+  } // end function setDeliveryId
+
 } // end class Resold
 
 /*
