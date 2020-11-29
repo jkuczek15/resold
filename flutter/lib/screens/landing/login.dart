@@ -3,12 +3,12 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/magento/login-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
-import 'package:resold/services/firebase.dart';
 import 'package:resold/widgets/loading.dart';
 
 class LoginPage extends StatefulWidget {
@@ -112,7 +112,7 @@ class LoginPageState extends State<LoginPage> {
                         await CustomerResponse.save(customer);
 
                         // create a firebase user
-                        await Firebase.createUser(customer);
+                        await ResoldFirebase.createUser(customer);
 
                         // initialize application state
                         await Future.wait([

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rebloc/rebloc.dart';
@@ -7,6 +8,7 @@ import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/environment.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/app-state.dart';
@@ -16,7 +18,6 @@ import 'package:resold/state/reducers/home-reducer..dart';
 import 'package:resold/state/reducers/search-reducer.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
-import 'package:resold/services/firebase.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'constants/dev-constants.dart';
 import 'enums/sort.dart';
@@ -31,8 +32,9 @@ Future<void> main() async {
   // set custom SSL certificate to enable emulator calls
   HttpOverrides.global = new CustomHttpOverrides();
 
-  // setup Firebase
-  await Firebase.configure();
+  // setup Firebase real-time db
+  await Firebase.initializeApp();
+  await ResoldFirebase.configure();
 
   // setup Stripe
   StripePayment.setOptions(StripeOptions(

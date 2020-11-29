@@ -5,6 +5,7 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,7 +20,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
-import 'package:resold/services/firebase.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/widgets/loading.dart';
@@ -455,7 +455,7 @@ class ProductPageState extends State<ProductPage> {
                                                                 Navigator.of(context, rootNavigator: true)
                                                                     .pop('dialog');
 
-                                                                await Firebase.sendProductMessage(
+                                                                await ResoldFirebase.sendProductMessage(
                                                                     chatId,
                                                                     customer.id,
                                                                     toCustomer.id,
@@ -561,8 +561,14 @@ class ProductPageState extends State<ProductPage> {
                                                       '|' +
                                                       quote.duration.toString();
 
-                                                  await Firebase.sendProductMessage(chatId, customer.id, toCustomer.id,
-                                                      product, content, MessageType.deliveryQuote, toId == customer.id,
+                                                  await ResoldFirebase.sendProductMessage(
+                                                      chatId,
+                                                      customer.id,
+                                                      toCustomer.id,
+                                                      product,
+                                                      content,
+                                                      MessageType.deliveryQuote,
+                                                      toId == customer.id,
                                                       firstMessage: true);
 
                                                   if (fromMessagePage) {

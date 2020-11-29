@@ -1,9 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/selected-tab.dart';
+import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/screens/tabs/map.dart';
@@ -12,7 +14,7 @@ import 'package:resold/screens/tabs/account.dart';
 import 'package:resold/screens/tabs/orders.dart';
 import 'package:resold/screens/tabs/search.dart';
 import 'package:resold/screens/messages/inbox.dart';
-import 'package:resold/services/firebase.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
@@ -64,7 +66,8 @@ class Home extends StatelessWidget {
                               customer: customer,
                               currentLocation: currentLocation,
                               selectedTab: selectedTab,
-                              dispatcher: dispatcher));
+                              dispatcher: dispatcher,
+                              firebaseMessaging: FirebaseMessaging()));
                     });
               });
         });
@@ -72,16 +75,34 @@ class Home extends StatelessWidget {
 } // end class Home
 
 class HomePageState extends State<HomePage> {
-  final Function dispatcher;
   CustomerResponse customer;
   Position currentLocation;
   SelectedTab selectedTab;
+  final Function dispatcher;
+  FirebaseMessaging firebaseMessaging;
 
-  HomePageState({this.customer, this.currentLocation, this.selectedTab, this.dispatcher});
+  HomePageState({this.customer, this.currentLocation, this.selectedTab, this.dispatcher, this.firebaseMessaging});
 
   @override
   void initState() {
     super.initState();
+    // handle Firebase push notifications
+    firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        // _showItemDialog(message);
+      },
+      onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // _navigateToItemDetail(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // _navigateToItemDetail(message);
+      },
+    );
+    firebaseMessaging.requestNotificationPermissions();
   } // end function initState
 
   @override
@@ -99,7 +120,7 @@ class HomePageState extends State<HomePage> {
               alignment: Alignment.centerRight,
               child: InkWell(
                 child: StreamBuilder(
-                    stream: Firebase.getUnreadMessageCount(customer.id),
+                    stream: ResoldFirebase.getUnreadMessageCount(customer.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasData && snapshot.data.documents.length != 0) {
                         return Stack(
@@ -239,10 +260,16 @@ class HomePage extends StatefulWidget {
   final Position currentLocation;
   final SelectedTab selectedTab;
   final Function dispatcher;
+  final FirebaseMessaging firebaseMessaging;
 
-  HomePage({this.customer, this.currentLocation, this.selectedTab, this.dispatcher, Key key}) : super(key: key);
+  HomePage({this.customer, this.currentLocation, this.selectedTab, this.dispatcher, this.firebaseMessaging, Key key})
+      : super(key: key);
 
   @override
   HomePageState createState() => HomePageState(
-      customer: customer, currentLocation: currentLocation, selectedTab: selectedTab, dispatcher: dispatcher);
+      customer: customer,
+      currentLocation: currentLocation,
+      selectedTab: selectedTab,
+      dispatcher: dispatcher,
+      firebaseMessaging: firebaseMessaging);
 } // end class HomePage

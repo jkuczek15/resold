@@ -6,6 +6,7 @@ import 'package:resold/screens/account/edit-address.dart';
 import 'package:resold/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
@@ -14,7 +15,6 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/models/customer/customer-address.dart';
-import 'package:resold/services/firebase.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 
@@ -239,7 +239,7 @@ class SignUpPageState extends State<SignUpPage> {
                           await CustomerResponse.save(customer);
 
                           // create a firebase user
-                          await Firebase.createUser(customer);
+                          await ResoldFirebase.createUser(customer);
 
                           // initialize application state
                           await Future.wait([
