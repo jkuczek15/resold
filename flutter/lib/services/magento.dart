@@ -3,6 +3,7 @@ import 'package:money2/money2.dart';
 import 'package:resold/models/customer/customer-address-region.dart';
 import 'package:resold/models/customer/customer-address.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:resold/view-models/request/magento/login-request.dart';
@@ -209,13 +210,13 @@ class Magento {
 
     var response = await client.post('${config.baseUrl}/carts/mine', headers: config.customerHeaders);
 
-    var responseText = response.body.toString().replaceAll("\"", "");
+    String responseText = response.body.toString().replaceAll("\"", "");
     if (response.statusCode == 200) {
       // get the cart ID
       int cartId = int.tryParse(responseText);
 
       // setup the cart item request
-      var requestJson = jsonEncode(<String, dynamic>{
+      String requestJson = jsonEncode(<String, dynamic>{
         'cartItem': {'sku': product.sku, 'qty': 1, 'quote_id': cartId}
       });
 
@@ -224,7 +225,7 @@ class Magento {
           await client.post('${config.baseUrl}/carts/mine/items', headers: config.customerHeaders, body: requestJson);
 
       // setup shipping estimate request
-      var address = shippingAddress.toJson();
+      Map<String, dynamic> address = shippingAddress.toJson();
       CustomerAddressRegion region = address['region'];
       address.remove('region');
       address.remove('defaultBilling');
@@ -294,7 +295,7 @@ class Magento {
 
     if (response.statusCode == 200) {
       // success
-      var json = jsonDecode(response.body.toString());
+      dynamic json = jsonDecode(response.body.toString());
       List<dynamic> items = json['items'].toList();
 
       List<Order> orders = new List<Order>();
@@ -321,9 +322,14 @@ class Magento {
       headers: config.adminHeaders,
     );
 
-    var responseJson = jsonDecode(response.body.toString());
+    dynamic responseJson = jsonDecode(response.body.toString());
     if (response.statusCode == 200) {
-      var vendorId = await Resold.getVendorId(customerId);
+      // get the vendor ID for this customer
+      String vendorId = await Resold.getVendorId(customerId);
+
+      // get the device token for this customer (for push notifications)
+      String deviceToken = await ResoldFirebase.getDeviceToken(customerId);
+
       return CustomerResponse(
           statusCode: response.statusCode,
           id: customerId,
@@ -331,7 +337,8 @@ class Magento {
           firstName: responseJson['firstname'].toString(),
           lastName: responseJson['lastname'].toString(),
           addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
-          vendorId: int.tryParse(vendorId));
+          vendorId: int.tryParse(vendorId),
+          deviceToken: deviceToken);
     } else {
       return CustomerResponse(statusCode: response.statusCode, error: responseJson['message']);
     }
@@ -349,7 +356,7 @@ class Magento {
       headers: config.adminHeaders,
     );
 
-    var responseJson = jsonDecode(response.body.toString());
+    dynamic responseJson = jsonDecode(response.body.toString());
     if (response.statusCode == 200) {
       return Order.fromJson(responseJson);
     } else {

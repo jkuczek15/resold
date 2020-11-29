@@ -260,6 +260,15 @@ class ResoldFirebase {
   } // end function markInboxMessageRead
 
   /*
+  * getDeviceToken - Get the device token for a specific user
+  * customerId - Customer ID
+  */
+  static Future getDeviceToken(int customerId) async {
+    DocumentSnapshot document = await firestore.collection('users').doc(customerId.toString()).get();
+    return document['deviceToken'];
+  } // end function markInboxMessageRead
+
+  /*
   * configure - Configure Firebase settings
   */
   static Future configure() async {
