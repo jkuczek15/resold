@@ -15,7 +15,6 @@ import 'package:resold/screens/messages/inbox.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
-import 'package:resold/state/map-state.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 
@@ -177,16 +176,12 @@ class HomePageState extends State<HomePage> {
                   builder: (context, snapshot) {
                     List<Product> results = snapshot.hasData ? snapshot.data : [];
                     if (selectedTab == SelectedTab.map) {
-                      return ViewModelSubscriber<AppState, MapState>(
-                          converter: (state) => state.mapState,
-                          builder: (context, dispatcher, mapState) {
-                            return MapPage(
-                                customer: customer,
-                                searchState: searchState,
-                                results: results,
-                                currentLocation: currentLocation,
-                                dispatcher: dispatcher);
-                          });
+                      return MapPage(
+                          customer: customer,
+                          searchState: searchState,
+                          results: results,
+                          currentLocation: currentLocation,
+                          dispatcher: dispatcher);
                     } else {
                       return SearchPage(
                           customer: customer,
