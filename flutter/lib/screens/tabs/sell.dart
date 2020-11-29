@@ -145,8 +145,11 @@ class SellPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductPage(customer, currentLocation, product, dispatcher)));
+                                      builder: (context) => ProductPage(
+                                          customer: customer,
+                                          currentLocation: currentLocation,
+                                          product: product,
+                                          dispatcher: dispatcher)));
                             } // end if form is valid
                           },
                           child: Text('Post',

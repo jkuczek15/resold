@@ -60,7 +60,11 @@ class Home extends StatelessWidget {
                               primaryColor: ResoldBlue,
                               splashColor: ResoldBlue,
                               backgroundColor: Colors.white),
-                          home: HomePage(customer, currentLocation, selectedTab, dispatcher));
+                          home: HomePage(
+                              customer: customer,
+                              currentLocation: currentLocation,
+                              selectedTab: selectedTab,
+                              dispatcher: dispatcher));
                     });
               });
         });
@@ -73,7 +77,7 @@ class HomePageState extends State<HomePage> {
   Position currentLocation;
   SelectedTab selectedTab;
 
-  HomePageState(this.customer, this.currentLocation, this.selectedTab, this.dispatcher);
+  HomePageState({this.customer, this.currentLocation, this.selectedTab, this.dispatcher});
 
   @override
   void initState() {
@@ -129,8 +133,11 @@ class HomePageState extends State<HomePage> {
                       } // end if we have unread message count
                     }),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => InboxPage(customer, currentLocation, dispatcher)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              InboxPage(customer: customer, currentLocation: currentLocation, dispatcher: dispatcher)));
                 },
               ),
               // child: Icon(Icons.message, color: Colors.white),
@@ -233,8 +240,9 @@ class HomePage extends StatefulWidget {
   final SelectedTab selectedTab;
   final Function dispatcher;
 
-  HomePage(this.customer, this.currentLocation, this.selectedTab, this.dispatcher, {Key key}) : super(key: key);
+  HomePage({this.customer, this.currentLocation, this.selectedTab, this.dispatcher, Key key}) : super(key: key);
 
   @override
-  HomePageState createState() => HomePageState(this.customer, this.currentLocation, this.selectedTab, this.dispatcher);
+  HomePageState createState() => HomePageState(
+      customer: customer, currentLocation: currentLocation, selectedTab: selectedTab, dispatcher: dispatcher);
 } // end class HomePage

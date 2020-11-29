@@ -94,7 +94,8 @@ class OrdersPageState extends State<OrdersPage> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => OrderDetails(order, product, isSeller: false)));
+                                                  builder: (context) =>
+                                                      OrderDetails(order: order, product: product, isSeller: false)));
                                         },
                                         child: Card(
                                             child: ListTile(
@@ -132,7 +133,8 @@ class OrdersPageState extends State<OrdersPage> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => OrderDetails(order, product, isSeller: true)));
+                                                builder: (context) =>
+                                                    OrderDetails(order: order, product: product, isSeller: true)));
                                       },
                                       child: Card(
                                           child: ListTile(

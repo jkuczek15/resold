@@ -10,14 +10,14 @@ class Landing extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: LandingPage(dispatcher));
+    return MaterialApp(home: LandingPage(dispatcher: dispatcher));
   }
 }
 
 class LandingPage extends StatefulWidget {
   final Function dispatcher;
 
-  LandingPage(Function dispatcher, {Key key})
+  LandingPage({Function dispatcher, Key key})
       : dispatcher = dispatcher,
         super(key: key);
 
@@ -55,7 +55,7 @@ class LandingPageState extends State<LandingPage> {
               Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => SignUpPage(dispatcher),
+                    pageBuilder: (context, animation, secondaryAnimation) => SignUpPage(dispatcher: dispatcher),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                       return FadeTransition(opacity: animation, child: child);
                     },
@@ -75,7 +75,7 @@ class LandingPageState extends State<LandingPage> {
                 Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(dispatcher),
+                      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(dispatcher: dispatcher),
                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                         return FadeTransition(opacity: animation, child: child);
                       },

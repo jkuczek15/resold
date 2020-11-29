@@ -511,7 +511,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                     await CustomerResponse.clear();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => LandingPage(dispatcher)));
+                        context, MaterialPageRoute(builder: (context) => LandingPage(dispatcher: dispatcher)));
                   },
                 ),
                 FlatButton(
@@ -579,7 +579,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                         await CustomerResponse.clear();
                         Navigator.of(context).popUntil((route) => route.isFirst);
                         Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => LandingPage(dispatcher)));
+                            context, MaterialPageRoute(builder: (context) => LandingPage(dispatcher: dispatcher)));
                         return showDialog<void>(
                             context: context,
                             barrierDismissible: false,

@@ -43,9 +43,15 @@ class MessagePage extends StatefulWidget {
   final UserMessageType type;
   final Function dispatcher;
 
-  MessagePage(CustomerResponse fromCustomer, CustomerResponse toCustomer, Position currentLocation, Product product,
-      String chatId, UserMessageType type, Function dispatcher,
-      {Key key})
+  MessagePage(
+      {CustomerResponse fromCustomer,
+      CustomerResponse toCustomer,
+      Position currentLocation,
+      Product product,
+      String chatId,
+      UserMessageType type,
+      Function dispatcher,
+      Key key})
       : fromCustomer = fromCustomer,
         toCustomer = toCustomer,
         currentLocation = currentLocation,
@@ -192,8 +198,12 @@ class MessagePageState extends State<MessagePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    ProductPage(fromCustomer, currentLocation, product, dispatcher, fromMessagePage: true)));
+                builder: (context) => ProductPage(
+                    customer: fromCustomer,
+                    currentLocation: currentLocation,
+                    product: product,
+                    dispatcher: dispatcher,
+                    fromMessagePage: true)));
         break;
       case 'Request Delivery':
         await requestDelivery();
@@ -1023,8 +1033,8 @@ class MessagePageState extends State<MessagePage> {
         await Firebase.setMessageProduct(chatId, product);
 
         // send the user to the order details page
-        await Navigator.push(
-            context, MaterialPageRoute(builder: (context) => OrderDetails(order, product, isSeller: false)));
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
       } // end if order successful
     }).catchError((err) {
       print(err);

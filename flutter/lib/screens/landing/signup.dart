@@ -21,7 +21,7 @@ import 'package:twilio_flutter/twilio_flutter.dart';
 class SignUpPage extends StatefulWidget {
   final Function dispatcher;
 
-  SignUpPage(Function dispatcher, {Key key})
+  SignUpPage({Function dispatcher, Key key})
       : dispatcher = dispatcher,
         super(key: key);
 
