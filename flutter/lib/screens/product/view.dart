@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:resold/state/actions/delete-product.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
+import 'package:resold/widgets/location/distance.dart';
 import 'package:resold/widgets/text/read-more-text.dart';
-import 'package:resold/builders/location-builder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/screens/messages/message.dart';
@@ -310,8 +310,11 @@ class ProductPageState extends State<ProductPage> {
                                               width: 70,
                                               child: Align(
                                                   alignment: Alignment.centerRight,
-                                                  child: LocationBuilder.calculateDistance(currentLocation.latitude,
-                                                      currentLocation.longitude, product.latitude, product.longitude)))
+                                                  child: Distance(
+                                                      startLatitude: currentLocation.latitude,
+                                                      startLongitude: currentLocation.longitude,
+                                                      endLatitude: product.latitude,
+                                                      endLongitude: product.longitude)))
                                         ])
                                   ]),
                               SizedBox(height: 10),

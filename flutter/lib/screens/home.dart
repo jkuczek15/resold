@@ -79,13 +79,11 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-  }
+  } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    customer = widget.customer;
-    currentLocation = widget.currentLocation;
-    selectedTab = widget.selectedTab;
+    onBuild();
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -226,6 +224,12 @@ class HomePageState extends State<HomePage> {
         return Text('Unknown tab');
     } // end switch on selected tab
   } // end function getContent
+
+  void onBuild() {
+    customer = widget.customer;
+    currentLocation = widget.currentLocation;
+    selectedTab = widget.selectedTab;
+  } // end function onBuild
 } // end class HomePageState
 
 class HomePage extends StatefulWidget {

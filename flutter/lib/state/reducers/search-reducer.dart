@@ -13,7 +13,6 @@ class SearchReducer extends SimpleBloc<AppState> {
       Search.fetchSearchProducts(state.searchState, state.currentLocation.latitude, state.currentLocation.longitude)
           .then((results) {
         state.searchState.searchStream.add(results);
-        state.searchState.mapStream.add(results);
         state.searchState.initialProducts = results;
       });
     }

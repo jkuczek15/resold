@@ -41,10 +41,11 @@ class MapPage extends StatefulWidget {
 }
 
 class MapPageState extends State<MapPage> {
-  final CustomerResponse customer;
-  final SearchState searchState;
-  final Position currentLocation;
+  CustomerResponse customer;
+  SearchState searchState;
+  Position currentLocation;
   final Function dispatcher;
+
   final Map<String, Marker> markers = new Map<String, Marker>();
   List<Product> results;
   double pinPillPosition = -100;
@@ -54,8 +55,7 @@ class MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    results = widget.results;
-    setupMarkers(currentLocation, results);
+    onBuild();
     return Stack(
       children: [
         Container(
@@ -64,7 +64,6 @@ class MapPageState extends State<MapPage> {
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             mapToolbarEnabled: false,
-            zoomControlsEnabled: false,
             onMapCreated: (GoogleMapController controller) => onMapCreated(controller, currentLocation, results),
             initialCameraPosition: CameraPosition(
               target: LatLng(currentLocation.latitude, currentLocation.longitude),
@@ -139,4 +138,12 @@ class MapPageState extends State<MapPage> {
           });
     });
   } // end function setupMarkers
+
+  void onBuild() {
+    results = widget.results;
+    customer = widget.customer;
+    searchState = widget.searchState;
+    currentLocation = widget.currentLocation;
+    setupMarkers(currentLocation, results);
+  } // end function onBuild
 }

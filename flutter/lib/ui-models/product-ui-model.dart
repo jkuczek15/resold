@@ -14,10 +14,10 @@ class ProductUiModel extends ChangeNotifier {
   SearchState searchState;
 
   ProductUiModel(Position currentLocation, SearchState searchState, List<Product> data) {
-    items = data;
-    searchState = searchState;
+    this.items = data;
+    this.searchState = searchState;
     this.currentLocation = currentLocation;
-  }
+  } // end ProductUiModel constructor
 
   Future handleItemCreated(int index) async {
     itemRequestThreshold = this.items.length;

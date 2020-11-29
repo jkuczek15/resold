@@ -7,7 +7,6 @@ import 'package:resold/models/product.dart';
 class SearchState {
   TextEditingController textController;
   StreamController<List<Product>> searchStream;
-  StreamController<List<Product>> mapStream;
   List<Product> initialProducts;
   String selectedCategory;
   String selectedCondition;
@@ -17,7 +16,6 @@ class SearchState {
   SearchState(
       {this.textController,
       this.searchStream,
-      this.mapStream,
       this.initialProducts,
       this.selectedCategory,
       this.selectedCondition,
