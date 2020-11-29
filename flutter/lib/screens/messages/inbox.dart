@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
-import 'package:resold/services/firebase.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/constants/url-config.dart';
@@ -63,7 +63,7 @@ class InboxPageState extends State<InboxPage> {
           children: [
             Expanded(
                 child: StreamBuilder(
-                    stream: Firebase.getUserMessagesStream(customer.id),
+                    stream: ResoldFirebase.getUserMessagesStream(customer.id),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: Loading());
@@ -111,7 +111,7 @@ class InboxPageState extends State<InboxPage> {
                                         CustomerResponse toCustomer = await Magento.getCustomerById(item['toId']);
 
                                         // mark the message as read
-                                        await Firebase.markInboxMessageRead(item.documentID);
+                                        await ResoldFirebase.markInboxMessageRead(item.id);
 
                                         Navigator.push(
                                             context,

@@ -8,9 +8,9 @@ import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/screens/order/details.dart';
 import 'package:resold/screens/product/view.dart';
-import 'package:resold/services/firebase.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
@@ -166,7 +166,7 @@ class MessagePageState extends State<MessagePage> {
   Future onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
+      await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
@@ -175,20 +175,21 @@ class MessagePageState extends State<MessagePage> {
 
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(File(pickedImage.path));
-    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-      imageUrl = downloadUrl;
-      setState(() {
-        isLoading = false;
-        onSendMessage(imageUrl, MessageType.image);
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    UploadTask uploadTask = reference.putFile(File(pickedImage.path));
+    uploadTask.whenComplete(() {
+      uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) {
+        imageUrl = downloadUrl;
+        setState(() {
+          isLoading = false;
+          onSendMessage(imageUrl, MessageType.image);
+        });
+      }, onError: (err) {
+        setState(() {
+          isLoading = false;
+        });
+        Fluttertoast.showToast(msg: 'This file is not an image');
       });
-    }, onError: (err) {
-      setState(() {
-        isLoading = false;
-      });
-      Fluttertoast.showToast(msg: 'This file is not an image');
     });
   } // end function uploadFile
 
@@ -252,7 +253,7 @@ class MessagePageState extends State<MessagePage> {
                     onPressed: () async {
                       if (formKey.currentState.validate()) {
                         Navigator.of(context, rootNavigator: true).pop('dialog');
-                        await Firebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product,
+                        await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product,
                             fromCustomer.id.toString() + '|' + offerController.text, MessageType.offer, isSeller);
                       } // end if valid verification code
                     },
@@ -288,7 +289,7 @@ class MessagePageState extends State<MessagePage> {
         response.duration.toString();
 
     // send a Firebase message
-    await Firebase.sendProductMessage(
+    await ResoldFirebase.sendProductMessage(
         chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
   } // end function requestDelivery
 
@@ -314,7 +315,7 @@ class MessagePageState extends State<MessagePage> {
       child: chatId == ''
           ? Center(child: Loading())
           : StreamBuilder(
-              stream: Firebase.getProductMessagesStream(chatId),
+              stream: ResoldFirebase.getProductMessagesStream(chatId),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: Loading());
@@ -540,7 +541,7 @@ class MessagePageState extends State<MessagePage> {
                                                     onPressed: () async {
                                                       if (isSeller) {
                                                         // user is the seller
-                                                        await Firebase.updateDeliveryQuoteStatus(
+                                                        await ResoldFirebase.updateDeliveryQuoteStatus(
                                                             chatId, DeliveryQuoteStatus.accepted);
                                                       } else {
                                                         // user is the buyer
@@ -554,7 +555,7 @@ class MessagePageState extends State<MessagePage> {
                                                     textColor: Colors.white,
                                                     onPressed: () async {
                                                       // Perform some action
-                                                      await Firebase.deleteProductMessage(chatId, document.documentID);
+                                                      await ResoldFirebase.deleteProductMessage(chatId, document.id);
                                                     },
                                                     child: const Text('Decline Delivery'),
                                                   ),
@@ -566,8 +567,8 @@ class MessagePageState extends State<MessagePage> {
                                                         color: Colors.black,
                                                         textColor: Colors.white,
                                                         onPressed: () async {
-                                                          await Firebase.deleteProductMessage(
-                                                              chatId, document.documentID);
+                                                          await ResoldFirebase.deleteProductMessage(
+                                                              chatId, document.id);
                                                         },
                                                         child: const Text('Cancel Delivery'),
                                                       ),
@@ -604,8 +605,7 @@ class MessagePageState extends State<MessagePage> {
                                                       color: Colors.black,
                                                       textColor: Colors.white,
                                                       onPressed: () async {
-                                                        await Firebase.deleteProductMessage(
-                                                            chatId, document.documentID);
+                                                        await ResoldFirebase.deleteProductMessage(chatId, document.id);
                                                       },
                                                       child: const Text('Cancel Offer'),
                                                     ),
@@ -629,8 +629,7 @@ class MessagePageState extends State<MessagePage> {
                                                         product.price = offerMessage.price.toString();
 
                                                         // delete the offer message
-                                                        await Firebase.deleteProductMessage(
-                                                            chatId, document.documentID);
+                                                        await ResoldFirebase.deleteProductMessage(chatId, document.id);
 
                                                         // create a delivery message
                                                         await requestDelivery();
@@ -644,8 +643,7 @@ class MessagePageState extends State<MessagePage> {
                                                       color: Colors.black,
                                                       textColor: Colors.white,
                                                       onPressed: () async {
-                                                        await Firebase.deleteProductMessage(
-                                                            chatId, document.documentID);
+                                                        await ResoldFirebase.deleteProductMessage(chatId, document.id);
                                                       },
                                                       child: const Text('Decline Offer'),
                                                     )
@@ -817,8 +815,8 @@ class MessagePageState extends State<MessagePage> {
                                                           color: Colors.black,
                                                           textColor: Colors.white,
                                                           onPressed: () async {
-                                                            await Firebase.deleteProductMessage(
-                                                                chatId, document.documentID);
+                                                            await ResoldFirebase.deleteProductMessage(
+                                                                chatId, document.id);
                                                           },
                                                           child: const Text('Cancel Delivery'),
                                                         ),
@@ -828,7 +826,7 @@ class MessagePageState extends State<MessagePage> {
                                                           onPressed: () async {
                                                             if (isSeller) {
                                                               // user is the seller
-                                                              await Firebase.updateDeliveryQuoteStatus(
+                                                              await ResoldFirebase.updateDeliveryQuoteStatus(
                                                                   chatId, DeliveryQuoteStatus.accepted);
                                                             } else {
                                                               // user is the buyer
@@ -840,8 +838,8 @@ class MessagePageState extends State<MessagePage> {
                                                         FlatButton(
                                                           onPressed: () async {
                                                             // Perform some action
-                                                            await Firebase.deleteProductMessage(
-                                                                chatId, document.documentID);
+                                                            await ResoldFirebase.deleteProductMessage(
+                                                                chatId, document.id);
                                                           },
                                                           child: const Text('Decline Delivery'),
                                                         ),
@@ -880,8 +878,8 @@ class MessagePageState extends State<MessagePage> {
                                                             color: Colors.black,
                                                             textColor: Colors.white,
                                                             onPressed: () async {
-                                                              await Firebase.deleteProductMessage(
-                                                                  chatId, document.documentID);
+                                                              await ResoldFirebase.deleteProductMessage(
+                                                                  chatId, document.id);
                                                             },
                                                             child: const Text('Cancel Offer'),
                                                           ),
@@ -905,8 +903,8 @@ class MessagePageState extends State<MessagePage> {
                                                               product.price = offerMessage.price.toString();
 
                                                               // delete the offer message
-                                                              await Firebase.deleteProductMessage(
-                                                                  chatId, document.documentID);
+                                                              await ResoldFirebase.deleteProductMessage(
+                                                                  chatId, document.id);
 
                                                               // create a delivery message
                                                               await requestDelivery();
@@ -920,8 +918,8 @@ class MessagePageState extends State<MessagePage> {
                                                             color: Colors.black,
                                                             textColor: Colors.white,
                                                             onPressed: () async {
-                                                              await Firebase.deleteProductMessage(
-                                                                  chatId, document.documentID);
+                                                              await ResoldFirebase.deleteProductMessage(
+                                                                  chatId, document.id);
                                                             },
                                                             child: const Text('Decline Offer'),
                                                           )
@@ -1022,7 +1020,7 @@ class MessagePageState extends State<MessagePage> {
         Order order = await Magento.getOrderById(orderId);
 
         // update the message as paid
-        await Firebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.paid);
+        await ResoldFirebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.paid);
 
         // create a Postmates delivery
         DeliveryResponse delivery = await getDelivery(useRobot: true);
@@ -1030,7 +1028,7 @@ class MessagePageState extends State<MessagePage> {
         // save the delivery ID to the product
         await ResoldRest.setDeliveryId(fromCustomer.token, product.id, delivery.id);
         setState(() => product.deliveryId = delivery.id);
-        await Firebase.setMessageProduct(chatId, product);
+        await ResoldFirebase.setMessageProduct(chatId, product);
 
         // send the user to the order details page
         await Navigator.push(context,
