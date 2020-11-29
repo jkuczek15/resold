@@ -143,12 +143,13 @@ class ResoldRest {
    * token - Customer identification token
    * deviceToken - Device identification token
    */
-  static Future sendNotificationMessage(String token, String deviceToken) async {
+  static Future sendNotificationMessage(
+      String token, String deviceToken, String title, String body, String imageUrl) async {
     await config.initialized;
-    FormData formData = new FormData.fromMap({'deviceToken': deviceToken});
+    FormData formData =
+        new FormData.fromMap({'deviceToken': deviceToken, 'title': title, 'body': body, 'imageUrl': imageUrl});
     dio.options.headers['Authorization'] = 'Bearer $token';
-    var response = await dio.post('${config.baseUrl}/notifications/send', data: formData);
-    print('testing');
+    await dio.post('${config.baseUrl}/notifications/send', data: formData);
   } // end function setDeliveryId
 
 } // end class Resold

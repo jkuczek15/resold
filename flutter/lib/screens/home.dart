@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -240,6 +241,8 @@ class HomePageState extends State<HomePage> {
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         // display notification when app in foreground
+        var notification = message['notification'];
+        var data = message['data'];
         showOverlayNotification((context) {
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -248,11 +251,11 @@ class HomePageState extends State<HomePage> {
                 leading: SizedBox.fromSize(
                     size: const Size(40, 40),
                     child: ClipOval(
-                        child: Container(
-                      color: Colors.black,
+                        child: CachedNetworkImage(
+                      imageUrl: data['image'],
                     ))),
-                title: Text('Hello world!'),
-                subtitle: Text('This is a test push notification in foreground'),
+                title: Text(notification['title']),
+                subtitle: Text(notification['body']),
                 trailing: IconButton(
                     icon: Icon(Icons.close),
                     onPressed: () {

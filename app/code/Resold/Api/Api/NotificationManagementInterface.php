@@ -21,7 +21,10 @@ interface NotificationManagementInterface
 	 * Send a notification message to a device
 	 * 
 	 * @param string $deviceToken
+	 * @param string $title
+	 * @param string $body
+	 * @param string $imageUrl
 	 * @return mixed[]
 	 */
-	public function sendNotificationMessage($deviceToken);
+	public function sendNotificationMessage($deviceToken, $title, $body, $imageUrl);
 }

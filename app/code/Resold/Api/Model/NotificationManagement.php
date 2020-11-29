@@ -33,13 +33,20 @@ class NotificationManagement
 	/**
 	 * {@inheritdoc}
 	 */
-  public function sendNotificationMessage($deviceToken)
+  public function sendNotificationMessage($deviceToken, $title, $body, $imageUrl)
 	{
     $messaging = $this->factory->createMessaging();
 
-    $message = CloudMessage::withTarget('token', $deviceToken)
-    ->withNotification(Notification::create('Title', 'Body'));
+    // setup notification
+    $message = CloudMessage::withTarget('token', $deviceToken)->withNotification([
+      'title' => $title,
+      'body' => $body,
+      'image' => $imageUrl
+    ])->withData([
+      'image' => $imageUrl
+    ]);
 
+    // send notification
     $messaging->send($message);
   }// end function sendNotificationMessage
 }
