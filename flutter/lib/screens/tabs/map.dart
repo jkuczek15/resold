@@ -9,6 +9,7 @@ import 'package:resold/state/actions/fetch-search-results.dart';
 import 'package:resold/state/actions/set-search-state.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
+import 'package:resold/widgets/list/product-list.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:resold/widgets/map/map-pin-pill.dart';
 import 'package:resold/widgets/resold-search-bar.dart';
@@ -87,23 +88,36 @@ class MapPageState extends State<MapPage> {
           color: Colors.white.withOpacity(0.9),
           height: 131,
           child: ResoldSearchBar<Product>(
+            placeHolder: results.length == 0 ? Center(child: Text('Your search returned no results.')) : null,
             textEditingController: searchState.textController,
             header: ScrollableFilterList(searchState, currentLocation, dispatcher),
             hintText: 'Search entire marketplace here...',
             searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
             cancellationWidget: Icon(Icons.cancel),
+            onCancelled: () async {
+              dispatcher(SetSearchStateAction(searchState));
+              dispatcher(FetchSearchResultsAction());
+              return await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
+            },
             onSearch: (term) async {
               searchState.textController.text = term;
               dispatcher(SetSearchStateAction(searchState));
               dispatcher(FetchSearchResultsAction());
               return await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
             },
+            onItemFound: (Product product, int index) {
+              return ProductList.buildProductListTile(context, currentLocation, product, customer, dispatcher, index);
+            },
             loader: Center(child: Loading()),
             suggestions: results,
-            onItemFound: (Product product, int index) {
-              return SizedBox();
-            },
-            emptyWidget: Center(child: Text('Your search returned no results.')),
+            emptyWidget: results.length == 0
+                ? Center(child: Text('Your search returned no results.'))
+                : ProductList(
+                    customer: customer,
+                    searchState: searchState,
+                    products: results,
+                    currentLocation: currentLocation,
+                    dispatcher: dispatcher),
           ),
         ),
       ],
