@@ -38,8 +38,7 @@ class NotificationManagement
     $messaging = $this->factory->createMessaging();
 
     $message = CloudMessage::withTarget('token', $deviceToken)
-    ->withNotification(Notification::create('Title', 'Body'))
-    ->withData(['key' => 'value']);
+    ->withNotification(Notification::create('Title', 'Body'));
 
     $messaging->send($message);
   }// end function sendNotificationMessage
