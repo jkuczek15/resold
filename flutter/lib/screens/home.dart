@@ -240,6 +240,7 @@ class HomePageState extends State<HomePage> {
     // handle Firebase push notifications
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
+        // todo: don't display notification if message is already opened (message product.id == data.product.id)
         // display notification when app in foreground
         var notification = message['notification'];
         var data = message['data'];
