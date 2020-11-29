@@ -271,11 +271,9 @@ class HomePageState extends State<HomePage> {
       onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        // _navigateToItemDetail(message);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        // _navigateToItemDetail(message);
       },
     );
     await firebaseMessaging.requestNotificationPermissions();
