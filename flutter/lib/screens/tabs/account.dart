@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:resold/builders/product-list-builder.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/screens/account/edit.dart';
+import 'package:resold/widgets/grid/product-grid.dart';
 
 class AccountPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -186,21 +186,11 @@ class AccountPageState extends State<AccountPage> {
                                 child: Text('You haven\'t sold any items.',
                                     style: new TextStyle(
                                         fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white))))
-                        : GridView.count(
-                            physics: ScrollPhysics(),
-                            shrinkWrap: true,
-                            crossAxisCount: 2,
-                            children: displayForSale
-                                ? List.generate(forSaleProducts.length, (index) {
-                                    var product = forSaleProducts[index];
-                                    return ProductListBuilder.buildProductGridTile(
-                                        context, currentLocation, product, customer, dispatcher, index);
-                                  })
-                                : List.generate(soldProducts.length, (index) {
-                                    var product = soldProducts[index];
-                                    return ProductListBuilder.buildProductGridTile(
-                                        context, currentLocation, product, customer, dispatcher, index);
-                                  })),
+                        : ProductGrid(
+                            customer: customer,
+                            currentLocation: currentLocation,
+                            products: displayForSale ? forSaleProducts : soldProducts,
+                            dispatcher: dispatcher)
               ],
             ))
           ]),

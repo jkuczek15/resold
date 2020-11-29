@@ -64,8 +64,7 @@ Future<void> main() async {
       selectedCondition: 'Cancel',
       selectedSort: Sort.newest,
       textController: TextEditingController(),
-      searchStream: StreamController<List<Product>>.broadcast(),
-      mapStream: StreamController<List<Product>>.broadcast());
+      searchStream: StreamController<List<Product>>.broadcast());
 
   // initialize application state
   Position currentLocation = Position();
@@ -77,8 +76,10 @@ Future<void> main() async {
       currentLocation = Position(latitude: 42.052158, longitude: -87.687866);
     } // end if development
 
+    // fetch inital products
     searchState.initialProducts =
         await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
+
     await Future.wait([
       Resold.getVendor(customer.vendorId),
       Resold.getVendorProducts(customer.vendorId, 'for-sale'),

@@ -1,24 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
+import 'package:resold/models/product.dart';
+import 'package:resold/screens/product/view.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/ui-models/product-ui-model.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
-import 'package:resold/models/product.dart';
-import 'package:resold/widgets/list/creation-aware-list-item.dart';
-import 'package:resold/screens/product/view.dart';
-import 'package:resold/builders/location-builder.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:intl/intl.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:resold/widgets/loading.dart';
+import 'package:resold/widgets/location/distance.dart';
+import 'creation-aware-list-item.dart';
 
-class ProductListBuilder {
-  static ChangeNotifierProvider<ProductUiModel> buildProductList(BuildContext context, List<Product> products,
-      Position currentLocation, SearchState searchState, CustomerResponse customer, Function dispatcher) {
+class ProductList extends StatelessWidget {
+  final CustomerResponse customer;
+  final SearchState searchState;
+  final List<Product> products;
+  final Position currentLocation;
+  final Function dispatcher;
+
+  ProductList({this.customer, this.searchState, this.products, this.currentLocation, this.dispatcher});
+
+  @override
+  Widget build(BuildContext context) {
     return ChangeNotifierProvider<ProductUiModel>(
         create: (_) => new ProductUiModel(currentLocation, searchState, products),
         child: Consumer<ProductUiModel>(
@@ -29,12 +36,12 @@ class ProductListBuilder {
                       itemCreated: () {
                         SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
                       },
-                      child: model.items[index + 1].name == LoadingIndicatorTitle
+                      child: model.items.length > index + 1 && model.items[index + 1].name == LoadingIndicatorTitle
                           ? Center(child: Loading())
                           : buildProductListTile(
                               context, currentLocation, model.items[index], customer, dispatcher, index));
                 })));
-  } // end function buildProductList
+  } // end function build
 
   static Widget buildProductListTile(BuildContext context, Position currentLocation, Product product,
       CustomerResponse customer, Function dispatcher, int index) {
@@ -126,56 +133,15 @@ class ProductListBuilder {
                                         width: 70,
                                         child: Align(
                                             alignment: Alignment.centerRight,
-                                            child: LocationBuilder.calculateDistance(currentLocation.latitude,
-                                                currentLocation.longitude, product.latitude, product.longitude)))
+                                            child: Distance(
+                                              startLatitude: currentLocation.latitude,
+                                              startLongitude: currentLocation.longitude,
+                                              endLatitude: product.latitude,
+                                              endLongitude: product.longitude,
+                                            )))
                                   ])
                                 ])
                           ],
                         ))))));
   } // end function buildProductListTile
-
-  static Widget buildProductGridTile(BuildContext context, Position currentLocation, Product product,
-      CustomerResponse customer, Function dispatcher, int index) {
-    return Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
-        child: InkWell(
-            splashColor: Colors.blue.withAlpha(30),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProductPage(customer, currentLocation, product, dispatcher)));
-            },
-            child: CachedNetworkImage(
-              placeholder: (context, url) => Container(
-                child: Loading(),
-                width: 200.0,
-                height: 200.0,
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                ),
-              ),
-              errorWidget: (context, url, error) => Material(
-                child: Image.asset(
-                  'assets/images/placeholder-image.png',
-                  width: 200.0,
-                  height: 200.0,
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8.0),
-                ),
-                clipBehavior: Clip.hardEdge,
-              ),
-              imageUrl: baseProductImagePath + product.thumbnail,
-              width: 200.0,
-              height: 200.0,
-              fit: BoxFit.cover,
-            )));
-  } // end function buildProductGridTile
 }
