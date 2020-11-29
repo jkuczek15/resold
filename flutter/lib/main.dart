@@ -19,6 +19,7 @@ import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/firebase.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+import 'constants/dev-constants.dart';
 import 'enums/sort.dart';
 import 'models/product.dart';
 import 'models/vendor.dart';
@@ -44,9 +45,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(CustomerResponse(email: 'joe.kuczek@gmail.com', password: 'Resold420!'));
-    // await CustomerResponse.save(CustomerResponse(email: 'jim.smith@gmail.com', password: 'Resold420!'));
-    // await CustomerResponse.save(CustomerResponse(email: 'bob.smith@gmail.com', password: 'Resold420!'));
+    await CustomerResponse.save(testAccounts['Joe']);
   } // end if development
 
   // get from disk and login
@@ -73,7 +72,7 @@ Future<void> main() async {
 
     if (env.isDevelopment) {
       // override location in development mode
-      currentLocation = Position(latitude: 42.052158, longitude: -87.687866);
+      currentLocation = testLocations['Evanston'];
     } // end if development
 
     // fetch inital products

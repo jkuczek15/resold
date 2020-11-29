@@ -594,6 +594,7 @@ class ProductPageState extends State<ProductPage> {
                                   height: 500,
                                   child: GoogleMap(
                                     myLocationEnabled: true,
+                                    mapToolbarEnabled: false,
                                     onMapCreated: onMapCreated,
                                     initialCameraPosition: CameraPosition(
                                       target: LatLng(product.latitude, product.longitude),
@@ -620,18 +621,11 @@ class ProductPageState extends State<ProductPage> {
     setState(() {
       markers.clear();
 
-      InfoWindow infoWindow;
-      if (product.titleDescription == null) {
-        infoWindow = InfoWindow(title: product.name);
-      } else {
-        infoWindow = InfoWindow(title: product.name, snippet: product.titleDescription);
-      }
-
       final productMarker = Marker(
           markerId: MarkerId(product.name),
           position: LatLng(product.latitude, product.longitude),
           icon: BitmapDescriptor.defaultMarkerWithHue(198),
-          infoWindow: infoWindow);
+          infoWindow: InfoWindow(title: product.name));
 
       markers[product.name] = productMarker;
     });
