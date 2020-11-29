@@ -5,23 +5,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:resold/services/magento.dart';
 
 class CustomerResponse extends Response {
-
   int id;
   String email;
   String password;
   String firstName;
   String lastName;
   String token;
+  String deviceToken;
   int vendorId;
   final List<CustomerAddress> addresses;
   String get fullName => this.firstName + ' ' + this.lastName;
 
-  CustomerResponse({this.id, this.email, this.password, this.firstName, this.lastName, this.addresses, this.token, this.vendorId, statusCode, error})
+  CustomerResponse(
+      {this.id,
+      this.email,
+      this.password,
+      this.firstName,
+      this.lastName,
+      this.addresses,
+      this.token,
+      this.deviceToken,
+      this.vendorId,
+      statusCode,
+      error})
       : super(statusCode: statusCode, error: error);
 
   bool isLoggedIn() {
     return token != null;
-  }
+  } // end function isLoggedIn
 
   static Future save(CustomerResponse response) async {
     try {
@@ -32,7 +43,7 @@ class CustomerResponse extends Response {
     } catch (ex) {
       print(ex);
     }
-  }
+  } // end function save
 
   static Future<CustomerResponse> load() async {
     CustomerResponse response = CustomerResponse();
@@ -41,15 +52,13 @@ class CustomerResponse extends Response {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       // login so we get a new token each time we load the customer
-      return await Magento.loginCustomer(LoginRequest(
-        username: prefs.getString('email'),
-        password: prefs.getString('password')
-      ));
+      return await Magento.loginCustomer(
+          LoginRequest(username: prefs.getString('email'), password: prefs.getString('password')));
     } catch (ex) {
       print(ex);
     }
     return response;
-  }
+  } // end function load
 
   static Future clear() async {
     try {
@@ -59,5 +68,5 @@ class CustomerResponse extends Response {
     } catch (ex) {
       print(ex);
     }
-  }
+  } // end function clear
 }

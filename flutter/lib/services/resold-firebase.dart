@@ -18,18 +18,18 @@ class ResoldFirebase {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   /*
-  * createUser - Create a Firebase user given customer data
-  * response - Customer response data
+  * createOrUpdateUser - Create a Firebase user given customer data
+  * customer - Customer response data
   */
-  static Future createUser(CustomerResponse response) async {
+  static Future createOrUpdateUser(CustomerResponse customer) async {
     // check if we have a firebase user
-    QuerySnapshot result = await firestore.collection('users').where('id', isEqualTo: response.id).get();
-    List<DocumentSnapshot> documents = result.docs;
-    if (documents.length == 0) {
-      // create a new user
-      await firestore.collection('users').doc(response.id.toString()).set(
-          {'id': response.id, 'email': response.email, 'nickname': response.fullName, 'vendorId': response.vendorId});
-    } // end if we need to create a new user
+    await firestore.collection('users').doc(customer.id.toString()).set({
+      'id': customer.id,
+      'email': customer.email,
+      'nickname': customer.fullName,
+      'vendorId': customer.vendorId,
+      'deviceToken': customer.deviceToken
+    });
   } // end function createUser
 
   /*
