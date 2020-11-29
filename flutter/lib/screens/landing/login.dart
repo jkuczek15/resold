@@ -112,7 +112,7 @@ class LoginPageState extends State<LoginPage> {
                         await CustomerResponse.save(customer);
 
                         // create a firebase user
-                        await ResoldFirebase.createUser(customer);
+                        await ResoldFirebase.createOrUpdateUser(customer);
 
                         // initialize application state
                         await Future.wait([
