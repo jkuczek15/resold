@@ -99,7 +99,7 @@ class AccountPageState extends State<AccountPage> {
                                 children: [
                                   SizedBox(height: 10),
                                   Row(children: [
-                                    SizedBox(width: 30),
+                                    SizedBox(width: 10),
                                     InkWell(
                                       child: Column(children: [
                                         Text(forSaleProducts.length.toString(),
