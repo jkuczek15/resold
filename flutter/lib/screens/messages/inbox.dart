@@ -20,7 +20,7 @@ class InboxPage extends StatefulWidget {
   final Position currentLocation;
   final Function dispatcher;
 
-  InboxPage(CustomerResponse customer, Position currentLocation, Function dispatcher, {Key key})
+  InboxPage({CustomerResponse customer, Position currentLocation, Function dispatcher, Key key})
       : customer = customer,
         currentLocation = currentLocation,
         dispatcher = dispatcher,
@@ -117,13 +117,13 @@ class InboxPageState extends State<InboxPage> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => MessagePage(
-                                                    customer,
-                                                    toCustomer,
-                                                    currentLocation,
-                                                    product,
-                                                    item['chatId'],
-                                                    UserMessageType.values[item['messageType']],
-                                                    dispatcher)));
+                                                    fromCustomer: customer,
+                                                    toCustomer: toCustomer,
+                                                    currentLocation: currentLocation,
+                                                    product: product,
+                                                    chatId: item['chatId'],
+                                                    type: UserMessageType.values[item['messageType']],
+                                                    dispatcher: dispatcher)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
                                       child: Card(

@@ -72,7 +72,11 @@ class MapPinPill extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProductPage(customer, currentLocation, selectedProduct, dispatcher)));
+                      builder: (context) => ProductPage(
+                          customer: customer,
+                          currentLocation: currentLocation,
+                          product: selectedProduct,
+                          dispatcher: dispatcher)));
             },
           )),
     );

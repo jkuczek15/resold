@@ -36,8 +36,14 @@ class ProductGrid extends StatelessWidget {
         child: InkWell(
             splashColor: Colors.blue.withAlpha(30),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProductPage(customer, currentLocation, product, dispatcher)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProductPage(
+                          customer: customer,
+                          currentLocation: currentLocation,
+                          product: product,
+                          dispatcher: dispatcher)));
             },
             child: CachedNetworkImage(
               placeholder: (context, url) => Container(

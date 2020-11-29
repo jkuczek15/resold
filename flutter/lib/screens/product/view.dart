@@ -31,8 +31,13 @@ class ProductPage extends StatefulWidget {
   final bool fromMessagePage;
   final Function dispatcher;
 
-  ProductPage(CustomerResponse customer, Position currentLocation, Product product, Function dispatcher,
-      {Key key, bool fromMessagePage = false})
+  ProductPage(
+      {CustomerResponse customer,
+      Position currentLocation,
+      Product product,
+      Function dispatcher,
+      Key key,
+      bool fromMessagePage = false})
       : customer = customer,
         currentLocation = currentLocation,
         product = product,
@@ -362,13 +367,13 @@ class ProductPageState extends State<ProductPage> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) => MessagePage(
-                                                                customer,
-                                                                toCustomer,
-                                                                currentLocation,
-                                                                product,
-                                                                chatId,
-                                                                UserMessageType.buyer,
-                                                                dispatcher)));
+                                                                fromCustomer: customer,
+                                                                toCustomer: toCustomer,
+                                                                currentLocation: currentLocation,
+                                                                product: product,
+                                                                chatId: chatId,
+                                                                type: UserMessageType.buyer,
+                                                                dispatcher: dispatcher)));
                                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                                   } // end if from message page
                                                 },
@@ -474,13 +479,13 @@ class ProductPageState extends State<ProductPage> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: (context) => MessagePage(
-                                                                              customer,
-                                                                              toCustomer,
-                                                                              currentLocation,
-                                                                              product,
-                                                                              chatId,
-                                                                              UserMessageType.buyer,
-                                                                              dispatcher)));
+                                                                              fromCustomer: customer,
+                                                                              toCustomer: toCustomer,
+                                                                              currentLocation: currentLocation,
+                                                                              product: product,
+                                                                              chatId: chatId,
+                                                                              type: UserMessageType.buyer,
+                                                                              dispatcher: dispatcher)));
                                                                 } // end if not from message page
                                                               } // end if valid verification code
                                                             },
@@ -570,13 +575,13 @@ class ProductPageState extends State<ProductPage> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) => MessagePage(
-                                                                customer,
-                                                                toCustomer,
-                                                                currentLocation,
-                                                                product,
-                                                                chatId,
-                                                                UserMessageType.buyer,
-                                                                dispatcher)));
+                                                                fromCustomer: customer,
+                                                                toCustomer: toCustomer,
+                                                                currentLocation: currentLocation,
+                                                                product: product,
+                                                                chatId: chatId,
+                                                                type: UserMessageType.buyer,
+                                                                dispatcher: dispatcher)));
                                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                                   } // end if not from message page
                                                 },

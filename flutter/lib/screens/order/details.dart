@@ -24,7 +24,7 @@ class OrderDetails extends StatefulWidget {
   final Product product;
   final bool isSeller;
 
-  OrderDetails(order, product, {Key key, isSeller = false})
+  OrderDetails({Order order, Product product, Key key, isSeller = false})
       : order = order,
         product = product,
         isSeller = isSeller,

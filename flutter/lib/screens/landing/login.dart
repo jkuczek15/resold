@@ -14,7 +14,7 @@ import 'package:resold/widgets/loading.dart';
 class LoginPage extends StatefulWidget {
   final Function dispatcher;
 
-  LoginPage(Function dispatcher, {Key key})
+  LoginPage({Function dispatcher, Key key})
       : dispatcher = dispatcher,
         super(key: key);
 
