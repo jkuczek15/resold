@@ -105,27 +105,16 @@ class MessagePageState extends State<MessagePage> {
     super.initState();
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
-    // determine if this is the seller
     var chatIdParts = this.chatId.split('-');
     isSeller = fromCustomer.id.toString() != chatIdParts[0];
   } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    fromCustomer = widget.toCustomer;
+    fromCustomer = widget.fromCustomer;
     return Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                      width: 250,
-                      child: Text(product.name,
-                          overflow: TextOverflow.ellipsis, style: new TextStyle(color: Colors.white))))
-            ],
-          ),
+          title: Text(product.name, style: new TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(
             color: Colors.white, //change your color here
           ),
@@ -167,6 +156,7 @@ class MessagePageState extends State<MessagePage> {
     if (content.trim() != '') {
       textEditingController.clear();
       await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
+      await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');

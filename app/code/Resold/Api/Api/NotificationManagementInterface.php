@@ -18,16 +18,10 @@ namespace Resold\Api\Api;
 interface NotificationManagementInterface
 {
 	/**
-	 * Register a device to receive push notifications
-	 * 
-	 * @return mixed[]
-	 */
-	public function registerDevice();
-
-	/**
 	 * Send a notification message to a device
-	 *
+	 * 
+	 * @param string $deviceToken
 	 * @return mixed[]
 	 */
-	public function sendNotificationMessage();
+	public function sendNotificationMessage($deviceToken);
 }
