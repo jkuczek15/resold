@@ -103,6 +103,7 @@ class HomePageState extends State<HomePage> {
       },
     );
     firebaseMessaging.requestNotificationPermissions();
+    FirebaseHelper.sendNotificationMessage();
   } // end function initState
 
   @override
