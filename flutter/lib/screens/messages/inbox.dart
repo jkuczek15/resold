@@ -48,12 +48,7 @@ class InboxPageState extends State<InboxPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(alignment: Alignment.centerLeft, child: Text('Messages', style: new TextStyle(color: Colors.white)))
-            ],
-          ),
+          title: Text('Messages', style: new TextStyle(color: Colors.white)),
           iconTheme: IconThemeData(
             color: Colors.white, //change your color here
           ),
@@ -129,6 +124,7 @@ class InboxPageState extends State<InboxPage> {
                                       child: Card(
                                           child: ListTile(
                                               title: Container(
+                                        // width: 200,
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,19 +174,18 @@ class InboxPageState extends State<InboxPage> {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  SizedBox(height: 4),
+                                                  SizedBox(height: 5),
                                                   Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisAlignment: MainAxisAlignment.end,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Container(
-                                                          width: 160,
                                                           child: Text(product.name,
                                                               overflow: TextOverflow.ellipsis,
                                                               style: item['unread']
                                                                   ? TextStyle(fontWeight: FontWeight.bold)
                                                                   : TextStyle(fontWeight: FontWeight.normal))),
-                                                      SizedBox(width: 50),
+                                                      SizedBox(width: 100),
                                                       Container(
                                                           child: Text(formattedDate,
                                                               overflow: TextOverflow.ellipsis,
@@ -201,7 +196,6 @@ class InboxPageState extends State<InboxPage> {
                                                   Row(children: [
                                                     SizedBox(width: 5),
                                                     Container(
-                                                        width: 280,
                                                         child: Text(item['messagePreview'],
                                                             overflow: TextOverflow.ellipsis,
                                                             style: new TextStyle(color: Colors.grey))),

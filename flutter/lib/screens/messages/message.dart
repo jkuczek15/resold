@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
@@ -156,7 +157,8 @@ class MessagePageState extends State<MessagePage> {
     if (content.trim() != '') {
       textEditingController.clear();
       await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
-      await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken);
+      await ResoldRest.sendNotificationMessage(
+          fromCustomer.token, toCustomer.deviceToken, product.name, content, baseProductImagePath + product.thumbnail);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
