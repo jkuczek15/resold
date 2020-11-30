@@ -47,7 +47,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(testAccounts['Jim']);
+    await CustomerResponse.save(TestAccounts.joe);
   } // end if development
 
   // get from disk and login
@@ -74,7 +74,7 @@ Future<void> main() async {
 
     if (env.isDevelopment) {
       // override location in development mode
-      currentLocation = testLocations['Evanston'];
+      currentLocation = TestLocations.evanston;
     } // end if development
 
     // fetch inital products
