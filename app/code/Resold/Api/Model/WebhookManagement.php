@@ -32,15 +32,24 @@ class WebhookManagement
 	 */
   public function processPostmatesEvent($kind, $id, $delivery_id, $status, $data, $created, $live_mode)
   {
-    $this->logger->info(json_encode([
-      'type' => 'PostmatesEvent',
-      'kind' => $kind,
-      'id' => $id,
-      'delivery_id' => $delivery_id,
-      'status' => $status,
-      'data' => $data,
-      'created' => $created,
-      'live_mode' => $live_mode
-    ]));
+    if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {
+      // process the event
+      $productId = $data['manifest']['reference'];
+
+      // todo: update the order based on the status
+
+      // log the event
+      $this->logger->info(json_encode([
+        'type' => 'PostmatesEvent',
+        'kind' => $kind,
+        'id' => $id,
+        'delivery_id' => $delivery_id,
+        'status' => $status,
+        'data' => $data,
+        'created' => $created,
+        'live_mode' => $live_mode
+      ]));
+    }// end if we have a valid product ID
+
   }// end function processPostmatesEvent
 }
