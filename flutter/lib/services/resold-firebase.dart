@@ -132,29 +132,34 @@ class ResoldFirebase {
     await createUserInboxMessage(
         fromId, toId, chatId, content, product, UserMessageType.seller, messageType, !isSeller);
 
-    CollectionReference documentReference = firestore.collection('messages').doc(chatId).collection(chatId);
+    // get the message bucket
+    CollectionReference collectionReference = firestore.collection('messages').doc(chatId).collection(chatId);
 
+    // message data to be stored
+    Map<String, dynamic> data = {
+      'idFrom': fromId,
+      'idTo': toId,
+      'messageType': messageType.index,
+      'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      'content': content
+    };
+
+    // check if we are storing a delivery quote
     if (messageType == MessageType.deliveryQuote) {
-      Query deliveryQuoteRef = documentReference.where('messageType', isEqualTo: MessageType.deliveryQuote.index);
+      Query deliveryQuoteRef = collectionReference.where('messageType', isEqualTo: MessageType.deliveryQuote.index);
       QuerySnapshot deliveryQuoteDocuments = await deliveryQuoteRef.get();
       if (deliveryQuoteDocuments.docs.isNotEmpty) {
         await firestore.runTransaction((transaction) async {
           transaction.delete(deliveryQuoteDocuments.docs[0].reference);
         });
       } // end if we have an existing delivery quote
+
+      // initial delivery quote status
+      data['status'] = DeliveryQuoteStatus.none.index;
     } // end if message type delivery quote
 
     await firestore.runTransaction((transaction) async {
-      transaction.set(
-        documentReference.doc(DateTime.now().millisecondsSinceEpoch.toString()),
-        {
-          'idFrom': fromId,
-          'idTo': toId,
-          'messageType': messageType.index,
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          'content': content
-        },
-      );
+      transaction.set(collectionReference.doc(DateTime.now().millisecondsSinceEpoch.toString()), data);
     });
   } // end function sendProductMessage
 
