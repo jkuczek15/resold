@@ -232,8 +232,8 @@ class OrderDetailsState extends State<OrderDetails> {
                                             ? [Text('\$${order.total.toStringAsFixed(2)}')]
                                             : [
                                                 Text('\$${order.total.toStringAsFixed(2)}'),
-                                                Text('\$$fee'),
-                                                Text('\$$total')
+                                                Text('\$${fee.toStringAsFixed(2)}'),
+                                                Text('\$${total.toStringAsFixed(2)}')
                                               ],
                                       )
                                     ]),

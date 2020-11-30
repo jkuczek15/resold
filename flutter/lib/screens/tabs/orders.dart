@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/order.dart';
@@ -35,121 +36,135 @@ class OrdersPageState extends State<OrdersPage> {
     super.initState();
     futurePurchasedOrders = Magento.getPurchasedOrders(customer.id);
     futureSoldOrders = ResoldRest.getVendorOrders(customer.token);
-  }
+  } // end function initState
 
   @override
   Widget build(BuildContext context) {
-    var formatter = new NumberFormat("\$###,###", "en_US");
-    return FutureBuilder<List<Order>>(
-        future: futurePurchasedOrders,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: Loading());
-          } // end if loading
-          List<Order> purchasedOrders = snapshot.data;
-          return FutureBuilder<List<Order>>(
-              future: futureSoldOrders,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: Loading());
-                } // end if loading
-                List<Order> soldOrders = snapshot.data;
-                return DefaultTabController(
-                  length: 2,
-                  child: Scaffold(
-                      appBar: AppBar(
-                          backgroundColor: Colors.white,
-                          toolbarHeight: 74,
-                          bottom: TabBar(
-                            indicatorColor: ResoldBlue,
-                            tabs: [
-                              Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
-                              Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
-                            ],
-                          )),
-                      body: TabBarView(children: [
-                        purchasedOrders.length > 0
-                            ? ListView(
-                                padding: const EdgeInsets.all(8),
-                                children: List.generate(
-                                  purchasedOrders.length,
-                                  (index) {
-                                    Order order = purchasedOrders[index];
-                                    OrderLine line = order.items[0];
-                                    return InkWell(
-                                        onTap: () async {
-                                          // show a loading indicator
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return Center(child: Loading());
-                                              });
+    NumberFormat formatter = new NumberFormat("\$###,###", "en_US");
+    return LiquidPullToRefresh(
+        height: 80,
+        springAnimationDurationInMilliseconds: 500,
+        onRefresh: () async {
+          setState(() {
+            futurePurchasedOrders = Magento.getPurchasedOrders(customer.id);
+            futureSoldOrders = ResoldRest.getVendorOrders(customer.token);
+          });
+        },
+        showChildOpacityTransition: false,
+        color: ResoldBlue,
+        animSpeedFactor: 5.0,
+        child: FutureBuilder<List<Order>>(
+            future: futurePurchasedOrders,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: Loading());
+              } // end if loading
+              List<Order> purchasedOrders = snapshot.data;
+              return FutureBuilder<List<Order>>(
+                  future: futureSoldOrders,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: Loading());
+                    } // end if loading
+                    List<Order> soldOrders = snapshot.data;
+                    return DefaultTabController(
+                      length: 2,
+                      child: Scaffold(
+                          appBar: AppBar(
+                              backgroundColor: Colors.white,
+                              toolbarHeight: 74,
+                              bottom: TabBar(
+                                indicatorColor: ResoldBlue,
+                                tabs: [
+                                  Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
+                                  Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
+                                ],
+                              )),
+                          body: TabBarView(children: [
+                            purchasedOrders.length > 0
+                                ? ListView(
+                                    padding: const EdgeInsets.all(8),
+                                    children: List.generate(
+                                      purchasedOrders.length,
+                                      (index) {
+                                        Order order = purchasedOrders[index];
+                                        OrderLine line = order.items[0];
+                                        return InkWell(
+                                            onTap: () async {
+                                              // show a loading indicator
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return Center(child: Loading());
+                                                  });
 
-                                          // fetch the product
-                                          Product product = await ResoldRest.getProduct(customer.token, line.productId);
+                                              // fetch the product
+                                              Product product =
+                                                  await ResoldRest.getProduct(customer.token, line.productId);
 
-                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                              Navigator.of(context, rootNavigator: true).pop('dialog');
 
-                                          // navigate to order details page
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderDetails(order: order, product: product, isSeller: false)));
-                                        },
-                                        child: Card(
-                                            child: ListTile(
-                                                trailing: Text(formatter.format(line.price.round())),
-                                                title: Container(
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [Text(line.name)],
-                                                  ),
-                                                ))));
-                                  },
-                                ))
-                            : Center(child: Text('You haven\'t purchased any items.')),
-                        soldOrders.length > 0
-                            ? ListView(
-                                padding: const EdgeInsets.all(8),
-                                children: List.generate(soldOrders.length, (index) {
-                                  Order order = soldOrders[index];
-                                  OrderLine line = order.items[0];
-                                  return InkWell(
-                                      onTap: () async {
-                                        // show a loading indicator
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Center(child: Loading());
-                                            });
-
-                                        // fetch the product
-                                        Product product = await ResoldRest.getProduct(customer.token, line.productId);
-
-                                        Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                        // navigate
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    OrderDetails(order: order, product: product, isSeller: true)));
+                                              // navigate to order details page
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => OrderDetails(
+                                                          order: order, product: product, isSeller: false)));
+                                            },
+                                            child: Card(
+                                                child: ListTile(
+                                                    trailing: Text(formatter.format(line.price.round())),
+                                                    title: Container(
+                                                      height: 50,
+                                                      child: Row(
+                                                        children: [Text(line.name)],
+                                                      ),
+                                                    ))));
                                       },
-                                      child: Card(
-                                          child: ListTile(
-                                              trailing: Text(formatter.format(line.price.round())),
-                                              title: Container(
-                                                height: 50,
-                                                child: Row(
-                                                  children: [Text(line.name)],
-                                                ),
-                                              ))));
-                                }))
-                            : Center(child: Text('You haven\'t sold any items.'))
-                      ])),
-                );
-              });
-        });
+                                    ))
+                                : Center(child: Text('You haven\'t purchased any items.')),
+                            soldOrders.length > 0
+                                ? ListView(
+                                    padding: const EdgeInsets.all(8),
+                                    children: List.generate(soldOrders.length, (index) {
+                                      Order order = soldOrders[index];
+                                      OrderLine line = order.items[0];
+                                      return InkWell(
+                                          onTap: () async {
+                                            // show a loading indicator
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return Center(child: Loading());
+                                                });
+
+                                            // fetch the product
+                                            Product product =
+                                                await ResoldRest.getProduct(customer.token, line.productId);
+
+                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                                            // navigate
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderDetails(order: order, product: product, isSeller: true)));
+                                          },
+                                          child: Card(
+                                              child: ListTile(
+                                                  trailing: Text(formatter.format(line.price.round())),
+                                                  title: Container(
+                                                    height: 50,
+                                                    child: Row(
+                                                      children: [Text(line.name)],
+                                                    ),
+                                                  ))));
+                                    }))
+                                : Center(child: Text('You haven\'t sold any items.'))
+                          ])),
+                    );
+                  });
+            }));
   } // end function build
 }
