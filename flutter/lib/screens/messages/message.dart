@@ -1003,6 +1003,13 @@ class MessagePageState extends State<MessagePage> {
       // wait for Stripe payment to be complete
       await StripePayment.completeNativePayRequest();
 
+      // show a loading dialog
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Center(child: Loading());
+          });
+
       // create a Magento order
       int orderId = await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product, token, fee);
 
@@ -1025,6 +1032,9 @@ class MessagePageState extends State<MessagePage> {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
       } // end if order successful
+
+      // close loading dialog
+      Navigator.of(context, rootNavigator: true).pop('dialog');
     }).catchError((err) {
       print(err);
     });
