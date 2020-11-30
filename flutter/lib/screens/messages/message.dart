@@ -938,7 +938,7 @@ class MessagePageState extends State<MessagePage> {
         ),
         margin: EdgeInsets.only(bottom: 10.0),
       );
-    }
+    } // end if peer message
   } // end function buildItem
 
   Future<DeliveryQuoteResponse> getDeliveryQuote() async {
@@ -1028,15 +1028,47 @@ class MessagePageState extends State<MessagePage> {
         setState(() => product.deliveryId = delivery.id);
         await ResoldFirebase.setMessageProduct(chatId, product);
 
+        // close loading dialog
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+
         // send the user to the order details page
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
+      } else {
+        // close loading dialog
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(title: Text("There was an error while processing your order."), actions: <Widget>[
+                FlatButton(
+                    child: Text(
+                      'OK',
+                      style: TextStyle(color: ResoldBlue),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                    })
+              ]);
+            });
       } // end if order successful
-
-      // close loading dialog
-      Navigator.of(context, rootNavigator: true).pop('dialog');
     }).catchError((err) {
-      print(err);
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(title: Text("There was an error while fetching payment methods."), actions: <Widget>[
+              FlatButton(
+                  child: Text(
+                    'OK',
+                    style: TextStyle(color: ResoldBlue),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  })
+            ]);
+          });
     });
   } // end function handlePaymentFlow
 
