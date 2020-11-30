@@ -21,6 +21,7 @@
 	<preference for="Resold\Api\Api\ProductManagementInterface" type="Resold\Api\Model\ProductManagement"/>
 	<preference for="Resold\Api\Api\VendorManagementInterface" type="Resold\Api\Model\VendorManagement"/>
 	<preference for="Resold\Api\Api\NotificationManagementInterface" type="Resold\Api\Model\NotificationManagement"/>
+	<preference for="Resold\Api\Api\WebhookManagementInterface" type="Resold\Api\Model\WebhookManagement"/>
   <preference for="Magento\Config\Model\Config" type="Ced\CsMarketplace\Model\Adminhtml\Config\Data" />
   <preference for="Magento\Store\Model\Store" type="Ced\CsMarketplace\Model\Core\Store" />
   <preference for="Magento\Config\Model\Config\SchemaLocator" type="Ced\CsMarketplace\Model\Config\SchemaLocator" />

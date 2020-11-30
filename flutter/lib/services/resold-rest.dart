@@ -149,7 +149,8 @@ class ResoldRest {
     FormData formData =
         new FormData.fromMap({'deviceToken': deviceToken, 'title': title, 'body': body, 'imageUrl': imageUrl});
     dio.options.headers['Authorization'] = 'Bearer $token';
-    await dio.post('${config.baseUrl}/notifications/send', data: formData);
+    var response = await dio.post('${config.baseUrl}/notifications/send', data: formData);
+    print('test');
   } // end function setDeliveryId
 
 } // end class Resold
