@@ -245,9 +245,7 @@ class SignUpPageState extends State<SignUpPage> {
                           await Future.wait([
                             Resold.getVendor(customer.vendorId),
                             Resold.getVendorProducts(customer.vendorId, 'for-sale'),
-                            Resold.getVendorProducts(customer.vendorId, 'sold'),
-                            Magento.getPurchasedOrders(customer.id),
-                            ResoldRest.getVendorOrders(customer.token)
+                            Resold.getVendorProducts(customer.vendorId, 'sold')
                           ]).then((data) {
                             dispatcher(InitStateAction(AppState(
                                 selectedTab: SelectedTab.home,
