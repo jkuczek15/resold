@@ -21,8 +21,10 @@ class WebhookManagement
    * @param \Magento\Framework\App\Action\Context $context
    */
    public function __construct(
+    \Resold\Api\Logger\Logger $logger
    )
   {
+    $this->logger = $logger;
   }
 
 	/**
@@ -30,7 +32,15 @@ class WebhookManagement
 	 */
   public function processPostmatesEvent($kind, $id, $delivery_id, $status, $data, $created, $live_mode)
   {
-    var_dump($data);
-    exit;
+    $this->logger->info(json_encode([
+      'type' => 'PostmatesEvent',
+      'kind' => $kind,
+      'id' => $id,
+      'delivery_id' => $delivery_id,
+      'status' => $status,
+      'data' => $data,
+      'created' => $created,
+      'live_mode' => $live_mode
+    ]));
   }// end function processPostmatesEvent
 }
