@@ -1049,6 +1049,7 @@ class MessagePageState extends State<MessagePage> {
                     ),
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).pop('dialog');
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
                     })
               ]);
             });
@@ -1058,13 +1059,14 @@ class MessagePageState extends State<MessagePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return AlertDialog(title: Text("There was an error while fetching payment methods."), actions: <Widget>[
+            return AlertDialog(title: Text("There was an error while processing your order."), actions: <Widget>[
               FlatButton(
                   child: Text(
                     'OK',
                     style: TextStyle(color: ResoldBlue),
                   ),
                   onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
                     Navigator.of(context, rootNavigator: true).pop('dialog');
                   })
             ]);

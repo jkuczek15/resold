@@ -24,7 +24,7 @@ interface WebhookManagementInterface
 	 * @param string $id
 	 * @param string $delivery_id
 	 * @param string $status
-	 * @param mixed[] $data
+	 * @param mixed $data
 	 * @param string $created
 	 * @param bool $live_mode
 	 * @return mixed[]
