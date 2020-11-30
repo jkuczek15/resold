@@ -14,6 +14,7 @@
  * @license     https://resold.us/license-agreement
  */
 namespace Resold\Api\Model;
+use Magento\Sales\Model\Order;
 
 class WebhookManagement
 {
@@ -21,10 +22,12 @@ class WebhookManagement
    * @param \Magento\Framework\App\Action\Context $context
    */
    public function __construct(
-    \Resold\Api\Logger\Logger $logger
+    \Resold\Api\Logger\Logger $logger,
+    \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order
    )
   {
     $this->logger = $logger;
+    $this->order = $order;
   }
 
 	/**
@@ -36,7 +39,20 @@ class WebhookManagement
       // process the event
       $productId = $data['manifest']['reference'];
 
-      // todo: update the order based on the status
+      $orderCollection = $this->order->create();
+      $orderCollection->getSelect()
+            ->join(
+                'sales_order_item',
+                'main_table.entity_id = sales_order_item.order_id'
+            )->where('product_id = '.$productId);
+      $orderCollection->getSelect()->group('main_table.entity_id');
+
+      $orderState = Order::STATE_COMPLETE;
+      foreach ($orderCollection as $order) {
+        $order->setState($orderState)->setStatus(Order::STATE_COMPLETE);
+        $order->save();
+        $this->logger->info('order #: '.$order->getIncrementId());
+      }// end foreach over orders
 
       // log the event
       $this->logger->info(json_encode([
