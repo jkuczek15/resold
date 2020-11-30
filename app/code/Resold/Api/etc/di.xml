@@ -44,4 +44,17 @@
   <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
     <plugin name="set_vendor_id_to_order_item" type="Ced\CsMarketplace\Plugin\SetVendorIdInOrderItem" sortOrder="10" disabled="false" />
   </type>
+  <type name="Resold\Api\Logger\Handler">
+      <arguments>
+          <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+      </arguments>
+  </type>
+  <type name="Resold\Api\Logger\Logger">
+      <arguments>
+          <argument name="name" xsi:type="string">ResoldLogger</argument>
+          <argument name="handlers"  xsi:type="array">
+              <item name="system" xsi:type="object">Resold\Api\Logger\Handler</item>
+          </argument>
+      </arguments>
+  </type>
 </config>
