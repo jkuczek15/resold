@@ -977,6 +977,7 @@ class MessagePageState extends State<MessagePage> {
             dropoff_ready_dt: now.toUtc().toIso8601String(),
             dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String(),
             manifest: product.name,
+            manifest_reference: product.id.toString(),
             manifest_items: [new ManifestItem(name: product.name, quantity: 1, size: product.getPostmatesItemSize())]),
         useRobot: useRobot);
   } // end function getDelivery

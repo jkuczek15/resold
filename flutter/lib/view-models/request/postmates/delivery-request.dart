@@ -39,6 +39,7 @@ class DeliveryRequest {
 
   // manifest, what the courier will be delivering
   final String manifest;
+  final String manifest_reference;
   final List<ManifestItem> manifest_items;
 
   DeliveryRequest(
@@ -55,6 +56,7 @@ class DeliveryRequest {
       this.pickup_phone_number,
       this.pickup_ready_dt,
       this.manifest,
+      this.manifest_reference,
       this.manifest_items,
       this.dropoff_notes,
       this.dropoff_name,

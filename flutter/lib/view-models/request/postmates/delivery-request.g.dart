@@ -21,6 +21,7 @@ DeliveryRequest _$DeliveryRequestFromJson(Map<String, dynamic> json) {
     pickup_phone_number: json['pickup_phone_number'] as String,
     pickup_ready_dt: json['pickup_ready_dt'] as String,
     manifest: json['manifest'] as String,
+    manifest_reference: json['manifest_reference'] as String,
     manifest_items: (json['manifest_items'] as List)
         ?.map((e) =>
             e == null ? null : ManifestItem.fromJson(e as Map<String, dynamic>))
@@ -28,6 +29,11 @@ DeliveryRequest _$DeliveryRequestFromJson(Map<String, dynamic> json) {
     dropoff_notes: json['dropoff_notes'] as String,
     dropoff_name: json['dropoff_name'] as String,
     pickup_name: json['pickup_name'] as String,
+    robo_delivered: json['robo_delivered'] as String,
+    robo_dropoff: json['robo_dropoff'] as String,
+    robo_pickup: json['robo_pickup'] as String,
+    robo_pickup_complete: json['robo_pickup_complete'] as String,
+    robo_undeliverable_action: json['robo_undeliverable_action'] as String,
   );
 }
 
@@ -48,7 +54,13 @@ Map<String, dynamic> _$DeliveryRequestToJson(DeliveryRequest instance) =>
       'pickup_longitude': instance.pickup_longitude,
       'pickup_phone_number': instance.pickup_phone_number,
       'pickup_ready_dt': instance.pickup_ready_dt,
+      'robo_delivered': instance.robo_delivered,
+      'robo_dropoff': instance.robo_dropoff,
+      'robo_pickup': instance.robo_pickup,
+      'robo_pickup_complete': instance.robo_pickup_complete,
+      'robo_undeliverable_action': instance.robo_undeliverable_action,
       'manifest': instance.manifest,
+      'manifest_reference': instance.manifest_reference,
       'manifest_items': instance.manifest_items,
     };
 
