@@ -384,9 +384,8 @@ class MessagePageState extends State<MessagePage> {
     FirebaseOffer offerMessage = new FirebaseOffer();
 
     if (document['messageType'] == MessageType.deliveryQuote.index) {
-      if (document['status'] != null) {
-        deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
-      }
+      // fetch delivery quote message content
+      deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
       deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(document['content']);
 
       // check if we need to fetch a new delivery quote

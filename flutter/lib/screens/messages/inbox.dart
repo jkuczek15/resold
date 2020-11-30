@@ -124,7 +124,6 @@ class InboxPageState extends State<InboxPage> {
                                       child: Card(
                                           child: ListTile(
                                               title: Container(
-                                        // width: 200,
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,7 +184,7 @@ class InboxPageState extends State<InboxPage> {
                                                               style: item['unread']
                                                                   ? TextStyle(fontWeight: FontWeight.bold)
                                                                   : TextStyle(fontWeight: FontWeight.normal))),
-                                                      SizedBox(width: 100),
+                                                      SizedBox(width: 125),
                                                       Container(
                                                           child: Text(formattedDate,
                                                               overflow: TextOverflow.ellipsis,
@@ -196,6 +195,7 @@ class InboxPageState extends State<InboxPage> {
                                                   Row(children: [
                                                     SizedBox(width: 5),
                                                     Container(
+                                                        width: 250,
                                                         child: Text(item['messagePreview'],
                                                             overflow: TextOverflow.ellipsis,
                                                             style: new TextStyle(color: Colors.grey))),
