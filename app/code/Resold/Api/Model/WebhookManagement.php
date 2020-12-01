@@ -55,11 +55,10 @@ class WebhookManagement
         case 'delivered':
         case 'returned':
           $orderStatus = 'complete';
+          break;
         default:
           break;
       }// end switch case settings order status
-
-      // todo: set delivery eta as custom attribute
 
       $orderCollection = $this->order->create();
       $orderCollection->getSelect()
@@ -71,6 +70,8 @@ class WebhookManagement
 
       foreach ($orderCollection as $order) {
         $order->setState($orderStatus)->setStatus($orderStatus);
+        $order->setPickupEta($data['pickup_eta']);
+        $order->setDropoffEta($data['dropoff_eta']);
         $order->save();
       }// end foreach over orders
 
