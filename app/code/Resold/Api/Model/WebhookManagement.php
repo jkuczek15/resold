@@ -14,7 +14,6 @@
  * @license     https://resold.us/license-agreement
  */
 namespace Resold\Api\Model;
-use Magento\Sales\Model\Order;
 
 class WebhookManagement
 {
@@ -35,6 +34,48 @@ class WebhookManagement
 	 */
   public function processPostmatesEvent($kind, $id, $delivery_id, $status, $data, $created, $live_mode)
   {
+    if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {
+      // process the event
+      $productId = $data['manifest']['reference'];
+
+      // set order status based on Postmates status
+      $orderStatus = 'processing';
+      switch($status) {
+        case 'pending':
+          $orderStatus = 'processing';
+          break;
+        case 'pickup': 
+          $orderStatus = 'pickup';
+          break;
+        case 'pickup_complete':
+        case 'ongoing':
+        case 'dropoff':
+          $orderStatus = 'delivery_in_progress';
+          break;
+        case 'delivered':
+        case 'returned':
+          $orderStatus = 'complete';
+        default:
+          break;
+      }// end switch case settings order status
+
+      // todo: set delivery eta as custom attribute
+
+      $orderCollection = $this->order->create();
+      $orderCollection->getSelect()
+            ->join(
+                'sales_order_item',
+                'main_table.entity_id = sales_order_item.order_id'
+            )->where('product_id = '.$productId);
+      $orderCollection->getSelect()->group('main_table.entity_id');
+
+      foreach ($orderCollection as $order) {
+        $order->setState($orderStatus)->setStatus($orderStatus);
+        $order->save();
+      }// end foreach over orders
+
+    }// end if we have a valid product ID
+
     // log the event
     $this->logger->info(json_encode([
       'type' => 'PostmatesEvent',
@@ -46,27 +87,5 @@ class WebhookManagement
       'created' => $created,
       'live_mode' => $live_mode
     ]));
-
-    if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {
-      // process the event
-      $productId = $data['manifest']['reference'];
-
-      $orderCollection = $this->order->create();
-      $orderCollection->getSelect()
-            ->join(
-                'sales_order_item',
-                'main_table.entity_id = sales_order_item.order_id'
-            )->where('product_id = '.$productId);
-      $orderCollection->getSelect()->group('main_table.entity_id');
-
-      $orderState = Order::STATE_COMPLETE;
-      foreach ($orderCollection as $order) {
-        $order->setState($orderState)->setStatus(Order::STATE_COMPLETE);
-        $order->save();
-        $this->logger->info('order #: '.$order->getIncrementId());
-      }// end foreach over orders
-
-    }// end if we have a valid product ID
-
   }// end function processPostmatesEvent
 }
