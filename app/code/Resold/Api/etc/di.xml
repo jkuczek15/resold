@@ -58,4 +58,18 @@
           </argument>
       </arguments>
   </type>
+  <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+      <arguments>
+          <argument name="columns" xsi:type="array">
+              <item name="pickup_eta" xsi:type="string">sales_order.pickup_eta</item>
+          </argument>
+      </arguments>
+  </virtualType>
+  <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+      <arguments>
+          <argument name="columns" xsi:type="array">
+              <item name="dropoff_eta" xsi:type="string">sales_order.dropoff_eta</item>
+          </argument>
+      </arguments>
+  </virtualType>
 </config>
