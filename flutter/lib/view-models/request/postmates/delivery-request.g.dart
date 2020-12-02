@@ -61,7 +61,8 @@ Map<String, dynamic> _$DeliveryRequestToJson(DeliveryRequest instance) =>
       'robo_undeliverable_action': instance.robo_undeliverable_action,
       'manifest': instance.manifest,
       'manifest_reference': instance.manifest_reference,
-      'manifest_items': instance.manifest_items,
+      'manifest_items':
+          instance.manifest_items?.map((e) => e?.toJson())?.toList(),
     };
 
 ManifestItem _$ManifestItemFromJson(Map<String, dynamic> json) {

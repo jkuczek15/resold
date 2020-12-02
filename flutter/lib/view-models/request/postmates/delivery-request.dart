@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'delivery-request.g.dart';
 
 // ignore_for_file: non_constant_identifier_names
-@JsonSerializable(nullable: true)
+@JsonSerializable(nullable: true, explicitToJson: true)
 class DeliveryRequest {
   // delivery defaults
   final String deliverable_action = 'deliverable_action_leave_at_door';

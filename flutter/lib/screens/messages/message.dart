@@ -963,6 +963,17 @@ class MessagePageState extends State<MessagePage> {
     var pickupDeadline = now.add(Duration(minutes: 30));
     var dropoffDeadline = pickupDeadline.add(Duration(hours: 2));
 
+    // include customer ids in Postmates manifest
+    int buyerCustomerId;
+    int sellerCustomerId;
+    if (isSeller) {
+      sellerCustomerId = fromCustomer.id;
+      buyerCustomerId = toCustomer.id;
+    } else {
+      buyerCustomerId = fromCustomer.id;
+      sellerCustomerId = toCustomer.id;
+    } // end if user is the seller
+
     // create a Postmates delivery
     return await Postmates.createDelivery(
         DeliveryRequest(
@@ -977,7 +988,8 @@ class MessagePageState extends State<MessagePage> {
             dropoff_ready_dt: now.toUtc().toIso8601String(),
             dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String(),
             manifest: product.name,
-            manifest_reference: product.id.toString(),
+            manifest_reference:
+                product.id.toString() + '|' + buyerCustomerId.toString() + '|' + sellerCustomerId.toString(),
             manifest_items: [new ManifestItem(name: product.name, quantity: 1, size: product.getPostmatesItemSize())]),
         useRobot: useRobot);
   } // end function getDelivery
