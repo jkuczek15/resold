@@ -34,13 +34,18 @@ class WebhookManagement
 	 */
   public function processPostmatesEvent($kind, $id, $delivery_id, $status, $data, $created, $live_mode)
   {
-    // todo: include seller device token and buyer device token in request (manifest)
-
     if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {
       // process the event
-      $productId = $data['manifest']['reference'];
+      $reference = $data['manifest']['reference'];
+      $referenceParts = explode('|', $reference);
+      $productId = $referenceParts[0];
+      $buyerCustomerId = $referenceParts[1];
+      $sellerCustomerId = $referenceParts[2];
+
+      // todo: fetch device token from Firebase based on customer id
 
       // set order status based on Postmates status
+      // todo: send different notification events for buyer/seller
       $orderStatus = 'processing';
       switch($status) {
         case 'pending':
@@ -71,24 +76,27 @@ class WebhookManagement
       $orderCollection->getSelect()->group('main_table.entity_id');
 
       foreach ($orderCollection as $order) {
+        $oldStatus = $order->getStatus();
         $order->setState($orderStatus)->setStatus($orderStatus);
         $order->setPickupEta($data['pickup_eta']);
         $order->setDropoffEta($data['dropoff_eta']);
         $order->save();
       }// end foreach over orders
 
+      // log the event
+      $this->logger->info(json_encode([
+        'type' => 'PostmatesEvent',
+        'kind' => $kind,
+        'id' => $id,
+        'delivery_id' => $delivery_id,
+        'status' => $status,
+        'data' => $data,
+        'created' => $created,
+        'live_mode' => $live_mode,
+        'buyer_customer_id' => $buyerCustomerId,
+        'seller_customer_id' => $sellerCustomerId
+      ]));
     }// end if we have a valid product ID
 
-    // log the event
-    $this->logger->info(json_encode([
-      'type' => 'PostmatesEvent',
-      'kind' => $kind,
-      'id' => $id,
-      'delivery_id' => $delivery_id,
-      'status' => $status,
-      'data' => $data,
-      'created' => $created,
-      'live_mode' => $live_mode
-    ]));
   }// end function processPostmatesEvent
 }

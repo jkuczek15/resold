@@ -16,7 +16,6 @@
 namespace Resold\Api\Model;
 
 use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
 
 class NotificationManagement
 {
