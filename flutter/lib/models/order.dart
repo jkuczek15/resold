@@ -4,9 +4,19 @@ class Order {
   final String status;
   final DateTime created;
   final DateTime updated;
+  final DateTime pickupEta;
+  final DateTime dropoffEta;
   final List<OrderLine> items;
 
-  Order({this.customerId, this.total, this.status, this.created, this.updated, this.items});
+  Order(
+      {this.customerId,
+      this.total,
+      this.status,
+      this.created,
+      this.updated,
+      this.pickupEta,
+      this.dropoffEta,
+      this.items});
 
   factory Order.fromJson(dynamic doc) {
     try {
@@ -30,6 +40,8 @@ class Order {
           status: doc['status'].toString(),
           created: DateTime.tryParse(doc['created_at'].toString()),
           updated: DateTime.tryParse(doc['updated_at'].toString()),
+          pickupEta: DateTime.tryParse(doc['pickup_eta'].toString()),
+          dropoffEta: DateTime.tryParse(doc['dropoff_eta'].toString()),
           items: orderLines);
     } catch (exception) {
       return Order();
