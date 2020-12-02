@@ -4,9 +4,9 @@ class Order {
   final String status;
   final DateTime created;
   final DateTime updated;
-  final DateTime pickupEta;
-  final DateTime dropoffEta;
   final List<OrderLine> items;
+  DateTime pickupEta;
+  DateTime dropoffEta;
 
   Order(
       {this.customerId,
@@ -34,19 +34,29 @@ class Order {
             price: double.tryParse(doc['product_price'])));
       } // end if list of items
 
-      return Order(
+      Order order = Order(
           customerId: int.tryParse(doc['customer_id'].toString()),
           total: double.tryParse(doc['grand_total'].toString()),
           status: doc['status'].toString(),
           created: DateTime.tryParse(doc['created_at'].toString()),
           updated: DateTime.tryParse(doc['updated_at'].toString()),
-          pickupEta: DateTime.tryParse(doc['pickup_eta'].toString()),
-          dropoffEta: DateTime.tryParse(doc['dropoff_eta'].toString()),
           items: orderLines);
+
+      if (doc['extension_attributes'] != null && doc['extension_attributes']['pickup_eta'] != null) {
+        order.pickupEta = DateTime.tryParse(doc['extension_attributes']['pickup_eta'].toString());
+      } else if (doc['pickup_eta'] != null) {
+        order.pickupEta = DateTime.tryParse(doc['pickup_eta'].toString());
+      }
+      if (doc['extension_attributes'] != null && doc['extension_attributes']['dropoff_eta'] != null) {
+        order.dropoffEta = DateTime.tryParse(doc['extension_attributes']['dropoff_eta'].toString());
+      } else if (doc['dropoff_eta'] != null) {
+        order.dropoffEta = DateTime.tryParse(doc['dropoff_eta'].toString());
+      }
+      return order;
     } catch (exception) {
       return Order();
     }
-  }
+  } // end function fromJson
 }
 
 class OrderLine {
