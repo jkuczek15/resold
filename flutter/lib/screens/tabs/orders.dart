@@ -121,8 +121,7 @@ class OrdersPageState extends State<OrdersPage> {
                                       Order order = inProgressPurchasedOrders[index];
                                       OrderLine line = order.items[0];
                                       Duration difference;
-                                      if ((order.status == 'pickup' || order.status == 'delivery_in_progress') &&
-                                          order.dropoffEta != null) {
+                                      if (order.status == 'pickup' || order.status == 'delivery_in_progress') {
                                         difference = order.dropoffEta.difference(DateTime.now());
                                       } // end if pickup or delivery in progress
                                       return InkWell(
