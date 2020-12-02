@@ -34,6 +34,8 @@ class WebhookManagement
 	 */
   public function processPostmatesEvent($kind, $id, $delivery_id, $status, $data, $created, $live_mode)
   {
+    // todo: include seller device token and buyer device token in request (manifest)
+
     if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {
       // process the event
       $productId = $data['manifest']['reference'];
