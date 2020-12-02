@@ -150,7 +150,7 @@ class OrderDetailsState extends State<OrderDetails> {
                         difference != null
                             ? Padding(
                                 padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
-                                child: Text('Arriving in ${difference.inMinutes} minutes.'))
+                                child: Text('Arriving in ${difference.inMinutes} minutes'))
                             : SizedBox(),
                         Divider(
                           color: Colors.grey.shade400,

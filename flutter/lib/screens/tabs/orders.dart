@@ -120,6 +120,11 @@ class OrdersPageState extends State<OrdersPage> {
                                     (index) {
                                       Order order = inProgressPurchasedOrders[index];
                                       OrderLine line = order.items[0];
+                                      Duration difference;
+                                      if ((order.status == 'pickup' || order.status == 'delivery_in_progress') &&
+                                          order.dropoffEta != null) {
+                                        difference = order.dropoffEta.difference(DateTime.now());
+                                      } // end if pickup or delivery in progress
                                       return InkWell(
                                           onTap: () async {
                                             // show a loading indicator
@@ -146,9 +151,16 @@ class OrdersPageState extends State<OrdersPage> {
                                               child: ListTile(
                                                   trailing: Text(formatter.format(line.price.round())),
                                                   title: Container(
-                                                    height: 50,
-                                                    child: Row(
-                                                      children: [Text(line.name)],
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(line.name),
+                                                        order.status == 'pickup' ||
+                                                                order.status == 'delivery_in_progress'
+                                                            ? Text('Arriving in ${difference.inMinutes} minutes',
+                                                                style: TextStyle(color: Colors.grey, fontSize: 12))
+                                                            : SizedBox(),
+                                                      ],
                                                     ),
                                                   ))));
                                     },
@@ -327,6 +339,14 @@ class OrdersPageState extends State<OrdersPage> {
                                     (index) {
                                       Order order = inProgressSoldOrders[index];
                                       OrderLine line = order.items[0];
+                                      Duration pickupDifference;
+                                      Duration dropoffDifference;
+                                      if (order.status == 'pickup') {
+                                        dropoffDifference = order.dropoffEta.difference(DateTime.now());
+                                        pickupDifference = order.pickupEta.difference(DateTime.now());
+                                      } else if (order.status == 'delivery_in_progress') {
+                                        dropoffDifference = order.dropoffEta.difference(DateTime.now());
+                                      } // end if pickup or delivery in progress
                                       return InkWell(
                                           onTap: () async {
                                             // show a loading indicator
@@ -353,9 +373,20 @@ class OrdersPageState extends State<OrdersPage> {
                                               child: ListTile(
                                                   trailing: Text(formatter.format(line.price.round())),
                                                   title: Container(
-                                                    height: 50,
-                                                    child: Row(
-                                                      children: [Text(line.name)],
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(line.name),
+                                                        order.status == 'pickup'
+                                                            ? Text(
+                                                                'Driver arriving in ${pickupDifference.inMinutes} minutes',
+                                                                style: TextStyle(color: Colors.grey, fontSize: 12))
+                                                            : order.status == 'delivery_in_progress'
+                                                                ? Text(
+                                                                    'Delivery arriving in ${dropoffDifference.inMinutes} minutes',
+                                                                    style: TextStyle(color: Colors.grey, fontSize: 12))
+                                                                : SizedBox(),
+                                                      ],
                                                     ),
                                                   ))));
                                     },

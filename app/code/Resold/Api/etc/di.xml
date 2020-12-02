@@ -58,6 +58,9 @@
           </argument>
       </arguments>
   </type>
+  <type name="Magento\Sales\Api\OrderRepositoryInterface">
+    <plugin name="resold_add_delivery_eta_attributes" type="Resold\Api\Plugin\OrderRepositoryPlugin" />
+  </type>
   <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
       <arguments>
           <argument name="columns" xsi:type="array">

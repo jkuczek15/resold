@@ -391,7 +391,7 @@ class LocaleDeploy implements DeployInterface
             if ($this->output->isVeryVerbose()) {
                 $this->output->writeln("\tDeploying the file to '{$asset->getPath()}'");
             } else {
-                $this->output->write('$');
+                $this->output->write('=');
             }
             if ($this->getOption(Options::DRY_RUN)) {
                 $asset->getContent();
