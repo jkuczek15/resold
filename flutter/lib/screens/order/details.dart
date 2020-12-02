@@ -301,7 +301,7 @@ class OrderDetailsState extends State<OrderDetails> {
   } // end function generateMarkers
 
   Future<void> onMapCreated(maps.GoogleMapController controller, DeliveryResponse delivery) async {
-    if (delivery.status != 'delivered') {
+    if (delivery.status != 'delivered' && order.status == 'delivery_in_progress') {
       await createPolylines(Position(latitude: delivery.pickup.location.lat, longitude: delivery.pickup.location.lng),
           Position(latitude: delivery.dropoff.location.lat, longitude: delivery.dropoff.location.lng));
     } // end if not delivered
