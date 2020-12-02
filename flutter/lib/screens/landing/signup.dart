@@ -7,7 +7,6 @@ import 'package:resold/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:resold/services/resold-firebase.dart';
-import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
