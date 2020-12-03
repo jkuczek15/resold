@@ -14,6 +14,7 @@
  * @license     https://resold.us/license-agreement
  */
 namespace Resold\Api\Model;
+use \Google\Cloud\Firestore\FirestoreClient;
 
 class WebhookManagement
 {
@@ -27,6 +28,9 @@ class WebhookManagement
   {
     $this->logger = $logger;
     $this->order = $order;
+    $this->firestoreClient = new FirestoreClient([
+      'projectId' => 'resold-127a1'
+    ]);
   }
 
 	/**
@@ -42,7 +46,13 @@ class WebhookManagement
       $buyerCustomerId = $referenceParts[1];
       $sellerCustomerId = $referenceParts[2];
 
-      // todo: fetch device token from Firebase based on customer id
+      try {
+        // fetch the buyer's device token
+        $buyerRef = $this->firestoreClient->collection('users')->document($buyerCustomerId);
+        $buyerDeviceToken = $buyerRef->get('deviceToken');
+      } catch (\Exception $e) {
+        $this->logger->info($e->getMessage());
+      }
 
       // set order status based on Postmates status
       // todo: send different notification events for buyer/seller
@@ -93,8 +103,7 @@ class WebhookManagement
         'data' => $data,
         'created' => $created,
         'live_mode' => $live_mode,
-        'buyer_customer_id' => $buyerCustomerId,
-        'seller_customer_id' => $sellerCustomerId
+        'buyer_device_token' => $buyerDeviceToken
       ]));
     }// end if we have a valid product ID
 

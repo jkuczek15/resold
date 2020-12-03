@@ -1,0 +1,16 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+# User specific aliases and functions
+export PATH=$PATH:/var/www/html/bin
+export M=/var/www/html
+
+alias magento-logs="tail /var/www/html/var/log/system.log"
+alias composer="php /bin/composer.phar"
+alias sudo='sudo '
+
+export GOOGLE_APPLICATION_CREDENTIALS="/var/www/html/firebase-adminsdk-key.json"
