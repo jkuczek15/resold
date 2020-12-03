@@ -7,9 +7,13 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/environment.dart';
+import 'package:resold/helpers/category-helper.dart';
+import 'package:resold/helpers/condition-helper.dart';
+import 'package:resold/helpers/local-global-helper.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/resold-firebase.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/app-state.dart';
@@ -47,11 +51,40 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.joe);
+    await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
 
   // get from disk and login
   CustomerResponse customer = await CustomerResponse.load();
+
+  if (env.isDevelopment && customer.email.toLowerCase() == TestAccounts.buyer.email.toLowerCase()) {
+    // sign in as seller
+    await CustomerResponse.clear();
+    await CustomerResponse.save(TestAccounts.seller);
+    customer = await CustomerResponse.load();
+
+    // automatically post a product
+    List<String> imagePaths = await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
+    await ResoldRest.postProduct(
+        customer.token,
+        Product(
+            name: 'Meatballs',
+            price: '1200',
+            itemSize: 0,
+            description: 'Doesn\'t go good with spaghetti',
+            vendorId: customer.vendorId,
+            latitude: TestLocations.evanston.latitude,
+            longitude: TestLocations.evanston.longitude,
+            categoryIds: [int.tryParse(CategoryHelper.getCategoryIdByName('Electronics'))],
+            condition: ConditionHelper.getConditionIdByName('New'),
+            localGlobal: LocalGlobalHelper.getLocalGlobal()),
+        imagePaths);
+
+    // sign in as buyer
+    await CustomerResponse.clear();
+    await CustomerResponse.save(TestAccounts.buyer);
+    customer = await CustomerResponse.load();
+  } // end if we should automatically post a product
 
   // setup the for-sale and sold products state
   Vendor vendor = new Vendor();

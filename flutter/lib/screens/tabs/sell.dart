@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:resold/enums/selected-tab.dart';
+import 'package:resold/helpers/local-global-helper.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/actions/set-for-sale.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
@@ -128,7 +129,7 @@ class SellPage extends StatelessWidget {
                                   itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
                                   latitude: currentLocation.latitude,
                                   longitude: currentLocation.longitude,
-                                  localGlobal: '231,232');
+                                  localGlobal: LocalGlobalHelper.getLocalGlobal());
 
                               var response = await ResoldRest.postProduct(
                                   customer.token, product, imageUploaderKey.currentState.imagePaths);

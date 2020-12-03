@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/environment.dart';
+import 'package:resold/helpers/asset-helper.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
@@ -401,15 +401,9 @@ class OrderDetailsState extends State<OrderDetails> {
     ];
   } // end function setupSteps
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
-  } // end function getBytesFromAsset
-
   void setCustomMapPin() async {
-    final Uint8List markerIcon = await getBytesFromAsset('assets/images/car-location-icon.png', 100);
+    final Uint8List markerIcon =
+        await AssetHelper.getBytesFromAsset('assets/images/car-location-icon.png', ui.ImageByteFormat.png, 100);
     carLocationIcon = BitmapDescriptor.fromBytes(markerIcon);
   } // end function setCustomMapPin
 }
