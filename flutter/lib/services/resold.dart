@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:http/http.dart' show Client;
+import 'package:http_parser/http_parser.dart';
+import 'package:resold/helpers/asset-helper.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:resold/models/product.dart';
@@ -182,6 +187,37 @@ class Resold {
     });
 
     return imagePaths;
+  } // end function uploadImages
+
+  /*
+   * uploadLocalImages - Upload images from file system
+   * imagePaths - List of images to upload
+   */
+  static Future<List<String>> uploadLocalImages(List<String> imagePaths) async {
+    await config.initialized;
+
+    int count = 0;
+    List<String> tmpPaths = [];
+
+    for (String imagePath in imagePaths) {
+      try {
+        Uint8List bytes = await AssetHelper.getBytesFromAsset(imagePath, ImageByteFormat.png, 300);
+        FormData formData = new FormData.fromMap({
+          'qqfile':
+              MultipartFile.fromBytes(bytes, filename: 'image${count++}', contentType: new MediaType('image', 'png'))
+        });
+        // upload the image
+        var response = await dio.post('${config.baseUrl}/image/upload', data: formData);
+
+        if (response.statusCode == 200 && response.data['success'] == 'Y') {
+          tmpPaths.add(response.data['path']);
+        }
+      } catch (e) {
+        print(e);
+      }
+    } // end foreach loop over image paths
+
+    return tmpPaths;
   } // end function uploadImages
 
   /*

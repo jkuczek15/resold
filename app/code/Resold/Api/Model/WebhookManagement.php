@@ -28,6 +28,9 @@ class WebhookManagement
   {
     $this->logger = $logger;
     $this->order = $order;
+    $this->logger->info('test1');
+    putenv('GOOGLE_APPLICATION_CREDENTIALS="/var/www/html/firebase-adminsdk-key.json"');
+    $this->logger->info('test2');
     $this->firestoreClient = new FirestoreClient([
       'projectId' => 'resold-127a1'
     ]);
@@ -49,7 +52,12 @@ class WebhookManagement
       try {
         // fetch the buyer's device token
         $buyerRef = $this->firestoreClient->collection('users')->document($buyerCustomerId);
-        $buyerDeviceToken = $buyerRef->get('deviceToken');
+        $buyerSnapshot = $buyerRef->snapshot();
+
+        if($buyerSnapshot->exists()) {
+          $buyerDoc = $buyerSnapshot->data();
+          $buyerDeviceToken = $buyerDoc['deviceToken'];
+        }// end if buyer exists
       } catch (\Exception $e) {
         $this->logger->info($e->getMessage());
       }
