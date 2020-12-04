@@ -65,7 +65,7 @@ Future<void> main() async {
 
     // automatically post a product
     List<String> imagePaths = await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
-    await ResoldRest.postProduct(
+    ResoldRest.postProduct(
         customer.token,
         Product(
             name: 'Meatballs',

@@ -7,6 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/product.dart';
@@ -253,7 +254,7 @@ class HomePageState extends State<HomePage> {
                     size: const Size(40, 40),
                     child: ClipOval(
                         child: CachedNetworkImage(
-                      imageUrl: data['image'],
+                      imageUrl: baseProductImagePath + data['image'],
                     ))),
                 title: Text(notification['title']),
                 subtitle: Text(notification['body']),

@@ -158,7 +158,7 @@ class MessagePageState extends State<MessagePage> {
       textEditingController.clear();
       await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
       await ResoldRest.sendNotificationMessage(
-          fromCustomer.token, toCustomer.deviceToken, product.name, content, baseProductImagePath + product.thumbnail);
+          fromCustomer.token, toCustomer.deviceToken, product.name, content, product.thumbnail);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
