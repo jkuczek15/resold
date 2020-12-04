@@ -220,9 +220,6 @@ class ProductManagement
 	 */
   public function getProduct($productId)
 	{
-    // get the logged in customer's id
-    $customerId = $this->userContext->getUserId();
-
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
     // get the product
@@ -247,7 +244,6 @@ class ProductManagement
       $longitude = $product->getCustomAttribute('longitude');
       $chargeId = $product->getCustomAttribute('charge_id');
       $deliveryId = $product->getCustomAttribute('delivery_id');
-      $categoryIds = $product->getCategoryIds();
       $vendorId = $this->vendorProducts->getVendorIdByProduct($product->getId());
 
       return [[

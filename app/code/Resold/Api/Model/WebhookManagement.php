@@ -15,6 +15,8 @@
  */
 namespace Resold\Api\Model;
 use \Google\Cloud\Firestore\FirestoreClient;
+use \Kreait\Firebase\Messaging\CloudMessage;
+use \Kreait\Firebase\ServiceAccount;
 
 class WebhookManagement
 {
@@ -23,17 +25,19 @@ class WebhookManagement
    */
    public function __construct(
     \Resold\Api\Logger\Logger $logger,
-    \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order
+    \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order,
+    \Kreait\Firebase\Factory $factory
    )
   {
-    $this->logger = $logger;
-    $this->order = $order;
-    $this->logger->info('test1');
-    putenv('GOOGLE_APPLICATION_CREDENTIALS="/var/www/html/firebase-adminsdk-key.json"');
-    $this->logger->info('test2');
-    $this->firestoreClient = new FirestoreClient([
-      'projectId' => 'resold-127a1'
-    ]);
+    try {
+      putenv('GOOGLE_APPLICATION_CREDENTIALS=/var/www/html/firebase-adminsdk-key.json');
+      $this->logger = $logger;
+      $this->order = $order;
+      $this->firestoreClient = new FirestoreClient();
+      $this->factory = $factory->withServiceAccount(ServiceAccount::fromJsonFile('/var/www/html/firebase-adminsdk-key.json'));
+    } catch(\Exception $e) {
+      $this->logger->info($e->getMessage());
+    }
   }
 
 	/**
@@ -42,28 +46,38 @@ class WebhookManagement
   public function processPostmatesEvent($kind, $id, $delivery_id, $status, $data, $created, $live_mode)
   {
     if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {
+      // firebase messaging
+      $messaging = $this->factory->createMessaging();
+
       // process the event
       $reference = $data['manifest']['reference'];
       $referenceParts = explode('|', $reference);
       $productId = $referenceParts[0];
       $buyerCustomerId = $referenceParts[1];
       $sellerCustomerId = $referenceParts[2];
+      $buyerDeviceToken = $sellerDeviceToken = '';
 
-      try {
-        // fetch the buyer's device token
-        $buyerRef = $this->firestoreClient->collection('users')->document($buyerCustomerId);
-        $buyerSnapshot = $buyerRef->snapshot();
+      // load product by ID
+      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+      $product = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
 
-        if($buyerSnapshot->exists()) {
-          $buyerDoc = $buyerSnapshot->data();
-          $buyerDeviceToken = $buyerDoc['deviceToken'];
-        }// end if buyer exists
-      } catch (\Exception $e) {
-        $this->logger->info($e->getMessage());
-      }
+      // fetch the buyer's device token
+      $buyerRef = $this->firestoreClient->collection('users')->document($buyerCustomerId);
+      $buyerSnapshot = $buyerRef->snapshot();
+      if($buyerSnapshot->exists()) {
+        $buyerDoc = $buyerSnapshot->data();
+        $buyerDeviceToken = $buyerDoc['deviceToken'];
+      }// end if buyer exists
+
+      // fetch the seller's device token
+      $sellerRef = $this->firestoreClient->collection('users')->document($sellerCustomerId);
+      $sellerSnapshot = $sellerRef->snapshot();
+      if($sellerSnapshot->exists()) {
+        $sellerDoc = $sellerSnapshot->data();
+        $sellerDeviceToken = $sellerDoc['deviceToken'];
+      }// end if buyer exists
 
       // set order status based on Postmates status
-      // todo: send different notification events for buyer/seller
       $orderStatus = 'processing';
       switch($status) {
         case 'pending':
@@ -95,6 +109,42 @@ class WebhookManagement
 
       foreach ($orderCollection as $order) {
         $oldStatus = $order->getStatus();
+
+        switch($oldStatus) {
+          case 'processing':
+            if($orderStatus == 'pickup') {
+              try {
+                // send notification that driver is on the way to pickup
+                $this->logger->info('Sending push notification...');
+                $message = CloudMessage::withTarget('token', $buyerDeviceToken)->withNotification([
+                  'title' => 'Driver is on the way to pickup your item',
+                  'body' => 'Delivery ETA is: xxx',
+                  'image' => $product->getThumbnail()
+                ])->withData([
+                  'image' => $product->getThumbnail()
+                ]);
+                $messaging->send($message);
+              } catch (\Exception $e) {
+                $this->logger->info($e->getMessage());
+              } 
+            }// end if driver on the way to pickup
+            break;
+          case 'pickup': 
+            if($orderStatus == 'delivery_in_progress') {
+              // send notification that driver is on the way to deliver
+
+            }// end if driver on the way to deliver
+            break;
+          case 'delivery_in_progress':
+            if($orderStatus == 'complete') {
+              // send notification that driver has delivered the item
+
+            }// end if driver has delivered the item
+            break;
+          default:
+            break;
+        }// end switch case settings order status
+
         $order->setState($orderStatus)->setStatus($orderStatus);
         $order->setPickupEta($data['pickup_eta']);
         $order->setDropoffEta($data['dropoff_eta']);
@@ -111,7 +161,8 @@ class WebhookManagement
         'data' => $data,
         'created' => $created,
         'live_mode' => $live_mode,
-        'buyer_device_token' => $buyerDeviceToken
+        'buyer_device_token' => $buyerDeviceToken,
+        'seller_device_token' => $sellerDeviceToken
       ]));
     }// end if we have a valid product ID
 

@@ -15,7 +15,8 @@
  */
 namespace Resold\Api\Model;
 
-use Kreait\Firebase\Messaging\CloudMessage;
+use \Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\ServiceAccount;
 
 class NotificationManagement
 {
@@ -23,10 +24,12 @@ class NotificationManagement
    * @param \Magento\Framework\App\Action\Context $context
    */
    public function __construct(
+    \Resold\Api\Logger\Logger $logger,
     \Kreait\Firebase\Factory $factory
    )
   {
-    $this->factory = $factory->withServiceAccount('/var/www/html/firebase-adminsdk-key.json');
+    $this->logger = $logger;
+    $this->factory = $factory->withServiceAccount(ServiceAccount::fromJsonFile('/var/www/html/firebase-adminsdk-key.json'));
   }
 
 	/**
