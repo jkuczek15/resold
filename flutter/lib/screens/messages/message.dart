@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
@@ -245,8 +244,14 @@ class MessagePageState extends State<MessagePage> {
                     onPressed: () async {
                       if (formKey.currentState.validate()) {
                         Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                        // send offer message
                         await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product,
                             fromCustomer.id.toString() + '|' + offerController.text, MessageType.offer, isSeller);
+
+                        // send a notification message
+                        await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken,
+                            product.name, 'Offer received for \$${offerController.text}.', product.thumbnail);
                       } // end if valid verification code
                     },
                   ),
@@ -283,6 +288,10 @@ class MessagePageState extends State<MessagePage> {
     // send a Firebase message
     await ResoldFirebase.sendProductMessage(
         chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
+
+    // send a notification message
+    await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
+        '${fromCustomer.fullName} has requested a delivery.', product.thumbnail);
   } // end function requestDelivery
 
   Future getImage() async {
@@ -534,6 +543,14 @@ class MessagePageState extends State<MessagePage> {
                                                         // user is the seller
                                                         await ResoldFirebase.updateDeliveryQuoteStatus(
                                                             chatId, DeliveryQuoteStatus.accepted);
+
+                                                        // send notification to buyer that delivery has been accepted
+                                                        await ResoldRest.sendNotificationMessage(
+                                                            fromCustomer.token,
+                                                            toCustomer.deviceToken,
+                                                            product.name,
+                                                            '${fromCustomer.fullName} has accepted your delivery request.',
+                                                            product.thumbnail);
                                                       } else {
                                                         // user is the buyer
                                                         handlePaymentFlow(deliveryQuoteMessage.fee, currency);
@@ -819,6 +836,14 @@ class MessagePageState extends State<MessagePage> {
                                                               // user is the seller
                                                               await ResoldFirebase.updateDeliveryQuoteStatus(
                                                                   chatId, DeliveryQuoteStatus.accepted);
+
+                                                              // send notification to buyer that delivery has been accepted
+                                                              await ResoldRest.sendNotificationMessage(
+                                                                  fromCustomer.token,
+                                                                  toCustomer.deviceToken,
+                                                                  product.name,
+                                                                  '${fromCustomer.fullName} has accepted your delivery request.',
+                                                                  product.thumbnail);
                                                             } else {
                                                               // user is the buyer
                                                               handlePaymentFlow(deliveryQuoteMessage.fee, currency);
@@ -1040,6 +1065,10 @@ class MessagePageState extends State<MessagePage> {
         await ResoldRest.setDeliveryId(fromCustomer.token, product.id, delivery.id);
         setState(() => product.deliveryId = delivery.id);
         await ResoldFirebase.setMessageProduct(chatId, product);
+
+        // send notification to buyer that delivery has been accepted
+        await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
+            '${fromCustomer.fullName} has completed payment.', product.thumbnail);
 
         // close loading dialog
         Navigator.of(context, rootNavigator: true).pop('dialog');
