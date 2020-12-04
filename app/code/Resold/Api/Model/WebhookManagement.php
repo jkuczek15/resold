@@ -111,17 +111,18 @@ class WebhookManagement
 
       foreach ($orderCollection as $order) {
         $oldStatus = $order->getStatus();
+        $pickup_eta = new DateTime($data['pickup_eta']);
+        $dropoff_eta = new DateTime($data['dropoff_eta']);
+        $now = new DateTime();
+        $pickup_difference = $pickup_eta->diff($now);
+        $dropoff_difference = $dropoff_eta->diff($now);
+
+        // todo: countdown notifications driver arriving in 5 min
 
         switch($oldStatus) {
           case 'processing':
             if($orderStatus == 'pickup') {
               try {
-                $pickup_eta = new DateTime($data['pickup_eta']);
-                $dropoff_eta = new DateTime($data['dropoff_eta']);
-                $now = new DateTime();
-                $pickup_difference = $pickup_eta->diff($now);
-                $dropoff_difference = $dropoff_eta->diff($now);
-
                 // send notification that driver is on the way to pickup
                 $sellerMessage = CloudMessage::withTarget('token', $sellerDeviceToken)->withNotification([
                   'title' => 'Driver is on the way to pickup your '. $product->getName(),
@@ -147,13 +148,26 @@ class WebhookManagement
           case 'pickup': 
             if($orderStatus == 'delivery_in_progress') {
               // send notification that driver is on the way to deliver
-
+              $buyerMessage = CloudMessage::withTarget('token', $buyerDeviceToken)->withNotification([
+                'title' => 'Driver has picked up your '. $product->getName(),
+                'body' => 'Arriving in '.$dropoff_difference->i.' minutes',
+                'image' => $product->getThumbnail()
+              ])->withData([
+                'image' => $product->getThumbnail()
+              ]);
+              $messaging->send($buyerMessage);
             }// end if driver on the way to deliver
             break;
           case 'delivery_in_progress':
             if($orderStatus == 'complete') {
               // send notification that driver has delivered the item
-
+              $sellerMessage = CloudMessage::withTarget('token', $sellerDeviceToken)->withNotification([
+                'title' => 'Driver has dropped off your '. $product->getName(),
+                'image' => $product->getThumbnail()
+              ])->withData([
+                'image' => $product->getThumbnail()
+              ]);
+              $messaging->send($sellerMessage);
             }// end if driver has delivered the item
             break;
           default:
