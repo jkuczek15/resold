@@ -14,6 +14,8 @@
  * @license     https://resold.us/license-agreement
  */
 namespace Resold\Api\Model;
+
+use \DateTime;
 use \Google\Cloud\Firestore\FirestoreClient;
 use \Kreait\Firebase\Messaging\CloudMessage;
 use \Kreait\Firebase\ServiceAccount;
@@ -114,11 +116,15 @@ class WebhookManagement
           case 'processing':
             if($orderStatus == 'pickup') {
               try {
+                $pickup_eta = new DateTime($data['pickup_eta']);
+                $now = new DateTime();
+                $difference = $pickup_eta->diff($now);
+
                 // send notification that driver is on the way to pickup
                 $this->logger->info('Sending push notification...');
-                $message = CloudMessage::withTarget('token', $buyerDeviceToken)->withNotification([
-                  'title' => 'Driver is on the way to pickup your item',
-                  'body' => 'Delivery ETA is: xxx',
+                $message = CloudMessage::withTarget('token', $sellerDeviceToken)->withNotification([
+                  'title' => 'Driver is on the way to pickup your '. $product->getName(),
+                  'body' => 'Arriving in '.$difference->i.' minutes',
                   'image' => $product->getThumbnail()
                 ])->withData([
                   'image' => $product->getThumbnail()

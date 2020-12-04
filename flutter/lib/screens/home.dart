@@ -267,7 +267,7 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           );
-        }, duration: Duration(milliseconds: 4000));
+        }, duration: Duration(milliseconds: 6000));
       },
       onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
