@@ -455,6 +455,7 @@ class ProductPageState extends State<ProductPage> {
                                                                 Navigator.of(context, rootNavigator: true)
                                                                     .pop('dialog');
 
+                                                                // send a Firebase message
                                                                 await ResoldFirebase.sendProductMessage(
                                                                     chatId,
                                                                     customer.id,
@@ -464,6 +465,14 @@ class ProductPageState extends State<ProductPage> {
                                                                     MessageType.offer,
                                                                     toId == customer.id,
                                                                     firstMessage: true);
+
+                                                                // send a notification message
+                                                                await ResoldRest.sendNotificationMessage(
+                                                                    customer.token,
+                                                                    toCustomer.deviceToken,
+                                                                    product.name,
+                                                                    'Offer received for \$${offerController.text}.',
+                                                                    product.thumbnail);
 
                                                                 if (fromMessagePage) {
                                                                   // go back
@@ -561,6 +570,7 @@ class ProductPageState extends State<ProductPage> {
                                                       '|' +
                                                       quote.duration.toString();
 
+                                                  // send a Firebase message
                                                   await ResoldFirebase.sendProductMessage(
                                                       chatId,
                                                       customer.id,
@@ -570,6 +580,14 @@ class ProductPageState extends State<ProductPage> {
                                                       MessageType.deliveryQuote,
                                                       toId == customer.id,
                                                       firstMessage: true);
+
+                                                  // send a notification message
+                                                  await ResoldRest.sendNotificationMessage(
+                                                      customer.token,
+                                                      toCustomer.deviceToken,
+                                                      product.name,
+                                                      '${customer.fullName} has requested a delivery.',
+                                                      product.thumbnail);
 
                                                   if (fromMessagePage) {
                                                     // go back
