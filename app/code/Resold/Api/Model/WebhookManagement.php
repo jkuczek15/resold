@@ -117,19 +117,28 @@ class WebhookManagement
             if($orderStatus == 'pickup') {
               try {
                 $pickup_eta = new DateTime($data['pickup_eta']);
+                $dropoff_eta = new DateTime($data['dropoff_eta']);
                 $now = new DateTime();
-                $difference = $pickup_eta->diff($now);
+                $pickup_difference = $pickup_eta->diff($now);
+                $dropoff_difference = $dropoff_eta->diff($now);
 
                 // send notification that driver is on the way to pickup
-                $this->logger->info('Sending push notification...');
-                $message = CloudMessage::withTarget('token', $sellerDeviceToken)->withNotification([
+                $sellerMessage = CloudMessage::withTarget('token', $sellerDeviceToken)->withNotification([
                   'title' => 'Driver is on the way to pickup your '. $product->getName(),
-                  'body' => 'Arriving in '.$difference->i.' minutes',
+                  'body' => 'Arriving in '.$pickup_difference->i.' minutes',
                   'image' => $product->getThumbnail()
                 ])->withData([
                   'image' => $product->getThumbnail()
                 ]);
-                $messaging->send($message);
+                $buyerMessage = CloudMessage::withTarget('token', $buyerDeviceToken)->withNotification([
+                  'title' => 'Driver is on the way to pickup your '. $product->getName(),
+                  'body' => 'Arriving in '.$dropoff_difference->i.' minutes',
+                  'image' => $product->getThumbnail()
+                ])->withData([
+                  'image' => $product->getThumbnail()
+                ]);
+                $messaging->send($sellerMessage);
+                $messaging->send($buyerMessage);
               } catch (\Exception $e) {
                 $this->logger->info($e->getMessage());
               } 
