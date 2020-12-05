@@ -10,9 +10,11 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/firebase-helper.dart';
+import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
 import 'package:resold/screens/messages/message.dart';
+import 'package:resold/screens/order/details.dart';
 import 'package:resold/screens/tabs/map.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';
@@ -21,6 +23,7 @@ import 'package:resold/screens/tabs/search.dart';
 import 'package:resold/screens/messages/inbox.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-customer.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
@@ -309,19 +312,18 @@ class HomePageState extends State<HomePage> {
                           chatId: chatId,
                           type: inboxMessage.messageType,
                           dispatcher: dispatcher)));
-
-                  // navigatorKey.currentState.push(MaterialPageRoute(
-                  //     builder: (context) => MessagePage(
-                  //         fromCustomer: customer,
-                  //         toCustomer: toCustomer,
-                  //         currentLocation: currentLocation,
-                  //         product: inboxMessage.product,
-                  //         chatId: chatId,
-                  //         type: inboxMessage.messageType,
-                  //         dispatcher: dispatcher)));
                 } else {
-                  // navigate to order page
+                  // delivery event notification
+                  int orderId = int.tryParse(data['orderId']);
+                  int productId = int.tryParse(data['productId']);
 
+                  // fetch order and product
+                  Order order = await Magento.getOrderById(orderId);
+                  Product product = await ResoldRest.getProduct(customer.token, productId);
+
+                  // navigate to order page
+                  Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
+                      builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
                 } // end if type is message
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },
