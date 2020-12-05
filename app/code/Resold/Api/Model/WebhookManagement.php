@@ -56,8 +56,7 @@ class WebhookManagement
       'status' => $status,
       'data' => $data,
       'created' => $created,
-      'live_mode' => $live_mode,
-      'COURIER_IMMINENT' => $data['courier_imminent']
+      'live_mode' => $live_mode
     ]));
     try {
       if(isset($data['manifest']) && isset($data['manifest']['reference']) && $data['manifest']['reference'] !== null) {

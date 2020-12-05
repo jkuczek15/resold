@@ -3,6 +3,7 @@ import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
+import 'package:resold/view-models/firebase/inbox-message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,6 +31,24 @@ class ResoldFirebase {
       'vendorId': customer.vendorId,
       'deviceToken': customer.deviceToken
     });
+  } // end function createUser
+
+  /*
+  * getUserInboxMessage - Retreive a user inbox message
+  * customer - Customer response data
+  */
+  static Future<InboxMessage> getUserInboxMessage(String chatId) async {
+    // check if we have a firebase user
+    DocumentSnapshot document = await firestore.collection('inbox_messages').doc(chatId).get();
+    return InboxMessage(
+        chatId: document['chatId'],
+        fromId: document['fromId'],
+        toId: document['toId'],
+        lastMessageTimestamp: document['lastMessageTimestamp'],
+        messagePreview: document['messagePreview'],
+        messageType: UserMessageType.values[document['messageType']],
+        product: Product.fromJson(document['product'], parseId: false),
+        unread: document['unread']);
   } // end function createUser
 
   /*

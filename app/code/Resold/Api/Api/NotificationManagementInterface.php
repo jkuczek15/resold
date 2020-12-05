@@ -24,7 +24,8 @@ interface NotificationManagementInterface
 	 * @param string $title
 	 * @param string $body
 	 * @param string $imageUrl
+	 * @param string $chatId
 	 * @return mixed[]
 	 */
-	public function sendNotificationMessage($deviceToken, $title, $body, $imageUrl);
+	public function sendNotificationMessage($deviceToken, $title, $body, $imageUrl, $chatId = null);
 }

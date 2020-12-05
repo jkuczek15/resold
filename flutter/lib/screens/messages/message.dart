@@ -157,7 +157,8 @@ class MessagePageState extends State<MessagePage> {
       textEditingController.clear();
       await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
       await ResoldRest.sendNotificationMessage(
-          fromCustomer.token, toCustomer.deviceToken, product.name, content, product.thumbnail);
+          fromCustomer.token, toCustomer.deviceToken, product.name, content, product.thumbnail,
+          chatId: chatId);
       listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
@@ -251,7 +252,8 @@ class MessagePageState extends State<MessagePage> {
 
                         // send a notification message
                         await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken,
-                            product.name, 'Offer received for \$${offerController.text}.', product.thumbnail);
+                            product.name, 'Offer received for \$${offerController.text}.', product.thumbnail,
+                            chatId: chatId);
                       } // end if valid verification code
                     },
                   ),
@@ -291,7 +293,8 @@ class MessagePageState extends State<MessagePage> {
 
     // send a notification message
     await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
-        '${fromCustomer.fullName} has requested a delivery.', product.thumbnail);
+        '${fromCustomer.fullName} has requested a delivery.', product.thumbnail,
+        chatId: chatId);
   } // end function requestDelivery
 
   Future getImage() async {
@@ -550,7 +553,8 @@ class MessagePageState extends State<MessagePage> {
                                                             toCustomer.deviceToken,
                                                             product.name,
                                                             '${fromCustomer.fullName} has accepted your delivery request.',
-                                                            product.thumbnail);
+                                                            product.thumbnail,
+                                                            chatId: chatId);
                                                       } else {
                                                         // user is the buyer
                                                         handlePaymentFlow(deliveryQuoteMessage.fee, currency);
@@ -843,7 +847,8 @@ class MessagePageState extends State<MessagePage> {
                                                                   toCustomer.deviceToken,
                                                                   product.name,
                                                                   '${fromCustomer.fullName} has accepted your delivery request.',
-                                                                  product.thumbnail);
+                                                                  product.thumbnail,
+                                                                  chatId: chatId);
                                                             } else {
                                                               // user is the buyer
                                                               handlePaymentFlow(deliveryQuoteMessage.fee, currency);
@@ -1068,7 +1073,8 @@ class MessagePageState extends State<MessagePage> {
 
         // send notification to buyer that delivery has been accepted
         await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
-            '${fromCustomer.fullName} has completed payment.', product.thumbnail);
+            '${fromCustomer.fullName} has completed payment.', product.thumbnail,
+            chatId: chatId);
 
         // close loading dialog
         Navigator.of(context, rootNavigator: true).pop('dialog');

@@ -35,7 +35,7 @@ class NotificationManagement
 	/**
 	 * {@inheritdoc}
 	 */
-  public function sendNotificationMessage($deviceToken, $title, $body, $imageUrl)
+  public function sendNotificationMessage($deviceToken, $title, $body, $imageUrl, $chatId = null)
 	{
     $messaging = $this->factory->createMessaging();
 
@@ -43,9 +43,11 @@ class NotificationManagement
     $message = CloudMessage::withTarget('token', $deviceToken)->withNotification([
       'title' => $title,
       'body' => $body,
-      'image' => $imageUrl
+      'image' => $imageUrl,
+      'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
     ])->withData([
-      'image' => $imageUrl
+      'image' => $imageUrl,
+      'chatId' => $chatId
     ]);
 
     // send notification

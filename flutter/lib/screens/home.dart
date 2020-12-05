@@ -12,20 +12,28 @@ import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
+import 'package:resold/screens/messages/message.dart';
 import 'package:resold/screens/tabs/map.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';
 import 'package:resold/screens/tabs/orders.dart';
 import 'package:resold/screens/tabs/search.dart';
 import 'package:resold/screens/messages/inbox.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/state/actions/set-customer.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
+import 'package:resold/view-models/firebase/inbox-message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
+import 'package:resold/widgets/loading.dart';
+
+import 'landing/landing.dart';
 
 class Home extends StatelessWidget {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -39,6 +47,7 @@ class Home extends StatelessWidget {
                     converter: (state) => state.selectedTab,
                     builder: (context, dispatcher, selectedTab) {
                       return MaterialApp(
+                          navigatorKey: navigatorKey,
                           title: 'Resold',
                           theme: ThemeData(
                               primarySwatch: const MaterialColor(0xff41b8ea, {
@@ -72,7 +81,8 @@ class Home extends StatelessWidget {
                               currentLocation: currentLocation,
                               selectedTab: selectedTab,
                               dispatcher: dispatcher,
-                              firebaseMessaging: FirebaseMessaging()));
+                              firebaseMessaging: FirebaseMessaging(),
+                              navigatorKey: navigatorKey));
                     });
               });
         });
@@ -85,8 +95,16 @@ class HomePageState extends State<HomePage> {
   SelectedTab selectedTab;
   final Function dispatcher;
   final FirebaseMessaging firebaseMessaging;
+  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  HomePageState({this.customer, this.currentLocation, this.selectedTab, this.dispatcher, this.firebaseMessaging});
+  HomePageState(
+      {this.customer,
+      this.currentLocation,
+      this.selectedTab,
+      this.dispatcher,
+      this.firebaseMessaging,
+      this.navigatorKey});
 
   @override
   void initState() {
@@ -98,6 +116,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     onBuild();
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -238,50 +257,91 @@ class HomePageState extends State<HomePage> {
   } // end function getContent
 
   void setupPushNotifications() async {
-    // handle Firebase push notifications
-    firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        // todo: don't display notification if message is already opened (message product.id == data.product.id)
-        // display notification when app in foreground
-        var notification = message['notification'];
-        var data = message['data'];
-        showOverlayNotification((context) {
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            child: SafeArea(
-              child: ListTile(
-                leading: SizedBox.fromSize(
-                    size: const Size(40, 40),
-                    child: ClipOval(
-                        child: CachedNetworkImage(
-                      imageUrl: baseProductImagePath + data['image'],
-                    ))),
-                title: Text(notification['title']),
-                subtitle: Text(notification['body']),
-                trailing: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      // todo: open message/order page depending on the notification
-                      OverlaySupportEntry.of(context).dismiss();
-                    }),
+    Future.delayed(Duration(seconds: 10), () async {
+      // handle Firebase push notifications
+      firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          // todo: don't display notification if message is already opened (message product.id == data.product.id)
+          // display notification when app in foreground
+          var notification = message['notification'];
+          var data = message['data'];
+          var chatId = data['chatId'];
+          showOverlayNotification((context) {
+            return GestureDetector(
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                child: SafeArea(
+                  child: ListTile(
+                    leading: SizedBox.fromSize(
+                        size: const Size(40, 40),
+                        child: ClipOval(
+                            child: CachedNetworkImage(
+                          imageUrl: baseProductImagePath + data['image'],
+                        ))),
+                    title: Text(notification['title']),
+                    subtitle: Text(notification['body']),
+                    trailing: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () async {
+                          OverlaySupportEntry.of(context).dismiss();
+                        }),
+                  ),
+                ),
               ),
-            ),
-          );
-        }, duration: Duration(milliseconds: 6000));
-      },
-      onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
-    await firebaseMessaging.requestNotificationPermissions();
-    firebaseMessaging.onTokenRefresh.listen((String newToken) {
-      customer.deviceToken = newToken;
-      ResoldFirebase.createOrUpdateUser(customer);
-      dispatcher(SetCustomerAction(customer));
+              onTap: () async {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Center(child: Loading());
+                    });
+                if (chatId != null) {
+                  // normal message notification
+                  InboxMessage inboxMessage = await ResoldFirebase.getUserInboxMessage(chatId);
+                  CustomerResponse toCustomer = await Magento.getCustomerById(inboxMessage.toId);
+
+                  // open message page
+                  Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
+                      builder: (context) => MessagePage(
+                          fromCustomer: customer,
+                          toCustomer: toCustomer,
+                          currentLocation: currentLocation,
+                          product: inboxMessage.product,
+                          chatId: chatId,
+                          type: inboxMessage.messageType,
+                          dispatcher: dispatcher)));
+
+                  // navigatorKey.currentState.push(MaterialPageRoute(
+                  //     builder: (context) => MessagePage(
+                  //         fromCustomer: customer,
+                  //         toCustomer: toCustomer,
+                  //         currentLocation: currentLocation,
+                  //         product: inboxMessage.product,
+                  //         chatId: chatId,
+                  //         type: inboxMessage.messageType,
+                  //         dispatcher: dispatcher)));
+                } else {
+                  // navigate to order page
+
+                } // end if type is message
+                Navigator.of(context, rootNavigator: true).pop('dialog');
+              },
+            );
+          }, duration: Duration(milliseconds: 6000));
+        },
+        onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
+        },
+      );
+      await firebaseMessaging.requestNotificationPermissions();
+      firebaseMessaging.onTokenRefresh.listen((String newToken) {
+        customer.deviceToken = newToken;
+        ResoldFirebase.createOrUpdateUser(customer);
+        dispatcher(SetCustomerAction(customer));
+      });
     });
   } // end function setupPushNotifications
 
@@ -299,8 +359,16 @@ class HomePage extends StatefulWidget {
   final SelectedTab selectedTab;
   final Function dispatcher;
   final FirebaseMessaging firebaseMessaging;
+  final GlobalKey<NavigatorState> navigatorKey;
 
-  HomePage({this.customer, this.currentLocation, this.selectedTab, this.dispatcher, this.firebaseMessaging, Key key})
+  HomePage(
+      {this.customer,
+      this.currentLocation,
+      this.selectedTab,
+      this.dispatcher,
+      this.firebaseMessaging,
+      this.navigatorKey,
+      Key key})
       : super(key: key);
 
   @override
@@ -309,5 +377,6 @@ class HomePage extends StatefulWidget {
       currentLocation: currentLocation,
       selectedTab: selectedTab,
       dispatcher: dispatcher,
-      firebaseMessaging: firebaseMessaging);
+      firebaseMessaging: firebaseMessaging,
+      navigatorKey: navigatorKey);
 } // end class HomePage
