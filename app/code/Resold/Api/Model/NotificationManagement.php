@@ -43,11 +43,11 @@ class NotificationManagement
     $message = CloudMessage::withTarget('token', $deviceToken)->withNotification([
       'title' => $title,
       'body' => $body,
-      'image' => $imageUrl,
-      'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
+      'image' => $imageUrl
     ])->withData([
       'image' => $imageUrl,
-      'chatId' => $chatId
+      'chatId' => $chatId,
+      'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
     ]);
 
     // send notification
