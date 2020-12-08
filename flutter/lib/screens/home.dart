@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
@@ -29,13 +30,13 @@ import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/state/sell-state.dart';
+import 'package:resold/ui-models/product-ui-model.dart';
 import 'package:resold/view-models/firebase/inbox-message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
 
 class Home extends StatelessWidget {
-  final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey(debugLabel: 'Main Navigator');
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
 
   // This widget is the root of your application.
   @override
@@ -72,8 +73,7 @@ class Home extends StatelessWidget {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  tickMarkShape:
-                                      SliderTickMarkShape.noTickMark),
+                                  tickMarkShape: SliderTickMarkShape.noTickMark),
                               scaffoldBackgroundColor: Colors.white,
                               brightness: Brightness.light,
                               accentColor: Colors.white,
@@ -97,6 +97,7 @@ class HomePageState extends State<HomePage> {
   CustomerResponse customer;
   Position currentLocation;
   SelectedTab selectedTab;
+  List<Product> results = List<Product>();
   final Function dispatcher;
   final FirebaseMessaging firebaseMessaging;
   final GlobalKey<NavigatorState> navigatorKey;
@@ -127,16 +128,14 @@ class HomePageState extends State<HomePage> {
           children: [
             Align(
                 alignment: Alignment.centerLeft,
-                child: Image.asset('assets/images/resold-white-logo.png',
-                    width: 145, height: 145)),
+                child: Image.asset('assets/images/resold-white-logo.png', width: 145, height: 145)),
             Align(
               alignment: Alignment.centerRight,
               child: InkWell(
                 child: StreamBuilder(
                     stream: ResoldFirebase.getUnreadMessageCount(customer.id),
                     builder: (context, snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.data.documents.length != 0) {
+                      if (snapshot.hasData && snapshot.data.documents.length != 0) {
                         return Stack(
                           children: <Widget>[
                             Icon(Icons.message, color: Colors.white),
@@ -171,10 +170,8 @@ class HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => InboxPage(
-                              customer: customer,
-                              currentLocation: currentLocation,
-                              dispatcher: dispatcher)));
+                          builder: (context) =>
+                              InboxPage(customer: customer, currentLocation: currentLocation, dispatcher: dispatcher)));
                 },
               ),
               // child: Icon(Icons.message, color: Colors.white),
@@ -194,18 +191,15 @@ class HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money), label: 'Sell'),
-          BottomNavigationBarItem(
-              icon: Icon(MdiIcons.truck), label: 'Deliveries'),
+          BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
+          BottomNavigationBarItem(icon: Icon(MdiIcons.truck), label: 'Deliveries'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
         ],
         currentIndex: selectedTab.index,
         backgroundColor: Colors.white,
         fixedColor: ResoldBlue,
         unselectedItemColor: Colors.black,
-        onTap: (int index) =>
-            dispatcher(SetSelectedTabAction(SelectedTab.values[index])),
+        onTap: (int index) => dispatcher(SetSelectedTabAction(SelectedTab.values[index])),
       ),
     );
   } // end function build
@@ -221,23 +215,33 @@ class HomePageState extends State<HomePage> {
                   initialData: searchState.initialProducts,
                   stream: searchState.searchStream.stream,
                   builder: (context, snapshot) {
-                    List<Product> results =
-                        snapshot.hasData ? snapshot.data : [];
-                    if (selectedTab == SelectedTab.map) {
-                      return MapPage(
-                          customer: customer,
-                          searchState: searchState,
-                          results: results,
-                          currentLocation: currentLocation,
-                          dispatcher: dispatcher);
-                    } else {
-                      return SearchPage(
-                          customer: customer,
-                          searchState: searchState,
-                          results: results,
-                          currentLocation: currentLocation,
-                          dispatcher: dispatcher);
-                    } // end if map tab
+                    if (searchState.currentPage == 0) {
+                      results.clear();
+                    } // end if current page == 0
+                    if (snapshot.hasData) {
+                      results.addAll(snapshot.data);
+                    } // end if we have stream data
+                    return ChangeNotifierProvider<ProductUiModel>(
+                        create: (_) =>
+                            ProductUiModel(currentLocation: currentLocation, searchState: searchState, items: results),
+                        child: Consumer<ProductUiModel>(builder: (context, model, child) {
+                          if (selectedTab == SelectedTab.map) {
+                            return MapPage(
+                                customer: customer,
+                                searchState: searchState,
+                                results: results,
+                                currentLocation: currentLocation,
+                                dispatcher: dispatcher);
+                          } else {
+                            return SearchPage(
+                                customer: customer,
+                                searchState: searchState,
+                                results: results,
+                                currentLocation: currentLocation,
+                                dispatcher: dispatcher,
+                                handleItemCreated: model.handleItemCreated);
+                          } // end if map tab
+                        }));
                   });
             });
       case SelectedTab.sell:
@@ -348,22 +352,19 @@ class HomePageState extends State<HomePage> {
     var chatId = data['chatId'];
     if (chatId != null) {
       // normal message notification
-      InboxMessage inboxMessage =
-          await ResoldFirebase.getUserInboxMessage(chatId);
-      CustomerResponse toCustomer =
-          await Magento.getCustomerById(inboxMessage.toId);
+      InboxMessage inboxMessage = await ResoldFirebase.getUserInboxMessage(chatId);
+      CustomerResponse toCustomer = await Magento.getCustomerById(inboxMessage.toId);
 
       // open message page
-      Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(
-          MaterialPageRoute(
-              builder: (context) => MessagePage(
-                  fromCustomer: customer,
-                  toCustomer: toCustomer,
-                  currentLocation: currentLocation,
-                  product: inboxMessage.product,
-                  chatId: chatId,
-                  type: inboxMessage.messageType,
-                  dispatcher: dispatcher)));
+      Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
+          builder: (context) => MessagePage(
+              fromCustomer: customer,
+              toCustomer: toCustomer,
+              currentLocation: currentLocation,
+              product: inboxMessage.product,
+              chatId: chatId,
+              type: inboxMessage.messageType,
+              dispatcher: dispatcher)));
     } else {
       // delivery event notification
       int orderId = int.tryParse(data['orderId']);
@@ -374,10 +375,8 @@ class HomePageState extends State<HomePage> {
       Product product = await ResoldRest.getProduct(customer.token, productId);
 
       // navigate to order page
-      Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(
-          MaterialPageRoute(
-              builder: (context) => OrderDetails(
-                  order: order, product: product, isSeller: false)));
+      Navigator.of(scaffoldKey.currentContext, rootNavigator: true)
+          .push(MaterialPageRoute(builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
     } // end if type is message
     Navigator.of(context, rootNavigator: true).pop('dialog');
   } // end function navigateFromNotification
