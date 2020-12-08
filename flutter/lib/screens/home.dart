@@ -32,8 +32,6 @@ import 'package:resold/view-models/firebase/inbox-message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
 
-import 'landing/landing.dart';
-
 class Home extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
 
@@ -260,7 +258,7 @@ class HomePageState extends State<HomePage> {
   } // end function getContent
 
   void setupPushNotifications() async {
-    Future.delayed(Duration(seconds: 10), () async {
+    Future.delayed(Duration(seconds: 5), () async {
       // handle Firebase push notifications
       firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
@@ -268,7 +266,6 @@ class HomePageState extends State<HomePage> {
           // display notification when app in foreground
           var notification = message['notification'];
           var data = message['data'];
-          var chatId = data['chatId'];
           showOverlayNotification((context) {
             return GestureDetector(
               child: Card(
@@ -292,50 +289,19 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
               onTap: () async {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Center(child: Loading());
-                    });
-                if (chatId != null) {
-                  // normal message notification
-                  InboxMessage inboxMessage = await ResoldFirebase.getUserInboxMessage(chatId);
-                  CustomerResponse toCustomer = await Magento.getCustomerById(inboxMessage.toId);
-
-                  // open message page
-                  Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
-                      builder: (context) => MessagePage(
-                          fromCustomer: customer,
-                          toCustomer: toCustomer,
-                          currentLocation: currentLocation,
-                          product: inboxMessage.product,
-                          chatId: chatId,
-                          type: inboxMessage.messageType,
-                          dispatcher: dispatcher)));
-                } else {
-                  // delivery event notification
-                  int orderId = int.tryParse(data['orderId']);
-                  int productId = int.tryParse(data['productId']);
-
-                  // fetch order and product
-                  Order order = await Magento.getOrderById(orderId);
-                  Product product = await ResoldRest.getProduct(customer.token, productId);
-
-                  // navigate to order page
-                  Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
-                      builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
-                } // end if type is message
-                Navigator.of(context, rootNavigator: true).pop('dialog');
+                navigateFromNotification(context, data);
               },
             );
           }, duration: Duration(milliseconds: 6000));
         },
         onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
+          var data = message['data'];
+          navigateFromNotification(context, data);
         },
         onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
+          var data = message['data'];
+          navigateFromNotification(context, data);
         },
       );
       await firebaseMessaging.requestNotificationPermissions();
@@ -346,6 +312,44 @@ class HomePageState extends State<HomePage> {
       });
     });
   } // end function setupPushNotifications
+
+  Future navigateFromNotification(BuildContext context, dynamic data) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(child: Loading());
+        });
+    var chatId = data['chatId'];
+    if (chatId != null) {
+      // normal message notification
+      InboxMessage inboxMessage = await ResoldFirebase.getUserInboxMessage(chatId);
+      CustomerResponse toCustomer = await Magento.getCustomerById(inboxMessage.toId);
+
+      // open message page
+      Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
+          builder: (context) => MessagePage(
+              fromCustomer: customer,
+              toCustomer: toCustomer,
+              currentLocation: currentLocation,
+              product: inboxMessage.product,
+              chatId: chatId,
+              type: inboxMessage.messageType,
+              dispatcher: dispatcher)));
+    } else {
+      // delivery event notification
+      int orderId = int.tryParse(data['orderId']);
+      int productId = int.tryParse(data['productId']);
+
+      // fetch order and product
+      Order order = await Magento.getOrderById(orderId);
+      Product product = await ResoldRest.getProduct(customer.token, productId);
+
+      // navigate to order page
+      Navigator.of(scaffoldKey.currentContext, rootNavigator: true)
+          .push(MaterialPageRoute(builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
+    } // end if type is message
+    Navigator.of(context, rootNavigator: true).pop('dialog');
+  } // end function navigateFromNotification
 
   void onBuild() {
     customer = widget.customer;
