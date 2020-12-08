@@ -29,7 +29,7 @@ hooks:
     - location: /scripts/before_install.sh
       timeout: 3600
       runas: root
-    BeforeAllowTraffic:
+    AfterInstall:
      - location: /scripts/aws_after_install.sh
        timeout: 3600
        runas: root
