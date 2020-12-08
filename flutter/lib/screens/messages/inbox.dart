@@ -133,15 +133,13 @@ class InboxPageState extends State<InboxPage> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                      height: 65,
-                                                      width: 57,
                                                       child: Align(
                                                           alignment: Alignment.centerLeft,
                                                           child: CachedNetworkImage(
                                                             placeholder: (context, url) => Container(
                                                               child: Loading(),
-                                                              width: 200.0,
-                                                              height: 200.0,
+                                                              width: 50.0,
+                                                              height: 50.0,
                                                               padding: EdgeInsets.all(70.0),
                                                               decoration: BoxDecoration(
                                                                 color: Colors.blueGrey,
@@ -163,8 +161,8 @@ class InboxPageState extends State<InboxPage> {
                                                               clipBehavior: Clip.hardEdge,
                                                             ),
                                                             imageUrl: baseProductImagePath + product.thumbnail,
-                                                            width: 200.0,
-                                                            height: 200.0,
+                                                            width: 50.0,
+                                                            height: 50.0,
                                                             fit: BoxFit.cover,
                                                           )))
                                                 ]),
