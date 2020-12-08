@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:resold/state/search-state.dart';
 
 class ProductUiModel extends ChangeNotifier {
-  int itemRequestThreshold = 20;
+  final int itemRequestThreshold = 20;
   static int currentPage = 0;
   List<Product> items;
   int lastLoadingIndex = 0;
@@ -20,12 +20,9 @@ class ProductUiModel extends ChangeNotifier {
   } // end ProductUiModel constructor
 
   Future handleItemCreated(int index) async {
-    itemRequestThreshold = this.items.length;
-
     var itemPosition = index + 1;
-    var tempRequestThreshold = itemRequestThreshold - 1;
-    var requestMoreData = itemPosition % tempRequestThreshold == 0 && itemPosition != 0;
-    var pageToRequest = itemPosition ~/ tempRequestThreshold;
+    var requestMoreData = itemPosition % itemRequestThreshold == 0 && itemPosition != 0;
+    var pageToRequest = itemPosition ~/ itemRequestThreshold;
 
     if (requestMoreData && pageToRequest > currentPage) {
       currentPage = pageToRequest;
