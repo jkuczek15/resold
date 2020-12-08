@@ -93,6 +93,7 @@ Future<void> main() async {
 
   // initialize search state
   SearchState searchState = SearchState(
+      currentPage: 0,
       distance: '25',
       selectedCategory: 'Cancel',
       selectedCondition: 'Cancel',
@@ -114,6 +115,7 @@ Future<void> main() async {
     searchState.initialProducts =
         await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
 
+    // fetch seller data
     await Future.wait([
       Resold.getVendor(customer.vendorId),
       Resold.getVendorProducts(customer.vendorId, 'for-sale'),

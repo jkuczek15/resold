@@ -8,7 +8,6 @@ import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/screens/product/view.dart';
 import 'package:resold/state/search-state.dart';
-import 'package:resold/ui-models/product-ui-model.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:resold/widgets/location/distance.dart';
@@ -19,10 +18,11 @@ class ProductList extends StatelessWidget {
   final SearchState searchState;
   final List<Product> products;
   final Position currentLocation;
-  final ProductUiModel model;
   final Function dispatcher;
+  final Function handleItemCreated;
 
-  ProductList({this.customer, this.searchState, this.products, this.currentLocation, this.model, this.dispatcher});
+  ProductList(
+      {this.customer, this.searchState, this.products, this.currentLocation, this.handleItemCreated, this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +31,9 @@ class ProductList extends StatelessWidget {
         itemBuilder: (context, index) {
           return CreationAwareListItem(
               itemCreated: () {
-                SchedulerBinding.instance.addPostFrameCallback((duration) => model.handleItemCreated(index));
+                SchedulerBinding.instance.addPostFrameCallback((duration) => handleItemCreated(index));
               },
-              child: products.length > index + 1 && products[index + 1].name == LoadingIndicatorTitle
-                  ? Center(child: Loading())
-                  : buildProductListTile(context, currentLocation, model.items[index], customer, dispatcher, index));
+              child: buildProductListTile(context, currentLocation, products[index], customer, dispatcher, index));
         });
   } // end function build
 

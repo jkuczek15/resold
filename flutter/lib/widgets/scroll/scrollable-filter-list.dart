@@ -3,16 +3,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/sort.dart';
-import 'package:resold/state/actions/fetch-search-results.dart';
-import 'package:resold/state/actions/set-search-state.dart';
+import 'package:resold/state/actions/filter-search-results.dart';
 import 'package:resold/state/search-state.dart';
+import 'package:resold/ui-models/product-ui-model.dart';
 
 class ScrollableFilterList extends StatefulWidget {
   final SearchState searchState;
   final Position currentLocation;
   final Function dispatcher;
 
-  ScrollableFilterList(SearchState searchState, Position currentLocation, Function dispatcher, {Key key})
+  ScrollableFilterList(
+      {SearchState searchState, Position currentLocation, ProductUiModel model, Function dispatcher, Key key})
       : searchState = searchState,
         currentLocation = currentLocation,
         dispatcher = dispatcher,
@@ -133,8 +134,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
                           },
                           onChangeEnd: (double value) {
                             searchState.distance = _currentSliderValue.toInt().toString();
-                            dispatcher(SetSearchStateAction(searchState));
-                            dispatcher(FetchSearchResultsAction());
+                            dispatcher(FilterSearchResultsAction(searchState));
                           },
                         ),
                       ]);
@@ -217,8 +217,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     });
     if (dispatcher is Function) {
       searchState.selectedCategory = choice.value;
-      dispatcher(SetSearchStateAction(searchState));
-      dispatcher(FetchSearchResultsAction());
+      dispatcher(FilterSearchResultsAction(searchState));
     } // end if dispatcher is function
   } // end function onSelectedCategory
 
@@ -233,8 +232,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     });
     if (dispatcher is Function) {
       searchState.selectedCondition = choice.value;
-      dispatcher(SetSearchStateAction(searchState));
-      dispatcher(FetchSearchResultsAction());
+      dispatcher(FilterSearchResultsAction(searchState));
     } // end if dispatcher is function
   } // end function onSelectedCondition
 
@@ -245,8 +243,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     });
     if (dispatcher is Function) {
       searchState.selectedSort = Sort.values[choice.value];
-      dispatcher(SetSearchStateAction(searchState));
-      dispatcher(FetchSearchResultsAction());
+      dispatcher(FilterSearchResultsAction(searchState));
     } // end if dispatcher is function
   } // end function onSelectedSort
 }

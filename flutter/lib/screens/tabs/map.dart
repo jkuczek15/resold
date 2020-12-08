@@ -5,8 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
-import 'package:resold/state/actions/fetch-search-results.dart';
-import 'package:resold/state/actions/set-search-state.dart';
+import 'package:resold/state/actions/filter-search-results.dart';
 import 'package:resold/state/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/list/product-list.dart';
@@ -90,19 +89,17 @@ class MapPageState extends State<MapPage> {
           child: ResoldSearchBar<Product>(
             placeHolder: results.length == 0 ? Center(child: Text('Your search returned no results.')) : null,
             textEditingController: searchState.textController,
-            header: ScrollableFilterList(searchState, currentLocation, dispatcher),
+            header: ScrollableFilterList(
+                searchState: searchState, currentLocation: currentLocation, dispatcher: dispatcher),
             hintText: 'Search entire marketplace here...',
             searchBarPadding: EdgeInsets.symmetric(horizontal: 20),
             cancellationWidget: Icon(Icons.cancel),
             onCancelled: () async {
-              dispatcher(SetSearchStateAction(searchState));
-              dispatcher(FetchSearchResultsAction());
-              return await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
+              dispatcher(FilterSearchResultsAction(searchState));
             },
             onSearch: (term) async {
               searchState.textController.text = term;
-              dispatcher(SetSearchStateAction(searchState));
-              dispatcher(FetchSearchResultsAction());
+              dispatcher(FilterSearchResultsAction(searchState));
               return await Search.fetchSearchProducts(searchState, currentLocation.latitude, currentLocation.longitude);
             },
             onItemFound: (Product product, int index) {

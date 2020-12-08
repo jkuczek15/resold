@@ -1,8 +1,8 @@
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/state/search-state.dart';
 
-class SetSearchStateAction extends Action {
+class FilterSearchResultsAction extends Action {
   final SearchState newState;
 
-  const SetSearchStateAction(this.newState);
+  FilterSearchResultsAction(this.newState);
 }

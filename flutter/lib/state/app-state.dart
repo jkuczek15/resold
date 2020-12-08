@@ -9,20 +9,20 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 class AppState {
   SelectedTab selectedTab;
   CustomerResponse customer;
+  Position currentLocation;
   Vendor vendor;
   List<Product> forSaleProducts;
   List<Product> soldProducts;
   SearchState searchState;
   SellState sellState;
-  Position currentLocation;
 
   AppState(
       {this.selectedTab,
       this.customer,
+      this.currentLocation,
       this.vendor,
       this.forSaleProducts,
       this.soldProducts,
       this.searchState,
-      this.sellState,
-      this.currentLocation});
+      this.sellState});
 }

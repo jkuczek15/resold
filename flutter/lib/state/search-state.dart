@@ -12,13 +12,14 @@ class SearchState {
   String selectedCondition;
   Sort selectedSort;
   String distance;
+  int currentPage;
 
   SearchState(
       {this.textController,
       this.searchStream,
-      this.initialProducts,
       this.selectedCategory,
       this.selectedCondition,
       this.selectedSort,
-      this.distance});
+      this.distance,
+      this.currentPage});
 }
