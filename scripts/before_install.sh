@@ -22,5 +22,5 @@ yum -y install gcc72 gcc72-c++
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 yum -y install php70-devel php7-pear zlib-devel
-pecl7 install grpc
-pecl7 install protobuf
+pecl7 install grpc > /dev/null 2> /dev/null < /dev/null &
+pecl7 install protobuf > /dev/null 2> /dev/null < /dev/null &
