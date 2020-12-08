@@ -117,7 +117,9 @@ class OrdersPageState extends State<OrdersPage> {
                         }
                         if (inProgressPurchasedOrders.length > 0 && completedPurchasedOrders.length > 0) {
                           return SingleChildScrollView(
-                              child: Column(
+                              child: Expanded(
+                                  child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
@@ -126,6 +128,7 @@ class OrdersPageState extends State<OrdersPage> {
                               ),
                               ListView(
                                   padding: const EdgeInsets.all(8),
+                                  physics: const AlwaysScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   children: List.generate(
                                     inProgressPurchasedOrders.length,
@@ -183,6 +186,7 @@ class OrdersPageState extends State<OrdersPage> {
                               ),
                               ListView(
                                   padding: const EdgeInsets.all(8),
+                                  physics: const AlwaysScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   children: List.generate(
                                     completedPurchasedOrders.length,
@@ -223,7 +227,7 @@ class OrdersPageState extends State<OrdersPage> {
                                     },
                                   ))
                             ],
-                          ));
+                          )));
                         } else if (inProgressPurchasedOrders.length > 0) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,6 +238,7 @@ class OrdersPageState extends State<OrdersPage> {
                               ),
                               ListView(
                                   padding: const EdgeInsets.all(8),
+                                  physics: const AlwaysScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   children: List.generate(
                                     inProgressPurchasedOrders.length,
@@ -287,57 +292,58 @@ class OrdersPageState extends State<OrdersPage> {
                             ],
                           );
                         } else if (completedPurchasedOrders.length > 0) {
-                          return SingleChildScrollView(
-                              child: Column(
+                          return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    completedPurchasedOrders.length,
-                                    (index) {
-                                      Order order = completedPurchasedOrders[index];
-                                      OrderLine line = order.items[0];
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
+                              Expanded(
+                                  child: ListView(
+                                      padding: const EdgeInsets.all(8),
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      children: List.generate(
+                                        completedPurchasedOrders.length,
+                                        (index) {
+                                          Order order = completedPurchasedOrders[index];
+                                          OrderLine line = order.items[0];
+                                          return InkWell(
+                                              onTap: () async {
+                                                // show a loading indicator
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return Center(child: Loading());
+                                                    });
 
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
+                                                // fetch the product
+                                                Product product =
+                                                    await ResoldRest.getProduct(customer.token, line.productId);
 
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                Navigator.of(context, rootNavigator: true).pop('dialog');
 
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: false)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    height: 50,
-                                                    child: Row(
-                                                      children: [Text(line.name)],
-                                                    ),
-                                                  ))));
-                                    },
-                                  ))
+                                                // navigate to order details page
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => OrderDetails(
+                                                            order: order, product: product, isSeller: false)));
+                                              },
+                                              child: Card(
+                                                  child: ListTile(
+                                                      trailing: Text(formatter.format(line.price.round())),
+                                                      title: Container(
+                                                        height: 50,
+                                                        child: Row(
+                                                          children: [Text(line.name)],
+                                                        ),
+                                                      ))));
+                                        },
+                                      )))
                             ],
-                          ));
+                          );
                         } // end if completed purchased orders
                       }()),
                       (() {
