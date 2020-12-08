@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -76,7 +77,13 @@ class InboxPageState extends State<InboxPage> {
                           var dateB = new DateTime.fromMillisecondsSinceEpoch(int.parse(b['lastMessageTimestamp']));
                           return dateB.compareTo(dateA);
                         });
-                        return SingleChildScrollView(
+                        return LiquidPullToRefresh(
+                            height: 80,
+                            springAnimationDurationInMilliseconds: 500,
+                            onRefresh: () async {},
+                            showChildOpacityTransition: false,
+                            color: ResoldBlue,
+                            animSpeedFactor: 5.0,
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: messages.length,
