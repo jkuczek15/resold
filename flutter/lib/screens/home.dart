@@ -274,12 +274,18 @@ class HomePageState extends State<HomePage> {
         return ViewModelSubscriber<AppState, AccountState>(
             converter: (state) => state.accountState,
             builder: (context, dispatcher, accountState) {
-              return AccountPage(
-                  customer: customer,
-                  vendor: accountState.vendor,
-                  currentLocation: currentLocation,
-                  forSaleProducts: accountState.forSaleProducts,
-                  soldProducts: accountState.soldProducts);
+              return ViewModelSubscriber<AppState, List<Product>>(
+                  converter: (state) => state.accountState.forSaleProducts,
+                  builder: (context, dispatcher, forSaleProducts) {
+                    return AccountPage(
+                        customer: customer,
+                        currentLocation: currentLocation,
+                        vendor: accountState.vendor,
+                        forSaleProducts: forSaleProducts,
+                        soldProducts: accountState.soldProducts,
+                        displayForSale: accountState.displayForSale,
+                        dispatcher: dispatcher);
+                  });
             });
       default:
         return Text('Unknown tab');

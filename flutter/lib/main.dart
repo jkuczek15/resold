@@ -19,9 +19,10 @@ import 'package:resold/services/resold.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
-import 'package:resold/state/reducers/product-reducer.dart';
+import 'package:resold/state/reducers/account-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
 import 'package:resold/state/reducers/search-reducer.dart';
+import 'package:resold/state/reducers/sell-reducer.dart';
 import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/state/screens/search-state.dart';
@@ -112,7 +113,7 @@ Future<void> main() async {
   OrdersState ordersState = OrdersState();
 
   // initialize account state
-  AccountState accountState = AccountState();
+  AccountState accountState = AccountState(displayForSale: true);
 
   // initialize application state
   Position currentLocation = Position();
@@ -155,7 +156,7 @@ Future<void> main() async {
         ordersState: ordersState,
         accountState: accountState,
       ),
-      blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer()]);
+      blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), AccountReducer()]);
 
   // run the app
   runApp(StoreProvider<AppState>(

@@ -5,6 +5,7 @@ class AccountState {
   Vendor vendor;
   List<Product> forSaleProducts;
   List<Product> soldProducts;
+  bool displayForSale;
 
-  AccountState({this.vendor, this.forSaleProducts, this.soldProducts});
+  AccountState({this.vendor, this.forSaleProducts, this.soldProducts, this.displayForSale});
 }
