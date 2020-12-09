@@ -1,61 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:resold/state/actions/set-account-state.dart';
+import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
-import 'package:resold/constants/url-config.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/screens/account/edit.dart';
 import 'package:resold/widgets/grid/product-grid.dart';
 
-class AccountPage extends StatefulWidget {
+class AccountPage extends StatelessWidget {
   final CustomerResponse customer;
   final Vendor vendor;
   final Position currentLocation;
   final List<Product> forSaleProducts;
   final List<Product> soldProducts;
+  final bool displayForSale;
   final Function dispatcher;
 
   AccountPage(
-      {CustomerResponse customer,
-      Vendor vendor,
-      Position currentLocation,
-      List<Product> forSaleProducts,
-      List<Product> soldProducts,
-      Function dispatcher,
-      Key key})
-      : customer = customer,
-        vendor = vendor,
-        currentLocation = currentLocation,
-        forSaleProducts = forSaleProducts,
-        soldProducts = soldProducts,
-        dispatcher = dispatcher,
-        super(key: key);
-
-  @override
-  AccountPageState createState() => AccountPageState(
-      this.customer, this.vendor, this.currentLocation, this.forSaleProducts, this.soldProducts, this.dispatcher);
-}
-
-class AccountPageState extends State<AccountPage> {
-  bool displayForSale = true;
-  String imagePath = '';
-
-  final CustomerResponse customer;
-  final Vendor vendor;
-  final Position currentLocation;
-  final List<Product> forSaleProducts;
-  final List<Product> soldProducts;
-  final Function dispatcher;
-  AccountPageState(
-      this.customer, this.vendor, this.currentLocation, this.forSaleProducts, this.soldProducts, this.dispatcher);
-
-  @override
-  void initState() {
-    super.initState();
-    imagePath = baseImagePath + '/' + vendor.profilePicture + '?d=' + DateTime.now().millisecond.toString();
-  } // end function initState
+      {this.customer,
+      this.vendor,
+      this.currentLocation,
+      this.forSaleProducts,
+      this.soldProducts,
+      this.displayForSale,
+      this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +48,7 @@ class AccountPageState extends State<AccountPage> {
                         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                         child: CircleAvatar(
                           backgroundImage: vendor.profilePicture != 'null'
-                              ? CachedNetworkImageProvider(imagePath)
+                              ? CachedNetworkImageProvider(vendor.getImagePath())
                               : AssetImage('assets/images/avatar-placeholder.png'),
                         ))),
                 Padding(
@@ -115,29 +86,36 @@ class AccountPageState extends State<AccountPage> {
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white))
                                       ]),
-                                      onTap: () => {
-                                        setState(() => {displayForSale = true})
-                                      },
+                                      onTap: () => dispatcher(SetAccountStateAction(AccountState(
+                                          displayForSale: true,
+                                          vendor: vendor,
+                                          forSaleProducts: forSaleProducts,
+                                          soldProducts: soldProducts))),
                                     ),
                                     SizedBox(width: 60),
                                     InkWell(
-                                        child: Column(children: [
-                                          Text(soldProducts.length.toString(),
-                                              style: new TextStyle(
-                                                  fontSize: 32.0,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white)),
-                                          Text('sold',
-                                              style: new TextStyle(
-                                                  fontSize: 20.0,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white))
-                                        ]),
-                                        onTap: () => {
-                                              setState(() => {displayForSale = false})
-                                            }),
+                                      child: Column(children: [
+                                        Text(soldProducts.length.toString(),
+                                            style: new TextStyle(
+                                                fontSize: 32.0,
+                                                fontFamily: 'Roboto',
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white)),
+                                        Text('sold',
+                                            style: new TextStyle(
+                                                fontSize: 20.0,
+                                                fontFamily: 'Roboto',
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white))
+                                      ]),
+                                      onTap: () => dispatcher(
+                                        SetAccountStateAction(AccountState(
+                                            displayForSale: false,
+                                            vendor: vendor,
+                                            forSaleProducts: forSaleProducts,
+                                            soldProducts: soldProducts)),
+                                      ),
+                                    )
                                   ])
                                 ]))),
                     Container(
@@ -153,15 +131,9 @@ class AccountPageState extends State<AccountPage> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () async {
                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProfilePage(customer, vendor, currentLocation, dispatcher)))
-                        .then((value) => {
-                              setState(() {
-                                imageCache.clear();
-                                imagePath = imagePath + '?d=' + DateTime.now().millisecond.toString();
-                              })
-                            });
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditProfilePage(customer, vendor, currentLocation, dispatcher)));
                   },
                   child: Text('Edit Profile',
                       style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white)),

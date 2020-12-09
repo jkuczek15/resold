@@ -126,7 +126,7 @@ class ProductPageState extends State<ProductPage> {
                                           onPressed: () async {
                                             Future<bool> complete = Magento.deleteProduct(product.sku);
                                             if (await complete) {
-                                              dispatcher(DeleteProductAction(product));
+                                              dispatcher(DeleteProductAction(product: product));
                                               deleteCanceled = false;
                                               Navigator.pop(context);
                                               return showDialog<void>(
@@ -134,7 +134,7 @@ class ProductPageState extends State<ProductPage> {
                                                   barrierDismissible: false,
                                                   builder: (BuildContext context) {
                                                     return AlertDialog(
-                                                        title: Text("Your listing has been deleted."),
+                                                        title: Text('Your listing has been deleted.'),
                                                         actions: <Widget>[
                                                           FlatButton(
                                                               child: Text(

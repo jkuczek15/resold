@@ -2,7 +2,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/models/product.dart';
 
 class DeleteProductAction extends Action {
-  final Product deletedProduct;
+  final Product product;
 
-  const DeleteProductAction(this.deletedProduct);
+  const DeleteProductAction({this.product});
 }
