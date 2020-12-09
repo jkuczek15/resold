@@ -142,36 +142,12 @@ class InboxPageState extends State<InboxPage> {
                                                   Container(
                                                       child: Align(
                                                           alignment: Alignment.centerLeft,
-                                                          child: CachedNetworkImage(
-                                                            placeholder: (context, url) => Container(
-                                                              child: Loading(),
-                                                              width: 50.0,
-                                                              height: 50.0,
-                                                              padding: EdgeInsets.all(70.0),
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.blueGrey,
-                                                                borderRadius: BorderRadius.all(
-                                                                  Radius.circular(8.0),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            errorWidget: (context, url, error) => Material(
-                                                              child: Image.asset(
-                                                                'images/img_not_available.jpeg',
-                                                                width: 200.0,
-                                                                height: 200.0,
-                                                                fit: BoxFit.cover,
-                                                              ),
-                                                              borderRadius: BorderRadius.all(
-                                                                Radius.circular(8.0),
-                                                              ),
-                                                              clipBehavior: Clip.hardEdge,
-                                                            ),
-                                                            imageUrl: baseProductImagePath + product.thumbnail,
-                                                            width: 50.0,
-                                                            height: 50.0,
-                                                            fit: BoxFit.cover,
-                                                          )))
+                                                          child: Padding(
+                                                              padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
+                                                              child: CircleAvatar(
+                                                                backgroundImage: CachedNetworkImageProvider(
+                                                                    baseProductImagePath + product.thumbnail),
+                                                              ))))
                                                 ]),
                                             SizedBox(width: 5),
                                             Column(

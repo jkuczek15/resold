@@ -5,13 +5,11 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/order.dart';
-import 'package:resold/models/product.dart';
-import 'package:resold/screens/order/details.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
+import 'package:resold/widgets/list/order-list.dart';
 import 'package:resold/widgets/loading.dart';
-import 'package:intl/intl.dart';
 
 class OrdersPage extends StatefulWidget {
   final CustomerResponse customer;
@@ -40,7 +38,6 @@ class OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    NumberFormat formatter = new NumberFormat("\$###,###", "en_US");
     return LiquidPullToRefresh(
         height: 80,
         springAnimationDurationInMilliseconds: 500,
@@ -126,106 +123,13 @@ class OrdersPageState extends State<OrdersPage> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    inProgressPurchasedOrders.length,
-                                    (index) {
-                                      Order order = inProgressPurchasedOrders[index];
-                                      OrderLine line = order.items[0];
-                                      Duration difference;
-                                      if (order.status == 'pickup' || order.status == 'delivery_in_progress') {
-                                        difference = order.dropoffEta.difference(DateTime.now());
-                                      } // end if pickup or delivery in progress
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: false)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(line.name),
-                                                        order.status == 'pickup' ||
-                                                                order.status == 'delivery_in_progress'
-                                                            ? Text('Arriving in ${difference.inMinutes} minutes',
-                                                                style: TextStyle(color: Colors.grey, fontSize: 12))
-                                                            : SizedBox(),
-                                                      ],
-                                                    ),
-                                                  ))));
-                                    },
-                                  )),
+                              OrderList(customer: customer, orders: inProgressPurchasedOrders),
                               SizedBox(height: 10),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    completedPurchasedOrders.length,
-                                    (index) {
-                                      Order order = completedPurchasedOrders[index];
-                                      OrderLine line = order.items[0];
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: false)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    height: 50,
-                                                    child: Row(
-                                                      children: [Text(line.name)],
-                                                    ),
-                                                  ))));
-                                    },
-                                  ))
+                              OrderList(customer: customer, orders: completedPurchasedOrders),
                             ],
                           )));
                         } else if (inProgressPurchasedOrders.length > 0) {
@@ -236,59 +140,7 @@ class OrdersPageState extends State<OrdersPage> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    inProgressPurchasedOrders.length,
-                                    (index) {
-                                      Order order = inProgressPurchasedOrders[index];
-                                      OrderLine line = order.items[0];
-                                      Duration difference;
-                                      if (order.status == 'pickup' || order.status == 'delivery_in_progress') {
-                                        difference = order.dropoffEta.difference(DateTime.now());
-                                      } // end if pickup or delivery in progress
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: false)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(line.name),
-                                                        order.status == 'pickup' ||
-                                                                order.status == 'delivery_in_progress'
-                                                            ? Text('Arriving in ${difference.inMinutes} minutes',
-                                                                style: TextStyle(color: Colors.grey, fontSize: 12))
-                                                            : SizedBox(),
-                                                      ],
-                                                    ),
-                                                  ))));
-                                    },
-                                  ))
+                              OrderList(customer: customer, orders: inProgressPurchasedOrders)
                             ],
                           );
                         } else if (completedPurchasedOrders.length > 0) {
@@ -299,49 +151,7 @@ class OrdersPageState extends State<OrdersPage> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              Expanded(
-                                  child: ListView(
-                                      padding: const EdgeInsets.all(8),
-                                      physics: const AlwaysScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      children: List.generate(
-                                        completedPurchasedOrders.length,
-                                        (index) {
-                                          Order order = completedPurchasedOrders[index];
-                                          OrderLine line = order.items[0];
-                                          return InkWell(
-                                              onTap: () async {
-                                                // show a loading indicator
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return Center(child: Loading());
-                                                    });
-
-                                                // fetch the product
-                                                Product product =
-                                                    await ResoldRest.getProduct(customer.token, line.productId);
-
-                                                Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                                // navigate to order details page
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => OrderDetails(
-                                                            order: order, product: product, isSeller: false)));
-                                              },
-                                              child: Card(
-                                                  child: ListTile(
-                                                      trailing: Text(formatter.format(line.price.round())),
-                                                      title: Container(
-                                                        height: 50,
-                                                        child: Row(
-                                                          children: [Text(line.name)],
-                                                        ),
-                                                      ))));
-                                        },
-                                      )))
+                              Expanded(child: OrderList(customer: customer, orders: completedPurchasedOrders))
                             ],
                           );
                         } // end if completed purchased orders
@@ -359,112 +169,13 @@ class OrdersPageState extends State<OrdersPage> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    inProgressSoldOrders.length,
-                                    (index) {
-                                      Order order = inProgressSoldOrders[index];
-                                      OrderLine line = order.items[0];
-                                      Duration pickupDifference;
-                                      Duration dropoffDifference;
-                                      if (order.status == 'pickup') {
-                                        dropoffDifference = order.dropoffEta.difference(DateTime.now());
-                                        pickupDifference = order.pickupEta.difference(DateTime.now());
-                                      } else if (order.status == 'delivery_in_progress') {
-                                        dropoffDifference = order.dropoffEta.difference(DateTime.now());
-                                      } // end if pickup or delivery in progress
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: true)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(line.name),
-                                                        order.status == 'pickup'
-                                                            ? Text(
-                                                                'Driver arriving in ${pickupDifference.inMinutes} minutes',
-                                                                style: TextStyle(color: Colors.grey, fontSize: 12))
-                                                            : order.status == 'delivery_in_progress'
-                                                                ? Text(
-                                                                    'Delivery arriving in ${dropoffDifference.inMinutes} minutes',
-                                                                    style: TextStyle(color: Colors.grey, fontSize: 12))
-                                                                : SizedBox(),
-                                                      ],
-                                                    ),
-                                                  ))));
-                                    },
-                                  )),
+                              OrderList(customer: customer, orders: inProgressSoldOrders),
                               SizedBox(height: 10),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    completedSoldOrders.length,
-                                    (index) {
-                                      Order order = completedSoldOrders[index];
-                                      OrderLine line = order.items[0];
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: true)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    height: 50,
-                                                    child: Row(
-                                                      children: [Text(line.name)],
-                                                    ),
-                                                  ))));
-                                    },
-                                  ))
+                              OrderList(customer: customer, orders: completedSoldOrders)
                             ],
                           ));
                         } else if (inProgressSoldOrders.length > 0) {
@@ -476,66 +187,7 @@ class OrdersPageState extends State<OrdersPage> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    inProgressSoldOrders.length,
-                                    (index) {
-                                      Order order = inProgressSoldOrders[index];
-                                      OrderLine line = order.items[0];
-                                      Duration pickupDifference;
-                                      Duration dropoffDifference;
-                                      if (order.status == 'pickup') {
-                                        dropoffDifference = order.dropoffEta.difference(DateTime.now());
-                                        pickupDifference = order.pickupEta.difference(DateTime.now());
-                                      } else if (order.status == 'delivery_in_progress') {
-                                        dropoffDifference = order.dropoffEta.difference(DateTime.now());
-                                      } // end if pickup or delivery in progress
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: true)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(line.name),
-                                                        order.status == 'pickup'
-                                                            ? Text(
-                                                                'Driver arriving in ${pickupDifference.inMinutes} minutes',
-                                                                style: TextStyle(color: Colors.grey, fontSize: 12))
-                                                            : order.status == 'delivery_in_progress'
-                                                                ? Text(
-                                                                    'Delivery arriving in ${dropoffDifference.inMinutes} minutes',
-                                                                    style: TextStyle(color: Colors.grey, fontSize: 12))
-                                                                : SizedBox(),
-                                                      ],
-                                                    ),
-                                                  ))));
-                                    },
-                                  ))
+                              OrderList(customer: customer, orders: inProgressSoldOrders)
                             ],
                           ));
                         } else if (completedSoldOrders.length > 0) {
@@ -547,47 +199,7 @@ class OrdersPageState extends State<OrdersPage> {
                                 padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                                 child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                               ),
-                              ListView(
-                                  padding: const EdgeInsets.all(8),
-                                  shrinkWrap: true,
-                                  children: List.generate(
-                                    completedSoldOrders.length,
-                                    (index) {
-                                      Order order = completedSoldOrders[index];
-                                      OrderLine line = order.items[0];
-                                      return InkWell(
-                                          onTap: () async {
-                                            // show a loading indicator
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return Center(child: Loading());
-                                                });
-
-                                            // fetch the product
-                                            Product product =
-                                                await ResoldRest.getProduct(customer.token, line.productId);
-
-                                            Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                                            // navigate to order details page
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OrderDetails(order: order, product: product, isSeller: true)));
-                                          },
-                                          child: Card(
-                                              child: ListTile(
-                                                  trailing: Text(formatter.format(line.price.round())),
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [Text(line.name)],
-                                                    ),
-                                                  ))));
-                                    },
-                                  ))
+                              OrderList(customer: customer, orders: completedSoldOrders)
                             ],
                           ));
                         } // end if completed sold orders
