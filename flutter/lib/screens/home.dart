@@ -10,7 +10,6 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/selected-tab.dart';
-import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/models/vendor.dart';
@@ -324,7 +323,6 @@ class HomePageState extends State<HomePage> {
             );
           }, duration: Duration(milliseconds: 6000));
         },
-        onBackgroundMessage: FirebaseHelper.backgroundMessageHandler,
         onLaunch: (Map<String, dynamic> message) async {
           var data = message['data'];
           navigateFromNotification(context, data);

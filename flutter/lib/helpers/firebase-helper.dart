@@ -1,27 +1,9 @@
-import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
 
 class FirebaseHelper {
-  /*
-  * backgroundMessageHandler - Handle background notification messages from Firebase
-  * message - Firebase message
-  */
-  static Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-    }
-
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-    }
-    // Or do other work.
-  } // end function backgroundMessageHandler
-
   /*
   * readDeliveryQuoteMessageContent - Parse delivery quote message content
   * content - Firebase message content
