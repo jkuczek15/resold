@@ -8,4 +8,3 @@ fi
 # Remove all web files
 rm -rf /var/www/html/* || true
 rm -rf /var/www/html/.* || true
-
