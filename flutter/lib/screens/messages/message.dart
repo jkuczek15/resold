@@ -359,6 +359,8 @@ class MessagePageState extends State<MessagePage> {
             child: Container(
               child: TextField(
                 style: TextStyle(color: Colors.black, fontSize: 15.0),
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
