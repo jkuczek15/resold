@@ -7,6 +7,7 @@ import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
+import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/request/magento/login-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
@@ -115,6 +116,7 @@ class LoginPageState extends State<LoginPage> {
                         await ResoldFirebase.createOrUpdateUser(customer);
 
                         // initialize application state
+                        // todo: init state on sign-in
                         await Future.wait([
                           Resold.getVendor(customer.vendorId),
                           Resold.getVendorProducts(customer.vendorId, 'for-sale'),
@@ -123,9 +125,8 @@ class LoginPageState extends State<LoginPage> {
                           dispatcher(InitStateAction(AppState(
                               selectedTab: SelectedTab.home,
                               customer: customer,
-                              vendor: data[0],
-                              forSaleProducts: data[1],
-                              soldProducts: data[2])));
+                              accountState:
+                                  AccountState(vendor: data[0], forSaleProducts: data[1], soldProducts: data[2]))));
                         });
 
                         // navigate

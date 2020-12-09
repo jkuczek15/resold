@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
 import 'package:resold/state/actions/filter-search-results.dart';
-import 'package:resold/state/search-state.dart';
+import 'package:resold/state/screens/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/list/product-list.dart';
 import 'package:resold/widgets/loading.dart';

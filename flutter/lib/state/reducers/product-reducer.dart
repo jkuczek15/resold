@@ -7,9 +7,10 @@ class ProductReducer extends SimpleBloc<AppState> {
   @override
   AppState reducer(AppState state, Action action) {
     if (action is SetForSaleAction) {
-      state.forSaleProducts = action.newForSaleProducts;
+      state.accountState.forSaleProducts = action.newForSaleProducts;
     } else if (action is DeleteProductAction) {
-      state.forSaleProducts = state.forSaleProducts.where((product) => product.id != action.deletedProduct.id).toList();
+      state.accountState.forSaleProducts =
+          state.accountState.forSaleProducts.where((product) => product.id != action.deletedProduct.id).toList();
     }
     return state;
   }

@@ -3,25 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/enums/selected-tab.dart';
-import 'package:resold/helpers/local-global-helper.dart';
-import 'package:resold/services/resold.dart';
-import 'package:resold/state/actions/set-for-sale.dart';
-import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/actions/set-sell-state.dart';
-import 'package:resold/state/sell-focus-state.dart';
-import 'package:resold/state/sell-state.dart';
+import 'package:resold/state/screens/sell-state.dart';
+import 'package:resold/state/screens/sell/sell-focus-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/image/image-uploader.dart';
-import 'package:resold/widgets/scroll/scroll-column-expandable.dart';
 import 'package:resold/widgets/dropdown/dropdown-category-list.dart';
-import 'package:resold/services/resold-rest.dart';
-import 'package:resold/models/product.dart';
-import 'package:resold/screens/product/view.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/widgets/dropdown/dropdown-size-list.dart';
 import 'package:resold/widgets/dropdown/dropdown-condition-list.dart';
-import 'package:resold/widgets/loading.dart';
 
 class SellPage extends StatelessWidget {
   final String condition = '';
@@ -50,12 +40,7 @@ class SellPage extends StatelessWidget {
   // new
   final List<bool> conditionSelected = [false, false, false, false];
   final List<bool> vehicleSelected = [false, false, false, false];
-  List<String> steps = [
-    '1. Add Images',
-    '2. Add Title and Details',
-    '3. Select Category',
-    '4. Review and Submit'
-  ];
+  List<String> steps = ['1. Add Images', '2. Add Title and Details', '3. Select Category', '4. Review and Submit'];
   Map categoriesMap = {
     'Electronics': Icons.computer,
     'Fashion': MdiIcons.tshirtCrew,
@@ -125,8 +110,7 @@ class SellPage extends StatelessWidget {
     final imageUploader = ImageUploader(key: imageUploaderKey);
     final dropdownCategoryList = DropdownCategoryList(key: dropdownCategoryKey);
     final dropdownSizeList = DropdownSizeList(key: dropdownSizeKey);
-    final dropdownConditionList =
-        DropdownConditionList(key: dropdownConditionKey);
+    final dropdownConditionList = DropdownConditionList(key: dropdownConditionKey);
     _forms = [
       Container(
         child: Column(
@@ -140,14 +124,10 @@ class SellPage extends StatelessWidget {
               child: ButtonTheme(
                 minWidth: double.infinity,
                 child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusDirectional.circular(8)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () => {_nextFormStep()},
                   child: Text('Next',
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                   color: Colors.black,
                   textColor: Colors.white,
@@ -169,29 +149,21 @@ class SellPage extends StatelessWidget {
                   style: TextStyle(color: ResoldBlue),
                   autofocus: sellState.focusState.listingTitleFocused,
                   onTap: () {
-                    sellState.focusState = SellFocusState(
-                        listingTitleFocused: true,
-                        priceFocused: false,
-                        detailsFocused: false);
+                    sellState.focusState =
+                        SellFocusState(listingTitleFocused: true, priceFocused: false, detailsFocused: false);
                     dispatcher(SetSellStateAction(sellState));
                   },
                   controller: listingTitleController,
                   decoration: InputDecoration(
                       labelText: 'Listing Title',
                       labelStyle: TextStyle(
-                          color: sellState.focusState.listingTitleFocused ||
-                                  listingTitleController.text.isNotEmpty
+                          color: sellState.focusState.listingTitleFocused || listingTitleController.text.isNotEmpty
                               ? ResoldBlue
                               : Colors.black),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: listingTitleController.text.isNotEmpty
-                                  ? ResoldBlue
-                                  : Colors.black,
-                              width: 1.5)),
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: ResoldBlue, width: 1.5))),
+                              color: listingTitleController.text.isNotEmpty ? ResoldBlue : Colors.black, width: 1.5)),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5))),
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Please enter your listing's title.";
@@ -209,10 +181,8 @@ class SellPage extends StatelessWidget {
                 autofocus: sellState.focusState.priceFocused,
                 style: TextStyle(color: ResoldBlue),
                 onTap: () {
-                  sellState.focusState = SellFocusState(
-                      listingTitleFocused: false,
-                      priceFocused: true,
-                      detailsFocused: false);
+                  sellState.focusState =
+                      SellFocusState(listingTitleFocused: false, priceFocused: true, detailsFocused: false);
                   dispatcher(SetSellStateAction(sellState));
                 },
                 controller: priceController,
@@ -220,18 +190,13 @@ class SellPage extends StatelessWidget {
                 decoration: InputDecoration(
                     labelText: 'Price (\$)',
                     labelStyle: TextStyle(
-                        color: sellState.focusState.priceFocused ||
-                                priceController.text.isNotEmpty
+                        color: sellState.focusState.priceFocused || priceController.text.isNotEmpty
                             ? ResoldBlue
                             : Colors.black),
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                            color: priceController.text.isNotEmpty
-                                ? ResoldBlue
-                                : Colors.black,
-                            width: 1.5)),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: ResoldBlue, width: 1.5))),
+                        borderSide:
+                            BorderSide(color: priceController.text.isNotEmpty ? ResoldBlue : Colors.black, width: 1.5)),
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5))),
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter a price.';
@@ -244,10 +209,8 @@ class SellPage extends StatelessWidget {
                 style: TextStyle(color: ResoldBlue),
                 controller: detailsController,
                 onTap: () {
-                  sellState.focusState = SellFocusState(
-                      listingTitleFocused: false,
-                      priceFocused: false,
-                      detailsFocused: true);
+                  sellState.focusState =
+                      SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: true);
                   dispatcher(SetSellStateAction(sellState));
                 },
                 maxLines: null,
@@ -256,18 +219,13 @@ class SellPage extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Details',
                   labelStyle: TextStyle(
-                      color: sellState.focusState.detailsFocused ||
-                              detailsController.text.isNotEmpty
+                      color: sellState.focusState.detailsFocused || detailsController.text.isNotEmpty
                           ? ResoldBlue
                           : Colors.black),
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: detailsController.text.isNotEmpty
-                              ? ResoldBlue
-                              : Colors.black,
-                          width: 1.5)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                      borderSide:
+                          BorderSide(color: detailsController.text.isNotEmpty ? ResoldBlue : Colors.black, width: 1.5)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -289,10 +247,8 @@ class SellPage extends StatelessWidget {
                   ToggleButtons(
                       onPressed: (int index) {
                         sellState.selectedCondition = index;
-                        sellState.focusState = SellFocusState(
-                            listingTitleFocused: false,
-                            priceFocused: false,
-                            detailsFocused: false);
+                        sellState.focusState =
+                            SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false);
                         dispatcher(SetSellStateAction(sellState));
                       },
                       renderBorder: false,
@@ -314,30 +270,21 @@ class SellPage extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.215,
                           child: FittedBox(
                               child: Column(
-                            children: [
-                              Icon(MdiIcons.emoticonHappyOutline),
-                              Text('Like New')
-                            ],
+                            children: [Icon(MdiIcons.emoticonHappyOutline), Text('Like New')],
                           )),
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.215,
                           child: FittedBox(
                               child: Column(
-                            children: [
-                              Icon(MdiIcons.emoticonNeutralOutline),
-                              Text('Good')
-                            ],
+                            children: [Icon(MdiIcons.emoticonNeutralOutline), Text('Good')],
                           )),
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.215,
                           child: FittedBox(
                               child: Column(
-                            children: [
-                              Icon(MdiIcons.emoticonSadOutline),
-                              Text('Used')
-                            ],
+                            children: [Icon(MdiIcons.emoticonSadOutline), Text('Used')],
                           )),
                         ),
                       ]),
@@ -346,14 +293,10 @@ class SellPage extends StatelessWidget {
               ButtonTheme(
                 minWidth: double.infinity,
                 child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusDirectional.circular(8)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () => {_nextFormStep()},
                   child: Text('Next',
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                   color: Colors.black,
                   textColor: Colors.white,
@@ -389,10 +332,8 @@ class SellPage extends StatelessWidget {
                 ToggleButtons(
                     onPressed: (int index) {
                       sellState.selectedCondition = index;
-                      sellState.focusState = SellFocusState(
-                          listingTitleFocused: false,
-                          priceFocused: false,
-                          detailsFocused: false);
+                      sellState.focusState =
+                          SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false);
                       dispatcher(SetSellStateAction(sellState));
                     },
                     renderBorder: false,
@@ -407,10 +348,8 @@ class SellPage extends StatelessWidget {
                                   MdiIcons.carSide,
                                 ),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.15,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
+                                  width: MediaQuery.of(context).size.width * 0.15,
+                                  height: MediaQuery.of(context).size.height * 0.05,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [Text('Car')],
@@ -442,20 +381,14 @@ class SellPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.215,
                         child: FittedBox(
                             child: Column(
-                          children: [
-                            Icon(MdiIcons.vanUtility),
-                            Text('Delivery Van')
-                          ],
+                          children: [Icon(MdiIcons.vanUtility), Text('Delivery Van')],
                         )),
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.215,
                         child: FittedBox(
                             child: Column(
-                          children: [
-                            Icon(MdiIcons.truck),
-                            Text('Moving Truck')
-                          ],
+                          children: [Icon(MdiIcons.truck), Text('Moving Truck')],
                         )),
                       ),
                     ]),
@@ -466,14 +399,10 @@ class SellPage extends StatelessWidget {
               child: ButtonTheme(
                 minWidth: double.infinity,
                 child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusDirectional.circular(8)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () => {_nextFormStep()},
                   child: Text('Next',
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                   color: Colors.black,
                   textColor: Colors.white,
@@ -494,14 +423,10 @@ class SellPage extends StatelessWidget {
               child: ButtonTheme(
                 minWidth: double.infinity,
                 child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusDirectional.circular(8)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () => {},
                   child: Text('Post',
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                   color: Colors.black,
                   textColor: Colors.white,
@@ -530,34 +455,26 @@ class SellPage extends StatelessWidget {
                           children: [
                             Align(
                                 alignment: Alignment.center,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          child: sellState.currentFormStep != 0
-                                              ? BackButton(
-                                                  onPressed: () {
-                                                    formPageViewController
-                                                        .previousPage(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve: Curves.ease,
-                                                    )
-                                                        .then((value) {
-                                                      sellState
-                                                          .currentFormStep -= 1;
-                                                      dispatcher(
-                                                          SetSellStateAction(
-                                                              sellState));
-                                                    });
-                                                  },
+                                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                  SizedBox(
+                                      child: sellState.currentFormStep != 0
+                                          ? BackButton(
+                                              onPressed: () {
+                                                formPageViewController
+                                                    .previousPage(
+                                                  duration: Duration(milliseconds: 300),
+                                                  curve: Curves.ease,
                                                 )
-                                              : SizedBox(),
-                                          width: 35),
-                                      Text(steps[sellState.currentFormStep],
-                                          style: new TextStyle(
-                                              color: Colors.white))
-                                    ]))
+                                                    .then((value) {
+                                                  sellState.currentFormStep -= 1;
+                                                  dispatcher(SetSellStateAction(sellState));
+                                                });
+                                              },
+                                            )
+                                          : SizedBox(),
+                                      width: 35),
+                                  Text(steps[sellState.currentFormStep], style: new TextStyle(color: Colors.white))
+                                ]))
                           ],
                         ),
                         iconTheme: IconThemeData(

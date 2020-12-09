@@ -3,7 +3,7 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/search.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/state/search-state.dart';
+import 'package:resold/state/screens/search-state.dart';
 
 class ProductUiModel extends ChangeNotifier {
   final int itemRequestThreshold = 20;

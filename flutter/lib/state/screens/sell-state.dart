@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:resold/state/sell-focus-state.dart';
+import 'package:resold/state/screens/sell/sell-focus-state.dart';
 
 class SellState {
   TextEditingController listingTitleController;

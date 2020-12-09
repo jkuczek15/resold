@@ -12,13 +12,12 @@ import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
-import 'package:resold/models/vendor.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/screens/order/details.dart';
 import 'package:resold/screens/tabs/map.dart';
+import 'package:resold/screens/tabs/orders.dart';
 import 'package:resold/screens/tabs/sell.dart';
 import 'package:resold/screens/tabs/account.dart';
-import 'package:resold/screens/tabs/orders.dart';
 import 'package:resold/screens/tabs/search.dart';
 import 'package:resold/screens/messages/inbox.dart';
 import 'package:resold/services/magento.dart';
@@ -27,8 +26,10 @@ import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-customer.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
-import 'package:resold/state/search-state.dart';
-import 'package:resold/state/sell-state.dart';
+import 'package:resold/state/screens/account-state.dart';
+import 'package:resold/state/screens/orders-state.dart';
+import 'package:resold/state/screens/search-state.dart';
+import 'package:resold/state/screens/sell-state.dart';
 import 'package:resold/ui-models/product-ui-model.dart';
 import 'package:resold/view-models/firebase/inbox-message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -261,25 +262,24 @@ class HomePageState extends State<HomePage> {
                   dispatcher: dispatcher);
             });
       case SelectedTab.orders:
-        return OrdersPage(customer: customer);
+        return ViewModelSubscriber<AppState, OrdersState>(
+            converter: (state) => state.ordersState,
+            builder: (context, dispatcher, ordersState) {
+              ordersState.purchasedOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
+              ordersState.soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
+              return OrdersPage(
+                  customer: customer, purchasedOrders: ordersState.purchasedOrders, soldOrders: ordersState.soldOrders);
+            });
       case SelectedTab.account:
-        return ViewModelSubscriber<AppState, Vendor>(
-            converter: (state) => state.vendor,
-            builder: (context, dispatcher, vendor) {
-              return ViewModelSubscriber<AppState, List<Product>>(
-                  converter: (state) => state.forSaleProducts,
-                  builder: (context, dispatcher, forSaleProducts) {
-                    return ViewModelSubscriber<AppState, List<Product>>(
-                        converter: (state) => state.soldProducts,
-                        builder: (context, dispatcher, soldProducts) {
-                          return AccountPage(
-                              customer: customer,
-                              vendor: vendor,
-                              currentLocation: currentLocation,
-                              forSaleProducts: forSaleProducts,
-                              soldProducts: soldProducts);
-                        });
-                  });
+        return ViewModelSubscriber<AppState, AccountState>(
+            converter: (state) => state.accountState,
+            builder: (context, dispatcher, accountState) {
+              return AccountPage(
+                  customer: customer,
+                  vendor: accountState.vendor,
+                  currentLocation: currentLocation,
+                  forSaleProducts: accountState.forSaleProducts,
+                  soldProducts: accountState.soldProducts);
             });
       default:
         return Text('Unknown tab');

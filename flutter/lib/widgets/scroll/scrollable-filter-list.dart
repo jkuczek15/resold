@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/sort.dart';
 import 'package:resold/state/actions/filter-search-results.dart';
-import 'package:resold/state/search-state.dart';
+import 'package:resold/state/screens/search-state.dart';
 import 'package:resold/ui-models/product-ui-model.dart';
 
 class ScrollableFilterList extends StatefulWidget {
