@@ -1,5 +1,5 @@
 import 'package:rebloc/rebloc.dart';
-import 'package:resold/state/search-state.dart';
+import 'package:resold/state/screens/search-state.dart';
 
 class FilterSearchResultsAction extends Action {
   final SearchState newState;

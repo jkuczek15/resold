@@ -7,7 +7,7 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/screens/product/view.dart';
-import 'package:resold/state/search-state.dart';
+import 'package:resold/state/screens/search-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:resold/widgets/location/distance.dart';

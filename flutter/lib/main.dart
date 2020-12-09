@@ -12,6 +12,7 @@ import 'package:resold/helpers/condition-helper.dart';
 import 'package:resold/helpers/local-global-helper.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/screens/home.dart';
+import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/services/resold.dart';
@@ -21,15 +22,16 @@ import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/product-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
 import 'package:resold/state/reducers/search-reducer.dart';
-import 'package:resold/state/search-state.dart';
-import 'package:resold/state/sell-focus-state.dart';
-import 'package:resold/state/sell-state.dart';
+import 'package:resold/state/screens/account-state.dart';
+import 'package:resold/state/screens/orders-state.dart';
+import 'package:resold/state/screens/search-state.dart';
+import 'package:resold/state/screens/sell-state.dart';
+import 'package:resold/state/screens/sell/sell-focus-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'constants/dev-constants.dart';
 import 'enums/sort.dart';
 import 'models/product.dart';
-import 'models/vendor.dart';
 import 'overrides/http-override.dart';
 
 Future<void> main() async {
@@ -53,7 +55,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.buyer);
+    await CustomerResponse.save(TestAccounts.seller);
   } // end if development
 
   // get from disk and login
@@ -88,11 +90,6 @@ Future<void> main() async {
     customer = await CustomerResponse.load();
   } // end if we should automatically post a product
 
-  // setup the for-sale and sold products state
-  Vendor vendor = new Vendor();
-  List<Product> forSaleProducts = new List<Product>();
-  List<Product> soldProducts = new List<Product>();
-
   // initialize search state
   SearchState searchState = SearchState(
       currentPage: 0,
@@ -102,6 +99,20 @@ Future<void> main() async {
       selectedSort: Sort.newest,
       textController: TextEditingController(),
       searchStream: StreamController<List<Product>>.broadcast());
+
+  // initialize sell state
+  SellState sellState = SellState(
+      listingTitleController: TextEditingController(),
+      priceController: TextEditingController(),
+      detailsController: TextEditingController(),
+      focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
+      currentFormStep: 0);
+
+  // initialize orders state
+  OrdersState ordersState = OrdersState();
+
+  // initialize account state
+  AccountState accountState = AccountState();
 
   // initialize application state
   Position currentLocation = Position();
@@ -121,30 +132,29 @@ Future<void> main() async {
     await Future.wait([
       Resold.getVendor(customer.vendorId),
       Resold.getVendorProducts(customer.vendorId, 'for-sale'),
-      Resold.getVendorProducts(customer.vendorId, 'sold')
+      Resold.getVendorProducts(customer.vendorId, 'sold'),
+      Magento.getPurchasedOrders(customer.id),
+      ResoldRest.getVendorOrders(customer.token)
     ]).then((data) {
-      vendor = data[0];
-      forSaleProducts = data[1];
-      soldProducts = data[2];
+      accountState.vendor = data[0];
+      accountState.forSaleProducts = data[1];
+      accountState.soldProducts = data[2];
+      ordersState.purchasedOrders = data[3];
+      ordersState.soldOrders = data[4];
     });
   } // end if customer is logged in
 
   // store app state
   Store store = Store<AppState>(
       initialState: AppState(
-          selectedTab: SelectedTab.home,
-          customer: customer,
-          vendor: vendor,
-          forSaleProducts: forSaleProducts,
-          soldProducts: soldProducts,
-          searchState: searchState,
-          currentLocation: currentLocation,
-          sellState: SellState(
-              listingTitleController: TextEditingController(),
-              priceController: TextEditingController(),
-              detailsController: TextEditingController(),
-              focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
-              currentFormStep: 0)),
+        selectedTab: SelectedTab.home,
+        customer: customer,
+        currentLocation: currentLocation,
+        searchState: searchState,
+        sellState: sellState,
+        ordersState: ordersState,
+        accountState: accountState,
+      ),
       blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer()]);
 
   // run the app

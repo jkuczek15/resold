@@ -9,6 +9,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
+import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/magento.dart';
@@ -247,11 +248,11 @@ class SignUpPageState extends State<SignUpPage> {
                             Resold.getVendorProducts(customer.vendorId, 'sold')
                           ]).then((data) {
                             dispatcher(InitStateAction(AppState(
-                                selectedTab: SelectedTab.home,
-                                customer: customer,
-                                vendor: data[0],
-                                forSaleProducts: data[1],
-                                soldProducts: data[2])));
+                              selectedTab: SelectedTab.home,
+                              customer: customer,
+                              accountState:
+                                  AccountState(vendor: data[0], forSaleProducts: data[1], soldProducts: data[2]),
+                            )));
                           });
 
                           // navigate
