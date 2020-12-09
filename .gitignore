@@ -27,6 +27,7 @@ atlassian*
 /Ultimo-Guide.pdf
 !/pub/media/wysiwyg/*
 /pub/media/wysiwyg/.thumbs
+!/var/session/README.md
 
 puppeteer/node_modules/*
 
@@ -60,6 +61,7 @@ robots.txt
 
 /var/*
 !/var/.htaccess
+!/var/session/README.md
 /vendor/*
 !/vendor/resold
 !/vendor/.htaccess
