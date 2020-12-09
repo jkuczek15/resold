@@ -108,7 +108,7 @@ Future<void> main() async {
       priceController: TextEditingController(),
       detailsController: TextEditingController(),
       focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
-      imageState: SellImageState(images: new List<Object>(), imagePaths: new List<String>()),
+      imageState: SellImageState(images: ['add-button'], imagePaths: new List<String>()),
       currentFormStep: 0);
 
   // initialize orders state

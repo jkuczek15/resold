@@ -25,7 +25,6 @@ class ImageUploader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     requestAccess();
-    images.add('add-button');
     return Expanded(child: buildGridView(context), flex: 0);
   }
 

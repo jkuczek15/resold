@@ -29,6 +29,7 @@ import 'package:resold/state/app-state.dart';
 import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/state/screens/search-state.dart';
+import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/state/screens/sell/sell-state.dart';
 import 'package:resold/ui-models/product-ui-model.dart';
 import 'package:resold/view-models/firebase/inbox-message.dart';
@@ -248,19 +249,23 @@ class HomePageState extends State<HomePage> {
         return ViewModelSubscriber<AppState, SellState>(
             converter: (state) => state.sellState,
             builder: (context, dispatcher, sellState) {
-              return SellPage(
-                  customer: customer,
-                  currentLocation: currentLocation,
-                  listingTitleController: sellState.listingTitleController,
-                  priceController: sellState.priceController,
-                  detailsController: sellState.detailsController,
-                  selectedCondition: sellState.selectedCondition,
-                  selectedCategory: sellState.selectedCategory,
-                  selectedItemSize: sellState.selectedItemSize,
-                  currentFormStep: sellState.currentFormStep,
-                  focusState: sellState.focusState,
-                  imageState: sellState.imageState,
-                  dispatcher: dispatcher);
+              return ViewModelSubscriber<AppState, SellImageState>(
+                  converter: (state) => state.sellState.imageState,
+                  builder: (context, dispatcher, imageState) {
+                    return SellPage(
+                        customer: customer,
+                        currentLocation: currentLocation,
+                        listingTitleController: sellState.listingTitleController,
+                        priceController: sellState.priceController,
+                        detailsController: sellState.detailsController,
+                        selectedCondition: sellState.selectedCondition,
+                        selectedCategory: sellState.selectedCategory,
+                        selectedItemSize: sellState.selectedItemSize,
+                        currentFormStep: sellState.currentFormStep,
+                        focusState: sellState.focusState,
+                        imageState: imageState,
+                        dispatcher: dispatcher);
+                  });
             });
       case SelectedTab.orders:
         return ViewModelSubscriber<AppState, OrdersState>(
