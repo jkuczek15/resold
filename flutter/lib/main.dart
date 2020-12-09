@@ -22,6 +22,8 @@ import 'package:resold/state/reducers/product-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
 import 'package:resold/state/reducers/search-reducer.dart';
 import 'package:resold/state/search-state.dart';
+import 'package:resold/state/sell-focus-state.dart';
+import 'package:resold/state/sell-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'constants/dev-constants.dart';
@@ -136,7 +138,13 @@ Future<void> main() async {
           forSaleProducts: forSaleProducts,
           soldProducts: soldProducts,
           searchState: searchState,
-          currentLocation: currentLocation),
+          currentLocation: currentLocation,
+          sellState: SellState(
+              listingTitleController: TextEditingController(),
+              priceController: TextEditingController(),
+              detailsController: TextEditingController(),
+              focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
+              currentFormStep: 0)),
       blocs: [CustomerReducer(), ProductReducer(), HomeReducer(), SearchReducer()]);
 
   // run the app
