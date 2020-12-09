@@ -4,23 +4,15 @@ import 'package:flutter/rendering.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/state/actions/set-sell-state.dart';
-import 'package:resold/state/screens/sell-state.dart';
+import 'package:resold/state/screens/sell/sell-state.dart';
 import 'package:resold/state/screens/sell/sell-focus-state.dart';
+import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/image/image-uploader.dart';
-import 'package:resold/widgets/dropdown/dropdown-category-list.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:resold/widgets/dropdown/dropdown-size-list.dart';
-import 'package:resold/widgets/dropdown/dropdown-condition-list.dart';
 
 class SellPage extends StatelessWidget {
   final String condition = '';
-
-  // widget keys
-  final imageUploaderKey = new GlobalKey<ImageUploaderState>();
-  final dropdownCategoryKey = new GlobalKey<DropdownCategoryListState>();
-  final dropdownSizeKey = new GlobalKey<DropdownSizeListState>();
-  final dropdownConditionKey = new GlobalKey<DropdownConditionListState>();
 
   // field controllers
   final TextEditingController listingTitleController;
@@ -40,7 +32,12 @@ class SellPage extends StatelessWidget {
   // new
   final List<bool> conditionSelected = [false, false, false, false];
   final List<bool> vehicleSelected = [false, false, false, false];
-  List<String> steps = ['1. Add Images', '2. Add Title and Details', '3. Select Category', '4. Review and Submit'];
+  List<String> steps = [
+    '1. Add Images',
+    '2. Add Title & Details',
+    '3. Select Category & Vehicle',
+    '4. Review and Submit'
+  ];
   Map categoriesMap = {
     'Electronics': Icons.computer,
     'Fashion': MdiIcons.tshirtCrew,
@@ -68,6 +65,7 @@ class SellPage extends StatelessWidget {
   SellState sellState;
   PageController formPageViewController;
   SellFocusState focusState;
+  SellImageState imageState;
   List<IconData> _selectedIcons = [];
 
   SellPage(
@@ -81,12 +79,8 @@ class SellPage extends StatelessWidget {
       this.selectedItemSize,
       this.currentFormStep,
       this.focusState,
+      this.imageState,
       this.dispatcher});
-
-  @override
-  GlobalKey<FormState> createState() {
-    return this.formKey = GlobalKey<FormState>();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,27 +92,25 @@ class SellPage extends StatelessWidget {
         selectedItemSize: selectedItemSize,
         selectedCategory: selectedCategory,
         currentFormStep: currentFormStep,
-        focusState: focusState);
+        focusState: focusState,
+        imageState: imageState);
 
     formPageViewController = PageController(initialPage: currentFormStep);
 
     if (selectedCondition != null) {
       conditionSelected[selectedCondition] = true;
     }
-    var counter = 0;
 
-    final imageUploader = ImageUploader(key: imageUploaderKey);
-    final dropdownCategoryList = DropdownCategoryList(key: dropdownCategoryKey);
-    final dropdownSizeList = DropdownSizeList(key: dropdownSizeKey);
-    final dropdownConditionList = DropdownConditionList(key: dropdownConditionKey);
+    final imageUploader =
+        ImageUploader(images: imageState.images, imagePaths: imageState.imagePaths, dispatcher: dispatcher);
+
     _forms = [
       Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text('Upload Images'),
-            //imageUploader,
+            imageUploader,
             Padding(
               padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
               child: ButtonTheme(
@@ -500,121 +492,3 @@ class SellPage extends StatelessWidget {
     dispatcher(SetSellStateAction(sellState));
   }
 }
-
-/*return Padding(
-        padding: EdgeInsets.all(20),
-        child: ScrollColumnExpandable(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Form(
-                  key: formKey,
-                  child: Column(children: <Widget>[
-                    imageUploader,
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Listing Title'),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text.';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    dropdownCategoryList,
-                    SizedBox(height: 20),
-                    dropdownSizeList,
-                    SizedBox(height: 20),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Container(
-                          width: 125,
-                          height: 60,
-                          child: TextFormField(
-                            controller: priceController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Price (\$)'),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter a price.';
-                              }
-                              return null;
-                            },
-                          )),
-                      Container(width: 150, height: 60, child: dropdownConditionList),
-                    ]),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: detailsController,
-                      maxLines: null,
-                      minLines: null,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Details',
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text.';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    ButtonTheme(
-                        minWidth: 340.0,
-                        height: 70.0,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                          onPressed: () async {
-                            if (formKey.currentState.validate()) {
-                              // show a loading indicator
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Center(child: Loading());
-                                  });
-                              var product = Product(
-                                  name: nameController.text,
-                                  price: priceController.text,
-                                  description: detailsController.text,
-                                  condition: dropdownConditionKey.currentState.conditionSelected,
-                                  categoryIds: [int.tryParse(dropdownCategoryKey.currentState.categorySelected)],
-                                  itemSize: int.tryParse(dropdownSizeKey.currentState.sizeSelected),
-                                  latitude: currentLocation.latitude,
-                                  longitude: currentLocation.longitude,
-                                  localGlobal: LocalGlobalHelper.getLocalGlobal());
-
-                              var response = await ResoldRest.postProduct(
-                                  customer.token, product, imageUploaderKey.currentState.imagePaths);
-                              product.id = int.tryParse(response);
-
-                              // dispatch new action to set the for-sale products
-                              List<Product> forSaleProducts =
-                                  await Resold.getVendorProducts(customer.vendorId, 'for-sale');
-
-                              dispatcher(SetForSaleAction(forSaleProducts));
-                              dispatcher(SetSelectedTabAction(SelectedTab.account));
-
-                              Navigator.of(context, rootNavigator: true).pop('dialog');
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProductPage(
-                                          customer: customer,
-                                          currentLocation: currentLocation,
-                                          product: product,
-                                          dispatcher: dispatcher)));
-                            } // end if form is valid
-                          },
-                          child: Text('Post',
-                              style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                          color: Colors.black,
-                          textColor: Colors.white,
-                        ))
-                  ]))
-            ]));*/
-//  } // end function build
-
-//}

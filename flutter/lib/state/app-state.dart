@@ -3,7 +3,7 @@ import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/state/screens/search-state.dart';
-import 'package:resold/state/screens/sell-state.dart';
+import 'package:resold/state/screens/sell/sell-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class AppState {

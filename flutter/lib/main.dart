@@ -26,8 +26,9 @@ import 'package:resold/state/reducers/sell-reducer.dart';
 import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/state/screens/search-state.dart';
-import 'package:resold/state/screens/sell-state.dart';
+import 'package:resold/state/screens/sell/sell-state.dart';
 import 'package:resold/state/screens/sell/sell-focus-state.dart';
+import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'constants/dev-constants.dart';
@@ -56,7 +57,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.seller);
+    await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
 
   // get from disk and login
@@ -107,6 +108,7 @@ Future<void> main() async {
       priceController: TextEditingController(),
       detailsController: TextEditingController(),
       focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
+      imageState: SellImageState(images: new List<Object>(), imagePaths: new List<String>()),
       currentFormStep: 0);
 
   // initialize orders state
