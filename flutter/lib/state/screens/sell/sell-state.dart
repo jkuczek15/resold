@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resold/state/screens/sell/sell-focus-state.dart';
+import 'package:resold/state/screens/sell/sell-image-state.dart';
 
 class SellState {
   TextEditingController listingTitleController;
@@ -11,6 +12,7 @@ class SellState {
   int currentFormStep;
   PageController formPageViewController;
   SellFocusState focusState;
+  SellImageState imageState;
 
   SellState(
       {this.listingTitleController,
@@ -21,5 +23,6 @@ class SellState {
       this.selectedItemSize,
       this.currentFormStep,
       this.formPageViewController,
-      this.focusState});
+      this.focusState,
+      this.imageState});
 }

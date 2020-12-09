@@ -5,34 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:resold/services/resold.dart';
+import 'package:resold/state/actions/set-sell-image-state.dart';
+import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/widgets/loading.dart';
 
-class ImageUploader extends StatefulWidget {
-
-  final ImageUploaderState state = new ImageUploaderState();
-
-  ImageUploader({Key key}) : super(key: key);
-
-  @override
-  ImageUploaderState createState() => state;
-}
-
-class ImageUploaderState extends State<ImageUploader> {
-
-  List<Object> images = List<Object>();
-  List<String> imagePaths = List<String>();
+class ImageUploader extends StatelessWidget {
+  final List<Object> images;
+  final List<String> imagePaths;
+  final Function dispatcher;
   Future<File> imageFile;
   String error = 'No Error Dectected';
-  Future<bool> hasMediaAccess;
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      hasMediaAccess = requestAccess();
-      images.add("add-button");
-    });
-  }
+  ImageUploader({this.images, this.imagePaths, this.dispatcher});
 
   Future<bool> requestAccess() async {
     return await Permission.camera.request().isGranted && await Permission.photos.request().isGranted;
@@ -40,30 +24,27 @@ class ImageUploaderState extends State<ImageUploader> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: buildGridView(), flex: 0);
+    requestAccess();
+    images.add('add-button');
+    return Expanded(child: buildGridView(context), flex: 0);
   }
 
-  Widget buildGridView() {
+  Widget buildGridView(context) {
     return GridView.count(
       shrinkWrap: true,
       physics: ScrollPhysics(),
       crossAxisCount: 3,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
-        if(images[index] == "add-button") {
+        if (images[index] == "add-button") {
           return Card(
-            child: Column (
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: loadAssets
-                ),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                IconButton(icon: Icon(Icons.add), onPressed: () => loadAssets(context)),
                 Text('Add Images')
-              ]
-            )
-          );
+              ]));
         } else {
           Asset asset = images[index];
           return Card(
@@ -97,13 +78,11 @@ class ImageUploaderState extends State<ImageUploader> {
                           context: context,
                           builder: (BuildContext context) {
                             return Center(child: Loading());
-                          }
-                      );
+                          });
                       await Resold.deleteImage(imagePaths[index]);
                       Navigator.of(context, rootNavigator: true).pop('dialog');
-                      setState(() {
-                        images.removeAt(index);
-                      });
+                      images.removeAt(index);
+                      dispatcher(SetSellImageStateAction(SellImageState(images: images, imagePaths: imagePaths)));
                     },
                   ),
                 ),
@@ -113,36 +92,30 @@ class ImageUploaderState extends State<ImageUploader> {
         }
       }),
     );
-  }
+  } // end function buildGridView
 
-  Future<void> loadAssets() async {
+  Future<void> loadAssets(BuildContext context) async {
     List<Asset> resultList = List<Asset>();
     List<Object> result = List<Object>();
     String error = 'No Error Dectected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 15,
-        enableCamera: true,
-        selectedAssets: images.where((element) => element is Asset).cast<Asset>().toList(),
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#41b8ea",
-          actionBarTitle: "Select Images",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          statusBarColor: '#318bb0',
-          selectCircleStrokeColor: "#41b8ea",
-        )
-      );
+          maxImages: 15,
+          enableCamera: true,
+          selectedAssets: images.where((element) => element is Asset).cast<Asset>().toList(),
+          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+          materialOptions: MaterialOptions(
+            actionBarColor: "#41b8ea",
+            actionBarTitle: "Select Images",
+            allViewTitle: "All Photos",
+            useDetailsView: false,
+            statusBarColor: '#318bb0',
+            selectCircleStrokeColor: "#41b8ea",
+          ));
     } on Exception catch (e) {
       error = e.toString();
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
 
     result.addAll(resultList);
     result.add("add-button");
@@ -152,18 +125,13 @@ class ImageUploaderState extends State<ImageUploader> {
         context: context,
         builder: (BuildContext context) {
           return Center(child: Loading());
-        }
-    );
+        });
 
     // upload the images to the server
     var paths = await Resold.uploadImages(resultList);
 
     Navigator.of(context, rootNavigator: true).pop('dialog');
 
-    setState(() {
-      images = result;
-      imagePaths = paths;
-      error = error;
-    });
-  }
+    dispatcher(SetSellImageStateAction(SellImageState(images: result, imagePaths: paths)));
+  } // end function loadAssets
 }
