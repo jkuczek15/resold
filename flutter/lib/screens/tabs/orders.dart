@@ -6,15 +6,20 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/helpers/filters/orders-filter.dart';
 import 'package:resold/models/order.dart';
+import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/actions/set-orders-state.dart';
+import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/list/order-list.dart';
 
 class OrdersPage extends StatelessWidget {
+  final CustomerResponse customer;
   final List<Order> purchasedOrders;
   final List<Order> soldOrders;
-  final CustomerResponse customer;
+  final Function dispatcher;
 
-  OrdersPage({this.customer, this.purchasedOrders, this.soldOrders});
+  OrdersPage({this.customer, this.purchasedOrders, this.soldOrders, this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +31,9 @@ class OrdersPage extends StatelessWidget {
         height: 80,
         springAnimationDurationInMilliseconds: 500,
         onRefresh: () async {
-          // setState(() {
-          //   futurePurchasedOrders = Magento.getPurchasedOrders(customer.id);
-          //   futureSoldOrders = ResoldRest.getVendorOrders(customer.token);
-          // });
+          dispatcher(SetOrdersStateAction(OrdersState(
+              purchasedOrders: await Magento.getPurchasedOrders(customer.id),
+              soldOrders: await ResoldRest.getVendorOrders(customer.token))));
         },
         showChildOpacityTransition: false,
         color: ResoldBlue,
@@ -52,10 +56,9 @@ class OrdersPage extends StatelessWidget {
                   if (purchasedOrders.length == 0) {
                     return Center(child: Text('You haven\'t purchased any items.'));
                   }
+                  Widget purchasedWidget;
                   if (inProgressPurchasedOrders.length > 0 && completedPurchasedOrders.length > 0) {
-                    return SingleChildScrollView(
-                        child: Expanded(
-                            child: Column(
+                    purchasedWidget = Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -71,9 +74,9 @@ class OrdersPage extends StatelessWidget {
                         ),
                         OrderList(customer: customer, orders: completedPurchasedOrders),
                       ],
-                    )));
+                    );
                   } else if (inProgressPurchasedOrders.length > 0) {
-                    return Column(
+                    purchasedWidget = Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -84,7 +87,7 @@ class OrdersPage extends StatelessWidget {
                       ],
                     );
                   } else if (completedPurchasedOrders.length > 0) {
-                    return Column(
+                    purchasedWidget = Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -95,14 +98,15 @@ class OrdersPage extends StatelessWidget {
                       ],
                     );
                   } // end if completed purchased orders
+                  return SingleChildScrollView(child: Expanded(child: purchasedWidget));
                 }()),
                 (() {
                   if (soldOrders.length == 0) {
                     return Center(child: Text('You haven\'t sold any items.'));
                   }
+                  Widget soldWidget;
                   if (inProgressSoldOrders.length > 0 && completedSoldOrders.length > 0) {
-                    return SingleChildScrollView(
-                        child: Column(
+                    soldWidget = Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -117,10 +121,9 @@ class OrdersPage extends StatelessWidget {
                         ),
                         OrderList(customer: customer, orders: completedSoldOrders)
                       ],
-                    ));
+                    );
                   } else if (inProgressSoldOrders.length > 0) {
-                    return SingleChildScrollView(
-                        child: Column(
+                    soldWidget = Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -129,10 +132,9 @@ class OrdersPage extends StatelessWidget {
                         ),
                         OrderList(customer: customer, orders: inProgressSoldOrders)
                       ],
-                    ));
+                    );
                   } else if (completedSoldOrders.length > 0) {
-                    return SingleChildScrollView(
-                        child: Column(
+                    soldWidget = Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -141,8 +143,9 @@ class OrdersPage extends StatelessWidget {
                         ),
                         OrderList(customer: customer, orders: completedSoldOrders)
                       ],
-                    ));
+                    );
                   } // end if completed sold orders
+                  return SingleChildScrollView(child: Expanded(child: soldWidget));
                 }())
               ])),
         ));

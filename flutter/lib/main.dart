@@ -21,6 +21,7 @@ import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/account-reducer.dart';
 import 'package:resold/state/reducers/home-reducer..dart';
+import 'package:resold/state/reducers/orders-reducer.dart';
 import 'package:resold/state/reducers/search-reducer.dart';
 import 'package:resold/state/reducers/sell-reducer.dart';
 import 'package:resold/state/screens/account-state.dart';
@@ -142,7 +143,7 @@ Future<void> main() async {
         ordersState: ordersState,
         accountState: accountState,
       ),
-      blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), AccountReducer()]);
+      blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), OrdersReducer(), AccountReducer()]);
 
   // run the app
   runApp(StoreProvider<AppState>(

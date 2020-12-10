@@ -886,7 +886,7 @@ class SellPage extends StatelessWidget {
             body: SingleChildScrollView(
                 child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height * 0.70,
+                      maxHeight: MediaQuery.of(context).size.height * 0.7,
                     ),
                     child: forms[sellState.currentFormStep])),
           );

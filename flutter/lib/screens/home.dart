@@ -274,7 +274,10 @@ class HomePageState extends State<HomePage> {
               ordersState.purchasedOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
               ordersState.soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
               return OrdersPage(
-                  customer: customer, purchasedOrders: ordersState.purchasedOrders, soldOrders: ordersState.soldOrders);
+                  customer: customer,
+                  purchasedOrders: ordersState.purchasedOrders,
+                  soldOrders: ordersState.soldOrders,
+                  dispatcher: dispatcher);
             });
       case SelectedTab.account:
         return ViewModelSubscriber<AppState, AccountState>(
