@@ -22,4 +22,15 @@ class SearchState {
       this.selectedSort,
       this.distance,
       this.currentPage});
+
+  factory SearchState.initialState() {
+    return SearchState(
+        currentPage: 0,
+        distance: '25',
+        selectedCategory: 'Cancel',
+        selectedCondition: 'Cancel',
+        selectedSort: Sort.newest,
+        textController: TextEditingController(),
+        searchStream: StreamController<List<Product>>.broadcast());
+  } // end function initialState
 }

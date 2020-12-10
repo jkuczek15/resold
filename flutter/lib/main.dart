@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
@@ -28,12 +27,9 @@ import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/state/screens/search-state.dart';
 import 'package:resold/state/screens/sell/sell-state.dart';
-import 'package:resold/state/screens/sell/sell-focus-state.dart';
-import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'constants/dev-constants.dart';
-import 'enums/sort.dart';
 import 'models/product.dart';
 import 'overrides/http-override.dart';
 
@@ -94,23 +90,10 @@ Future<void> main() async {
   } // end if we should automatically post a product
 
   // initialize search state
-  SearchState searchState = SearchState(
-      currentPage: 0,
-      distance: '25',
-      selectedCategory: 'Cancel',
-      selectedCondition: 'Cancel',
-      selectedSort: Sort.newest,
-      textController: TextEditingController(),
-      searchStream: StreamController<List<Product>>.broadcast());
+  SearchState searchState = SearchState.initialState();
 
   // initialize sell state
-  SellState sellState = SellState(
-      listingTitleController: TextEditingController(),
-      priceController: TextEditingController(),
-      detailsController: TextEditingController(),
-      focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
-      imageState: SellImageState(images: new List<Asset>(), imagePaths: new List<String>()),
-      currentFormStep: 0);
+  SellState sellState = SellState.initialState();
 
   // initialize orders state
   OrdersState ordersState = OrdersState();
