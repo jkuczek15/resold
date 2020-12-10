@@ -842,56 +842,56 @@ class SellPage extends StatelessWidget {
       )
     ];
     return Form(
-        key: formKey,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: PageView.builder(
-                  controller: formPageViewController,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Align(
-                                alignment: Alignment.center,
-                                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                  SizedBox(
-                                      child: sellState.currentFormStep != 0
-                                          ? BackButton(
-                                              onPressed: () {
-                                                formPageViewController
-                                                    .previousPage(
-                                                  duration: Duration(milliseconds: 300),
-                                                  curve: Curves.ease,
-                                                )
-                                                    .then((value) {
-                                                  sellState.currentFormStep -= 1;
-                                                  dispatcher(SetSellStateAction(sellState));
-                                                });
-                                              },
-                                            )
-                                          : SizedBox(),
-                                      width: 35),
-                                  Text(steps[sellState.currentFormStep], style: new TextStyle(color: Colors.white))
-                                ]))
-                          ],
-                        ),
-                        iconTheme: IconThemeData(
-                          color: Colors.white, // change your color here
-                        ),
-                        backgroundColor: ResoldBlue,
-                        actions: <Widget>[],
-                      ),
-                      body: forms[sellState.currentFormStep],
-                    );
-                  },
-                ),
-              )
-            ]));
+      key: formKey,
+      child: PageView.builder(
+        controller: formPageViewController,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return Scaffold(
+            resizeToAvoidBottomPadding: false,
+            appBar: AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                      alignment: Alignment.center,
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        SizedBox(
+                            child: sellState.currentFormStep != 0
+                                ? BackButton(
+                                    onPressed: () {
+                                      formPageViewController
+                                          .previousPage(
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.ease,
+                                      )
+                                          .then((value) {
+                                        sellState.currentFormStep -= 1;
+                                        dispatcher(SetSellStateAction(sellState));
+                                      });
+                                    },
+                                  )
+                                : SizedBox(),
+                            width: 35),
+                        Text(steps[sellState.currentFormStep], style: new TextStyle(color: Colors.white))
+                      ]))
+                ],
+              ),
+              iconTheme: IconThemeData(
+                color: Colors.white, // change your color here
+              ),
+              backgroundColor: ResoldBlue,
+              actions: <Widget>[],
+            ),
+            body: SingleChildScrollView(
+                child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.70,
+                    ),
+                    child: forms[sellState.currentFormStep])),
+          );
+        },
+      ),
+    );
   } // end function build
 }
