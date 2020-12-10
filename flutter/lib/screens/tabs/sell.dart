@@ -314,6 +314,7 @@ class SellPage extends StatelessWidget {
         ),
       ),
       Container(
+          child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -322,7 +323,7 @@ class SellPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
+                  padding: EdgeInsets.fromLTRB(20, 10, 0, 20),
                   child: Text(
                     'Select Category',
                     style: TextStyle(color: Colors.black, fontSize: 16),
@@ -519,7 +520,7 @@ class SellPage extends StatelessWidget {
                     ],
                   ),
                 ]),
-                SizedBox(height: 50),
+                SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
                   child: Text(
@@ -574,7 +575,7 @@ class SellPage extends StatelessWidget {
                         ),
                       ]),
                 ]),
-                SizedBox(height: 50),
+                SizedBox(height: 10),
                 Row(children: [
                   ToggleButtons(
                       onPressed: (int index) {
@@ -641,7 +642,7 @@ class SellPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      )),
       Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
