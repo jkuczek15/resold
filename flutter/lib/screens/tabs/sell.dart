@@ -44,8 +44,9 @@ class SellPage extends StatelessWidget {
   List<String> steps = [
     '1. Add Images',
     '2. Add Title & Details',
-    '3. Select Category & Vehicle',
-    '4. Review and Submit'
+    '3. Select Category',
+    '4. Select Vehicle',
+    '5. Review and Submit'
   ];
   Map categoriesMap = {
     'Electronics': Icons.computer,
@@ -64,18 +65,13 @@ class SellPage extends StatelessWidget {
     'Used': MdiIcons.emoticonSadOutline,
     'Cancel': MdiIcons.close,
   };
-  final List<IconData> _icons = [
-    MdiIcons.carSide,
-    MdiIcons.carPickup,
-    MdiIcons.vanUtility,
-    MdiIcons.truck,
-  ];
   List _forms;
   SellState sellState;
   PageController formPageViewController;
   SellFocusState focusState;
   SellImageState imageState;
-  List<IconData> _selectedIcons = [];
+  final double categoryIconSize = 30;
+  final double vehicleIconSize = 40;
 
   SellPage(
       {this.customer,
@@ -315,20 +311,15 @@ class SellPage extends StatelessWidget {
       ),
       Container(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Column(
+              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                  child: Text(
-                    'Select Category',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
                 Row(children: [
                   ToggleButtons(
                     onPressed: (int index) {
@@ -345,6 +336,7 @@ class SellPage extends StatelessWidget {
                               children: [
                                 Icon(
                                   MdiIcons.laptop,
+                                  size: categoryIconSize,
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
@@ -363,7 +355,10 @@ class SellPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(MdiIcons.tshirtCrew),
+                            Icon(
+                              MdiIcons.tshirtCrew,
+                              size: categoryIconSize,
+                            ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width / 2,
                               child: Column(
@@ -377,7 +372,7 @@ class SellPage extends StatelessWidget {
                     ],
                   ),
                 ]),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Row(children: [
                   ToggleButtons(
                     onPressed: (int index) {
@@ -394,6 +389,7 @@ class SellPage extends StatelessWidget {
                               children: [
                                 Icon(
                                   MdiIcons.sofa,
+                                  size: categoryIconSize,
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
@@ -412,7 +408,10 @@ class SellPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(MdiIcons.bike),
+                            Icon(
+                              MdiIcons.bike,
+                              size: categoryIconSize,
+                            ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width / 2,
                               child: Column(
@@ -426,7 +425,7 @@ class SellPage extends StatelessWidget {
                     ],
                   ),
                 ]),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Row(children: [
                   ToggleButtons(
                     onPressed: (int index) {
@@ -441,7 +440,10 @@ class SellPage extends StatelessWidget {
                           child: FittedBox(
                             child: Column(
                               children: [
-                                Icon(MdiIcons.basketball),
+                                Icon(
+                                  MdiIcons.basketball,
+                                  size: categoryIconSize,
+                                ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
                                   child: Column(
@@ -459,7 +461,10 @@ class SellPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(MdiIcons.guitarAcoustic),
+                            Icon(
+                              MdiIcons.guitarAcoustic,
+                              size: categoryIconSize,
+                            ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width / 2,
                               child: Column(
@@ -473,7 +478,7 @@ class SellPage extends StatelessWidget {
                     ],
                   ),
                 ]),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Row(children: [
                   ToggleButtons(
                     onPressed: (int index) {
@@ -488,7 +493,10 @@ class SellPage extends StatelessWidget {
                           child: FittedBox(
                             child: Column(
                               children: [
-                                Icon(MdiIcons.cards),
+                                Icon(
+                                  MdiIcons.cards,
+                                  size: categoryIconSize,
+                                ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
                                   child: Column(
@@ -506,7 +514,10 @@ class SellPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(MdiIcons.handHeart),
+                            Icon(
+                              MdiIcons.handHeart,
+                              size: categoryIconSize,
+                            ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width / 2,
                               child: Column(
@@ -520,14 +531,35 @@ class SellPage extends StatelessWidget {
                     ],
                   ),
                 ]),
-                SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
-                  child: Text(
-                    'Select Vehicle Required',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+              child: ButtonTheme(
+                minWidth: double.infinity,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                  onPressed: () => {_nextFormStep()},
+                  child: Text('Next',
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                  padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                  color: Colors.black,
+                  textColor: Colors.white,
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Row(children: [
                   ToggleButtons(
                       onPressed: (int index) {
@@ -542,9 +574,7 @@ class SellPage extends StatelessWidget {
                             child: FittedBox(
                               child: Column(
                                 children: [
-                                  Icon(
-                                    MdiIcons.carSide,
-                                  ),
+                                  Icon(MdiIcons.carSide, size: vehicleIconSize),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width / 2,
                                     child: Column(
@@ -562,7 +592,7 @@ class SellPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(MdiIcons.carPickup),
+                              Icon(MdiIcons.carPickup, size: vehicleIconSize),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: Column(
@@ -575,7 +605,7 @@ class SellPage extends StatelessWidget {
                         ),
                       ]),
                 ]),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Row(children: [
                   ToggleButtons(
                       onPressed: (int index) {
@@ -590,9 +620,7 @@ class SellPage extends StatelessWidget {
                             child: FittedBox(
                               child: Column(
                                 children: [
-                                  Icon(
-                                    MdiIcons.vanUtility,
-                                  ),
+                                  Icon(MdiIcons.vanUtility, size: vehicleIconSize),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width / 2,
                                     child: Column(
@@ -610,7 +638,7 @@ class SellPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(MdiIcons.truck),
+                              Icon(MdiIcons.truck, size: vehicleIconSize),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: Column(
