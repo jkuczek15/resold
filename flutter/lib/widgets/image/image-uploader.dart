@@ -96,7 +96,6 @@ class ImageUploader extends StatelessWidget {
   Future<void> loadAssets(BuildContext context) async {
     List<Asset> resultList = List<Asset>();
     List<Object> result = List<Object>();
-    String error = 'No Error Dectected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
