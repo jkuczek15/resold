@@ -11,7 +11,6 @@ class SellState {
   int selectedCondition;
   List<int> selectedItemSize;
   int currentFormStep;
-  PageController formPageViewController;
   SellFocusState focusState;
   SellImageState imageState;
 
@@ -23,7 +22,6 @@ class SellState {
       this.selectedCondition,
       this.selectedItemSize,
       this.currentFormStep,
-      this.formPageViewController,
       this.focusState,
       this.imageState});
 
