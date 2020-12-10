@@ -73,25 +73,45 @@ class OrderList extends StatelessWidget {
                                 ),
                               ))));
                 } else {
-                  return Card(
-                      child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage('assets/placeholder-image.png'),
-                          ),
-                          title: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(line.name),
-                                order.status == 'pickup' || order.status == 'delivery_in_progress'
-                                    ? Text('Arriving in ${difference.inMinutes} minutes',
-                                        style: TextStyle(color: Colors.grey, fontSize: 12))
-                                    : Text('Delivered: ' + DateFormat('EEEE M/d').format(order.created),
-                                        style: TextStyle(color: Colors.grey, fontSize: 12))
-                              ],
-                            ),
-                          )));
-                }
+                  return InkWell(
+                      onTap: () async {
+                        // show a loading indicator
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Center(child: Loading());
+                            });
+
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                        // fetch product on tap
+                        Product product = await ResoldRest.getProduct(customer.token, line.productId);
+
+                        // navigate to order details page
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
+                      },
+                      child: Card(
+                          child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: AssetImage('assets/placeholder-image.png'),
+                              ),
+                              title: Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(line.name),
+                                    order.status == 'pickup' || order.status == 'delivery_in_progress'
+                                        ? Text('Arriving in ${difference.inMinutes} minutes',
+                                            style: TextStyle(color: Colors.grey, fontSize: 12))
+                                        : Text('Delivered: ' + DateFormat('EEEE M/d').format(order.created),
+                                            style: TextStyle(color: Colors.grey, fontSize: 12))
+                                  ],
+                                ),
+                              ))));
+                } // end if we have data
               },
             );
           },
