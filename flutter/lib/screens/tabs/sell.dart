@@ -808,9 +808,12 @@ class SellPage extends StatelessWidget {
                           longitude: currentLocation.longitude,
                           localGlobal: '231,232');
 
-                      var response =
+                      String response =
                           await ResoldRest.postProduct(customer.token, product, sellState.imageState.imagePaths);
-                      product.id = int.tryParse(response);
+
+                      // fetch the product again
+                      product = await ResoldRest.getProduct(customer.token, int.tryParse(response));
+
                       // dispatch new action to set the for-sale products
                       dispatcher(AddProductAction(product: product));
                       dispatcher(SetSelectedTabAction(SelectedTab.account));
