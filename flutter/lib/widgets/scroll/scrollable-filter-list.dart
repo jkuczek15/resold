@@ -30,6 +30,7 @@ class ScrollableFilterListState extends State<ScrollableFilterList> {
     'Fashion': MdiIcons.tshirtCrew,
     'Home & Lawn': MdiIcons.sofa,
     'Outdoors': Icons.directions_bike,
+    'Sporting Goods': Icons.sports_basketball,
     'Music': MdiIcons.guitarAcoustic,
     'Collectibles': MdiIcons.cards,
     'Handmade': MdiIcons.handHeart,

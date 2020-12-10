@@ -25,13 +25,22 @@ class SellPage extends StatelessWidget {
   final Function dispatcher;
 
   final int selectedCondition;
-  final int selectedCategory;
-  final int selectedItemSize;
+  final List<int> selectedCategory;
+  final List<int> selectedItemSize;
   final int currentFormStep;
 
   // new
   final List<bool> conditionSelected = [false, false, false, false];
-  final List<bool> vehicleSelected = [false, false, false, false];
+  final List<List<bool>> vehicleSelected = [
+    [false, false],
+    [false, false]
+  ];
+  final List<List<bool>> categorySelected = [
+    [false, false],
+    [false, false],
+    [false, false],
+    [false, false]
+  ];
   List<String> steps = [
     '1. Add Images',
     '2. Add Title & Details',
@@ -99,6 +108,12 @@ class SellPage extends StatelessWidget {
 
     if (selectedCondition != null) {
       conditionSelected[selectedCondition] = true;
+    }
+    if (selectedCategory != null) {
+      categorySelected[selectedCategory[0]][selectedCategory[1]] = true;
+    }
+    if (selectedItemSize != null) {
+      vehicleSelected[selectedItemSize[0]][selectedItemSize[1]] = true;
     }
 
     final imageUploader =
@@ -307,83 +322,306 @@ class SellPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
                   child: Text(
-                    'Select Vehicle Required',
+                    'Select Category',
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 ),
-                /* SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: FittedBox(
-                    child: Column(
-                      children: [Icon(MdiIcons.carSide), Text('Car')],
-                    ),
-                  ),
-                ), */
-                ToggleButtons(
+                Row(children: [
+                  ToggleButtons(
                     onPressed: (int index) {
-                      sellState.selectedCondition = index;
-                      sellState.focusState =
-                          SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false);
+                      sellState.selectedCategory = [0, index];
                       dispatcher(SetSellStateAction(sellState));
                     },
                     renderBorder: false,
-                    isSelected: conditionSelected,
+                    isSelected: categorySelected[0],
                     children: <Widget>[
                       SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.215,
+                          width: MediaQuery.of(context).size.width / 2,
                           child: FittedBox(
                             child: Column(
                               children: [
                                 Icon(
-                                  MdiIcons.carSide,
+                                  MdiIcons.laptop,
                                 ),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.15,
-                                  height: MediaQuery.of(context).size.height * 0.05,
+                                  width: MediaQuery.of(context).size.width / 2,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [Text('Car')],
+                                    children: [Text('Electronics')],
                                   ),
                                 ),
                               ],
                             ),
                           )),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.215,
+                        width: MediaQuery.of(context).size.width / 2,
                         child: FittedBox(
                             child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(MdiIcons.carPickup),
+                            Icon(MdiIcons.tshirtCrew),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: MediaQuery.of(context).size.width / 2,
                               child: Column(
-                                children: [Text('Pickup Truck')],
+                                children: [Text('Fashion')],
                                 mainAxisAlignment: MainAxisAlignment.center,
                               ),
                             ),
                           ],
                         )),
                       ),
+                    ],
+                  ),
+                ]),
+                SizedBox(height: 10),
+                Row(children: [
+                  ToggleButtons(
+                    onPressed: (int index) {
+                      sellState.selectedCategory = [1, index];
+                      dispatcher(SetSellStateAction(sellState));
+                    },
+                    renderBorder: false,
+                    isSelected: categorySelected[1],
+                    children: <Widget>[
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.215,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: FittedBox(
+                            child: Column(
+                              children: [
+                                Icon(
+                                  MdiIcons.sofa,
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [Text('Home & Lawn')],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
                         child: FittedBox(
                             child: Column(
-                          children: [Icon(MdiIcons.vanUtility), Text('Delivery Van')],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(MdiIcons.bike),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Column(
+                                children: [Text('Outdoors')],
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                            ),
+                          ],
                         )),
                       ),
+                    ],
+                  ),
+                ]),
+                SizedBox(height: 10),
+                Row(children: [
+                  ToggleButtons(
+                    onPressed: (int index) {
+                      sellState.selectedCategory = [2, index];
+                      dispatcher(SetSellStateAction(sellState));
+                    },
+                    renderBorder: false,
+                    isSelected: categorySelected[2],
+                    children: <Widget>[
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.215,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: FittedBox(
+                            child: Column(
+                              children: [
+                                Icon(MdiIcons.basketball),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [Text('Sporting Goods')],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
                         child: FittedBox(
                             child: Column(
-                          children: [Icon(MdiIcons.truck), Text('Moving Truck')],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(MdiIcons.guitarAcoustic),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Column(
+                                children: [Text('Music')],
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                            ),
+                          ],
                         )),
                       ),
-                    ]),
+                    ],
+                  ),
+                ]),
+                SizedBox(height: 10),
+                Row(children: [
+                  ToggleButtons(
+                    onPressed: (int index) {
+                      sellState.selectedCategory = [3, index];
+                      dispatcher(SetSellStateAction(sellState));
+                    },
+                    renderBorder: false,
+                    isSelected: categorySelected[3],
+                    children: <Widget>[
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: FittedBox(
+                            child: Column(
+                              children: [
+                                Icon(MdiIcons.cards),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [Text('Collectibles')],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: FittedBox(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(MdiIcons.handHeart),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: Column(
+                                children: [Text('Handmade')],
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                            ),
+                          ],
+                        )),
+                      ),
+                    ],
+                  ),
+                ]),
+                SizedBox(height: 50),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
+                  child: Text(
+                    'Select Vehicle Required',
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ),
+                Row(children: [
+                  ToggleButtons(
+                      onPressed: (int index) {
+                        sellState.selectedItemSize = [0, index];
+                        dispatcher(SetSellStateAction(sellState));
+                      },
+                      renderBorder: false,
+                      isSelected: vehicleSelected[0],
+                      children: <Widget>[
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: FittedBox(
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    MdiIcons.carSide,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [Text('Car')],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: FittedBox(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(MdiIcons.carPickup),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Column(
+                                  children: [Text('Pickup Truck')],
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
+                              ),
+                            ],
+                          )),
+                        ),
+                      ]),
+                ]),
+                SizedBox(height: 50),
+                Row(children: [
+                  ToggleButtons(
+                      onPressed: (int index) {
+                        sellState.selectedItemSize = [1, index];
+                        dispatcher(SetSellStateAction(sellState));
+                      },
+                      renderBorder: false,
+                      isSelected: vehicleSelected[1],
+                      children: <Widget>[
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: FittedBox(
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    MdiIcons.vanUtility,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [Text('Delivery Van')],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: FittedBox(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(MdiIcons.truck),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Column(
+                                  children: [Text('Moving Truck')],
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
+                              ),
+                            ],
+                          )),
+                        ),
+                      ]),
+                ]),
               ],
             ),
             Padding(

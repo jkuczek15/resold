@@ -6,9 +6,9 @@ class SellState {
   TextEditingController listingTitleController;
   TextEditingController priceController;
   TextEditingController detailsController;
-  int selectedCategory;
+  List<int> selectedCategory;
   int selectedCondition;
-  int selectedItemSize;
+  List<int> selectedItemSize;
   int currentFormStep;
   PageController formPageViewController;
   SellFocusState focusState;
