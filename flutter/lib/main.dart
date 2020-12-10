@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/enums/selected-tab.dart';
@@ -57,7 +58,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.buyer);
+    await CustomerResponse.save(TestAccounts.seller);
   } // end if development
 
   // get from disk and login
@@ -108,7 +109,7 @@ Future<void> main() async {
       priceController: TextEditingController(),
       detailsController: TextEditingController(),
       focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
-      imageState: SellImageState(images: ['add-button'], imagePaths: new List<String>()),
+      imageState: SellImageState(images: new List<Asset>(), imagePaths: new List<String>()),
       currentFormStep: 0);
 
   // initialize orders state

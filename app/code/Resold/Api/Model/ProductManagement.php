@@ -143,7 +143,7 @@ class ProductManagement
     }// end if uploading a new file
 
     // loop over all temporary images uploaded for this product
-    foreach($imagePaths as $count => $imagePath)
+    foreach($imagePaths as $imagePath)
     {
       // image will be given a new path once linked to the product
       $path = $mediaDir.$imagePath;
@@ -182,7 +182,6 @@ class ProductManagement
           'email' => 'support@resold.us'
         ];
 
-        $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
         $transport = $this->_transportBuilder
           ->setTemplateIdentifier('connect_to_stripe_template') // this code we have mentioned in the email_templates.xml
           ->setTemplateOptions([

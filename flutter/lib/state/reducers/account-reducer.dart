@@ -1,4 +1,5 @@
 import 'package:rebloc/rebloc.dart';
+import 'package:resold/state/actions/add=product.dart';
 import 'package:resold/state/actions/delete-product.dart';
 import 'package:resold/state/actions/set-account-state.dart';
 import 'package:resold/state/app-state.dart';
@@ -11,6 +12,8 @@ class AccountReducer extends SimpleBloc<AppState> {
     } else if (action is DeleteProductAction) {
       state.accountState.forSaleProducts =
           state.accountState.forSaleProducts.where((product) => product.id != action.product.id).toList();
+    } else if (action is AddProductAction) {
+      state.accountState.forSaleProducts.add(action.product);
     }
     return state;
   }
