@@ -10,6 +10,9 @@ class SellReducer extends SimpleBloc<AppState> {
       state.sellState = action.newState;
     } else if (action is SetSellImageStateAction) {
       state.sellState.imageState = action.newState;
+      if (state.sellState.imageState.imagePaths.length > 0) {
+        state.sellState.error = '';
+      }
     }
     return state;
   }

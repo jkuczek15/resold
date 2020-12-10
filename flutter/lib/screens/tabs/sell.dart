@@ -41,6 +41,7 @@ class SellPage extends StatelessWidget {
   final List<int> selectedCategory;
   final List<int> selectedItemSize;
   final int currentFormStep;
+  final String error;
 
   // new
   final List<bool> conditionSelected = [false, false, false, false];
@@ -93,6 +94,7 @@ class SellPage extends StatelessWidget {
       this.selectedCategory,
       this.selectedItemSize,
       this.currentFormStep,
+      this.error,
       this.focusState,
       this.imageState,
       this.dispatcher});
@@ -109,6 +111,7 @@ class SellPage extends StatelessWidget {
         selectedItemSize: selectedItemSize,
         selectedCategory: selectedCategory,
         currentFormStep: currentFormStep,
+        error: error,
         focusState: focusState,
         imageState: imageState);
 
@@ -135,27 +138,37 @@ class SellPage extends StatelessWidget {
           children: <Widget>[
             imageUploader,
             Padding(
-              padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
-              child: ButtonTheme(
-                minWidth: double.infinity,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () async {
-                    sellState.currentFormStep += 1;
-                    await formPageViewController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.ease,
-                    );
-                    dispatcher(SetSellStateAction(sellState));
-                  },
-                  child: Text('Next',
-                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                  padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-                  color: Colors.black,
-                  textColor: Colors.white,
-                ),
-              ),
-            ),
+                padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
+                child: Column(
+                  children: [
+                    ButtonTheme(
+                      minWidth: double.infinity,
+                      child: RaisedButton(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                        onPressed: () async {
+                          if (sellState.imageState.imagePaths.length > 0) {
+                            sellState.error = '';
+                            sellState.currentFormStep += 1;
+                            await formPageViewController.nextPage(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.ease,
+                            );
+                          } else {
+                            sellState.error = 'Please select at least one image';
+                          }
+                          dispatcher(SetSellStateAction(sellState));
+                        },
+                        child: Text('Next',
+                            style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                        padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                        color: Colors.black,
+                        textColor: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    sellState.error.isNotEmpty ? Text(sellState.error, style: TextStyle(color: Colors.red)) : SizedBox()
+                  ],
+                )),
           ],
         ),
       ),
@@ -257,6 +270,7 @@ class SellPage extends StatelessWidget {
                 },
               ),
               Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -317,11 +331,24 @@ class SellPage extends StatelessWidget {
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () async {
-                    sellState.currentFormStep += 1;
-                    await formPageViewController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.ease,
-                    );
+                    if (sellState.listingTitleController.text.isEmpty) {
+                      sellState.error = 'Please enter a listing title';
+                    } else if (sellState.priceController.text.isEmpty) {
+                      sellState.error = 'Please enter a price';
+                    } else if (sellState.detailsController.text.isEmpty) {
+                      sellState.error = 'Please enter details';
+                    } else if (sellState.selectedCondition == null) {
+                      sellState.error = 'Please select a condition';
+                    } else {
+                      sellState.error = '';
+                      sellState.currentFormStep += 1;
+                      await formPageViewController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    } // end if we have an error
+                    sellState.focusState =
+                        SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false);
                     dispatcher(SetSellStateAction(sellState));
                   },
                   child: Text('Next',
@@ -331,6 +358,7 @@ class SellPage extends StatelessWidget {
                   textColor: Colors.white,
                 ),
               ),
+              sellState.error.isNotEmpty ? Text(sellState.error, style: TextStyle(color: Colors.red)) : SizedBox()
             ],
           ),
         ),
@@ -566,11 +594,16 @@ class SellPage extends StatelessWidget {
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () async {
-                    sellState.currentFormStep += 1;
-                    await formPageViewController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.ease,
-                    );
+                    if (sellState.selectedCategory == null) {
+                      sellState.error = 'Please select a category';
+                    } else {
+                      sellState.error = '';
+                      sellState.currentFormStep += 1;
+                      await formPageViewController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    } // end if error
                     dispatcher(SetSellStateAction(sellState));
                   },
                   child: Text('Next',
@@ -581,6 +614,7 @@ class SellPage extends StatelessWidget {
                 ),
               ),
             ),
+            sellState.error.isNotEmpty ? Text(sellState.error, style: TextStyle(color: Colors.red)) : SizedBox()
           ],
         ),
       ),
@@ -693,11 +727,16 @@ class SellPage extends StatelessWidget {
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                   onPressed: () async {
-                    sellState.currentFormStep += 1;
-                    await formPageViewController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.ease,
-                    );
+                    if (sellState.selectedItemSize == null) {
+                      sellState.error = 'Please select a vehicle required';
+                    } else {
+                      sellState.error = '';
+                      sellState.currentFormStep += 1;
+                      await formPageViewController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    } // end if error
                     dispatcher(SetSellStateAction(sellState));
                   },
                   child: Text('Next',
@@ -708,6 +747,7 @@ class SellPage extends StatelessWidget {
                 ),
               ),
             ),
+            sellState.error.isNotEmpty ? Text(sellState.error, style: TextStyle(color: Colors.red)) : SizedBox()
           ],
         ),
       ),
@@ -841,6 +881,43 @@ class SellPage extends StatelessWidget {
         ),
       )
     ];
+
+    // store app bar to get the height
+    AppBar appBar = AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Align(
+              alignment: Alignment.center,
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SizedBox(
+                    child: sellState.currentFormStep != 0
+                        ? BackButton(
+                            onPressed: () {
+                              formPageViewController
+                                  .previousPage(
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.ease,
+                              )
+                                  .then((value) {
+                                sellState.currentFormStep -= 1;
+                                sellState.error = '';
+                                dispatcher(SetSellStateAction(sellState));
+                              });
+                            },
+                          )
+                        : SizedBox(),
+                    width: 35),
+                Text(steps[sellState.currentFormStep], style: new TextStyle(color: Colors.white))
+              ]))
+        ],
+      ),
+      iconTheme: IconThemeData(
+        color: Colors.white, // change your color here
+      ),
+      backgroundColor: ResoldBlue,
+      actions: <Widget>[],
+    );
     return Form(
       key: formKey,
       child: PageView.builder(
@@ -849,44 +926,11 @@ class SellPage extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return Scaffold(
             resizeToAvoidBottomPadding: false,
-            appBar: AppBar(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Align(
-                      alignment: Alignment.center,
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        SizedBox(
-                            child: sellState.currentFormStep != 0
-                                ? BackButton(
-                                    onPressed: () {
-                                      formPageViewController
-                                          .previousPage(
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.ease,
-                                      )
-                                          .then((value) {
-                                        sellState.currentFormStep -= 1;
-                                        dispatcher(SetSellStateAction(sellState));
-                                      });
-                                    },
-                                  )
-                                : SizedBox(),
-                            width: 35),
-                        Text(steps[sellState.currentFormStep], style: new TextStyle(color: Colors.white))
-                      ]))
-                ],
-              ),
-              iconTheme: IconThemeData(
-                color: Colors.white, // change your color here
-              ),
-              backgroundColor: ResoldBlue,
-              actions: <Widget>[],
-            ),
+            appBar: appBar,
             body: SingleChildScrollView(
                 child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height * 0.7,
+                      maxHeight: MediaQuery.of(context).size.height - (appBar.preferredSize.height * 4),
                     ),
                     child: forms[sellState.currentFormStep])),
           );

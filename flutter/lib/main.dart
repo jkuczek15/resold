@@ -55,7 +55,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.buyer);
+    await CustomerResponse.save(TestAccounts.seller);
   } // end if development
 
   // get from disk and login
