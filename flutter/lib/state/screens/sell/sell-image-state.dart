@@ -1,5 +1,7 @@
+import 'package:multi_image_picker/multi_image_picker.dart';
+
 class SellImageState {
-  List<Object> images;
+  List<Asset> images;
   List<String> imagePaths;
 
   SellImageState({this.images, this.imagePaths});

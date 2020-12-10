@@ -283,6 +283,7 @@ class HomePageState extends State<HomePage> {
               return ViewModelSubscriber<AppState, List<Product>>(
                   converter: (state) => state.accountState.forSaleProducts,
                   builder: (context, dispatcher, forSaleProducts) {
+                    forSaleProducts.sort((Product a, Product b) => b.id.compareTo(a.id));
                     return AccountPage(
                         customer: customer,
                         currentLocation: currentLocation,

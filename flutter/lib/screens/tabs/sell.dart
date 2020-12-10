@@ -1,8 +1,21 @@
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/enums/selected-tab.dart';
+import 'package:resold/helpers/category-helper.dart';
+import 'package:resold/helpers/condition-helper.dart';
+import 'package:resold/helpers/size-helper.dart';
+import 'package:resold/models/product.dart';
+import 'package:resold/screens/product/view.dart';
+import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/actions/add=product.dart';
+import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/actions/set-sell-state.dart';
 import 'package:resold/state/screens/sell/sell-state.dart';
 import 'package:resold/state/screens/sell/sell-focus-state.dart';
@@ -10,6 +23,7 @@ import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/image/image-uploader.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:resold/widgets/loading.dart';
 
 class SellPage extends StatelessWidget {
   final String condition = '';
@@ -18,7 +32,6 @@ class SellPage extends StatelessWidget {
   final TextEditingController listingTitleController;
   final TextEditingController priceController;
   final TextEditingController detailsController;
-  var formKey = GlobalKey<FormState>();
 
   final CustomerResponse customer;
   final Position currentLocation;
@@ -41,14 +54,14 @@ class SellPage extends StatelessWidget {
     [false, false],
     [false, false]
   ];
-  List<String> steps = [
+  final List<String> steps = [
     '1. Add Images',
     '2. Add Title & Details',
     '3. Select Category',
     '4. Select Vehicle',
     '5. Review and Submit'
   ];
-  Map categoriesMap = {
+  final Map categoriesMap = {
     'Electronics': Icons.computer,
     'Fashion': MdiIcons.tshirtCrew,
     'Home & Lawn': MdiIcons.sofa,
@@ -58,18 +71,15 @@ class SellPage extends StatelessWidget {
     'Handmade': MdiIcons.handHeart,
     'Cancel': MdiIcons.close,
   };
-  Map conditionMap = {
+  final Map conditionMap = {
     'New': MdiIcons.emoticonExcitedOutline,
     'Like New': MdiIcons.emoticonHappyOutline,
     'Good': MdiIcons.emoticonNeutralOutline,
     'Used': MdiIcons.emoticonSadOutline,
     'Cancel': MdiIcons.close,
   };
-  List _forms;
-  SellState sellState;
-  PageController formPageViewController;
-  SellFocusState focusState;
-  SellImageState imageState;
+  final SellFocusState focusState;
+  final SellImageState imageState;
   final double categoryIconSize = 30;
   final double vehicleIconSize = 40;
 
@@ -89,7 +99,9 @@ class SellPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    sellState = SellState(
+    GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    NumberFormat formatter = new NumberFormat("\$###,###", "en_US");
+    SellState sellState = SellState(
         listingTitleController: listingTitleController,
         priceController: priceController,
         detailsController: detailsController,
@@ -100,7 +112,7 @@ class SellPage extends StatelessWidget {
         focusState: focusState,
         imageState: imageState);
 
-    formPageViewController = PageController(initialPage: currentFormStep);
+    PageController formPageViewController = PageController(initialPage: currentFormStep);
 
     if (selectedCondition != null) {
       conditionSelected[selectedCondition] = true;
@@ -115,7 +127,7 @@ class SellPage extends StatelessWidget {
     final imageUploader =
         ImageUploader(images: imageState.images, imagePaths: imageState.imagePaths, dispatcher: dispatcher);
 
-    _forms = [
+    final List forms = [
       Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,7 +140,14 @@ class SellPage extends StatelessWidget {
                 minWidth: double.infinity,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () => {_nextFormStep()},
+                  onPressed: () async {
+                    sellState.currentFormStep += 1;
+                    await formPageViewController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                    dispatcher(SetSellStateAction(sellState));
+                  },
                   child: Text('Next',
                       style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
@@ -297,7 +316,14 @@ class SellPage extends StatelessWidget {
                 minWidth: double.infinity,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () => {_nextFormStep()},
+                  onPressed: () async {
+                    sellState.currentFormStep += 1;
+                    await formPageViewController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                    dispatcher(SetSellStateAction(sellState));
+                  },
                   child: Text('Next',
                       style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
@@ -539,7 +565,14 @@ class SellPage extends StatelessWidget {
                 minWidth: double.infinity,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () => {_nextFormStep()},
+                  onPressed: () async {
+                    sellState.currentFormStep += 1;
+                    await formPageViewController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                    dispatcher(SetSellStateAction(sellState));
+                  },
                   child: Text('Next',
                       style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
@@ -659,7 +692,14 @@ class SellPage extends StatelessWidget {
                 minWidth: double.infinity,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () => {_nextFormStep()},
+                  onPressed: () async {
+                    sellState.currentFormStep += 1;
+                    await formPageViewController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.ease,
+                    );
+                    dispatcher(SetSellStateAction(sellState));
+                  },
                   child: Text('Next',
                       style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
@@ -676,14 +716,115 @@ class SellPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text('Review'),
+            CarouselSlider(
+                options: CarouselOptions(height: 325.0),
+                items: sellState.imageState.images.map((image) {
+                  return Builder(builder: (BuildContext context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: AssetThumb(asset: image, width: 200, height: 200),
+                    );
+                  });
+                }).toList()),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: new EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          width: 250,
+                          child: new Text(
+                            sellState.listingTitleController.text,
+                            overflow: TextOverflow.fade,
+                            style: new TextStyle(
+                              fontSize: 14.0,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: new EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          width: 250,
+                          child: new Text(
+                            sellState.detailsController.text ?? "",
+                            overflow: TextOverflow.fade,
+                            style: new TextStyle(
+                              fontSize: 14.0,
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ]),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: 70,
+                            child: Padding(
+                                padding: new EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: priceController.text.isNotEmpty
+                                        ? Text(formatter.format(double.parse(sellState.priceController.text)),
+                                            style: new TextStyle(
+                                              fontSize: 14.0,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.bold,
+                                            ))
+                                        : SizedBox()))),
+                      ])
+                ]),
             Padding(
               padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
               child: ButtonTheme(
                 minWidth: double.infinity,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () => {},
+                  onPressed: () async {
+                    if (formKey.currentState.validate()) {
+                      // show a loading indicator
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(child: Loading());
+                          });
+
+                      Product product = Product(
+                          name: sellState.listingTitleController.text,
+                          price: sellState.priceController.text,
+                          description: sellState.detailsController.text,
+                          condition: ConditionHelper.getConditionIdByIndex(sellState.selectedCondition),
+                          categoryIds: [int.tryParse(CategoryHelper.getCategoryIdByMatrix(sellState.selectedCategory))],
+                          itemSize: int.tryParse(SizeHelper.getSizeIdByMatrix(sellState.selectedItemSize)),
+                          latitude: currentLocation.latitude,
+                          longitude: currentLocation.longitude,
+                          localGlobal: '231,232');
+
+                      var response =
+                          await ResoldRest.postProduct(customer.token, product, sellState.imageState.imagePaths);
+                      product.id = int.tryParse(response);
+                      // dispatch new action to set the for-sale products
+                      dispatcher(AddProductAction(product: product));
+                      dispatcher(SetSelectedTabAction(SelectedTab.account));
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductPage(
+                                  customer: customer,
+                                  currentLocation: currentLocation,
+                                  product: product,
+                                  dispatcher: dispatcher)));
+                    } // end if form is valid
+                  },
                   child: Text('Post',
                       style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
                   padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
@@ -742,20 +883,11 @@ class SellPage extends StatelessWidget {
                         backgroundColor: ResoldBlue,
                         actions: <Widget>[],
                       ),
-                      body: _forms[sellState.currentFormStep],
+                      body: forms[sellState.currentFormStep],
                     );
                   },
                 ),
               )
             ]));
-  }
-
-  void _nextFormStep() async {
-    sellState.currentFormStep += 1;
-    await formPageViewController.nextPage(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.ease,
-    );
-    dispatcher(SetSellStateAction(sellState));
-  }
+  } // end function build
 }

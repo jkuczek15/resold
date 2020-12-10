@@ -82,8 +82,7 @@ class ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = new NumberFormat("\$###,###", "en_US");
-
+    NumberFormat formatter = new NumberFormat("\$###,###", "en_US");
     return Scaffold(
         appBar: AppBar(
             title: Text(product.name, style: new TextStyle(color: Colors.white)),

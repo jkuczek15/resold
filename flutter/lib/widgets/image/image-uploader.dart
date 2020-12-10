@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +9,9 @@ import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/widgets/loading.dart';
 
 class ImageUploader extends StatelessWidget {
-  final List<Object> images;
+  final List<Asset> images;
   final List<String> imagePaths;
   final Function dispatcher;
-  Future<File> imageFile;
-  String error = 'No Error Dectected';
 
   ImageUploader({this.images, this.imagePaths, this.dispatcher});
 
@@ -34,8 +31,8 @@ class ImageUploader extends StatelessWidget {
       physics: ScrollPhysics(),
       crossAxisCount: 3,
       childAspectRatio: 1,
-      children: List.generate(images.length, (index) {
-        if (images[index] == "add-button") {
+      children: List.generate(images.length + 1, (index) {
+        if (index == images.length) {
           return Card(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -92,28 +89,20 @@ class ImageUploader extends StatelessWidget {
 
   Future<void> loadAssets(BuildContext context) async {
     List<Asset> resultList = List<Asset>();
-    List<Object> result = List<Object>();
 
-    try {
-      resultList = await MultiImagePicker.pickImages(
-          maxImages: 15,
-          enableCamera: true,
-          selectedAssets: images.where((element) => element is Asset).cast<Asset>().toList(),
-          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-          materialOptions: MaterialOptions(
-            actionBarColor: "#41b8ea",
-            actionBarTitle: "Select Images",
-            allViewTitle: "All Photos",
-            useDetailsView: false,
-            statusBarColor: '#318bb0',
-            selectCircleStrokeColor: "#41b8ea",
-          ));
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-    result.addAll(resultList);
-    result.add("add-button");
+    resultList = await MultiImagePicker.pickImages(
+        maxImages: 15,
+        enableCamera: true,
+        selectedAssets: images.where((element) => element is Asset).cast<Asset>().toList(),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#41b8ea",
+          actionBarTitle: "Select Images",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          statusBarColor: '#318bb0',
+          selectCircleStrokeColor: "#41b8ea",
+        ));
 
     // show a loading indicator
     showDialog(
@@ -127,6 +116,6 @@ class ImageUploader extends StatelessWidget {
 
     Navigator.of(context, rootNavigator: true).pop('dialog');
 
-    dispatcher(SetSellImageStateAction(SellImageState(images: result, imagePaths: paths)));
+    dispatcher(SetSellImageStateAction(SellImageState(images: resultList, imagePaths: paths)));
   } // end function loadAssets
 }
