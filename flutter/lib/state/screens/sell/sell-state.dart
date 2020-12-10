@@ -11,6 +11,7 @@ class SellState {
   int selectedCondition;
   List<int> selectedItemSize;
   int currentFormStep;
+  String error;
   SellFocusState focusState;
   SellImageState imageState;
 
@@ -22,6 +23,7 @@ class SellState {
       this.selectedCondition,
       this.selectedItemSize,
       this.currentFormStep,
+      this.error,
       this.focusState,
       this.imageState});
 
@@ -32,6 +34,7 @@ class SellState {
         detailsController: TextEditingController(),
         focusState: SellFocusState(listingTitleFocused: false, priceFocused: false, detailsFocused: false),
         imageState: SellImageState(images: new List<Asset>(), imagePaths: new List<String>()),
-        currentFormStep: 0);
+        currentFormStep: 0,
+        error: '');
   } // end function initialState
 }

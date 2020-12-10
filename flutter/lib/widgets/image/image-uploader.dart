@@ -75,6 +75,7 @@ class ImageUploader extends StatelessWidget {
                       await Resold.deleteImage(imagePaths[index]);
                       Navigator.of(context, rootNavigator: true).pop('dialog');
                       images.removeAt(index);
+                      imagePaths.removeAt(index);
                       dispatcher(SetSellImageStateAction(SellImageState(images: images, imagePaths: imagePaths)));
                     },
                   ),

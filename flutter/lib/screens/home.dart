@@ -262,6 +262,7 @@ class HomePageState extends State<HomePage> {
                         selectedCategory: sellState.selectedCategory,
                         selectedItemSize: sellState.selectedItemSize,
                         currentFormStep: sellState.currentFormStep,
+                        error: sellState.error,
                         focusState: sellState.focusState,
                         imageState: imageState,
                         dispatcher: dispatcher);
