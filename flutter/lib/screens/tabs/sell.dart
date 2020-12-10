@@ -817,6 +817,7 @@ class SellPage extends StatelessWidget {
                       // dispatch new action to set the for-sale products
                       dispatcher(AddProductAction(product: product));
                       dispatcher(SetSelectedTabAction(SelectedTab.account));
+                      dispatcher(SetSellStateAction(SellState.initialState()));
                       Navigator.of(context, rootNavigator: true).pop('dialog');
                       Navigator.push(
                           context,
