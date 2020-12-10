@@ -40,10 +40,7 @@ class ImageUploader extends StatelessWidget {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                IconButton(icon: Icon(Icons.add), onPressed: () => loadAssets(context)),
-                Text('Add Images')
-              ]));
+                  children: [IconButton(icon: Icon(Icons.add), onPressed: () => loadAssets(context))]));
         } else {
           Asset asset = images[index];
           return Card(
