@@ -38,6 +38,7 @@ class ResoldRest {
     var response = await dio.post('${config.baseUrl}/product', data: formData);
 
     if (response.data[0].length > 1) {
+      // todo: return more details than just product id from the server
       return response.data[0]['productId'];
     } else {
       return 'Error: ' + response.data;
