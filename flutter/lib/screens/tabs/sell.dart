@@ -717,7 +717,7 @@ class SellPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             CarouselSlider(
-                options: CarouselOptions(height: 325.0),
+                options: CarouselOptions(height: 350.0),
                 items: sellState.imageState.images.map((image) {
                   return Builder(builder: (BuildContext context) {
                     return Container(
