@@ -46,13 +46,14 @@ class OrderList extends StatelessWidget {
                               return Center(child: Loading());
                             });
 
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
-
                         // navigate to order details page
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
+
+                        // hide loading indicator
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
                       },
                       child: Card(
                           child: ListTile(
@@ -82,8 +83,6 @@ class OrderList extends StatelessWidget {
                               return Center(child: Loading());
                             });
 
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
-
                         // fetch product on tap
                         Product product = await ResoldRest.getProduct(customer.token, line.productId);
 
@@ -92,6 +91,9 @@ class OrderList extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
+
+                        // hide loading indicator
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
                       },
                       child: Card(
                           child: ListTile(
