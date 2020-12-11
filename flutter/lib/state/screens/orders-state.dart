@@ -5,4 +5,8 @@ class OrdersState {
   List<Order> soldOrders;
 
   OrdersState({this.purchasedOrders, this.soldOrders});
+
+  factory OrdersState.initialState() {
+    return OrdersState();
+  } // end function initialState
 }

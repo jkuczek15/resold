@@ -8,4 +8,9 @@ class AccountState {
   bool displayForSale;
 
   AccountState({this.vendor, this.forSaleProducts, this.soldProducts, this.displayForSale});
+
+  factory AccountState.initialState() {
+    return AccountState(displayForSale: true);
+  } // end function initialState
+
 }
