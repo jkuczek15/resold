@@ -82,7 +82,6 @@ class ResoldFirebase {
       } // end if user message type is seller
     } else if (messageType == MessageType.deliveryQuote) {
       FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
-
       if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
       } else if (userMessageType == UserMessageType.sender && !isSeller) {

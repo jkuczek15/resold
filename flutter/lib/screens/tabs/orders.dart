@@ -63,12 +63,12 @@ class OrdersPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: Column(children: [
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                             child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                           ),
-                          Expanded(child: OrderList(customer: customer, orders: inProgressPurchasedOrders)),
+                          OrderList(customer: customer, orders: inProgressPurchasedOrders),
                           SizedBox(height: 10),
                           Padding(
                             padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
@@ -111,7 +111,8 @@ class OrdersPage extends StatelessWidget {
                   }
                   Widget soldWidget;
                   if (inProgressSoldOrders.length > 0 && completedSoldOrders.length > 0) {
-                    soldWidget = Column(
+                    soldWidget = Expanded(
+                        child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -119,7 +120,7 @@ class OrdersPage extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
                           child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                         ),
-                        Expanded(child: OrderList(customer: customer, orders: inProgressSoldOrders)),
+                        OrderList(customer: customer, orders: inProgressSoldOrders),
                         SizedBox(height: 10),
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
@@ -127,7 +128,7 @@ class OrdersPage extends StatelessWidget {
                         ),
                         Expanded(child: OrderList(customer: customer, orders: completedSoldOrders))
                       ],
-                    );
+                    ));
                   } else if (inProgressSoldOrders.length > 0) {
                     soldWidget = Column(
                       mainAxisSize: MainAxisSize.min,
