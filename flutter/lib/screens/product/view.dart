@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
 import 'package:resold/services/resold-firebase.dart';
@@ -371,7 +370,6 @@ class ProductPageState extends State<ProductPage> {
                                                                 currentLocation: currentLocation,
                                                                 product: product,
                                                                 chatId: chatId,
-                                                                type: UserMessageType.buyer,
                                                                 dispatcher: dispatcher)));
                                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                                   } // end if from message page
@@ -492,7 +490,6 @@ class ProductPageState extends State<ProductPage> {
                                                                               currentLocation: currentLocation,
                                                                               product: product,
                                                                               chatId: chatId,
-                                                                              type: UserMessageType.buyer,
                                                                               dispatcher: dispatcher)));
                                                                 } // end if not from message page
                                                               } // end if valid verification code
@@ -603,7 +600,6 @@ class ProductPageState extends State<ProductPage> {
                                                                 currentLocation: currentLocation,
                                                                 product: product,
                                                                 chatId: chatId,
-                                                                type: UserMessageType.buyer,
                                                                 dispatcher: dispatcher)));
                                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                                   } // end if not from message page

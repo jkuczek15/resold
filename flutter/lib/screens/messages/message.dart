@@ -28,7 +28,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resold/enums/message-type.dart';
-import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/services/postmates.dart';
 import 'package:money2/money2.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -40,7 +39,6 @@ class MessagePage extends StatefulWidget {
   final Position currentLocation;
   final Product product;
   final String chatId;
-  final UserMessageType type;
   final Function dispatcher;
 
   MessagePage(
@@ -49,7 +47,6 @@ class MessagePage extends StatefulWidget {
       Position currentLocation,
       Product product,
       String chatId,
-      UserMessageType type,
       Function dispatcher,
       Key key})
       : fromCustomer = fromCustomer,
@@ -57,13 +54,12 @@ class MessagePage extends StatefulWidget {
         currentLocation = currentLocation,
         product = product,
         chatId = chatId,
-        type = type,
         dispatcher = dispatcher,
         super(key: key);
 
   @override
   MessagePageState createState() =>
-      MessagePageState(fromCustomer, toCustomer, currentLocation, product, chatId, type, dispatcher);
+      MessagePageState(fromCustomer, toCustomer, currentLocation, product, chatId, dispatcher);
 }
 
 class MessagePageState extends State<MessagePage> {
@@ -71,7 +67,6 @@ class MessagePageState extends State<MessagePage> {
   final CustomerResponse toCustomer;
   final Position currentLocation;
   final Product product;
-  final UserMessageType type;
   final Function dispatcher;
 
   var listMessage;
@@ -91,13 +86,12 @@ class MessagePageState extends State<MessagePage> {
   final FocusNode focusNode = FocusNode();
 
   MessagePageState(CustomerResponse fromCustomer, CustomerResponse toCustomer, Position currentLocation,
-      Product product, String chatId, UserMessageType type, Function dispatcher)
+      Product product, String chatId, Function dispatcher)
       : fromCustomer = fromCustomer,
         toCustomer = toCustomer,
         currentLocation = currentLocation,
         product = product,
         chatId = chatId,
-        type = type,
         dispatcher = dispatcher;
 
   @override

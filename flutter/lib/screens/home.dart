@@ -378,7 +378,6 @@ class HomePageState extends State<HomePage> {
               currentLocation: currentLocation,
               product: inboxMessage.product,
               chatId: chatId,
-              type: inboxMessage.messageType,
               dispatcher: dispatcher)));
     } else {
       // delivery event notification

@@ -11,7 +11,6 @@ import 'package:resold/services/magento.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/models/product.dart';
-import 'package:resold/enums/user-message-type.dart';
 import 'package:resold/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -124,7 +123,6 @@ class InboxPageState extends State<InboxPage> {
                                                     currentLocation: currentLocation,
                                                     product: product,
                                                     chatId: item['chatId'],
-                                                    type: UserMessageType.values[item['messageType']],
                                                     dispatcher: dispatcher)));
                                         Navigator.of(context, rootNavigator: true).pop('dialog');
                                       },
