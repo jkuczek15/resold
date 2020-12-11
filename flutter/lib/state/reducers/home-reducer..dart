@@ -10,6 +10,7 @@ class HomeReducer extends SimpleBloc<AppState> {
       return action.newState;
     } else if (action is SetSelectedTabAction) {
       state.selectedTab = action.selectedTab;
+      state.sellState.error = '';
     }
     return state;
   }
