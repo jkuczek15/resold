@@ -312,6 +312,13 @@ class HomePageState extends State<HomePage> {
           // display notification when app in foreground
           var notification = message['notification'];
           var data = message['data'];
+          if (notification == null ||
+              data == null ||
+              notification['title'] == null ||
+              notification['body'] == null ||
+              data['image'] == null) {
+            return;
+          }
           showOverlayNotification((context) {
             return GestureDetector(
               child: Card(
