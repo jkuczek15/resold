@@ -55,7 +55,7 @@ Future<void> main() async {
   if (env.isDevelopment) {
     // clear from disk
     await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.seller);
+    await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
 
   // get from disk and login
@@ -90,17 +90,11 @@ Future<void> main() async {
     customer = await CustomerResponse.load();
   } // end if we should automatically post a product
 
-  // initialize search state
+  // initialize screen state
   SearchState searchState = SearchState.initialState();
-
-  // initialize sell state
   SellState sellState = SellState.initialState();
-
-  // initialize orders state
-  OrdersState ordersState = OrdersState();
-
-  // initialize account state
-  AccountState accountState = AccountState(displayForSale: true);
+  OrdersState ordersState = OrdersState.initialState();
+  AccountState accountState = AccountState.initialState();
 
   // initialize application state
   Position currentLocation = Position();
