@@ -757,14 +757,14 @@ class SellPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             CarouselSlider(
-                options: CarouselOptions(height: 400.0),
+                options: CarouselOptions(height: 350.0),
                 items: sellState.imageState.images.map((image) {
                   return Builder(builder: (BuildContext context) {
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                         child: FadeInImage(
-                            image: AssetThumbImageProvider(image, width: 400, height: 500),
+                            image: AssetThumbImageProvider(image, width: 350, height: 450),
                             placeholder: AssetImage('assets/images/placeholder-image.png')));
                   });
                 }).toList()),
