@@ -175,6 +175,7 @@ class InboxPageState extends State<InboxPage> {
                                                     SizedBox(width: 5),
                                                     Container(
                                                         width: 250,
+                                                        height: 25,
                                                         child: Text(item['messagePreview'],
                                                             overflow: TextOverflow.ellipsis,
                                                             style: new TextStyle(color: Colors.grey))),
