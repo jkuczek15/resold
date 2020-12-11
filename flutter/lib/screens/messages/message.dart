@@ -829,38 +829,40 @@ class MessagePageState extends State<MessagePage> {
                                                           child: const Text('Cancel Delivery'),
                                                         ),
                                                       ]
-                                                    : [
-                                                        FlatButton(
-                                                          onPressed: () async {
-                                                            if (isSeller) {
-                                                              // user is the seller
-                                                              await ResoldFirebase.updateDeliveryQuoteStatus(
-                                                                  chatId, DeliveryQuoteStatus.accepted);
+                                                    : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                        ? []
+                                                        : [
+                                                            FlatButton(
+                                                              onPressed: () async {
+                                                                if (isSeller) {
+                                                                  // user is the seller
+                                                                  await ResoldFirebase.updateDeliveryQuoteStatus(
+                                                                      chatId, DeliveryQuoteStatus.accepted);
 
-                                                              // send notification to buyer that delivery has been accepted
-                                                              await ResoldRest.sendNotificationMessage(
-                                                                  fromCustomer.token,
-                                                                  toCustomer.deviceToken,
-                                                                  product.name,
-                                                                  '${fromCustomer.fullName} has accepted your delivery request.',
-                                                                  product.thumbnail,
-                                                                  chatId: chatId);
-                                                            } else {
-                                                              // user is the buyer
-                                                              handlePaymentFlow(deliveryQuoteMessage.fee, currency);
-                                                            } // end if user is seller
-                                                          },
-                                                          child: const Text('Accept Delivery'),
-                                                        ),
-                                                        FlatButton(
-                                                          onPressed: () async {
-                                                            // Perform some action
-                                                            await ResoldFirebase.deleteProductMessage(
-                                                                chatId, document.id);
-                                                          },
-                                                          child: const Text('Decline Delivery'),
-                                                        ),
-                                                      ],
+                                                                  // send notification to buyer that delivery has been accepted
+                                                                  await ResoldRest.sendNotificationMessage(
+                                                                      fromCustomer.token,
+                                                                      toCustomer.deviceToken,
+                                                                      product.name,
+                                                                      '${fromCustomer.fullName} has accepted your delivery request.',
+                                                                      product.thumbnail,
+                                                                      chatId: chatId);
+                                                                } else {
+                                                                  // user is the buyer
+                                                                  handlePaymentFlow(deliveryQuoteMessage.fee, currency);
+                                                                } // end if user is seller
+                                                              },
+                                                              child: const Text('Accept Delivery'),
+                                                            ),
+                                                            FlatButton(
+                                                              onPressed: () async {
+                                                                // Perform some action
+                                                                await ResoldFirebase.deleteProductMessage(
+                                                                    chatId, document.id);
+                                                              },
+                                                              child: const Text('Decline Delivery'),
+                                                            ),
+                                                          ],
                                           )
                                         ],
                                       ),

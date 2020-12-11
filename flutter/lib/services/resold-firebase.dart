@@ -84,7 +84,7 @@ class ResoldFirebase {
       FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
       if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
-      } else if (userMessageType == UserMessageType.sender && !isSeller) {
+      } else {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedDropoff;
       } // end if user is seller
     } // end if message type is offer
@@ -177,6 +177,7 @@ class ResoldFirebase {
     if (deliveryQuoteDocuments.docs.isNotEmpty) {
       DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
       await deliveryQuote.reference.update(<String, dynamic>{'status': status.index});
+      await markInboxMessageUnread(chatId);
     } // end if we found a delivery quote to accept
   } // end function for accepting a delivery quote
 
@@ -263,6 +264,23 @@ class ResoldFirebase {
     DocumentReference documentReference = firestore.collection('inbox_messages').doc(documentId);
     await documentReference.update(<String, dynamic>{'unread': false});
   } // end function markInboxMessageRead
+
+  /*
+  * markInboxMessageUnread - Marks the inbox message as unread
+  * chatId - Inbox message chat id
+  */
+  static Future markInboxMessageUnread(String chatId) async {
+    QuerySnapshot inboxMessages = await firestore
+        .collection('inbox_messages')
+        .where('messageType', isEqualTo: UserMessageType.sender.index)
+        .where('chatId', isEqualTo: chatId)
+        .get();
+
+    if (inboxMessages.docs.isNotEmpty) {
+      DocumentSnapshot inboxMessage = inboxMessages.docs[0];
+      await inboxMessage.reference.update(<String, dynamic>{'unread': true});
+    } // end if we found a delivery quote to accept
+  } // end function markInboxMessageUnread
 
   /*
   * getDeviceToken - Get the device token for a specific user
