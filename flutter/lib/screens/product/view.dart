@@ -122,8 +122,14 @@ class ProductPageState extends State<ProductPage> {
                                             style: TextStyle(color: ResoldBlue),
                                           ),
                                           onPressed: () async {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return Center(child: Loading());
+                                                });
                                             Future<bool> complete = Magento.deleteProduct(product.sku);
                                             if (await complete) {
+                                              Navigator.of(context, rootNavigator: true).pop('dialog');
                                               dispatcher(DeleteProductAction(product: product));
                                               deleteCanceled = false;
                                               Navigator.pop(context);
