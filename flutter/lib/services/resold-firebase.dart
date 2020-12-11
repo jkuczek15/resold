@@ -61,9 +61,10 @@ class ResoldFirebase {
   * product - Product that message group is related to.
   */
   static Future createUserInboxMessage(int fromId, int toId, String chatId, String content, Product product,
-      UserMessageType userMessageType, MessageType messageType, bool unread) async {
+      UserMessageType userMessageType, MessageType messageType, bool isSeller) async {
     // get existing message collection
-    String userMessageId;
+    String userMessageId =
+        (userMessageType == UserMessageType.sender ? fromId.toString() : toId.toString()) + '-' + product.id.toString();
 
     // setup message preview and trim if necessary
     var messagePreview = content;
@@ -74,38 +75,20 @@ class ResoldFirebase {
     if (messageType == MessageType.offer) {
       FirebaseOffer offerMessage = FirebaseHelper.readOfferMessageContent(content);
 
-      if (userMessageType == UserMessageType.seller) {
-        if (toId == offerMessage.fromId) {
-          messagePreview = 'You have sent an offer for \$${offerMessage.price}.';
-        } else {
-          messagePreview = 'You have received an offer for \$${offerMessage.price}.';
-        } // end if customer is sending the offer
+      if (userMessageType == UserMessageType.sender) {
+        messagePreview = 'You have sent an offer for \$${offerMessage.price}.';
       } else {
-        if (fromId == offerMessage.fromId) {
-          messagePreview = 'You have sent an offer for \$${offerMessage.price}.';
-        } else {
-          messagePreview = 'You have received an offer for \$${offerMessage.price}.';
-        } // end if customer is sending the offer
+        messagePreview = 'You have received an offer for \$${offerMessage.price}.';
       } // end if user message type is seller
-    } // end if message type is offer
+    } else if (messageType == MessageType.deliveryQuote) {
+      FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
 
-    if (userMessageType == UserMessageType.buyer) {
-      userMessageId = fromId.toString() + '-' + product.id.toString();
-
-      // custom message preview for delivery quote
-      if (messageType == MessageType.deliveryQuote) {
-        FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
-        messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedDropoff;
-      } // end if delivery quote message type
-    } else {
-      userMessageId = toId.toString() + '-' + product.id.toString();
-
-      // custom message preview for delivery quote
-      if (messageType == MessageType.deliveryQuote) {
-        FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
+      if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
-      } // end if delivery quote message type
-    } // end if type is buyer
+      } else if (userMessageType == UserMessageType.sender && !isSeller) {
+        messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedDropoff;
+      } // end if user is seller
+    } // end if message type is offer
 
     // set up params to store for user inbox message
     var now = DateTime.now().millisecondsSinceEpoch.toString();
@@ -118,7 +101,7 @@ class ResoldFirebase {
       'messagePreview': messagePreview,
       'lastMessageTimestamp': now
     };
-    if (userMessageType == UserMessageType.buyer) {
+    if (userMessageType == UserMessageType.sender) {
       data['toId'] = toId;
       data['fromId'] = fromId;
     } else {
@@ -127,7 +110,7 @@ class ResoldFirebase {
     } // end if type is buyer
 
     // set message to unread by default
-    data['unread'] = unread;
+    data['unread'] = userMessageType == UserMessageType.receiver;
     await firestore.collection('inbox_messages').doc(userMessageId).set(data);
   } // end function createUserInboxMessage
 
@@ -144,12 +127,11 @@ class ResoldFirebase {
       String chatId, int fromId, int toId, Product product, String content, MessageType messageType, bool isSeller,
       {bool firstMessage = false}) async {
     // mark buyer's inbox message as unread if sender is the seller and not the first message
-    await createUserInboxMessage(
-        fromId, toId, chatId, content, product, UserMessageType.buyer, messageType, isSeller && !firstMessage);
+    await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.sender, messageType, isSeller);
 
     // mark seller's inbox message as unread if sender is the buyer
     await createUserInboxMessage(
-        fromId, toId, chatId, content, product, UserMessageType.seller, messageType, !isSeller);
+        fromId, toId, chatId, content, product, UserMessageType.receiver, messageType, isSeller);
 
     // get the message bucket
     CollectionReference collectionReference = firestore.collection('messages').doc(chatId).collection(chatId);
