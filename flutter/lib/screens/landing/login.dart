@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
-import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/request/magento/login-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
@@ -26,7 +24,8 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController forgotPasswordController = TextEditingController();
+  final TextEditingController forgotPasswordController =
+      TextEditingController();
   final GlobalKey<FormState> forgotPasswordKey = GlobalKey<FormState>();
   final Function dispatcher;
 
@@ -37,7 +36,8 @@ class LoginPageState extends State<LoginPage> {
     return WillPopScope(
         child: Scaffold(
             body: Stack(children: [
-          Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
+          Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
+              fit: BoxFit.cover, width: 500),
           Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,11 +46,17 @@ class LoginPageState extends State<LoginPage> {
                   Padding(
                       child: Align(
                           alignment: Alignment.topCenter,
-                          child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
+                          child: Image.asset(
+                              'assets/images/resold-white-logo.png',
+                              fit: BoxFit.cover,
+                              width: 500)),
                       padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
                   Center(
                       child: Text('Buy & sell without leaving your home',
-                          style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
+                          style: new TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)))
                 ]),
                 Center(
                     child: Column(children: [
@@ -65,12 +71,15 @@ class LoginPageState extends State<LoginPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   Padding(
@@ -85,16 +94,20 @@ class LoginPageState extends State<LoginPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   RaisedButton(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusDirectional.circular(8)),
                     onPressed: () async {
                       // show a loading indicator
                       showDialog(
@@ -105,7 +118,9 @@ class LoginPageState extends State<LoginPage> {
 
                       // attempt to login
                       CustomerResponse customer = await Magento.loginCustomer(
-                          LoginRequest(username: emailController.text, password: passwordController.text));
+                          LoginRequest(
+                              username: emailController.text,
+                              password: passwordController.text));
 
                       if (customer.statusCode == 200) {
                         // login was successful
@@ -119,29 +134,33 @@ class LoginPageState extends State<LoginPage> {
                         // todo: init state on sign-in
                         await Future.wait([
                           Resold.getVendor(customer.vendorId),
-                          Resold.getVendorProducts(customer.vendorId, 'for-sale'),
+                          Resold.getVendorProducts(
+                              customer.vendorId, 'for-sale'),
                           Resold.getVendorProducts(customer.vendorId, 'sold')
-                        ]).then((data) {
-                          dispatcher(InitStateAction(AppState(
-                              selectedTab: SelectedTab.home,
-                              customer: customer,
-                              accountState:
-                                  AccountState(vendor: data[0], forSaleProducts: data[1], soldProducts: data[2]))));
+                        ]).then((data) async {
+                          dispatcher(InitStateAction(
+                              await AppState.initialState(customer)));
                         });
 
                         // navigate
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
                         Navigator.pop(context);
                         Navigator.pushReplacement(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => Home(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                return FadeTransition(opacity: animation, child: child);
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      Home(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                    opacity: animation, child: child);
                               },
                             ));
                       } else {
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
                         return showDialog<void>(
                           context: context,
                           barrierDismissible: false,
@@ -167,7 +186,10 @@ class LoginPageState extends State<LoginPage> {
                       }
                     },
                     child: Text('Sign In',
-                        style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                        style: new TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
                     padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
                     color: Colors.black,
                     textColor: Colors.white,
@@ -213,9 +235,15 @@ class LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: 'Enter your email...',
                           labelStyle: TextStyle(color: ResoldBlue),
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                          border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ResoldBlue, width: 1.5)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ResoldBlue, width: 1.5)),
+                          border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ResoldBlue, width: 1.5)),
                         ),
                         style: TextStyle(color: Colors.black),
                         validator: (value) {
@@ -248,7 +276,8 @@ class LoginPageState extends State<LoginPage> {
                               barrierDismissible: false,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: Text("A password reset email has been sent to $email."),
+                                    title: Text(
+                                        "A password reset email has been sent to $email."),
                                     actions: <Widget>[
                                       FlatButton(
                                           child: Text(
@@ -262,14 +291,16 @@ class LoginPageState extends State<LoginPage> {
                               });
                           // close the dialog
                           forgotPasswordController.value = TextEditingValue();
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
                         } else {
                           await showDialog<void>(
                               context: context,
                               barrierDismissible: false,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: Text("The email address could not be found."),
+                                    title: Text(
+                                        "The email address could not be found."),
                                     actions: <Widget>[
                                       FlatButton(
                                           child: Text(
