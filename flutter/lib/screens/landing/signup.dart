@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/screens/account/edit-address.dart';
 import 'package:resold/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:resold/services/resold-firebase.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/init-state.dart';
 import 'package:resold/state/app-state.dart';
-import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/services/magento.dart';
@@ -52,10 +51,12 @@ class SignUpPageState extends State<SignUpPage> {
   } // end function initState
 
   Future locationInit() async {
-    await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) async {
+    await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((location) async {
       if (this.mounted) {
-        futureAddresses =
-            Geocoder.local.findAddressesFromCoordinates(new Coordinates(location.latitude, location.longitude));
+        futureAddresses = Geocoder.local.findAddressesFromCoordinates(
+            new Coordinates(location.latitude, location.longitude));
       } // end if mounted
     });
   } // end function locationInit
@@ -76,11 +77,17 @@ class SignUpPageState extends State<SignUpPage> {
                   Padding(
                       child: Align(
                           alignment: Alignment.topCenter,
-                          child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
+                          child: Image.asset(
+                              'assets/images/resold-white-logo.png',
+                              fit: BoxFit.cover,
+                              width: 500)),
                       padding: EdgeInsets.fromLTRB(30, 40, 30, 20)),
                   Center(
                       child: Text('Buy & sell without leaving your home',
-                          style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
+                          style: new TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)))
                 ]),
                 Center(
                     child: Column(children: [
@@ -95,12 +102,15 @@ class SignUpPageState extends State<SignUpPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   Padding(
@@ -114,12 +124,15 @@ class SignUpPageState extends State<SignUpPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   Padding(
@@ -133,12 +146,15 @@ class SignUpPageState extends State<SignUpPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   Padding(
@@ -153,12 +169,15 @@ class SignUpPageState extends State<SignUpPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   Padding(
@@ -173,12 +192,15 @@ class SignUpPageState extends State<SignUpPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   Padding(
@@ -193,21 +215,28 @@ class SignUpPageState extends State<SignUpPage> {
                                 color: ResoldBlue,
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               ),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 1.5)),
                               border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white, width: 1.5),
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.5),
                               )),
                           style: TextStyle(color: Colors.white))),
                   RaisedButton(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusDirectional.circular(8)),
                     onPressed: () async {
                       await locationInitialized;
                       // show dialog
                       await SmsHelper().handleSmsVerification(
-                          phoneController, smsVerificationController, formKey, context, () async {
+                          phoneController,
+                          smsVerificationController,
+                          formKey,
+                          context, () async {
                         // show a loading indicator
                         showDialog(
                             context: context,
@@ -219,19 +248,24 @@ class SignUpPageState extends State<SignUpPage> {
                         var address = addresses.first;
 
                         var customerAddress = CustomerAddress.fromAddress(
-                            address, firstNameController.text, lastNameController.text, phoneController.text);
-                        var regionId =
-                            await Resold.getRegionId(customerAddress.region.regionCode, customerAddress.countryId);
+                            address,
+                            firstNameController.text,
+                            lastNameController.text,
+                            phoneController.text);
+                        var regionId = await Resold.getRegionId(
+                            customerAddress.region.regionCode,
+                            customerAddress.countryId);
                         customerAddress.region.regionId = int.parse(regionId);
 
-                        CustomerResponse customer = await Magento.createCustomer(
-                            CustomerRequest(
-                                email: emailController.text,
-                                firstname: firstNameController.text,
-                                lastname: lastNameController.text,
-                                addresses: [customerAddress]),
-                            passwordController.text,
-                            confirmPasswordController.text);
+                        CustomerResponse customer =
+                            await Magento.createCustomer(
+                                CustomerRequest(
+                                    email: emailController.text,
+                                    firstname: firstNameController.text,
+                                    lastname: lastNameController.text,
+                                    addresses: [customerAddress]),
+                                passwordController.text,
+                                confirmPasswordController.text);
 
                         if (customer.statusCode == 200) {
                           // signup was successful
@@ -244,26 +278,30 @@ class SignUpPageState extends State<SignUpPage> {
                           // initialize application state
                           await Future.wait([
                             Resold.getVendor(customer.vendorId),
-                            Resold.getVendorProducts(customer.vendorId, 'for-sale'),
-                            Resold.getVendorProducts(customer.vendorId, 'sold')
-                          ]).then((data) {
-                            dispatcher(InitStateAction(AppState(
-                              selectedTab: SelectedTab.home,
-                              customer: customer,
-                              accountState:
-                                  AccountState(vendor: data[0], forSaleProducts: data[1], soldProducts: data[2]),
-                            )));
+                            Resold.getVendorProducts(
+                                customer.vendorId, 'for-sale'),
+                            Resold.getVendorProducts(customer.vendorId, 'sold'),
+                            Magento.getPurchasedOrders(customer.id),
+                            ResoldRest.getVendorOrders(customer.token)
+                          ]).then((data) async {
+                            dispatcher(InitStateAction(
+                                await AppState.initialState(customer)));
                           });
 
                           // navigate
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
                           Navigator.pop(context);
                           Navigator.pushReplacement(
                               context,
                               PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => Home(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  return FadeTransition(opacity: animation, child: child);
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        Home(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return FadeTransition(
+                                      opacity: animation, child: child);
                                 },
                               ));
 
@@ -292,7 +330,8 @@ class SignUpPageState extends State<SignUpPage> {
                                       style: TextStyle(color: ResoldBlue),
                                     ),
                                     onPressed: () async {
-                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop('dialog');
                                     },
                                   ),
                                   FlatButton(
@@ -301,11 +340,14 @@ class SignUpPageState extends State<SignUpPage> {
                                       style: TextStyle(color: ResoldBlue),
                                     ),
                                     onPressed: () async {
-                                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop('dialog');
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => EditAddressPage(customer, dispatcher)));
+                                              builder: (context) =>
+                                                  EditAddressPage(
+                                                      customer, dispatcher)));
                                     },
                                   )
                                 ],
@@ -313,7 +355,8 @@ class SignUpPageState extends State<SignUpPage> {
                             },
                           );
                         } else {
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
                           return showDialog<void>(
                             context: context,
                             barrierDismissible: false,
@@ -340,7 +383,10 @@ class SignUpPageState extends State<SignUpPage> {
                       });
                     },
                     child: Text('Sign Up',
-                        style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                        style: new TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
                     padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
                     color: Colors.black,
                     textColor: Colors.white,
