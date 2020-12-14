@@ -45,18 +45,14 @@ Future<void> main() async {
       androidPayMode: env.stripeAndroidPayMode));
 
   // auto-login/auto-post
-  CustomerResponse customer = CustomerResponse();
   Position currentLocation;
   if (env.isDevelopment) {
-    // clear from disk
-    await CustomerResponse.clear();
-    await CustomerResponse.save(TestAccounts.buyer);
-    customer = await autoPost(TestAccounts.buyer);
     currentLocation = TestLocations.evanston;
-  } else {
-    // get from disk and login
-    customer = await CustomerResponse.load();
+    await autoPost();
+    await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
+
+  CustomerResponse customer = await CustomerResponse.load();
 
   // run the app
   runApp(StoreProvider<AppState>(
@@ -70,11 +66,11 @@ Future<void> main() async {
   ));
 } // end function main
 
-Future<CustomerResponse> autoPost(CustomerResponse customer) async {
+Future<CustomerResponse> autoPost() async {
   // sign in as seller
   await CustomerResponse.clear();
   await CustomerResponse.save(TestAccounts.seller);
-  customer = await CustomerResponse.load();
+  CustomerResponse customer = await CustomerResponse.load();
 
   // automatically post a product
   List<String> imagePaths = await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
@@ -96,6 +92,5 @@ Future<CustomerResponse> autoPost(CustomerResponse customer) async {
   // sign in as buyer
   await CustomerResponse.clear();
   await CustomerResponse.save(TestAccounts.buyer);
-  customer = await CustomerResponse.load();
   return customer;
 } // end function autopost

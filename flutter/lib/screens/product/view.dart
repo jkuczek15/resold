@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/services/postmates.dart';
 import 'package:resold/services/resold-firebase.dart';
@@ -11,6 +12,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:intl/intl.dart';
 import 'package:resold/state/actions/delete-product.dart';
+import 'package:resold/state/actions/request-delivery.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
 import 'package:resold/view-models/response/postmates/delivery-quote-response.dart';
 import 'package:resold/widgets/location/distance.dart';
@@ -461,8 +463,8 @@ class ProductPageState extends State<ProductPage> {
                                                                 // send a Firebase message
                                                                 await ResoldFirebase.sendProductMessage(
                                                                     chatId,
-                                                                    customer.id,
-                                                                    toCustomer.id,
+                                                                    customer,
+                                                                    toCustomer,
                                                                     product,
                                                                     customer.id.toString() + '|' + offerController.text,
                                                                     MessageType.offer,
@@ -573,14 +575,8 @@ class ProductPageState extends State<ProductPage> {
                                                       quote.duration.toString();
 
                                                   // send a Firebase message
-                                                  await ResoldFirebase.sendProductMessage(
-                                                      chatId,
-                                                      customer.id,
-                                                      toCustomer.id,
-                                                      product,
-                                                      content,
-                                                      MessageType.deliveryQuote,
-                                                      toId == customer.id,
+                                                  await ResoldFirebase.sendProductMessage(chatId, customer, toCustomer,
+                                                      product, content, MessageType.deliveryQuote, toId == customer.id,
                                                       firstMessage: true);
 
                                                   // send a notification message
@@ -590,6 +586,14 @@ class ProductPageState extends State<ProductPage> {
                                                       product.name,
                                                       '${customer.fullName} has requested a delivery.',
                                                       product.thumbnail);
+
+                                                  // request delivery action
+                                                  dispatcher(RequestDeliveryAction(
+                                                      quote: FirebaseHelper.buildDeliveryQuote(content,
+                                                          chatId: chatId,
+                                                          fromCustomer: customer,
+                                                          toCustomer: toCustomer,
+                                                          product: product)));
 
                                                   if (fromMessagePage) {
                                                     // go back

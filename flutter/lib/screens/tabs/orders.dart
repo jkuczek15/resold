@@ -32,7 +32,7 @@ class OrdersPage extends StatelessWidget {
           dispatcher(SetOrdersStateAction(OrdersState(
               purchasedOrders: await Magento.getPurchasedOrders(customer.id),
               soldOrders: await ResoldRest.getVendorOrders(customer.token),
-              requestedDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer.id))));
+              requestedDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer))));
         },
         showChildOpacityTransition: false,
         color: ResoldBlue,

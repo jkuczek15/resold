@@ -53,7 +53,7 @@ class AppState {
         Resold.getVendorProducts(customer.vendorId, 'sold'),
         Magento.getPurchasedOrders(customer.id),
         ResoldRest.getVendorOrders(customer.token),
-        ResoldFirebase.getRequestedDeliveryQuotes(customer.id)
+        ResoldFirebase.getRequestedDeliveryQuotes(customer)
       ]).then((data) {
         accountState.vendor = data[0];
         accountState.forSaleProducts = data[1];
