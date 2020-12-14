@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -278,6 +279,8 @@ class HomePageState extends State<HomePage> {
                   customer: customer,
                   purchasedOrders: ordersState.purchasedOrders,
                   soldOrders: ordersState.soldOrders,
+                  requestedPurchaseDeliveries: ordersState.requestedPurchaseDeliveries,
+                  requestedSoldDeliveries: ordersState.requestedSoldDeliveries,
                   dispatcher: dispatcher);
             });
       case SelectedTab.account:

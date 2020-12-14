@@ -25,7 +25,7 @@ class ProductManagement
     \Ced\CsMarketplace\Model\VendorFactory $VendorFactory,
     \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
     \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
-    \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+    \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
     \Magento\Customer\Model\Session $customerSession,
     \Magento\Framework\Event\ManagerInterface $eventManager,
     \Ced\CsMarketplace\Model\Vproducts $vendorProducts,
@@ -35,10 +35,10 @@ class ProductManagement
       $this->session = $customerSession;
       $this->userContext = $userContext;
       $this->vendorFactory = $VendorFactory;
-      $this->_transportBuilder = $transportBuilder;
+      $this->transportBuilder = $transportBuilder;
       $this->inlineTranslation = $inlineTranslation;
-      $this->_customerRepositoryInterface = $customerRepositoryInterface;
-      $this->_eventManager = $eventManager;
+      $this->customerRepository = $customerRepository;
+      $this->eventManager = $eventManager;
       $this->vendorProducts = $vendorProducts;
       $this->vendor = $vendor;
   }
@@ -94,36 +94,33 @@ class ProductManagement
     // Set our time zone to Chicago
     date_default_timezone_set('America/Chicago');
 
-    if(!isset($_product))
-    {
-      // creating a new product
-      // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
-      // set all of our product attributes and save it to the database
-      $sku = uniqid("product-", true);
-      $_product = $objectManager->create('Magento\Catalog\Model\Product');
-      $_product->setSku($sku);
-      $_product->setCreatedAt(strtotime('now'));
-      $_product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
-    }// end if creating a product
+    // creating a new product
+    // Generate a unique product sku, uniqid generates a unique identifier using the current time in microseconds
+    // set all of our product attributes and save it to the database
+    $sku = uniqid("product-", true);
+    $product = $objectManager->create('Magento\Catalog\Model\Product');
+    $product->setSku($sku);
+    $product->setCreatedAt(strtotime('now'));
+    $product->setCustomAttribute('date', date('m/d/Y h:i:s a', time()));
 
     // set product attributes
-    $_product->setName($name);
-    $_product->setTypeId('simple');
-    $_product->setStoreId(1);
-    $_product->setAttributeSetId(4);
-    $_product->setVisibility(4);
-    $_product->setPrice($price);
-    $_product->setDescription(nl2br($details));
-    $_product->setCategoryIds([$topCategory, $all_category_id]);
-    $_product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-    $_product->setWebsiteIds(array(1));
-    $_product->setStockData(['qty' => 1, 'is_in_stock' => true]);
-    $_product->setCustomAttribute('condition', $condition);
-    $_product->setCustomAttribute('local_global', $localGlobal);
-    $_product->setCustomAttribute('latitude', $latitude);
-    $_product->setCustomAttribute('longitude', $longitude);
-    $_product->setCustomAttribute('location', $latitude.','.$longitude);
-    $_product->setCustomAttribute('item_size', $itemSize);
+    $product->setName($name);
+    $product->setTypeId('simple');
+    $product->setStoreId(1);
+    $product->setAttributeSetId(4);
+    $product->setVisibility(4);
+    $product->setPrice($price);
+    $product->setDescription(nl2br($details));
+    $product->setCategoryIds([$topCategory, $all_category_id]);
+    $product->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+    $product->setWebsiteIds(array(1));
+    $product->setStockData(['qty' => 1, 'is_in_stock' => true]);
+    $product->setCustomAttribute('condition', $condition);
+    $product->setCustomAttribute('local_global', $localGlobal);
+    $product->setCustomAttribute('latitude', $latitude);
+    $product->setCustomAttribute('longitude', $longitude);
+    $product->setCustomAttribute('location', $latitude.','.$longitude);
+    $product->setCustomAttribute('item_size', $itemSize);
 
     // tempory location for product images
     $mediaDir = '/var/www/html/pub/media';
@@ -136,7 +133,7 @@ class ProductManagement
       if(file_exists($primary_path))
       {
         // uploading a new file
-        $_product->addImageToMediaGallery($primary_path, $image_types, false, false);
+        $product->addImageToMediaGallery($primary_path, $image_types, false, false);
         unset($imagePaths[0]);
         unlink($primary_path);
       }// end if file exists
@@ -151,14 +148,14 @@ class ProductManagement
       {
         if(file_exists($path))
         {
-          $_product->addImageToMediaGallery($path, null, false, false);
+          $product->addImageToMediaGallery($path, null, false, false);
           unlink($path);
         }// end if file exists
       }// end if uploading a new file
     }// end foreach loop over image paths
 
     // save the product to the database
-    $_product->save();
+    $product->save();
 
     // load the vendor
     $vendorModel = $this->vendorFactory->create();
@@ -171,47 +168,50 @@ class ProductManagement
     if(count($stripe_model) == 0){
       // check to see if connected to stripe
       // the user hasn't connected to stripe yet
-      $customer = $this->_customerRepositoryInterface->getById($customerId);
+      $customer = $this->customerRepository->getById($customerId);
 
-      try {
-        // send an email to the user letting them know they need to connect to stripe
-        $this->inlineTranslation->suspend();
-        // send the customer an email telling them to connect with stripe
-        $sender = [
-          'name' => 'Resold',
-          'email' => 'support@resold.us'
-        ];
+      if($customer != null && method_exists($customer, 'getName')) {
+        try {
+          // send an email to the user letting them know they need to connect to stripe
+          $this->inlineTranslation->suspend();
+          // send the customer an email telling them to connect with stripe
+          $sender = [
+            'name' => 'Resold',
+            'email' => 'support@resold.us'
+          ];
 
-        $transport = $this->_transportBuilder
-          ->setTemplateIdentifier('connect_to_stripe_template') // this code we have mentioned in the email_templates.xml
-          ->setTemplateOptions([
-            'area' => \Magento\Framework\App\Area::AREA_FRONTEND, // this is using frontend area to get the template file
-            'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
-        ])
-        ->setTemplateVars(['host' => $_SERVER['HTTP_HOST'], 'name' => $customer->getName() ])
-        ->setFrom($sender)
-        ->addTo($customer->getEmail())
-        ->getTransport();
+          $transport = $this->_transportBuilder
+            ->setTemplateIdentifier('connect_to_stripe_template') // this code we have mentioned in the email_templates.xml
+            ->setTemplateOptions([
+              'area' => \Magento\Framework\App\Area::AREA_FRONTEND, // this is using frontend area to get the template file
+              'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID
+          ])
+          ->setTemplateVars(['host' => $_SERVER['HTTP_HOST'], 'name' => $customer->getName() ])
+          ->setFrom($sender)
+          ->addTo($customer->getEmail())
+          ->getTransport();
 
-        $transport->sendMessage();
-        $this->inlineTranslation->resume();
-      }
-      catch(\Exception $e)
-      {
-        $this->inlineTranslation->resume();
-      }// end try catch
+          $transport->sendMessage();
+          $this->inlineTranslation->resume();
+        }
+        catch(\Exception $e)
+        {
+          $this->inlineTranslation->resume();
+        }// end try catch
+      }// end if customer is not null
+
     }// end if user hasn't connected to Stripe
 
     // creating a new product and linking it to the seller
     // save a vendor product with the seller
-    $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $_product);
+    $objectManager->get('\Magento\Framework\Registry')->register('saved_product', $product);
     $objectManager->create('Ced\CsMarketplace\Model\Vproducts')->saveProduct(\Ced\CsMarketplace\Model\Vproducts::NEW_PRODUCT_MODE, $vendorId);
-    $this->_eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
-      'product' => $_product,
+    $this->eventManager->dispatch('csmarketplace_vendor_new_product_creation', [
+      'product' => $product,
       'vendor_id' => $vendorId
     ]);
 
-    return [['success' => 'Y', 'productId' => $_product->getId()]];
+    return [['success' => 'Y', 'productId' => $product->getId()]];
   }// end function createProduct
 
 	/**

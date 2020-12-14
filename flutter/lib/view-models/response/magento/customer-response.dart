@@ -52,8 +52,9 @@ class CustomerResponse extends Response {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       // login so we get a new token each time we load the customer
-      return await Magento.loginCustomer(
-          LoginRequest(username: prefs.getString('email'), password: prefs.getString('password')));
+      return await Magento.loginCustomer(LoginRequest(
+          username: prefs.getString('email'),
+          password: prefs.getString('password')));
     } catch (ex) {
       print(ex);
     }
