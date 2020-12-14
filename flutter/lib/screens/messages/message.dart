@@ -394,7 +394,8 @@ class MessagePageState extends State<MessagePage> {
     if (document['messageType'] == MessageType.deliveryQuote.index) {
       // fetch delivery quote message content
       deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
-      deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(document['content']);
+      deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(document['content'],
+          chatId: document.id, idFrom: document['idFrom'], idTo: document['idTo']);
 
       // check if we need to fetch a new delivery quote
       if (deliveryQuoteStatus != DeliveryQuoteStatus.paid && deliveryQuoteStatus != DeliveryQuoteStatus.accepted) {
