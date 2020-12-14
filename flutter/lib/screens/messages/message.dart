@@ -394,7 +394,7 @@ class MessagePageState extends State<MessagePage> {
     if (document['messageType'] == MessageType.deliveryQuote.index) {
       // fetch delivery quote message content
       deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
-      deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(document['content']);
+      deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(document['content']);
 
       // check if we need to fetch a new delivery quote
       if (deliveryQuoteStatus != DeliveryQuoteStatus.paid && deliveryQuoteStatus != DeliveryQuoteStatus.accepted) {
@@ -407,7 +407,7 @@ class MessagePageState extends State<MessagePage> {
         } // end if we need to fetch a new delivery quote
       } // end if delivery quote status not paid
     } else if (document['messageType'] == MessageType.offer.index) {
-      offerMessage = FirebaseHelper.readOfferMessageContent(document['content']);
+      offerMessage = FirebaseHelper.buildOffer(document['content']);
     } // end if delivery request
 
     if (document['idFrom'] == fromCustomer.id) {
