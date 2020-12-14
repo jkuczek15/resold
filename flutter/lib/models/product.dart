@@ -115,11 +115,11 @@ class Product {
       }
 
       if (doc['item_size'] != null) {
-        product.itemSize = int.tryParse(doc['item_size']);
+        product.itemSize = int.tryParse(doc['item_size'].toString());
       }
 
       if (doc['vendor_id'] != null) {
-        product.vendorId = int.tryParse(doc['vendor_id']);
+        product.vendorId = int.tryParse(doc['vendor_id'].toString());
       }
 
       return product;
