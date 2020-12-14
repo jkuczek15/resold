@@ -81,7 +81,8 @@ class ResoldFirebase {
         messagePreview = 'You have received an offer for \$${offerMessage.price}.';
       } // end if user message type is seller
     } else if (messageType == MessageType.deliveryQuote) {
-      FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(content);
+      FirebaseDeliveryQuote deliveryQuoteMessage =
+          FirebaseHelper.buildDeliveryQuote(content, chatId: chatId, idFrom: fromId, idTo: toId);
       if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
       } else {
@@ -203,7 +204,8 @@ class ResoldFirebase {
         if (deliveryQuoteDocuments.docs.isNotEmpty) {
           for (int j = 0; j < deliveryQuoteDocuments.size; j++) {
             DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
-            requestedDeliveries.add(FirebaseHelper.buildDeliveryQuote(deliveryQuote['content'], chatId: chatId));
+            requestedDeliveries.add(FirebaseHelper.buildDeliveryQuote(deliveryQuote['content'],
+                chatId: chatId, idFrom: deliveryQuote['idFrom'], idTo: deliveryQuote['idTo']));
           } // end foreach loop over delivery quote documents
         } // end if we found a delivery quote to accept
       } // end foreach loop over delivery quote documents

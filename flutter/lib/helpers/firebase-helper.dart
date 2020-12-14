@@ -8,11 +8,13 @@ class FirebaseHelper {
   * buildDeliveryQuote - Build delivery quote from a document
   * document - Firebase message content
   */
-  static FirebaseDeliveryQuote buildDeliveryQuote(String content, {String chatId}) {
+  static FirebaseDeliveryQuote buildDeliveryQuote(String content, {String chatId, int idFrom, int idTo}) {
     List<String> contentParts = content.split('|');
     return FirebaseDeliveryQuote(
         quoteId: contentParts[0],
         chatId: chatId,
+        idFrom: idFrom,
+        idTo: idTo,
         productId: int.tryParse(contentParts[1]),
         fee: Money.fromInt(int.tryParse(contentParts[1]), Currency.create('USD', 2)),
         expectedPickup: DateFormat('h:mm a on MM/dd/yyyy.')
