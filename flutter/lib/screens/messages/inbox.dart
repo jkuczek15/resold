@@ -20,14 +20,19 @@ class InboxPage extends StatefulWidget {
   final Position currentLocation;
   final Function dispatcher;
 
-  InboxPage({CustomerResponse customer, Position currentLocation, Function dispatcher, Key key})
+  InboxPage(
+      {CustomerResponse customer,
+      Position currentLocation,
+      Function dispatcher,
+      Key key})
       : customer = customer,
         currentLocation = currentLocation,
         dispatcher = dispatcher,
         super(key: key);
 
   @override
-  InboxPageState createState() => InboxPageState(this.customer, this.currentLocation, this.dispatcher);
+  InboxPageState createState() =>
+      InboxPageState(this.customer, this.currentLocation, this.dispatcher);
 }
 
 class InboxPageState extends State<InboxPage> {
@@ -63,17 +68,21 @@ class InboxPageState extends State<InboxPage> {
                       if (!snapshot.hasData) {
                         return Center(child: Loading());
                       } else {
-                        List<DocumentSnapshot> messages = new List<DocumentSnapshot>();
+                        List<DocumentSnapshot> messages =
+                            new List<DocumentSnapshot>();
                         messages.addAll(snapshot.data[0].documents);
                         messages.addAll(snapshot.data[1].documents);
 
                         if (messages.length == 0) {
-                          return Center(child: Text('You don\'t have any messages'));
+                          return Center(
+                              child: Text('You don\'t have any messages'));
                         } // end if no messages
 
                         messages.sort((DocumentSnapshot a, DocumentSnapshot b) {
-                          var dateA = new DateTime.fromMillisecondsSinceEpoch(int.parse(a['lastMessageTimestamp']));
-                          var dateB = new DateTime.fromMillisecondsSinceEpoch(int.parse(b['lastMessageTimestamp']));
+                          var dateA = new DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(a['lastMessageTimestamp']));
+                          var dateB = new DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(b['lastMessageTimestamp']));
                           return dateB.compareTo(dateA);
                         });
                         return LiquidPullToRefresh(
@@ -89,15 +98,22 @@ class InboxPageState extends State<InboxPage> {
                                 padding: EdgeInsets.fromLTRB(2, 10, 2, 10),
                                 itemBuilder: (context, index) {
                                   var item = messages[index];
-                                  var date =
-                                      new DateTime.fromMillisecondsSinceEpoch(int.parse(item['lastMessageTimestamp']));
+                                  var date = new DateTime
+                                          .fromMillisecondsSinceEpoch(
+                                      int.parse(item['lastMessageTimestamp']));
 
-                                  Product product = Product.fromJson(item['product'], parseId: false);
+                                  Product product = Product.fromJson(
+                                      item['product'],
+                                      parseId: false);
 
                                   // check if date is today, if so just use the time
-                                  var formattedDate = DateFormat('M/d/yy').format(date);
-                                  if (formattedDate == DateFormat('M/d/yy').format(DateTime.now())) {
-                                    formattedDate = DateFormat().add_jm().format(date);
+                                  var formattedDate =
+                                      DateFormat('M/d/yy').format(date);
+                                  if (formattedDate ==
+                                      DateFormat('M/d/yy')
+                                          .format(DateTime.now())) {
+                                    formattedDate =
+                                        DateFormat().add_jm().format(date);
                                   } // end if date is today
 
                                   return InkWell(
@@ -109,76 +125,123 @@ class InboxPageState extends State<InboxPage> {
                                             });
 
                                         // get the to customer details
-                                        CustomerResponse toCustomer = await Magento.getCustomerById(item['toId']);
+                                        CustomerResponse toCustomer =
+                                            await Magento.getCustomerById(
+                                                item['toId']);
 
                                         // mark the message as read
-                                        await ResoldFirebase.markInboxMessageRead(item.id);
+                                        await ResoldFirebase
+                                            .markInboxMessageRead(item.id);
 
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => MessagePage(
-                                                    fromCustomer: customer,
-                                                    toCustomer: toCustomer,
-                                                    currentLocation: currentLocation,
-                                                    product: product,
-                                                    chatId: item['chatId'],
-                                                    dispatcher: dispatcher)));
-                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                builder: (context) =>
+                                                    MessagePage(
+                                                        fromCustomer: customer,
+                                                        toCustomer: toCustomer,
+                                                        currentLocation:
+                                                            currentLocation,
+                                                        product: product,
+                                                        chatId: item['chatId'],
+                                                        dispatcher:
+                                                            dispatcher)));
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop('dialog');
                                       },
                                       child: Card(
                                           child: ListTile(
                                               title: Container(
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                       child: Align(
-                                                          alignment: Alignment.centerLeft,
+                                                          alignment: Alignment
+                                                              .centerLeft,
                                                           child: Padding(
-                                                              padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
-                                                              child: CircleAvatar(
-                                                                backgroundImage: CachedNetworkImageProvider(
-                                                                    baseProductImagePath + product.thumbnail),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          0,
+                                                                          5,
+                                                                          5,
+                                                                          0),
+                                                              child:
+                                                                  CircleAvatar(
+                                                                backgroundImage:
+                                                                    CachedNetworkImageProvider(
+                                                                        baseProductImagePath +
+                                                                            product.thumbnail),
                                                               ))))
                                                 ]),
-                                            SizedBox(width: 5),
+                                            // SizedBox(width: 5),
                                             Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   SizedBox(height: 5),
                                                   Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
                                                     children: [
                                                       SizedBox(width: 5),
                                                       Container(
-                                                          child: Text(product.name,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: item['unread']
-                                                                  ? TextStyle(fontWeight: FontWeight.bold)
-                                                                  : TextStyle(fontWeight: FontWeight.normal))),
+                                                          child: Text(
+                                                              product.name,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: item[
+                                                                      'unread']
+                                                                  ? TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)
+                                                                  : TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal))),
                                                       SizedBox(width: 125),
                                                       Container(
-                                                          child: Text(formattedDate,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              style: new TextStyle(color: Colors.grey)))
+                                                          child: Text(
+                                                              formattedDate,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .grey)))
                                                     ],
                                                   ),
                                                   SizedBox(height: 5),
                                                   Row(children: [
                                                     SizedBox(width: 5),
                                                     Container(
-                                                        width: 250,
+                                                        width: 260,
                                                         height: 25,
-                                                        child: Text(item['messagePreview'],
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: new TextStyle(color: Colors.grey))),
+                                                        child: Text(
+                                                            item[
+                                                                'messagePreview'],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: new TextStyle(
+                                                                color: Colors
+                                                                    .grey))),
                                                     SizedBox(height: 4)
                                                   ])
                                                 ])

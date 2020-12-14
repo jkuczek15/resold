@@ -1,32 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
-import 'package:resold/helpers/filters/orders-filter.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-orders-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
+import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
-import 'package:resold/widgets/list/order-list.dart';
+import 'package:resold/widgets/list/builders/order-widget-builder.dart';
 
 class OrdersPage extends StatelessWidget {
   final CustomerResponse customer;
   final List<Order> purchasedOrders;
   final List<Order> soldOrders;
+  final List<FirebaseDeliveryQuote> requestedPurchaseDeliveries;
+  final List<FirebaseDeliveryQuote> requestedSoldDeliveries;
   final Function dispatcher;
 
-  OrdersPage({this.customer, this.purchasedOrders, this.soldOrders, this.dispatcher});
+  OrdersPage(
+      {this.customer,
+      this.purchasedOrders,
+      this.soldOrders,
+      this.requestedPurchaseDeliveries,
+      this.requestedSoldDeliveries,
+      this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
-    List<Order> inProgressPurchasedOrders = OrdersFilter.filterInProgress(purchasedOrders);
-    List<Order> completedPurchasedOrders = OrdersFilter.filterComplete(purchasedOrders);
-    List<Order> inProgressSoldOrders = OrdersFilter.filterInProgress(soldOrders);
-    List<Order> completedSoldOrders = OrdersFilter.filterComplete(soldOrders);
     return LiquidPullToRefresh(
         height: 80,
         springAnimationDurationInMilliseconds: 500,
@@ -56,105 +59,13 @@ class OrdersPage extends StatelessWidget {
                   if (purchasedOrders.length == 0) {
                     return Center(child: Text('You haven\'t purchased any items.'));
                   }
-                  Widget purchasedWidget;
-                  if (inProgressPurchasedOrders.length > 0 && completedPurchasedOrders.length > 0) {
-                    purchasedWidget = Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                            child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                          ),
-                          OrderList(customer: customer, orders: inProgressPurchasedOrders),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                            child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                          ),
-                          Expanded(child: OrderList(customer: customer, orders: completedPurchasedOrders)),
-                        ]))
-                      ],
-                    );
-                  } else if (inProgressPurchasedOrders.length > 0) {
-                    purchasedWidget = Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                          child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(child: OrderList(customer: customer, orders: inProgressPurchasedOrders))
-                      ],
-                    );
-                  } else if (completedPurchasedOrders.length > 0) {
-                    purchasedWidget = Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                          child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(child: OrderList(customer: customer, orders: completedPurchasedOrders))
-                      ],
-                    );
-                  } // end if completed purchased orders
-                  return purchasedWidget;
+                  return OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders);
                 }()),
                 (() {
                   if (soldOrders.length == 0) {
                     return Center(child: Text('You haven\'t sold any items.'));
                   }
-                  Widget soldWidget;
-                  if (inProgressSoldOrders.length > 0 && completedSoldOrders.length > 0) {
-                    soldWidget = Expanded(
-                        child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                          child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        ),
-                        OrderList(customer: customer, orders: inProgressSoldOrders),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                          child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(child: OrderList(customer: customer, orders: completedSoldOrders))
-                      ],
-                    ));
-                  } else if (inProgressSoldOrders.length > 0) {
-                    soldWidget = Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                          child: Text('In Progress', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(child: OrderList(customer: customer, orders: inProgressSoldOrders))
-                      ],
-                    );
-                  } else if (completedSoldOrders.length > 0) {
-                    soldWidget = Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                          child: Text('Delivered', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(child: OrderList(customer: customer, orders: completedSoldOrders))
-                      ],
-                    );
-                  } // end if completed sold orders
-                  return soldWidget;
+                  return OrderWidgetBuilder.buildOrderWidget(customer, soldOrders);
                 }())
               ])),
         ));

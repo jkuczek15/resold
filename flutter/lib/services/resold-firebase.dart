@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
@@ -179,6 +180,28 @@ class ResoldFirebase {
       await deliveryQuote.reference.update(<String, dynamic>{'status': status.index});
       await markInboxMessageUnread(chatId);
     } // end if we found a delivery quote to accept
+  } // end function for accepting a delivery quote
+
+  /*
+  * getRequestedDeliveryQuotes - Return requested delivery quotes for a customer
+  * customerId - Customer ID
+  */
+  static Future<List<FirebaseDeliveryQuote>> getRequestedDeliveryQuotes(int customerId) async {
+    QuerySnapshot deliveryQuoteDocuments = await firestore
+        .collection('messages')
+        .where('idFrom', isEqualTo: customerId)
+        .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
+        .get();
+
+    List<FirebaseDeliveryQuote> requestedDeliveries = new List<FirebaseDeliveryQuote>();
+    if (deliveryQuoteDocuments.docs.isNotEmpty) {
+      for (var i = 0; i < deliveryQuoteDocuments.size; i++) {
+        DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
+        requestedDeliveries.add(FirebaseHelper.readDeliveryQuoteMessageContent(deliveryQuote['content']));
+      } // end foreach loop over delivery quote documents
+    } // end if we found a delivery quote to accept
+
+    return requestedDeliveries;
   } // end function for accepting a delivery quote
 
   /*
