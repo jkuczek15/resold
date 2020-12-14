@@ -11,23 +11,17 @@ import 'package:resold/state/actions/set-orders-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
+import 'package:resold/widgets/list/builders/delivery-quote-widget-builder.dart';
 import 'package:resold/widgets/list/builders/order-widget-builder.dart';
 
 class OrdersPage extends StatelessWidget {
   final CustomerResponse customer;
   final List<Order> purchasedOrders;
   final List<Order> soldOrders;
-  final List<FirebaseDeliveryQuote> requestedPurchaseDeliveries;
-  final List<FirebaseDeliveryQuote> requestedSoldDeliveries;
+  final List<FirebaseDeliveryQuote> requestedDeliveries;
   final Function dispatcher;
 
-  OrdersPage(
-      {this.customer,
-      this.purchasedOrders,
-      this.soldOrders,
-      this.requestedPurchaseDeliveries,
-      this.requestedSoldDeliveries,
-      this.dispatcher});
+  OrdersPage({this.customer, this.purchasedOrders, this.soldOrders, this.requestedDeliveries, this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +32,13 @@ class OrdersPage extends StatelessWidget {
           dispatcher(SetOrdersStateAction(OrdersState(
               purchasedOrders: await Magento.getPurchasedOrders(customer.id),
               soldOrders: await ResoldRest.getVendorOrders(customer.token),
-              requestedPurchaseDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer.id),
-              requestedSoldDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer.id))));
+              requestedDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer.id))));
         },
         showChildOpacityTransition: false,
         color: ResoldBlue,
         animSpeedFactor: 5.0,
         child: DefaultTabController(
-          length: 2,
+          length: 3,
           child: Scaffold(
               appBar: AppBar(
                   backgroundColor: Colors.white,
@@ -53,17 +46,22 @@ class OrdersPage extends StatelessWidget {
                   bottom: TabBar(
                     indicatorColor: ResoldBlue,
                     tabs: [
-                      Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
-                      Tab(icon: Icon(MdiIcons.clipboardText, semanticLabel: 'Sold'), text: 'Sold')
+                      Tab(icon: Icon(MdiIcons.truckDelivery, semanticLabel: 'Requested'), text: 'Requested'),
+                      Tab(icon: Icon(MdiIcons.truckFast, semanticLabel: 'Purchased'), text: 'Purchased'),
+                      Tab(icon: Icon(MdiIcons.truckCheck, semanticLabel: 'Sold'), text: 'Sold')
                     ],
                   )),
               body: TabBarView(children: [
                 (() {
-                  return OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders, requestedPurchaseDeliveries,
+                  return DeliveryQuoteWidgetBuilder.buildDeliveryQuoteWidget(customer, requestedDeliveries,
+                      error: 'You don\'t have any requested deliveries.');
+                }()),
+                (() {
+                  return OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders,
                       error: 'You haven\'t purchased any items.');
                 }()),
                 (() {
-                  return OrderWidgetBuilder.buildOrderWidget(customer, soldOrders, requestedSoldDeliveries,
+                  return OrderWidgetBuilder.buildOrderWidget(customer, soldOrders,
                       error: 'You haven\'t sold any items.');
                 }())
               ])),

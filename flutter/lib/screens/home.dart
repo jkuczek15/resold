@@ -278,8 +278,7 @@ class HomePageState extends State<HomePage> {
                   customer: customer,
                   purchasedOrders: ordersState.purchasedOrders,
                   soldOrders: ordersState.soldOrders,
-                  requestedPurchaseDeliveries: ordersState.requestedPurchaseDeliveries,
-                  requestedSoldDeliveries: ordersState.requestedSoldDeliveries,
+                  requestedDeliveries: ordersState.requestedDeliveries,
                   dispatcher: dispatcher);
             });
       case SelectedTab.account:

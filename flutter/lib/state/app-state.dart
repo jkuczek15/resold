@@ -53,7 +53,6 @@ class AppState {
         Resold.getVendorProducts(customer.vendorId, 'sold'),
         Magento.getPurchasedOrders(customer.id),
         ResoldRest.getVendorOrders(customer.token),
-        ResoldFirebase.getRequestedDeliveryQuotes(customer.id),
         ResoldFirebase.getRequestedDeliveryQuotes(customer.id)
       ]).then((data) {
         accountState.vendor = data[0];
@@ -61,8 +60,7 @@ class AppState {
         accountState.soldProducts = data[2];
         ordersState.purchasedOrders = data[3];
         ordersState.soldOrders = data[4];
-        ordersState.requestedPurchaseDeliveries = data[5];
-        ordersState.requestedSoldDeliveries = data[6];
+        ordersState.requestedDeliveries = data[5];
       });
     } // end if customer is logged in
 
