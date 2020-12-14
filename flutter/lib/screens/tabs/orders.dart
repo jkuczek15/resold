@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-orders-state.dart';
 import 'package:resold/state/screens/orders-state.dart';
@@ -36,7 +37,9 @@ class OrdersPage extends StatelessWidget {
         onRefresh: () async {
           dispatcher(SetOrdersStateAction(OrdersState(
               purchasedOrders: await Magento.getPurchasedOrders(customer.id),
-              soldOrders: await ResoldRest.getVendorOrders(customer.token))));
+              soldOrders: await ResoldRest.getVendorOrders(customer.token),
+              requestedPurchaseDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer.id),
+              requestedSoldDeliveries: await ResoldFirebase.getRequestedDeliveryQuotes(customer.id))));
         },
         showChildOpacityTransition: false,
         color: ResoldBlue,

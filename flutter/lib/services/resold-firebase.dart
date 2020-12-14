@@ -73,7 +73,7 @@ class ResoldFirebase {
     } // end if content length > 50
 
     if (messageType == MessageType.offer) {
-      FirebaseOffer offerMessage = FirebaseHelper.readOfferMessageContent(content);
+      FirebaseOffer offerMessage = FirebaseHelper.buildOffer(content);
 
       if (userMessageType == UserMessageType.sender) {
         messagePreview = 'You have sent an offer for \$${offerMessage.price}.';
@@ -81,7 +81,7 @@ class ResoldFirebase {
         messagePreview = 'You have received an offer for \$${offerMessage.price}.';
       } // end if user message type is seller
     } else if (messageType == MessageType.deliveryQuote) {
-      FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.readDeliveryQuoteMessageContent(content);
+      FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(content);
       if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
       } else {
@@ -192,17 +192,18 @@ class ResoldFirebase {
     List<FirebaseDeliveryQuote> requestedDeliveries = new List<FirebaseDeliveryQuote>();
     if (chatDocuments.docs.isNotEmpty) {
       for (int i = 0; i < chatDocuments.size; i++) {
+        String chatId = chatDocuments.docs[i]['chatId'];
         QuerySnapshot deliveryQuoteDocuments = await firestore
             .collection('messages')
-            .doc(chatDocuments.docs[i]['chatId'])
-            .collection(chatDocuments.docs[i]['chatId'])
+            .doc(chatId)
+            .collection(chatId)
             .where('idFrom', isEqualTo: customerId)
             .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
             .get();
         if (deliveryQuoteDocuments.docs.isNotEmpty) {
           for (int j = 0; j < deliveryQuoteDocuments.size; j++) {
             DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
-            requestedDeliveries.add(FirebaseHelper.readDeliveryQuoteMessageContent(deliveryQuote['content']));
+            requestedDeliveries.add(FirebaseHelper.buildDeliveryQuote(deliveryQuote['content'], chatId: chatId));
           } // end foreach loop over delivery quote documents
         } // end if we found a delivery quote to accept
       } // end foreach loop over delivery quote documents

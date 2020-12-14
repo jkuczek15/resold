@@ -5,14 +5,15 @@ import 'package:resold/view-models/firebase/firebase-offer.dart';
 
 class FirebaseHelper {
   /*
-  * readDeliveryQuoteMessageContent - Parse delivery quote message content
-  * content - Firebase message content
+  * buildDeliveryQuote - Build delivery quote from a document
+  * document - Firebase message content
   */
-  static FirebaseDeliveryQuote readDeliveryQuoteMessageContent(String content) {
-    var contentParts = content.split('|');
-
+  static FirebaseDeliveryQuote buildDeliveryQuote(String content, {String chatId}) {
+    List<String> contentParts = content.split('|');
     return FirebaseDeliveryQuote(
         quoteId: contentParts[0],
+        chatId: chatId,
+        productId: int.tryParse(contentParts[1]),
         fee: Money.fromInt(int.tryParse(contentParts[1]), Currency.create('USD', 2)),
         expectedPickup: DateFormat('h:mm a on MM/dd/yyyy.')
             .format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(contentParts[2]))).toString()))
@@ -26,8 +27,8 @@ class FirebaseHelper {
   * readOfferMessageContent - Parse offer message content
   * content - Firebase message content
   */
-  static FirebaseOffer readOfferMessageContent(String content) {
-    var contentParts = content.split('|');
+  static FirebaseOffer buildOffer(String content) {
+    List<String> contentParts = content.split('|');
     return FirebaseOffer(fromId: int.tryParse(contentParts[0]), price: int.tryParse(contentParts[1]));
   } // end function readOfferMessageContent
 }
