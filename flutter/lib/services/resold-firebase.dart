@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/enums/message-type.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
