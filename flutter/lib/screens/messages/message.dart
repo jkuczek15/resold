@@ -12,6 +12,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/actions/request-delivery.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
 import 'package:resold/view-models/request/postmates/delivery-quote-request.dart';
@@ -149,7 +150,7 @@ class MessagePageState extends State<MessagePage> {
   Future onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product, content, type, isSeller);
+      await ResoldFirebase.sendProductMessage(chatId, fromCustomer, toCustomer, product, content, type, isSeller);
       await ResoldRest.sendNotificationMessage(
           fromCustomer.token, toCustomer.deviceToken, product.name, content, product.thumbnail,
           chatId: chatId);
@@ -241,7 +242,7 @@ class MessagePageState extends State<MessagePage> {
                         Navigator.of(context, rootNavigator: true).pop('dialog');
 
                         // send offer message
-                        await ResoldFirebase.sendProductMessage(chatId, fromCustomer.id, toCustomer.id, product,
+                        await ResoldFirebase.sendProductMessage(chatId, fromCustomer, toCustomer, product,
                             fromCustomer.id.toString() + '|' + offerController.text, MessageType.offer, isSeller);
 
                         // send a notification message
@@ -283,7 +284,12 @@ class MessagePageState extends State<MessagePage> {
 
     // send a Firebase message
     await ResoldFirebase.sendProductMessage(
-        chatId, fromCustomer.id, toCustomer.id, product, content, MessageType.deliveryQuote, isSeller);
+        chatId, fromCustomer, toCustomer, product, content, MessageType.deliveryQuote, isSeller);
+
+    // request delivery action
+    dispatcher(RequestDeliveryAction(
+        quote:
+            FirebaseHelper.buildDeliveryQuote(content, chatId: chatId, fromCustomer: fromCustomer, product: product)));
 
     // send a notification message
     await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
@@ -395,7 +401,7 @@ class MessagePageState extends State<MessagePage> {
       // fetch delivery quote message content
       deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
       deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(document['content'],
-          chatId: document.id, idFrom: document['idFrom'], idTo: document['idTo']);
+          chatId: document.id, fromCustomer: fromCustomer, toCustomer: toCustomer, product: product);
 
       // check if we need to fetch a new delivery quote
       if (deliveryQuoteStatus != DeliveryQuoteStatus.paid && deliveryQuoteStatus != DeliveryQuoteStatus.accepted) {

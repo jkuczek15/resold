@@ -34,7 +34,7 @@ class CustomerResponse extends Response {
     return token != null;
   } // end function isLoggedIn
 
-  static Future save(CustomerResponse response) async {
+  static Future<CustomerResponse> save(CustomerResponse response) async {
     try {
       // persist customer settings to disk
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,6 +43,7 @@ class CustomerResponse extends Response {
     } catch (ex) {
       print(ex);
     }
+    return response;
   } // end function save
 
   static Future<CustomerResponse> load() async {
@@ -52,9 +53,8 @@ class CustomerResponse extends Response {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       // login so we get a new token each time we load the customer
-      return await Magento.loginCustomer(LoginRequest(
-          username: prefs.getString('email'),
-          password: prefs.getString('password')));
+      return await Magento.loginCustomer(
+          LoginRequest(username: prefs.getString('email'), password: prefs.getString('password')));
     } catch (ex) {
       print(ex);
     }

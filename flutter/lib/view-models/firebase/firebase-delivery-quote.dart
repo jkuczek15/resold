@@ -1,23 +1,25 @@
 import 'package:money2/money2.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
+import 'package:resold/models/product.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class FirebaseDeliveryQuote {
-  int idFrom;
-  int idTo;
+  CustomerResponse fromCustomer;
+  CustomerResponse toCustomer;
+  Product product;
   String chatId;
   String quoteId;
-  int productId;
   Money fee;
   DeliveryQuoteStatus status;
   String expectedPickup;
   String expectedDropoff;
 
   FirebaseDeliveryQuote({
-    this.idFrom,
-    this.idTo,
+    this.fromCustomer,
+    this.toCustomer,
+    this.product,
     this.chatId,
     this.quoteId,
-    this.productId,
     this.fee,
     this.status,
     this.expectedDropoff,

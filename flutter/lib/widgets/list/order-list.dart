@@ -69,7 +69,7 @@ class OrderList extends StatelessWidget {
                                 leading: CircleAvatar(
                                   backgroundImage: snapshot.hasData
                                       ? CachedNetworkImageProvider(baseProductImagePath + product.thumbnail)
-                                      : AssetImage('assets/placeholder-image.png'),
+                                      : AssetImage('assets/images/placeholder-image.png'),
                                 ),
                                 title: Container(
                                   child: Column(

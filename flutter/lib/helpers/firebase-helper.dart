@@ -1,21 +1,25 @@
 import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
+import 'package:resold/models/product.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
+import 'package:resold/view-models/response/magento/customer-response.dart';
 
 class FirebaseHelper {
   /*
   * buildDeliveryQuote - Build delivery quote from a document
   * document - Firebase message content
   */
-  static FirebaseDeliveryQuote buildDeliveryQuote(String content, {String chatId, int idFrom, int idTo}) {
+  static FirebaseDeliveryQuote buildDeliveryQuote(String content,
+      {String chatId, CustomerResponse fromCustomer, CustomerResponse toCustomer, Product product}) {
     List<String> contentParts = content.split('|');
+
     return FirebaseDeliveryQuote(
         quoteId: contentParts[0],
         chatId: chatId,
-        idFrom: idFrom,
-        idTo: idTo,
-        productId: int.tryParse(contentParts[1]),
+        fromCustomer: fromCustomer,
+        toCustomer: toCustomer,
+        product: product,
         fee: Money.fromInt(int.tryParse(contentParts[1]), Currency.create('USD', 2)),
         expectedPickup: DateFormat('h:mm a on MM/dd/yyyy.')
             .format(DateTime.tryParse(DateTime.now().add(Duration(minutes: int.tryParse(contentParts[2]))).toString()))

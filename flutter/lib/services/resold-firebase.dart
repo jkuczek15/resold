@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/enums/message-type.dart';
+import 'package:resold/services/magento.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
 import 'package:resold/view-models/firebase/inbox-message.dart';
@@ -60,11 +62,13 @@ class ResoldFirebase {
   * content - Content of the message for message preview
   * product - Product that message group is related to.
   */
-  static Future createUserInboxMessage(int fromId, int toId, String chatId, String content, Product product,
-      UserMessageType userMessageType, MessageType messageType, bool isSeller) async {
+  static Future createUserInboxMessage(CustomerResponse fromCustomer, CustomerResponse toCustomer, String chatId,
+      String content, Product product, UserMessageType userMessageType, MessageType messageType, bool isSeller) async {
     // get existing message collection
     String userMessageId =
-        (userMessageType == UserMessageType.sender ? fromId.toString() : toId.toString()) + '-' + product.id.toString();
+        (userMessageType == UserMessageType.sender ? fromCustomer.id.toString() : toCustomer.id.toString()) +
+            '-' +
+            product.id.toString();
 
     // setup message preview and trim if necessary
     var messagePreview = content;
@@ -81,8 +85,8 @@ class ResoldFirebase {
         messagePreview = 'You have received an offer for \$${offerMessage.price}.';
       } // end if user message type is seller
     } else if (messageType == MessageType.deliveryQuote) {
-      FirebaseDeliveryQuote deliveryQuoteMessage =
-          FirebaseHelper.buildDeliveryQuote(content, chatId: chatId, idFrom: fromId, idTo: toId);
+      FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(content,
+          chatId: chatId, fromCustomer: fromCustomer, toCustomer: toCustomer, product: product);
       if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
       } else {
@@ -102,11 +106,11 @@ class ResoldFirebase {
       'lastMessageTimestamp': now
     };
     if (userMessageType == UserMessageType.sender) {
-      data['toId'] = toId;
-      data['fromId'] = fromId;
+      data['toId'] = toCustomer.id;
+      data['fromId'] = fromCustomer.id;
     } else {
-      data['fromId'] = toId;
-      data['toId'] = fromId;
+      data['fromId'] = toCustomer.id;
+      data['toId'] = fromCustomer.id;
     } // end if type is buyer
 
     // set message to unread by default
@@ -117,29 +121,31 @@ class ResoldFirebase {
   /*
   * sendProductMessage - Send a product message from one user to another
   * chatId - Group chat ID
-  * fromId - Customer from ID
-  * toId - Customer to ID
+  * fromCustomer - Customer from
+  * toCustomer - Customer to
   * product - Product that message group is related to.
   * content - Content of the message for message preview
   * type - Type of the message (buyer or seller)
   */
-  static Future sendProductMessage(
-      String chatId, int fromId, int toId, Product product, String content, MessageType messageType, bool isSeller,
+  static Future sendProductMessage(String chatId, CustomerResponse fromCustomer, CustomerResponse toCustomer,
+      Product product, String content, MessageType messageType, bool isSeller,
       {bool firstMessage = false}) async {
     // mark buyer's inbox message as unread if sender is the seller and not the first message
-    await createUserInboxMessage(fromId, toId, chatId, content, product, UserMessageType.sender, messageType, isSeller);
+    await createUserInboxMessage(
+        fromCustomer, toCustomer, chatId, content, product, UserMessageType.sender, messageType, isSeller);
 
     // mark seller's inbox message as unread if sender is the buyer
     await createUserInboxMessage(
-        fromId, toId, chatId, content, product, UserMessageType.receiver, messageType, isSeller);
+        fromCustomer, toCustomer, chatId, content, product, UserMessageType.receiver, messageType, isSeller);
 
     // get the message bucket
     CollectionReference collectionReference = firestore.collection('messages').doc(chatId).collection(chatId);
 
     // message data to be stored
     Map<String, dynamic> data = {
-      'idFrom': fromId,
-      'idTo': toId,
+      'idFrom': fromCustomer.id,
+      'idTo': toCustomer.id,
+      'idProduct': product.id,
       'messageType': messageType.index,
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       'content': content
@@ -186,9 +192,9 @@ class ResoldFirebase {
   * getRequestedDeliveryQuotes - Return requested delivery quotes for a customer
   * customerId - Customer ID
   */
-  static Future<List<FirebaseDeliveryQuote>> getRequestedDeliveryQuotes(int customerId) async {
+  static Future<List<FirebaseDeliveryQuote>> getRequestedDeliveryQuotes(CustomerResponse customer) async {
     QuerySnapshot chatDocuments =
-        await firestore.collection('inbox_messages').where('fromId', isEqualTo: customerId).get();
+        await firestore.collection('inbox_messages').where('fromId', isEqualTo: customer.id).get();
 
     List<FirebaseDeliveryQuote> requestedDeliveries = new List<FirebaseDeliveryQuote>();
     if (chatDocuments.docs.isNotEmpty) {
@@ -198,14 +204,24 @@ class ResoldFirebase {
             .collection('messages')
             .doc(chatId)
             .collection(chatId)
-            .where('idFrom', isEqualTo: customerId)
+            .where('idFrom', isEqualTo: customer.id)
             .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
             .get();
         if (deliveryQuoteDocuments.docs.isNotEmpty) {
           for (int j = 0; j < deliveryQuoteDocuments.size; j++) {
             DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
+
+            List<Object> additionalQuoteData = await Future.wait([
+              Magento.getCustomerById(deliveryQuote['idFrom']),
+              Magento.getCustomerById(deliveryQuote['idFrom']),
+              ResoldRest.getProduct(customer.token, deliveryQuote['idProduct'])
+            ]);
+
             requestedDeliveries.add(FirebaseHelper.buildDeliveryQuote(deliveryQuote['content'],
-                chatId: chatId, idFrom: deliveryQuote['idFrom'], idTo: deliveryQuote['idTo']));
+                chatId: chatId,
+                fromCustomer: additionalQuoteData[0],
+                toCustomer: additionalQuoteData[1],
+                product: additionalQuoteData[2]));
           } // end foreach loop over delivery quote documents
         } // end if we found a delivery quote to accept
       } // end foreach loop over delivery quote documents
