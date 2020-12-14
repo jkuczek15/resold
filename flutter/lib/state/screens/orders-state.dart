@@ -4,10 +4,9 @@ import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 class OrdersState {
   List<Order> purchasedOrders;
   List<Order> soldOrders;
-  List<FirebaseDeliveryQuote> requestedPurchaseDeliveries;
-  List<FirebaseDeliveryQuote> requestedSoldDeliveries;
+  List<FirebaseDeliveryQuote> requestedDeliveries;
 
-  OrdersState({this.purchasedOrders, this.soldOrders, this.requestedPurchaseDeliveries, this.requestedSoldDeliveries});
+  OrdersState({this.purchasedOrders, this.soldOrders, this.requestedDeliveries});
 
   factory OrdersState.initialState() {
     return OrdersState();

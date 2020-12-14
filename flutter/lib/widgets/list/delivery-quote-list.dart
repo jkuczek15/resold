@@ -14,15 +14,13 @@ class DeliveryQuoteList extends StatelessWidget {
   final CustomerResponse customer;
   final Position currentLocation;
   final List<FirebaseDeliveryQuote> quotes;
-  final Widget header;
   final Function dispatcher;
 
-  DeliveryQuoteList({this.customer, this.currentLocation, this.quotes, this.header, this.dispatcher});
+  DeliveryQuoteList({this.customer, this.currentLocation, this.quotes, this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      header,
       ListView(
           padding: const EdgeInsets.all(8),
           physics: const NeverScrollableScrollPhysics(),
