@@ -45,7 +45,7 @@ Future<void> main() async {
       androidPayMode: env.stripeAndroidPayMode));
 
   // auto-login/auto-post
-  CustomerResponse customer;
+  CustomerResponse customer = CustomerResponse();
   Position currentLocation;
   if (env.isDevelopment) {
     // clear from disk
@@ -61,16 +61,8 @@ Future<void> main() async {
   // run the app
   runApp(StoreProvider<AppState>(
     store: Store(
-        initialState: await AppState.initialState(customer,
-            currentLocation: currentLocation),
-        blocs: [
-          CustomerReducer(),
-          HomeReducer(),
-          SearchReducer(),
-          SellReducer(),
-          OrdersReducer(),
-          AccountReducer()
-        ]),
+        initialState: await AppState.initialState(customer, currentLocation: currentLocation),
+        blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), OrdersReducer(), AccountReducer()]),
     child: OverlaySupport(
         child: MaterialApp(
       home: customer.isLoggedIn() ? Home() : Landing(),
@@ -85,8 +77,7 @@ Future<CustomerResponse> autoPost(CustomerResponse customer) async {
   customer = await CustomerResponse.load();
 
   // automatically post a product
-  List<String> imagePaths =
-      await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
+  List<String> imagePaths = await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
   ResoldRest.postProduct(
       customer.token,
       Product(
@@ -97,9 +88,7 @@ Future<CustomerResponse> autoPost(CustomerResponse customer) async {
           vendorId: customer.vendorId,
           latitude: TestLocations.evanston.latitude,
           longitude: TestLocations.evanston.longitude,
-          categoryIds: [
-            int.tryParse(CategoryHelper.getCategoryIdByName('Electronics'))
-          ],
+          categoryIds: [int.tryParse(CategoryHelper.getCategoryIdByName('Electronics'))],
           condition: ConditionHelper.getConditionIdByName('New'),
           localGlobal: LocalGlobalHelper.getLocalGlobal()),
       imagePaths);
