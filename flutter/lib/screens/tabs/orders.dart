@@ -56,16 +56,12 @@ class OrdersPage extends StatelessWidget {
                   )),
               body: TabBarView(children: [
                 (() {
-                  if (purchasedOrders.length == 0) {
-                    return Center(child: Text('You haven\'t purchased any items.'));
-                  }
-                  return OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders);
+                  return OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders, requestedPurchaseDeliveries,
+                      error: 'You haven\'t purchased any items.');
                 }()),
                 (() {
-                  if (soldOrders.length == 0) {
-                    return Center(child: Text('You haven\'t sold any items.'));
-                  }
-                  return OrderWidgetBuilder.buildOrderWidget(customer, soldOrders);
+                  return OrderWidgetBuilder.buildOrderWidget(customer, soldOrders, requestedSoldDeliveries,
+                      error: 'You haven\'t sold any items.');
                 }())
               ])),
         ));

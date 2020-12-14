@@ -186,19 +186,27 @@ class ResoldFirebase {
   * customerId - Customer ID
   */
   static Future<List<FirebaseDeliveryQuote>> getRequestedDeliveryQuotes(int customerId) async {
-    QuerySnapshot deliveryQuoteDocuments = await firestore
-        .collection('messages')
-        .where('idFrom', isEqualTo: customerId)
-        .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
-        .get();
+    QuerySnapshot chatDocuments =
+        await firestore.collection('inbox_messages').where('fromId', isEqualTo: customerId).get();
 
     List<FirebaseDeliveryQuote> requestedDeliveries = new List<FirebaseDeliveryQuote>();
-    if (deliveryQuoteDocuments.docs.isNotEmpty) {
-      for (var i = 0; i < deliveryQuoteDocuments.size; i++) {
-        DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
-        requestedDeliveries.add(FirebaseHelper.readDeliveryQuoteMessageContent(deliveryQuote['content']));
+    if (chatDocuments.docs.isNotEmpty) {
+      for (int i = 0; i < chatDocuments.size; i++) {
+        QuerySnapshot deliveryQuoteDocuments = await firestore
+            .collection('messages')
+            .doc(chatDocuments.docs[i]['chatId'])
+            .collection(chatDocuments.docs[i]['chatId'])
+            .where('idFrom', isEqualTo: customerId)
+            .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
+            .get();
+        if (deliveryQuoteDocuments.docs.isNotEmpty) {
+          for (int j = 0; j < deliveryQuoteDocuments.size; j++) {
+            DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
+            requestedDeliveries.add(FirebaseHelper.readDeliveryQuoteMessageContent(deliveryQuote['content']));
+          } // end foreach loop over delivery quote documents
+        } // end if we found a delivery quote to accept
       } // end foreach loop over delivery quote documents
-    } // end if we found a delivery quote to accept
+    } // end if chat documents is not empty
 
     return requestedDeliveries;
   } // end function for accepting a delivery quote

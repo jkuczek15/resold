@@ -1,11 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:resold/helpers/filters/orders-filter.dart';
 import 'package:resold/models/order.dart';
+import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/list/order-list.dart';
 
 class OrderWidgetBuilder {
-  static Widget buildOrderWidget(CustomerResponse customer, List<Order> orders) {
+  static Widget buildOrderWidget(
+      CustomerResponse customer, List<Order> orders, List<FirebaseDeliveryQuote> requestedDeliveries,
+      {String error}) {
     Widget ordersWidget;
     List<Order> inProgressOrders = OrdersFilter.filterInProgress(orders);
     List<Order> completedOrders = OrdersFilter.filterComplete(orders);
@@ -54,7 +57,10 @@ class OrderWidgetBuilder {
           Expanded(child: OrderList(customer: customer, orders: completedOrders))
         ],
       );
+    } else {
+      return Center(child: Text(error));
     } // end if completed purchased orders
+
     return ordersWidget;
-  }
+  } // end function buildOrdersWidget
 }
