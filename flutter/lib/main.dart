@@ -48,8 +48,8 @@ Future<void> main() async {
   Position currentLocation;
   if (env.isDevelopment) {
     currentLocation = TestLocations.evanston;
-    // await CustomerResponse.save(TestAccounts.seller);
-    // await autoPost();
+    await CustomerResponse.save(TestAccounts.seller);
+    await autoPost();
     await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
 
