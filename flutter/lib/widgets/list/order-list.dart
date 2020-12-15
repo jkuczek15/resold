@@ -23,6 +23,7 @@ class OrderList extends StatelessWidget {
       children: [
         header,
         ListView(
+            key: Key(orders.length.toString()),
             padding: const EdgeInsets.all(8),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,

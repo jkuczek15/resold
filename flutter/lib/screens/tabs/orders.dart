@@ -25,6 +25,12 @@ class OrdersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> tabs = [
+      DeliveryQuoteWidgetBuilder.buildDeliveryQuoteWidget(customer, requestedDeliveries, dispatcher,
+          error: 'You don\'t have any requested deliveries.'),
+      OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders, error: 'You haven\'t purchased any items.'),
+      OrderWidgetBuilder.buildOrderWidget(customer, soldOrders, error: 'You haven\'t sold any items.')
+    ];
     return LiquidPullToRefresh(
         height: 80,
         springAnimationDurationInMilliseconds: 500,
@@ -51,20 +57,7 @@ class OrdersPage extends StatelessWidget {
                       Tab(icon: Icon(MdiIcons.truckCheck, semanticLabel: 'Sold'), text: 'Sold')
                     ],
                   )),
-              body: TabBarView(children: [
-                (() {
-                  return DeliveryQuoteWidgetBuilder.buildDeliveryQuoteWidget(customer, requestedDeliveries,
-                      error: 'You don\'t have any requested deliveries.');
-                }()),
-                (() {
-                  return OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders,
-                      error: 'You haven\'t purchased any items.');
-                }()),
-                (() {
-                  return OrderWidgetBuilder.buildOrderWidget(customer, soldOrders,
-                      error: 'You haven\'t sold any items.');
-                }())
-              ])),
+              body: TabBarView(children: tabs)),
         ));
   } // end function build
 }

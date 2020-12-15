@@ -19,6 +19,7 @@ class DeliveryQuoteList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       ListView(
+          key: Key(quotes.length.toString()),
           padding: const EdgeInsets.all(8),
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,

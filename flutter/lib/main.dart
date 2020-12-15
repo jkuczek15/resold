@@ -18,7 +18,7 @@ import 'package:resold/state/app-state.dart';
 import 'package:resold/state/reducers/customer-reducer.dart';
 import 'package:resold/state/reducers/account-reducer.dart';
 import 'package:resold/state/reducers/home-reducer.dart';
-import 'package:resold/state/reducers/orders-reducer.dart';
+import 'package:resold/state/reducers/order-reducer.dart';
 import 'package:resold/state/reducers/search-reducer.dart';
 import 'package:resold/state/reducers/sell-reducer.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
@@ -50,7 +50,7 @@ Future<void> main() async {
     currentLocation = TestLocations.evanston;
     // await CustomerResponse.save(TestAccounts.seller);
     // await autoPost();
-    await CustomerResponse.save(TestAccounts.seller);
+    await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
 
   CustomerResponse customer = await CustomerResponse.load();
@@ -59,7 +59,7 @@ Future<void> main() async {
   runApp(StoreProvider<AppState>(
     store: Store(
         initialState: await AppState.initialState(customer, currentLocation: currentLocation),
-        blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), OrdersReducer(), AccountReducer()]),
+        blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), OrderReducer(), AccountReducer()]),
     child: OverlaySupport(
         child: MaterialApp(
       home: customer.isLoggedIn() ? Home() : Landing(),
