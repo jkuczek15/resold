@@ -12,6 +12,7 @@ import 'package:resold/models/product.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
+import 'package:resold/state/actions/cancel-delivery.dart';
 import 'package:resold/state/actions/request-delivery.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
@@ -573,6 +574,7 @@ class MessagePageState extends State<MessagePage> {
                                                     onPressed: () async {
                                                       // Perform some action
                                                       await ResoldFirebase.deleteProductMessage(chatId, document.id);
+                                                      dispatcher(CancelDeliveryAction(chatId));
                                                     },
                                                     child: const Text('Decline Delivery'),
                                                   ),
@@ -586,6 +588,7 @@ class MessagePageState extends State<MessagePage> {
                                                         onPressed: () async {
                                                           await ResoldFirebase.deleteProductMessage(
                                                               chatId, document.id);
+                                                          dispatcher(CancelDeliveryAction(chatId));
                                                         },
                                                         child: const Text('Cancel Delivery'),
                                                       ),
@@ -834,6 +837,7 @@ class MessagePageState extends State<MessagePage> {
                                                           onPressed: () async {
                                                             await ResoldFirebase.deleteProductMessage(
                                                                 chatId, document.id);
+                                                            dispatcher(CancelDeliveryAction(chatId));
                                                           },
                                                           child: const Text('Cancel Delivery'),
                                                         ),
@@ -868,6 +872,7 @@ class MessagePageState extends State<MessagePage> {
                                                                 // Perform some action
                                                                 await ResoldFirebase.deleteProductMessage(
                                                                     chatId, document.id);
+                                                                dispatcher(CancelDeliveryAction(chatId));
                                                               },
                                                               child: const Text('Decline Delivery'),
                                                             ),

@@ -32,6 +32,7 @@ import 'package:resold/state/screens/search-state.dart';
 import 'package:resold/state/screens/sell/sell-image-state.dart';
 import 'package:resold/state/screens/sell/sell-state.dart';
 import 'package:resold/ui-models/product-ui-model.dart';
+import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/inbox-message.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
@@ -272,14 +273,18 @@ class HomePageState extends State<HomePage> {
         return ViewModelSubscriber<AppState, OrdersState>(
             converter: (state) => state.ordersState,
             builder: (context, dispatcher, ordersState) {
-              ordersState.purchasedOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
-              ordersState.soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
-              return OrdersPage(
-                  customer: customer,
-                  purchasedOrders: ordersState.purchasedOrders,
-                  soldOrders: ordersState.soldOrders,
-                  requestedDeliveries: ordersState.requestedDeliveries,
-                  dispatcher: dispatcher);
+              return ViewModelSubscriber<AppState, List<FirebaseDeliveryQuote>>(
+                  converter: (state) => state.ordersState.requestedDeliveries,
+                  builder: (context, dispatcher, requestedDeliveries) {
+                    ordersState.purchasedOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
+                    ordersState.soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
+                    return OrdersPage(
+                        customer: customer,
+                        purchasedOrders: ordersState.purchasedOrders,
+                        soldOrders: ordersState.soldOrders,
+                        requestedDeliveries: requestedDeliveries,
+                        dispatcher: dispatcher);
+                  });
             });
       case SelectedTab.account:
         return ViewModelSubscriber<AppState, AccountState>(
