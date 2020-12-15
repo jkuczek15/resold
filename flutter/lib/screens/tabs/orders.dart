@@ -27,7 +27,7 @@ class OrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> tabs = [
       DeliveryQuoteWidgetBuilder.buildDeliveryQuoteWidget(customer, requestedDeliveries, dispatcher,
-          error: 'You don\'t have any requested deliveries.'),
+          error: 'You haven\'t requested any deliveries.'),
       OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders, error: 'You haven\'t purchased any items.'),
       OrderWidgetBuilder.buildOrderWidget(customer, soldOrders, error: 'You haven\'t sold any items.')
     ];
