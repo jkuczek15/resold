@@ -96,6 +96,8 @@ class ResoldFirebase {
       } else {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedDropoff;
       } // end if user is seller
+    } else if (messageType == MessageType.canceledDelivery) {
+      messagePreview = 'Delivery has been canceled.';
     } // end if message type is offer
 
     // set up params to store for user inbox message
