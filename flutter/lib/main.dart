@@ -48,8 +48,9 @@ Future<void> main() async {
   Position currentLocation;
   if (env.isDevelopment) {
     currentLocation = TestLocations.evanston;
-    await autoPost();
-    await CustomerResponse.save(TestAccounts.buyer);
+    // await CustomerResponse.save(TestAccounts.seller);
+    // await autoPost();
+    await CustomerResponse.save(TestAccounts.seller);
   } // end if development
 
   CustomerResponse customer = await CustomerResponse.load();
@@ -66,10 +67,8 @@ Future<void> main() async {
   ));
 } // end function main
 
-Future<CustomerResponse> autoPost() async {
-  // sign in as seller
-  await CustomerResponse.clear();
-  await CustomerResponse.save(TestAccounts.seller);
+Future autoPost() async {
+  // auto-post from the current account
   CustomerResponse customer = await CustomerResponse.load();
 
   // automatically post a product
@@ -88,9 +87,4 @@ Future<CustomerResponse> autoPost() async {
           condition: ConditionHelper.getConditionIdByName('New'),
           localGlobal: LocalGlobalHelper.getLocalGlobal()),
       imagePaths);
-
-  // sign in as buyer
-  await CustomerResponse.clear();
-  await CustomerResponse.save(TestAccounts.buyer);
-  return customer;
 } // end function autopost

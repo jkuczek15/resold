@@ -593,7 +593,8 @@ class ProductPageState extends State<ProductPage> {
                                                           chatId: chatId,
                                                           fromCustomer: customer,
                                                           toCustomer: toCustomer,
-                                                          product: product)));
+                                                          product: product,
+                                                          sellerCustomerId: toCustomer.id)));
 
                                                   if (fromMessagePage) {
                                                     // go back

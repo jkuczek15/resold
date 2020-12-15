@@ -11,7 +11,11 @@ class FirebaseHelper {
   * document - Firebase message content
   */
   static FirebaseDeliveryQuote buildDeliveryQuote(String content,
-      {String chatId, CustomerResponse fromCustomer, CustomerResponse toCustomer, Product product}) {
+      {String chatId,
+      CustomerResponse fromCustomer,
+      CustomerResponse toCustomer,
+      Product product,
+      int sellerCustomerId}) {
     List<String> contentParts = content.split('|');
 
     return FirebaseDeliveryQuote(
@@ -19,6 +23,7 @@ class FirebaseHelper {
         chatId: chatId,
         fromCustomer: fromCustomer,
         toCustomer: toCustomer,
+        sellerCustomerId: sellerCustomerId,
         product: product,
         fee: Money.fromInt(int.tryParse(contentParts[1]), Currency.create('USD', 2)),
         expectedPickup: DateFormat('h:mm a on MM/dd/yyyy.')
@@ -30,11 +35,21 @@ class FirebaseHelper {
   } // end function readDeliveryQuoteMessageContent
 
   /*
-  * readOfferMessageContent - Parse offer message content
+  * buildOffer - Build Firebase offer object
   * content - Firebase message content
   */
   static FirebaseOffer buildOffer(String content) {
     List<String> contentParts = content.split('|');
     return FirebaseOffer(fromId: int.tryParse(contentParts[0]), price: int.tryParse(contentParts[1]));
+  } // end function readOfferMessageContent
+
+  /*
+  * isSeller - Return true if the customer is the seller for a particular chat group
+  * customer - Logged in customer
+  * chatId - Group chat ID
+  */
+  static bool isSeller(CustomerResponse customer, String chatId) {
+    List<String> chatIdParts = chatId.split('-');
+    return customer.id.toString() != chatIdParts[0];
   } // end function readOfferMessageContent
 }
