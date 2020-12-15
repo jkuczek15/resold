@@ -100,8 +100,7 @@ class MessagePageState extends State<MessagePage> {
     super.initState();
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
-    var chatIdParts = this.chatId.split('-');
-    isSeller = fromCustomer.id.toString() != chatIdParts[0];
+    isSeller = FirebaseHelper.isSeller(fromCustomer, chatId);
   } // end function initState
 
   @override
@@ -288,8 +287,11 @@ class MessagePageState extends State<MessagePage> {
 
     // request delivery action
     dispatcher(RequestDeliveryAction(
-        quote:
-            FirebaseHelper.buildDeliveryQuote(content, chatId: chatId, fromCustomer: fromCustomer, product: product)));
+        quote: FirebaseHelper.buildDeliveryQuote(content,
+            chatId: chatId,
+            fromCustomer: fromCustomer,
+            product: product,
+            sellerCustomerId: isSeller ? fromCustomer.id : toCustomer.id)));
 
     // send a notification message
     await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,

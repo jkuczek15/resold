@@ -86,7 +86,11 @@ class ResoldFirebase {
       } // end if user message type is seller
     } else if (messageType == MessageType.deliveryQuote) {
       FirebaseDeliveryQuote deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(content,
-          chatId: chatId, fromCustomer: fromCustomer, toCustomer: toCustomer, product: product);
+          chatId: chatId,
+          fromCustomer: fromCustomer,
+          toCustomer: toCustomer,
+          product: product,
+          sellerCustomerId: isSeller ? fromCustomer.id : toCustomer.id);
       if (isSeller) {
         messagePreview = 'Delivery has been requested for ' + deliveryQuoteMessage.expectedPickup;
       } else {
@@ -146,6 +150,7 @@ class ResoldFirebase {
       'idFrom': fromCustomer.id,
       'idTo': toCustomer.id,
       'idProduct': product.id,
+      'sellerCustomerId': isSeller ? fromCustomer.id : toCustomer.id,
       'messageType': messageType.index,
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       'content': content
@@ -200,16 +205,30 @@ class ResoldFirebase {
     if (chatDocuments.docs.isNotEmpty) {
       for (int i = 0; i < chatDocuments.size; i++) {
         String chatId = chatDocuments.docs[i]['chatId'];
-        QuerySnapshot deliveryQuoteDocuments = await firestore
+
+        QuerySnapshot fromDocuments = await firestore
             .collection('messages')
             .doc(chatId)
             .collection(chatId)
             .where('idFrom', isEqualTo: customer.id)
             .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
             .get();
-        if (deliveryQuoteDocuments.docs.isNotEmpty) {
-          for (int j = 0; j < deliveryQuoteDocuments.size; j++) {
-            DocumentSnapshot deliveryQuote = deliveryQuoteDocuments.docs[0];
+
+        QuerySnapshot toDocuments = await firestore
+            .collection('messages')
+            .doc(chatId)
+            .collection(chatId)
+            .where('idTo', isEqualTo: customer.id)
+            .where('messageType', isEqualTo: MessageType.deliveryQuote.index)
+            .get();
+
+        List<QueryDocumentSnapshot> deliveryQuoteDocuments = new List<QueryDocumentSnapshot>();
+        deliveryQuoteDocuments.addAll(fromDocuments.docs);
+        deliveryQuoteDocuments.addAll(toDocuments.docs);
+
+        if (deliveryQuoteDocuments.isNotEmpty) {
+          for (int j = 0; j < deliveryQuoteDocuments.length; j++) {
+            DocumentSnapshot deliveryQuote = deliveryQuoteDocuments[0];
 
             List<Object> additionalQuoteData = await Future.wait([
               Magento.getCustomerById(deliveryQuote['idFrom']),
@@ -221,7 +240,8 @@ class ResoldFirebase {
                 chatId: chatId,
                 fromCustomer: additionalQuoteData[0],
                 toCustomer: additionalQuoteData[1],
-                product: additionalQuoteData[2]));
+                product: additionalQuoteData[2],
+                sellerCustomerId: deliveryQuote['sellerCustomerId']));
           } // end foreach loop over delivery quote documents
         } // end if we found a delivery quote to accept
       } // end foreach loop over delivery quote documents

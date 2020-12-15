@@ -27,6 +27,7 @@ class DeliveryQuoteList extends StatelessWidget {
             (index) {
               FirebaseDeliveryQuote quote = quotes[index];
               bool isSender = customer.id == quote.fromCustomer.id;
+              bool isSeller = customer.id == quote.sellerCustomerId;
 
               return InkWell(
                   onTap: () async {
@@ -63,9 +64,11 @@ class DeliveryQuoteList extends StatelessWidget {
                               children: [
                                 Text(quote.product.name),
                                 isSender
-                                    ? Text('You have sent a delivery request for ${quote.expectedDropoff}',
+                                    ? Text(
+                                        'You have sent a delivery request for ${isSeller ? quote.expectedPickup : quote.expectedDropoff}',
                                         style: TextStyle(color: Colors.grey, fontSize: 12))
-                                    : Text('You have received a delivery request for ${quote.expectedDropoff}',
+                                    : Text(
+                                        'You have received a delivery request for ${isSeller ? quote.expectedPickup : quote.expectedDropoff}',
                                         style: TextStyle(color: Colors.grey, fontSize: 12))
                               ],
                             ),

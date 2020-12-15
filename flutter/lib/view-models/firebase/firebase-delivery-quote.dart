@@ -6,6 +6,7 @@ import 'package:resold/view-models/response/magento/customer-response.dart';
 class FirebaseDeliveryQuote {
   CustomerResponse fromCustomer;
   CustomerResponse toCustomer;
+  int sellerCustomerId;
   Product product;
   String chatId;
   String quoteId;
@@ -17,6 +18,7 @@ class FirebaseDeliveryQuote {
   FirebaseDeliveryQuote({
     this.fromCustomer,
     this.toCustomer,
+    this.sellerCustomerId,
     this.product,
     this.chatId,
     this.quoteId,
