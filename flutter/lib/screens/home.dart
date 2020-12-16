@@ -194,7 +194,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
-          BottomNavigationBarItem(icon: Icon(MdiIcons.car), label: 'Deliveries'),
+          BottomNavigationBarItem(icon: Icon(MdiIcons.carMultiple), label: 'Deliveries'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
         ],
         currentIndex: selectedTab.index,

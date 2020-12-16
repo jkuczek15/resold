@@ -52,8 +52,8 @@ class OrdersPage extends StatelessWidget {
                   bottom: TabBar(
                     indicatorColor: ResoldBlue,
                     tabs: [
-                      Tab(icon: Icon(MdiIcons.carArrowRight, semanticLabel: 'Requested'), text: 'Requested'),
-                      Tab(icon: Icon(MdiIcons.cart, semanticLabel: 'Purchased'), text: 'Purchased'),
+                      Tab(icon: Icon(MdiIcons.sendClock, semanticLabel: 'Requested'), text: 'Requested'),
+                      Tab(icon: Icon(MdiIcons.carArrowRight, semanticLabel: 'Purchased'), text: 'Purchased'),
                       Tab(icon: Icon(MdiIcons.cashMarker, semanticLabel: 'Sold'), text: 'Sold')
                     ],
                   )),
