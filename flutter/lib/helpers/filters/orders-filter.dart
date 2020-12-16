@@ -4,7 +4,10 @@ class OrdersFilter {
   static List<Order> filterInProgress(List<Order> orders) {
     return orders
         .where((order) =>
-            order.status == 'processing' || order.status == 'pickup' || order.status == 'delivery_in_progress')
+            order.status == 'pending' ||
+            order.status == 'processing' ||
+            order.status == 'pickup' ||
+            order.status == 'delivery_in_progress')
         .toList();
   } // end function filterInProgress
 
