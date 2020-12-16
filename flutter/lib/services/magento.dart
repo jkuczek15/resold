@@ -202,7 +202,7 @@ class Magento {
   * stripeToken - Stripe payment token
   * deliveryFee - Delivery fee
   */
-  static Future<int> createOrder(
+  static Future<String> createOrder(
       String token, CustomerAddress shippingAddress, Product product, Token stripeToken, Money deliveryFee) async {
     await config.initialized;
 
@@ -210,76 +210,87 @@ class Magento {
 
     var response = await client.post('${config.baseUrl}/carts/mine', headers: config.customerHeaders);
 
-    String responseText = response.body.toString().replaceAll("\"", "");
-    if (response.statusCode == 200) {
-      // get the cart ID
-      int cartId = int.tryParse(responseText);
-
-      // setup the cart item request
-      String requestJson = jsonEncode(<String, dynamic>{
-        'cartItem': {'sku': product.sku, 'qty': 1, 'quote_id': cartId}
-      });
-
-      // add the product to the cart
-      response =
-          await client.post('${config.baseUrl}/carts/mine/items', headers: config.customerHeaders, body: requestJson);
-
-      // setup shipping estimate request
-      Map<String, dynamic> address = shippingAddress.toJson();
-      CustomerAddressRegion region = address['region'];
-      address.remove('region');
-      address.remove('defaultBilling');
-      address.remove('defaultShipping');
-      address['region_id'] = region.regionId;
-      address['region_code'] = region.regionCode;
-      address['same_as_billing'] = 1;
-      requestJson = jsonEncode(<String, dynamic>{'address': address});
-
-      // estimate shipping methods
-      response = await client.post('${config.baseUrl}/carts/mine/estimate-shipping-methods',
-          headers: config.customerHeaders, body: requestJson);
-
-      responseText = response.body.toString();
-
-      // setup shipping information request
-      requestJson = jsonEncode(<String, dynamic>{
-        'addressInformation': {
-          'shipping_address': address,
-          'billing_address': address,
-          'shipping_carrier_code': 'flatrate',
-          'shipping_method_code': 'flatrate'
-        }
-      });
-
-      // set shipping information
-      response = await client.post('${config.baseUrl}/carts/mine/shipping-information',
-          headers: config.customerHeaders, body: requestJson);
-
-      // setup payment information request
-      requestJson = jsonEncode(<String, dynamic>{
-        'paymentMethod': {
-          'method': 'stripe',
-          'additional_data': {'token': stripeToken.tokenId, 'cc_saved': stripeToken.tokenId}
-        },
-        'delivery_fee': deliveryFee.toString().replaceAll('\$', '').replaceAll('.', ''),
-        'billing_address': address
-      });
-
-      // set payment information and create order
-      response = await client.post('${config.baseUrl}/carts/mine/payment-information',
-          headers: config.customerHeaders, body: requestJson);
-
-      responseText = response.body.toString();
-
-      if (response.statusCode == 200) {
-        // return the order Id
-        return int.tryParse(responseText.replaceAll("\"", ""));
-      }
-      return -1;
-    } else {
-      // error
-      return -1;
+    if (response.statusCode != 200) {
+      return response.body;
     }
+
+    String responseText = response.body.toString().replaceAll("\"", "");
+
+    // get the cart ID
+    int cartId = int.tryParse(responseText);
+
+    // setup the cart item request
+    String requestJson = jsonEncode(<String, dynamic>{
+      'cartItem': {'sku': product.sku, 'qty': 1, 'quote_id': cartId}
+    });
+    // add the product to the cart
+    response =
+        await client.post('${config.baseUrl}/carts/mine/items', headers: config.customerHeaders, body: requestJson);
+
+    if (response.statusCode != 200) {
+      return response.body;
+    }
+
+    // setup shipping estimate request
+    Map<String, dynamic> address = shippingAddress.toJson();
+    CustomerAddressRegion region = address['region'];
+    address.remove('region');
+    address.remove('defaultBilling');
+    address.remove('defaultShipping');
+    address['region_id'] = region.regionId;
+    address['region_code'] = region.regionCode;
+    address['same_as_billing'] = 1;
+    requestJson = jsonEncode(<String, dynamic>{'address': address});
+
+    // estimate shipping methods
+    response = await client.post('${config.baseUrl}/carts/mine/estimate-shipping-methods',
+        headers: config.customerHeaders, body: requestJson);
+
+    if (response.statusCode != 200) {
+      return response.body;
+    }
+
+    responseText = response.body.toString();
+
+    // setup shipping information request
+    requestJson = jsonEncode(<String, dynamic>{
+      'addressInformation': {
+        'shipping_address': address,
+        'billing_address': address,
+        'shipping_carrier_code': 'flatrate',
+        'shipping_method_code': 'flatrate'
+      }
+    });
+
+    // set shipping information
+    response = await client.post('${config.baseUrl}/carts/mine/shipping-information',
+        headers: config.customerHeaders, body: requestJson);
+
+    if (response.statusCode != 200) {
+      return response.body;
+    }
+
+    // setup payment information request
+    requestJson = jsonEncode(<String, dynamic>{
+      'paymentMethod': {
+        'method': 'stripe',
+        'additional_data': {'token': stripeToken.tokenId, 'cc_saved': stripeToken.tokenId}
+      },
+      'delivery_fee': deliveryFee.toString().replaceAll('\$', '').replaceAll('.', ''),
+      'billing_address': address
+    });
+
+    // set payment information and create order
+    response = await client.post('${config.baseUrl}/carts/mine/payment-information',
+        headers: config.customerHeaders, body: requestJson);
+
+    if (response.statusCode != 200) {
+      return response.body;
+    }
+
+    responseText = response.body.toString();
+
+    return responseText.replaceAll("\"", "");
   } // end function getMe
 
   /*
