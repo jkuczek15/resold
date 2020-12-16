@@ -1,7 +1,7 @@
 class Order {
   final int customerId;
   final double total;
-  final String status;
+  String status;
   final DateTime created;
   final DateTime updated;
   final List<OrderLine> items;

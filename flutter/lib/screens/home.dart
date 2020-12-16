@@ -25,6 +25,7 @@ import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-customer.dart';
+import 'package:resold/state/actions/set-orders-state.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/screens/account-state.dart';
@@ -196,7 +197,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
           BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: 'Sell'),
-          BottomNavigationBarItem(icon: Icon(MdiIcons.truck), label: 'Deliveries'),
+          BottomNavigationBarItem(icon: Icon(MdiIcons.carMultiple), label: 'Deliveries'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account')
         ],
         currentIndex: selectedTab.index,
@@ -275,17 +276,25 @@ class HomePageState extends State<HomePage> {
         return ViewModelSubscriber<AppState, OrdersState>(
             converter: (state) => state.ordersState,
             builder: (context, dispatcher, ordersState) {
-              return ViewModelSubscriber<AppState, List<FirebaseDeliveryQuote>>(
-                  converter: (state) => state.ordersState.requestedDeliveries,
-                  builder: (context, dispatcher, requestedDeliveries) {
-                    ordersState.purchasedOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
-                    ordersState.soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
-                    return OrdersPage(
-                        customer: customer,
-                        purchasedOrders: ordersState.purchasedOrders,
-                        soldOrders: ordersState.soldOrders,
-                        requestedDeliveries: requestedDeliveries,
-                        dispatcher: dispatcher);
+              return ViewModelSubscriber<AppState, List<Order>>(
+                  converter: (state) => state.ordersState.purchasedOrders,
+                  builder: (context, dispatcher, purchasedOrders) {
+                    return ViewModelSubscriber<AppState, List<Order>>(
+                        converter: (state) => state.ordersState.soldOrders,
+                        builder: (context, dispatcher, soldOrders) {
+                          return ViewModelSubscriber<AppState, List<FirebaseDeliveryQuote>>(
+                              converter: (state) => state.ordersState.requestedDeliveries,
+                              builder: (context, dispatcher, requestedDeliveries) {
+                                purchasedOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
+                                soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
+                                return OrdersPage(
+                                    customer: customer,
+                                    purchasedOrders: purchasedOrders,
+                                    soldOrders: soldOrders,
+                                    requestedDeliveries: requestedDeliveries,
+                                    dispatcher: dispatcher);
+                              });
+                        });
                   });
             });
       case SelectedTab.account:
@@ -295,15 +304,19 @@ class HomePageState extends State<HomePage> {
               return ViewModelSubscriber<AppState, List<Product>>(
                   converter: (state) => state.accountState.forSaleProducts,
                   builder: (context, dispatcher, forSaleProducts) {
-                    forSaleProducts.sort((Product a, Product b) => b.id.compareTo(a.id));
-                    return AccountPage(
-                        customer: customer,
-                        currentLocation: currentLocation,
-                        vendor: accountState.vendor,
-                        forSaleProducts: forSaleProducts,
-                        soldProducts: accountState.soldProducts,
-                        displayForSale: accountState.displayForSale,
-                        dispatcher: dispatcher);
+                    return ViewModelSubscriber<AppState, List<Product>>(
+                        converter: (state) => state.accountState.soldProducts,
+                        builder: (context, dispatcher, soldProducts) {
+                          soldProducts.sort((Product a, Product b) => b.id.compareTo(a.id));
+                          return AccountPage(
+                              customer: customer,
+                              currentLocation: currentLocation,
+                              vendor: accountState.vendor,
+                              forSaleProducts: forSaleProducts,
+                              soldProducts: soldProducts,
+                              displayForSale: accountState.displayForSale,
+                              dispatcher: dispatcher);
+                        });
                   });
             });
       default:
@@ -327,13 +340,17 @@ class HomePageState extends State<HomePage> {
               data['image'] == null) {
             return;
           }
-          if (data['approachingPickupMessage'] == true) {
+          if (data['approachingPickupMessage'] == 'true') {
             await smsHelper.sendSMS(
                 customer.addresses[0].telephone, 'Driver is approaching to pickup your ${notification['title']}.');
-          } else if (data['approachingDropoffMessage'] == true) {
+          } else if (data['approachingDropoffMessage'] == 'true') {
             await smsHelper.sendSMS(
                 customer.addresses[0].telephone, 'Driver is approaching to dropoff your ${notification['title']}.');
           } // end if approaching pickup message
+
+          if (data['orderUpdate'] == 'true') {
+            dispatcher(SetOrdersStateAction(await OrdersState.initialState(customer)));
+          } // end if order update notification
 
           showOverlayNotification((context) {
             return GestureDetector(

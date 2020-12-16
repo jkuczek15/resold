@@ -155,7 +155,7 @@ class OrderDetailsState extends State<OrderDetails> {
                         Divider(
                           color: Colors.grey.shade400,
                           height: 20,
-                          thickness: 2,
+                          thickness: 1,
                           indent: 23,
                           endIndent: 15,
                         ),
@@ -214,7 +214,7 @@ class OrderDetailsState extends State<OrderDetails> {
                                           child: Divider(
                                             color: Colors.grey.shade400,
                                             height: 20,
-                                            thickness: 2,
+                                            thickness: 1,
                                             indent: 0,
                                             endIndent: 0,
                                           ))
