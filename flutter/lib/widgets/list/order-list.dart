@@ -77,7 +77,7 @@ class OrderList extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(line.name),
-                                      order.status == 'pending'
+                                      order.status == 'pending' || order.status.isEmpty
                                           ? SizedBox()
                                           : order.status == 'pickup' || order.status == 'delivery_in_progress'
                                               ? Text('Arriving in ${difference.inMinutes} minutes',
