@@ -16,6 +16,7 @@ class OrderReducer extends SimpleBloc<AppState> {
       state.ordersState.requestedDeliveries =
           state.ordersState.requestedDeliveries.where((quote) => quote.chatId != action.chatId).toList();
     } else if (action is CompletePaymentAction) {
+      state.ordersState.purchasedOrders.add(action.order);
       state.ordersState.requestedDeliveries =
           state.ordersState.requestedDeliveries.where((quote) => quote.chatId != action.chatId).toList();
     }
