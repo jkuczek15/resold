@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/screens/messages/message.dart';
+import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/widgets/loading.dart';
@@ -50,6 +51,9 @@ class DeliveryQuoteList extends StatelessWidget {
                                 product: quote.product,
                                 chatId: quote.chatId,
                                 dispatcher: dispatcher)));
+
+                    // mark the message as read
+                    ResoldFirebase.markInboxMessageRead('${customer.id}-${quote.product.id.toString()}');
 
                     // hide loading indicator
                     Navigator.of(context, rootNavigator: true).pop('dialog');
