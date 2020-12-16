@@ -1,5 +1,6 @@
 import 'package:rebloc/rebloc.dart';
 import 'package:resold/state/actions/cancel-delivery.dart';
+import 'package:resold/state/actions/complete-payment.dart';
 import 'package:resold/state/actions/request-delivery.dart';
 import 'package:resold/state/actions/set-orders-state.dart';
 import 'package:resold/state/app-state.dart';
@@ -12,6 +13,9 @@ class OrderReducer extends SimpleBloc<AppState> {
     } else if (action is RequestDeliveryAction) {
       state.ordersState.requestedDeliveries.add(action.quote);
     } else if (action is CancelDeliveryAction) {
+      state.ordersState.requestedDeliveries =
+          state.ordersState.requestedDeliveries.where((quote) => quote.chatId != action.chatId).toList();
+    } else if (action is CompletePaymentAction) {
       state.ordersState.requestedDeliveries =
           state.ordersState.requestedDeliveries.where((quote) => quote.chatId != action.chatId).toList();
     }

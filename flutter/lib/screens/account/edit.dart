@@ -48,6 +48,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   final updateKey1 = GlobalKey<FormState>();
   final updateinfoKey1 = GlobalKey<FormState>();
   final smsVerificationKey = GlobalKey<FormState>();
+  final smsHelper = SmsHelper();
 
   final CustomerResponse customer;
   final Vendor vendor;
@@ -298,7 +299,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 if (phoneNumController.text == customer.addresses.first.telephone) {
                                   confirmPass();
                                 } else {
-                                  await SmsHelper().handleSmsVerification(phoneNumController, smsVerificationController,
+                                  await smsHelper.handleSmsVerification(phoneNumController, smsVerificationController,
                                       smsVerificationKey, context, confirmPass);
                                 }
                               },

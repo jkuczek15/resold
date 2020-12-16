@@ -36,6 +36,7 @@ class SignUpPageState extends State<SignUpPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final smsVerificationController = TextEditingController();
+  final smsHelper = SmsHelper();
   Future<List<Address>> futureAddresses;
   Future locationInitialized;
   TwilioFlutter twilioFlutter;
@@ -205,7 +206,7 @@ class SignUpPageState extends State<SignUpPage> {
                     onPressed: () async {
                       await locationInitialized;
                       // show dialog
-                      await SmsHelper().handleSmsVerification(
+                      await smsHelper.handleSmsVerification(
                           phoneController, smsVerificationController, formKey, context, () async {
                         // show a loading indicator
                         showDialog(

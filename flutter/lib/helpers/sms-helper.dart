@@ -13,6 +13,10 @@ class SmsHelper {
         TwilioFlutter(accountSid: env.twilioAccountSid, authToken: env.twilioAuthToken, twilioNumber: env.twilioNumber);
   }
 
+  Future sendSMS(String phoneNumber, String messageBody) async {
+    await twilioFlutter.sendSMS(toNumber: phoneNumber, messageBody: messageBody);
+  } // end function sendSMS
+
   Future handleSmsVerification(
     TextEditingController phoneController,
     TextEditingController smsVerificationController,

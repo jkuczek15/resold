@@ -117,6 +117,7 @@ class WebhookManagement
                 'image' => $product->getThumbnail(),
                 'orderId' => $order->getId(),
                 'productId' => $product->getId(),
+                'approachingPickupMessage' => true,
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
               ]);
               $messaging->send($approachingMessage);
@@ -136,6 +137,7 @@ class WebhookManagement
                 'image' => $product->getThumbnail(),
                 'orderId' => $order->getId(),
                 'productId' => $product->getId(),
+                'approachingDropoffMessage' => true,
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
               ]);
               $messaging->send($approachingMessage);
