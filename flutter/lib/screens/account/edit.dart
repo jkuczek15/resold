@@ -103,7 +103,7 @@ class EditProfilePageState extends State<EditProfilePage> {
             children: [
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Edit Profile', style: new TextStyle(color: Colors.white)))
+                  child: Text('Edit Profile', style: new TextStyle(color: Colors.white, fontFamily: 'Raleway')))
             ],
           ),
           iconTheme: IconThemeData(
@@ -152,8 +152,8 @@ class EditProfilePageState extends State<EditProfilePage> {
                         Text('Change Profile Picture',
                             style: new TextStyle(
                                 fontSize: 16.0,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.normal,
+                                fontFamily: 'Raleway',
+                                fontWeight: FontWeight.bold,
                                 color: Color(0xff41b8ea))),
                       ]),
                       onTap: newProPic,
@@ -167,7 +167,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                             controller: firstNameController,
                             decoration: InputDecoration(
                               labelText: 'First Name *',
-                              labelStyle: TextStyle(color: ResoldBlue),
+                              labelStyle: TextStyle(color: ResoldBlue, fontFamily: 'Raleway'),
                               enabledBorder:
                                   UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                               focusedBorder:
@@ -189,7 +189,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                             controller: lastNameController,
                             decoration: InputDecoration(
                               labelText: 'Last Name *',
-                              labelStyle: TextStyle(color: ResoldBlue),
+                              labelStyle: TextStyle(color: ResoldBlue, fontFamily: 'Raleway'),
                               enabledBorder:
                                   UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                               focusedBorder:
@@ -211,7 +211,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                             controller: emailController,
                             decoration: InputDecoration(
                               labelText: 'Email Address *',
-                              labelStyle: TextStyle(color: ResoldBlue),
+                              labelStyle: TextStyle(color: ResoldBlue, fontFamily: 'Raleway'),
                               enabledBorder:
                                   UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                               focusedBorder:
@@ -233,7 +233,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                             controller: phoneNumController,
                             decoration: InputDecoration(
                               labelText: 'Phone Number *',
-                              labelStyle: TextStyle(color: ResoldBlue),
+                              labelStyle: TextStyle(color: ResoldBlue, fontFamily: 'Raleway'),
                               enabledBorder:
                                   UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                               focusedBorder:
@@ -255,7 +255,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                             controller: newpasswordController,
                             decoration: InputDecoration(
                               labelText: 'New Password',
-                              labelStyle: TextStyle(color: ResoldBlue),
+                              labelStyle: TextStyle(color: ResoldBlue, fontFamily: 'Raleway'),
                               enabledBorder:
                                   UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                               focusedBorder:
@@ -271,7 +271,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                             controller: newconfirmPasswordController,
                             decoration: InputDecoration(
                               labelText: 'Confirm New Password',
-                              labelStyle: TextStyle(color: ResoldBlue),
+                              labelStyle: TextStyle(color: ResoldBlue, fontFamily: 'Raleway'),
                               enabledBorder:
                                   UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
                               focusedBorder:
@@ -304,8 +304,11 @@ class EditProfilePageState extends State<EditProfilePage> {
                                 }
                               },
                               child: Text('Save',
-                                  style:
-                                      new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                  style: new TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontFamily: 'Raleway')),
                               padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                               color: Colors.black,
                               textColor: Colors.white,

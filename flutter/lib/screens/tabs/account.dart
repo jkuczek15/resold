@@ -55,7 +55,7 @@ class AccountPage extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
                     child: Text(customer.fullName,
                         style: new TextStyle(
-                            fontSize: 14.0, fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white)))
+                            fontSize: 14.0, fontFamily: 'Raleway', fontWeight: FontWeight.bold, color: Colors.white)))
               ]),
               Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,13 +76,13 @@ class AccountPage extends StatelessWidget {
                                         Text(forSaleProducts.length.toString(),
                                             style: new TextStyle(
                                                 fontSize: 32.0,
-                                                fontFamily: 'Roboto',
+                                                fontFamily: 'Raleway',
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white)),
                                         Text('for sale',
                                             style: new TextStyle(
                                                 fontSize: 20.0,
-                                                fontFamily: 'Roboto',
+                                                fontFamily: 'Raleway',
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white))
                                       ]),
@@ -98,13 +98,13 @@ class AccountPage extends StatelessWidget {
                                         Text(soldProducts.length.toString(),
                                             style: new TextStyle(
                                                 fontSize: 32.0,
-                                                fontFamily: 'Roboto',
+                                                fontFamily: 'Raleway',
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white)),
                                         Text('sold',
                                             style: new TextStyle(
                                                 fontSize: 20.0,
-                                                fontFamily: 'Roboto',
+                                                fontFamily: 'Raleway',
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white))
                                       ]),
@@ -136,7 +136,8 @@ class AccountPage extends StatelessWidget {
                             builder: (context) => EditProfilePage(customer, vendor, currentLocation, dispatcher)));
                   },
                   child: Text('Edit Profile',
-                      style: new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                      style: new TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Raleway')),
                   color: Colors.black,
                   textColor: Colors.white,
                 )),
@@ -149,15 +150,21 @@ class AccountPage extends StatelessWidget {
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
                             child: Text('You haven\'t listed any items for sale.',
-                                style:
-                                    new TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white))))
+                                style: new TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontFamily: 'Raleway'))))
                     : !displayForSale && soldProducts.length == 0
                         ? Center(
                             child: Padding(
                                 padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
                                 child: Text('You haven\'t sold any items.',
                                     style: new TextStyle(
-                                        fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white))))
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontFamily: 'Raleway'))))
                         : ProductGrid(
                             customer: customer,
                             currentLocation: currentLocation,

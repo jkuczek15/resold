@@ -115,7 +115,7 @@ class ProductList extends StatelessWidget {
                                             overflow: TextOverflow.fade,
                                             style: new TextStyle(
                                               fontSize: 14.0,
-                                              fontFamily: 'Roboto',
+                                              fontFamily: 'Raleway',
                                               fontWeight: FontWeight.normal,
                                             ),
                                           ),
@@ -124,7 +124,7 @@ class ProductList extends StatelessWidget {
                                         Text(formatter.format(double.parse(product.price).round()),
                                             style: new TextStyle(
                                               fontSize: 12.0,
-                                              fontFamily: 'Roboto',
+                                              fontFamily: 'Raleway',
                                               fontWeight: FontWeight.bold,
                                             ))
                                       ]),
