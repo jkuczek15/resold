@@ -33,9 +33,11 @@ class OrderList extends StatelessWidget {
                 Order order = orders[index];
                 OrderLine line = order.items[0];
                 Duration difference;
+                int minutes = 0;
 
                 if (order.status == 'pickup' || order.status == 'delivery_in_progress') {
                   difference = order.dropoffEta.difference(DateTime.now());
+                  minutes = difference.inMinutes;
                 } // end if pickup or delivery in progress
 
                 return FutureBuilder<Product>(
@@ -80,8 +82,11 @@ class OrderList extends StatelessWidget {
                                       order.status == 'pending' || order.status.isEmpty
                                           ? SizedBox()
                                           : order.status == 'pickup' || order.status == 'delivery_in_progress'
-                                              ? Text('Arriving in ${difference.inMinutes} minutes',
-                                                  style: TextStyle(color: Colors.grey, fontSize: 12))
+                                              ? (minutes <= 2
+                                                  ? Text('Arriving soon',
+                                                      style: TextStyle(color: Colors.grey, fontSize: 12))
+                                                  : Text('Arriving in $minutes minutes',
+                                                      style: TextStyle(color: Colors.grey, fontSize: 12)))
                                               : Text('Delivered: ' + DateFormat('EEEE M/d').format(order.created),
                                                   style: TextStyle(color: Colors.grey, fontSize: 12))
                                     ],

@@ -94,6 +94,7 @@ class OrderDetailsState extends State<OrderDetails> {
                     DeliveryResponse delivery = snapshot.data;
                     DateTime now = DateTime.now();
                     Duration difference;
+                    int minutes = 0;
 
                     // setup the steps
                     setupSteps(delivery);
@@ -101,10 +102,12 @@ class OrderDetailsState extends State<OrderDetails> {
                     if (this.currentStep == 0 && isSeller) {
                       if (delivery.pickup_eta != null) {
                         difference = delivery.pickup_eta.difference(now);
+                        minutes = difference.inMinutes;
                       } // end if pickup eta not null
                     } else if (this.currentStep == 1) {
                       if (delivery.dropoff_eta != null) {
                         difference = delivery.dropoff_eta.difference(now);
+                        minutes = difference.inMinutes;
                       } // end if dropoff eta not null
                     } // end if pickup and is seller
 
@@ -150,7 +153,7 @@ class OrderDetailsState extends State<OrderDetails> {
                         difference != null
                             ? Padding(
                                 padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
-                                child: Text('Arriving in ${difference.inMinutes} minutes'))
+                                child: minutes <= 2 ? Text('Arriving soon') : Text('Arriving in ${minutes} minutes'))
                             : SizedBox(),
                         Divider(
                           color: Colors.grey.shade400,
