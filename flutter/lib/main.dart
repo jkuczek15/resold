@@ -63,6 +63,7 @@ Future<void> main() async {
         blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), OrderReducer(), AccountReducer()]),
     child: OverlaySupport(
         child: MaterialApp(
+      theme: ThemeData(fontFamily: 'Raleway'),
       home: customer.isLoggedIn() ? Home() : Landing(),
     )),
   ));

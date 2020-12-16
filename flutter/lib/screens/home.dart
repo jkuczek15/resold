@@ -83,6 +83,7 @@ class Home extends StatelessWidget {
                               accentColor: Colors.white,
                               primaryColor: ResoldBlue,
                               splashColor: ResoldBlue,
+                              fontFamily: 'Raleway',
                               backgroundColor: Colors.white),
                           home: HomePage(
                               customer: customer,

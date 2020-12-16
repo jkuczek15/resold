@@ -22,7 +22,7 @@ class Distance extends StatelessWidget {
               overflow: TextOverflow.fade,
               style: new TextStyle(
                 fontSize: 14.0,
-                fontFamily: 'Roboto',
+                fontFamily: 'Raleway',
                 fontWeight: FontWeight.normal,
               ));
         } else {
