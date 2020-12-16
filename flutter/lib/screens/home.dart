@@ -24,6 +24,7 @@ import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-customer.dart';
+import 'package:resold/state/actions/set-orders-state.dart';
 import 'package:resold/state/actions/set-selected-tab.dart';
 import 'package:resold/state/app-state.dart';
 import 'package:resold/state/screens/account-state.dart';
@@ -337,6 +338,11 @@ class HomePageState extends State<HomePage> {
               data['image'] == null) {
             return;
           }
+
+          if (data['orderUpdate'] == 'true') {
+            dispatcher(SetOrdersStateAction(await OrdersState.initialState(customer)));
+          } // end if order update notification
+
           showOverlayNotification((context) {
             return GestureDetector(
               child: Card(
