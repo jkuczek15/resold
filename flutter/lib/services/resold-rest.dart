@@ -146,11 +146,15 @@ class ResoldRest {
    */
   static Future sendNotificationMessage(String token, String deviceToken, String title, String body, String imageUrl,
       {String chatId}) async {
-    await config.initialized;
-    FormData formData = new FormData.fromMap(
-        {'deviceToken': deviceToken, 'title': title, 'body': body, 'imageUrl': imageUrl, 'chatId': chatId});
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    await dio.post('${config.baseUrl}/notifications/send', data: formData);
+    try {
+      await config.initialized;
+      FormData formData = new FormData.fromMap(
+          {'deviceToken': deviceToken, 'title': title, 'body': body, 'imageUrl': imageUrl, 'chatId': chatId});
+      dio.options.headers['Authorization'] = 'Bearer $token';
+      await dio.post('${config.baseUrl}/notifications/send', data: formData);
+    } catch (exception) {
+      print(exception);
+    }
   } // end function sendNotificationMessage
 
 } // end class Resold

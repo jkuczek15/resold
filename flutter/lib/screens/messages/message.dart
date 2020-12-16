@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/enums/delivery-quote-status.dart';
+import 'package:resold/environment.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/screens/order/details.dart';
@@ -1137,9 +1138,11 @@ class MessagePageState extends State<MessagePage> {
           });
 
       // create a Magento order
-      int orderId = await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product, token, fee);
+      String orderResponse =
+          await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product, token, fee);
+      int orderId = int.tryParse(orderResponse);
 
-      if (orderId != -1) {
+      if (orderId != null) {
         // retreive order details
         Order order = await Magento.getOrderById(orderId);
 
@@ -1160,6 +1163,7 @@ class MessagePageState extends State<MessagePage> {
             chatId: chatId);
 
         // dispatch payment complete action
+        order.status = 'pending';
         dispatcher(CompletePaymentAction(order, chatId));
 
         // close loading dialog
@@ -1175,17 +1179,20 @@ class MessagePageState extends State<MessagePage> {
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
-              return AlertDialog(title: Text("There was an error while processing your order."), actions: <Widget>[
-                FlatButton(
-                    child: Text(
-                      'OK',
-                      style: TextStyle(color: ResoldBlue),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop('dialog');
-                      Navigator.of(context, rootNavigator: true).pop('dialog');
-                    })
-              ]);
+              return AlertDialog(
+                  title: Text(
+                      "There was an error while processing your order. ${env.isDevelopment ? 'Error: ' + orderResponse : ''}"),
+                  actions: <Widget>[
+                    FlatButton(
+                        child: Text(
+                          'OK',
+                          style: TextStyle(color: ResoldBlue),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                        })
+                  ]);
             });
       } // end if order successful
     }).catchError((err) {
@@ -1193,17 +1200,20 @@ class MessagePageState extends State<MessagePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            return AlertDialog(title: Text("There was an error while processing your order."), actions: <Widget>[
-              FlatButton(
-                  child: Text(
-                    'OK',
-                    style: TextStyle(color: ResoldBlue),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                  })
-            ]);
+            return AlertDialog(
+                title: Text(
+                    "There was an error while processing your payment. ${env.isDevelopment ? 'Error: ' + err : ''}"),
+                actions: <Widget>[
+                  FlatButton(
+                      child: Text(
+                        'OK',
+                        style: TextStyle(color: ResoldBlue),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                      })
+                ]);
           });
     });
   } // end function handlePaymentFlow
