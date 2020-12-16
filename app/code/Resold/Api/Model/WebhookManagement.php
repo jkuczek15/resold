@@ -117,6 +117,7 @@ class WebhookManagement
                 'image' => $product->getThumbnail(),
                 'orderId' => $order->getId(),
                 'productId' => $product->getId(),
+                'orderUpdate' => 'true',
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
               ]);
               $messaging->send($approachingMessage);
@@ -136,6 +137,7 @@ class WebhookManagement
                 'image' => $product->getThumbnail(),
                 'orderId' => $order->getId(),
                 'productId' => $product->getId(),
+                'orderUpdate' => 'true',
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
               ]);
               $messaging->send($approachingMessage);
@@ -167,6 +169,7 @@ class WebhookManagement
                   'image' => $product->getThumbnail(),
                   'orderId' => $order->getId(),
                   'productId' => $product->getId(),
+                  'orderUpdate' => 'true',
                   'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
                 ]);
                 $buyerMessage = CloudMessage::withTarget('token', $buyerDeviceToken)->withNotification([
@@ -177,6 +180,7 @@ class WebhookManagement
                   'image' => $product->getThumbnail(),
                   'orderId' => $order->getId(),
                   'productId' => $product->getId(),
+                  'orderUpdate' => 'true',
                   'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
                 ]);
                 $messaging->send($sellerMessage);
@@ -194,6 +198,7 @@ class WebhookManagement
                 'image' => $product->getThumbnail(),
                 'orderId' => $order->getId(),
                 'productId' => $product->getId(),
+                'orderUpdate' => 'true',
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
               ]);
               $messaging->send($buyerMessage);
@@ -210,6 +215,7 @@ class WebhookManagement
                 'image' => $product->getThumbnail(),
                 'orderId' => $order->getId(),
                 'productId' => $product->getId(),
+                'orderUpdate' => 'true',
                 'click_action' => 'FLUTTER_NOTIFICATION_CLICK'
               ]);
               $messaging->send($sellerMessage);
