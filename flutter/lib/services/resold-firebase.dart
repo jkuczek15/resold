@@ -227,6 +227,8 @@ class ResoldFirebase {
         List<QueryDocumentSnapshot> deliveryQuoteDocuments = new List<QueryDocumentSnapshot>();
         deliveryQuoteDocuments.addAll(fromDocuments.docs);
         deliveryQuoteDocuments.addAll(toDocuments.docs);
+        deliveryQuoteDocuments
+            .sort((QueryDocumentSnapshot a, QueryDocumentSnapshot b) => b['timestamp'].compareTo(a['timestamp']));
 
         if (deliveryQuoteDocuments.isNotEmpty) {
           for (int j = 0; j < deliveryQuoteDocuments.length; j++) {
