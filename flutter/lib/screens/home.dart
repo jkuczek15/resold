@@ -10,6 +10,7 @@ import 'package:rebloc/rebloc.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/constants/url-config.dart';
 import 'package:resold/enums/selected-tab.dart';
+import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
 import 'package:resold/screens/messages/message.dart';
@@ -100,6 +101,7 @@ class HomePageState extends State<HomePage> {
   Position currentLocation;
   SelectedTab selectedTab;
   List<Product> results = List<Product>();
+  final smsHelper = SmsHelper();
   final Function dispatcher;
   final FirebaseMessaging firebaseMessaging;
   final GlobalKey<NavigatorState> navigatorKey;
@@ -325,6 +327,14 @@ class HomePageState extends State<HomePage> {
               data['image'] == null) {
             return;
           }
+          if (data['approachingPickupMessage'] == true) {
+            await smsHelper.sendSMS(
+                customer.addresses[0].telephone, 'Driver is approaching to pickup your ${notification['title']}.');
+          } else if (data['approachingDropoffMessage'] == true) {
+            await smsHelper.sendSMS(
+                customer.addresses[0].telephone, 'Driver is approaching to dropoff your ${notification['title']}.');
+          } // end if approaching pickup message
+
           showOverlayNotification((context) {
             return GestureDetector(
               child: Card(

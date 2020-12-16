@@ -231,6 +231,9 @@ class ResoldFirebase {
         if (deliveryQuoteDocuments.isNotEmpty) {
           for (int j = 0; j < deliveryQuoteDocuments.length; j++) {
             DocumentSnapshot deliveryQuote = deliveryQuoteDocuments[0];
+            if (deliveryQuote['status'] == DeliveryQuoteStatus.paid.index) {
+              continue;
+            } // end if status is paid, skip the quote
 
             List<Object> additionalQuoteData = await Future.wait([
               Magento.getCustomerById(deliveryQuote['idFrom']),
