@@ -247,6 +247,7 @@ class ProductManagement
 
       return [[
         'id' => $product->getId(),
+        'sku' => $product->getSku(),
         'name' => $product->getName(),
         'price' => $product->getPrice(),
         'description' => $product->getDescription(),

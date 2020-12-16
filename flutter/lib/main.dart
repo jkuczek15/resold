@@ -53,6 +53,7 @@ Future<void> main() async {
     await CustomerResponse.save(TestAccounts.buyer);
   } // end if development
 
+  // load customer from disk
   CustomerResponse customer = await CustomerResponse.load();
 
   // run the app
