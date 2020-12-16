@@ -13,6 +13,7 @@ import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/cancel-delivery.dart';
+import 'package:resold/state/actions/complete-payment.dart';
 import 'package:resold/state/actions/request-delivery.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
 import 'package:resold/view-models/firebase/firebase-offer.dart';
@@ -1157,6 +1158,9 @@ class MessagePageState extends State<MessagePage> {
         await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
             '${fromCustomer.fullName} has completed payment.', product.thumbnail,
             chatId: chatId);
+
+        // dispatch payment complete action
+        dispatcher(CompletePaymentAction(order, chatId));
 
         // close loading dialog
         Navigator.of(context, rootNavigator: true).pop('dialog');
