@@ -340,14 +340,17 @@ class HomePageState extends State<HomePage> {
               data['image'] == null) {
             return;
           }
-          if (data['approachingPickupMessage'] == 'true') {
+
+          // check if we need to send twilio notification
+          if (data['approachingPickup'] == 'true') {
             await smsHelper.sendSMS(
                 customer.addresses[0].telephone, 'Driver is approaching to pickup your ${notification['title']}.');
-          } else if (data['approachingDropoffMessage'] == 'true') {
+          } else if (data['approachingDropoff'] == 'true') {
             await smsHelper.sendSMS(
                 customer.addresses[0].telephone, 'Driver is approaching to dropoff your ${notification['title']}.');
           } // end if approaching pickup message
 
+          // check if we need to update orders state
           if (data['orderUpdate'] == 'true') {
             dispatcher(SetOrdersStateAction(await OrdersState.initialState(customer)));
           } // end if order update notification
