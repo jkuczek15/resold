@@ -77,11 +77,13 @@ class OrderList extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(line.name),
-                                      order.status == 'pickup' || order.status == 'delivery_in_progress'
-                                          ? Text('Arriving in ${difference.inMinutes} minutes',
-                                              style: TextStyle(color: Colors.grey, fontSize: 12))
-                                          : Text('Delivered: ' + DateFormat('EEEE M/d').format(order.created),
-                                              style: TextStyle(color: Colors.grey, fontSize: 12))
+                                      order.status == 'pending'
+                                          ? SizedBox()
+                                          : order.status == 'pickup' || order.status == 'delivery_in_progress'
+                                              ? Text('Arriving in ${difference.inMinutes} minutes',
+                                                  style: TextStyle(color: Colors.grey, fontSize: 12))
+                                              : Text('Delivered: ' + DateFormat('EEEE M/d').format(order.created),
+                                                  style: TextStyle(color: Colors.grey, fontSize: 12))
                                     ],
                                   ),
                                 ))));
