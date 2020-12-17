@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/screens/account/edit-address.dart';
+import 'package:resold/state/actions/set-account-state.dart';
 import 'package:resold/state/actions/set-customer.dart';
+import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:resold/models/vendor.dart';
@@ -394,6 +396,7 @@ class EditProfilePageState extends State<EditProfilePage> {
 
                         // update the customer app state
                         dispatcher(SetCustomerAction(customer));
+                        dispatcher(SetAccountStateAction(await AccountState.initialState(customer)));
 
                         // close the update dialog
                         Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -432,7 +435,6 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   void newProPic() async {
     await getImage();
-    print(_image);
     if (_image != null) {
       return showDialog<void>(
         context: context,
@@ -474,6 +476,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                         imageCache.clear();
                         imagePath = imagePath + '?d=' + DateTime.now().millisecond.toString();
                       });
+                      dispatcher(SetAccountStateAction(await AccountState.initialState(customer)));
                       Navigator.of(context).pop();
                     }
                   }),

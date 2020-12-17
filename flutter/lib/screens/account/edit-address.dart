@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold.dart';
+import 'package:resold/state/actions/set-account-state.dart';
 import 'package:resold/state/actions/set-customer.dart';
+import 'package:resold/state/screens/account-state.dart';
 import 'package:resold/view-models/request/magento/customer-request.dart';
 import 'package:resold/view-models/response/magento/customer-response.dart';
 import 'package:geocoder/geocoder.dart';
@@ -313,6 +315,7 @@ class EditAddressPageState extends State<EditAddressPage> {
 
                                 // dispatch update customer state action
                                 dispatcher(SetCustomerAction(customer));
+                                dispatcher(SetAccountStateAction(await AccountState.initialState(customer)));
 
                                 // navigate
                                 Navigator.of(context, rootNavigator: true).pop('dialog');
