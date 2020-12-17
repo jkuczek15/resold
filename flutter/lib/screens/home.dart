@@ -340,7 +340,7 @@ class HomePageState extends State<HomePage> {
               notification['body'] == null ||
               data['image'] == null) {
             return;
-          }
+          } // end if notification == null
 
           // check if we need to send twilio notification
           if (data['approachingPickup'] == 'true') {
@@ -354,6 +354,8 @@ class HomePageState extends State<HomePage> {
           // check if we need to update orders state
           if (data['orderUpdate'] == 'true') {
             dispatcher(SetOrdersStateAction(await OrdersState.initialState(customer)));
+          } else if (Navigator.canPop(context)) {
+            return;
           } // end if order update notification
 
           showOverlayNotification((context) {
