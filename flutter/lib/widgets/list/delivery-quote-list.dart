@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:resold/constants/url-config.dart';
+import 'package:resold/arguments/MessagePageArguments.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/view-models/firebase/firebase-delivery-quote.dart';
@@ -41,16 +42,14 @@ class DeliveryQuoteList extends StatelessWidget {
                         });
 
                     // navigate to message page
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MessagePage(
-                                fromCustomer: customer,
-                                toCustomer: quote.toCustomer,
-                                currentLocation: currentLocation,
-                                product: quote.product,
-                                chatId: quote.chatId,
-                                dispatcher: dispatcher)));
+                    Navigator.pushNamed(context, MessagePage.routeName,
+                        arguments: MessagePageArguments(
+                            fromCustomer: customer,
+                            toCustomer: quote.toCustomer,
+                            currentLocation: currentLocation,
+                            product: quote.product,
+                            chatId: quote.chatId,
+                            dispatcher: dispatcher));
 
                     // mark the message as read
                     ResoldFirebase.markInboxMessageRead('${customer.id}-${quote.product.id.toString()}');

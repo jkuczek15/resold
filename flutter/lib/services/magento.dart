@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' show Client;
 import 'package:money2/money2.dart';
 import 'package:resold/models/customer/customer-address-region.dart';
@@ -22,6 +23,7 @@ import 'package:resold/environment.dart';
 class Magento {
   static Config config = Config();
   static Client client = Client();
+  static final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   /*
   * loginCustomer - Authenticates a customer against Magento service
@@ -176,6 +178,7 @@ class Magento {
       // get vendor id
       var customerId = int.tryParse(responseJson['id'].toString());
       var vendorId = await Resold.getVendorId(customerId);
+      var deviceToken = await firebaseMessaging.getToken();
 
       return CustomerResponse(
           statusCode: response.statusCode,
@@ -186,6 +189,7 @@ class Magento {
           lastName: responseJson['lastname'].toString(),
           addresses: [CustomerAddress.fromMap(responseJson['addresses'])],
           token: token,
+          deviceToken: deviceToken,
           vendorId: int.tryParse(vendorId));
     } else {
       // error

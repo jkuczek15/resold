@@ -13,6 +13,7 @@ import 'package:resold/enums/selected-tab.dart';
 import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/models/order.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/arguments/MessagePageArguments.dart';
 import 'package:resold/screens/messages/message.dart';
 import 'package:resold/screens/order/details.dart';
 import 'package:resold/screens/tabs/map.dart';
@@ -57,6 +58,7 @@ class Home extends StatelessWidget {
                       return MaterialApp(
                           navigatorKey: navigatorKey,
                           title: 'Resold',
+                          routes: {MessagePage.routeName: (context) => MessagePage()},
                           theme: ThemeData(
                               primarySwatch: const MaterialColor(0xff41b8ea, {
                                 50: Color.fromRGBO(25, 72, 92, .1),
@@ -357,8 +359,15 @@ class HomePageState extends State<HomePage> {
             return;
           } // end if order update notification
 
-          // todo: check if global key chat id == message chat id
-          // todo: pass message chat ID to state when opening a message
+          // check if we have an existing message open, don't show notification
+          String route = ModalRoute.of(context).settings.name;
+          Object arguments = ModalRoute.of(context).settings.arguments;
+          if (route == '/messages' && arguments is MessagePageArguments) {
+            var chatId = data['chatId'];
+            if (chatId == arguments.chatId) {
+              return;
+            } // end if existing message is open
+          } // end if route messages
 
           showOverlayNotification((context) {
             return GestureDetector(
@@ -419,14 +428,17 @@ class HomePageState extends State<HomePage> {
       CustomerResponse toCustomer = await Magento.getCustomerById(inboxMessage.toId);
 
       // open message page
-      Navigator.of(scaffoldKey.currentContext, rootNavigator: true).push(MaterialPageRoute(
-          builder: (context) => MessagePage(
-              fromCustomer: customer,
-              toCustomer: toCustomer,
-              currentLocation: currentLocation,
-              product: inboxMessage.product,
-              chatId: chatId,
-              dispatcher: dispatcher)));
+      Navigator.pushNamed(
+        context,
+        MessagePage.routeName,
+        arguments: MessagePageArguments(
+            fromCustomer: customer,
+            toCustomer: toCustomer,
+            currentLocation: currentLocation,
+            product: inboxMessage.product,
+            chatId: chatId,
+            dispatcher: dispatcher),
+      );
     } else {
       // delivery event notification
       int orderId = int.tryParse(data['orderId']);
