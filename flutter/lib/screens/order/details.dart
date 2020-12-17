@@ -153,7 +153,7 @@ class OrderDetailsState extends State<OrderDetails> {
                         difference != null
                             ? Padding(
                                 padding: EdgeInsets.fromLTRB(23, 3, 0, 0),
-                                child: minutes <= 2 ? Text('Arriving soon') : Text('Arriving in ${minutes} minutes'))
+                                child: minutes <= 2 ? Text('Arriving soon') : Text('Arriving in $minutes minutes'))
                             : SizedBox(),
                         Divider(
                           color: Colors.grey.shade400,
