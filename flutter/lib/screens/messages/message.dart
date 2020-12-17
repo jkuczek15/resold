@@ -7,6 +7,7 @@ import 'package:resold/enums/delivery-quote-status.dart';
 import 'package:resold/environment.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/order.dart';
+import 'package:resold/arguments/MessagePageArguments.dart';
 import 'package:resold/screens/order/details.dart';
 import 'package:resold/screens/product/view.dart';
 import 'package:resold/models/product.dart';
@@ -37,41 +38,14 @@ import 'package:money2/money2.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'dart:io';
 
-class MessagePage extends StatefulWidget {
-  final CustomerResponse fromCustomer;
-  final CustomerResponse toCustomer;
-  final Position currentLocation;
-  final Product product;
-  final String chatId;
-  final Function dispatcher;
+class MessagePage extends StatelessWidget {
+  static const routeName = '/message';
 
-  MessagePage(
-      {CustomerResponse fromCustomer,
-      CustomerResponse toCustomer,
-      Position currentLocation,
-      Product product,
-      String chatId,
-      Function dispatcher,
-      Key key})
-      : fromCustomer = fromCustomer,
-        toCustomer = toCustomer,
-        currentLocation = currentLocation,
-        product = product,
-        chatId = chatId,
-        dispatcher = dispatcher,
-        super(key: key);
-
-  @override
-  MessagePageState createState() =>
-      MessagePageState(fromCustomer, toCustomer, currentLocation, product, chatId, dispatcher);
-}
-
-class MessagePageState extends State<MessagePage> {
   CustomerResponse fromCustomer;
-  final CustomerResponse toCustomer;
-  final Position currentLocation;
-  final Product product;
-  final Function dispatcher;
+  CustomerResponse toCustomer;
+  Position currentLocation;
+  Product product;
+  Function dispatcher;
 
   var listMessage;
   bool isLoading;
@@ -89,26 +63,18 @@ class MessagePageState extends State<MessagePage> {
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
 
-  MessagePageState(CustomerResponse fromCustomer, CustomerResponse toCustomer, Position currentLocation,
-      Product product, String chatId, Function dispatcher)
-      : fromCustomer = fromCustomer,
-        toCustomer = toCustomer,
-        currentLocation = currentLocation,
-        product = product,
-        chatId = chatId,
-        dispatcher = dispatcher;
-
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    final MessagePageArguments args = ModalRoute.of(context).settings.arguments;
+    fromCustomer = args.fromCustomer;
+    toCustomer = args.toCustomer;
+    currentLocation = args.currentLocation;
+    product = args.product;
+    dispatcher = args.dispatcher;
+    chatId = args.chatId;
     peerAvatar = 'assets/images/avatar-placeholder.png';
     isLoading = false;
     isSeller = FirebaseHelper.isSeller(fromCustomer, chatId);
-  } // end function initState
-
-  @override
-  Widget build(BuildContext context) {
-    fromCustomer = widget.fromCustomer;
     return Scaffold(
         appBar: AppBar(
           title: Text(product.name, style: new TextStyle(color: Colors.white)),
@@ -118,7 +84,7 @@ class MessagePageState extends State<MessagePage> {
           backgroundColor: ResoldBlue,
           actions: <Widget>[
             PopupMenuButton<String>(
-              onSelected: handleMenuClick,
+              onSelected: (String value) => handleMenuClick(context, value),
               itemBuilder: (BuildContext context) {
                 Set<String> items =
                     product.deliveryId != null ? {'View Details'} : {'View Details', 'Send Offer', 'Request Delivery'};
@@ -169,20 +135,16 @@ class MessagePageState extends State<MessagePage> {
     uploadTask.whenComplete(() {
       uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) {
         imageUrl = downloadUrl;
-        setState(() {
-          isLoading = false;
-          onSendMessage(imageUrl, MessageType.image);
-        });
+        isLoading = false;
+        onSendMessage(imageUrl, MessageType.image);
       }, onError: (err) {
-        setState(() {
-          isLoading = false;
-        });
+        isLoading = false;
         Fluttertoast.showToast(msg: 'This file is not an image');
       });
     });
   } // end function uploadFile
 
-  void handleMenuClick(String value) async {
+  void handleMenuClick(BuildContext context, String value) async {
     switch (value) {
       case 'View Details':
         Navigator.push(
@@ -306,9 +268,7 @@ class MessagePageState extends State<MessagePage> {
     pickedImage = await picker.getImage(source: ImageSource.camera);
 
     if (pickedImage != null) {
-      setState(() {
-        isLoading = true;
-      });
+      isLoading = true;
       uploadFile();
     }
   } // end function getImage
@@ -332,7 +292,7 @@ class MessagePageState extends State<MessagePage> {
                   listMessage = snapshot.data.documents;
                   return ListView.builder(
                     padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) => buildItem(index, listMessage[index]),
+                    itemBuilder: (context, index) => buildItem(context, index, listMessage[index]),
                     itemCount: listMessage.length,
                     reverse: true,
                     controller: listScrollController,
@@ -396,7 +356,7 @@ class MessagePageState extends State<MessagePage> {
     );
   } // end function buildInput
 
-  Widget buildItem(int index, DocumentSnapshot document) {
+  Widget buildItem(BuildContext context, int index, DocumentSnapshot document) {
     var currency = Currency.create('USD', 2);
     var deliveryQuoteStatus = DeliveryQuoteStatus.none;
     FirebaseDeliveryQuote deliveryQuoteMessage = new FirebaseDeliveryQuote();
@@ -579,7 +539,8 @@ class MessagePageState extends State<MessagePage> {
                                                                 chatId: chatId);
                                                           } else {
                                                             // user is the buyer
-                                                            handlePaymentFlow(deliveryQuoteMessage.fee, currency);
+                                                            handlePaymentFlow(
+                                                                context, deliveryQuoteMessage.fee, currency);
                                                           } // end if user is seller
                                                         },
                                                         child: const Text('Accept Delivery'),
@@ -922,7 +883,7 @@ class MessagePageState extends State<MessagePage> {
                                                                     } else {
                                                                       // user is the buyer
                                                                       handlePaymentFlow(
-                                                                          deliveryQuoteMessage.fee, currency);
+                                                                          context, deliveryQuoteMessage.fee, currency);
                                                                     } // end if user is seller
                                                                   },
                                                                   child: const Text('Accept Delivery'),
@@ -1108,7 +1069,7 @@ class MessagePageState extends State<MessagePage> {
         useRobot: useRobot);
   } // end function getDelivery
 
-  handlePaymentFlow(Money fee, Currency currency) async {
+  handlePaymentFlow(BuildContext context, Money fee, Currency currency) async {
     StripePayment.paymentRequestWithNativePay(
       androidPayOptions: AndroidPayPaymentRequest(
         totalPrice:
@@ -1154,7 +1115,7 @@ class MessagePageState extends State<MessagePage> {
 
         // save the delivery ID to the product
         await ResoldRest.setDeliveryId(fromCustomer.token, product.id, delivery.id);
-        setState(() => product.deliveryId = delivery.id);
+        product.deliveryId = delivery.id;
         await ResoldFirebase.setMessageProduct(chatId, product);
 
         // send notification to buyer that delivery has been accepted

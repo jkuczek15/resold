@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/helpers/firebase-helper.dart';
 import 'package:resold/models/product.dart';
+import 'package:resold/arguments/MessagePageArguments.dart';
 import 'package:resold/services/postmates.dart';
 import 'package:resold/services/resold-firebase.dart';
 import 'package:resold/services/resold-rest.dart';
@@ -368,17 +369,15 @@ class ProductPageState extends State<ProductPage> {
                                                     Navigator.of(context, rootNavigator: true).pop(context);
                                                     Navigator.pop(context);
                                                   } else {
-                                                    // push a new message page
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => MessagePage(
-                                                                fromCustomer: customer,
-                                                                toCustomer: toCustomer,
-                                                                currentLocation: currentLocation,
-                                                                product: product,
-                                                                chatId: chatId,
-                                                                dispatcher: dispatcher)));
+                                                    // open message page
+                                                    Navigator.pushNamed(context, MessagePage.routeName,
+                                                        arguments: MessagePageArguments(
+                                                            fromCustomer: customer,
+                                                            toCustomer: toCustomer,
+                                                            currentLocation: currentLocation,
+                                                            product: product,
+                                                            chatId: chatId,
+                                                            dispatcher: dispatcher));
                                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                                   } // end if from message page
                                                 },
@@ -489,16 +488,15 @@ class ProductPageState extends State<ProductPage> {
                                                                   offerController.value = TextEditingValue();
                                                                   Navigator.of(context, rootNavigator: true)
                                                                       .pop('dialog');
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) => MessagePage(
-                                                                              fromCustomer: customer,
-                                                                              toCustomer: toCustomer,
-                                                                              currentLocation: currentLocation,
-                                                                              product: product,
-                                                                              chatId: chatId,
-                                                                              dispatcher: dispatcher)));
+                                                                  // open message page
+                                                                  Navigator.pushNamed(context, MessagePage.routeName,
+                                                                      arguments: MessagePageArguments(
+                                                                          fromCustomer: customer,
+                                                                          toCustomer: toCustomer,
+                                                                          currentLocation: currentLocation,
+                                                                          product: product,
+                                                                          chatId: chatId,
+                                                                          dispatcher: dispatcher));
                                                                 } // end if not from message page
                                                               } // end if valid verification code
                                                             },
@@ -602,16 +600,14 @@ class ProductPageState extends State<ProductPage> {
                                                     Navigator.pop(context);
                                                   } else {
                                                     // push a new message page
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) => MessagePage(
-                                                                fromCustomer: customer,
-                                                                toCustomer: toCustomer,
-                                                                currentLocation: currentLocation,
-                                                                product: product,
-                                                                chatId: chatId,
-                                                                dispatcher: dispatcher)));
+                                                    Navigator.pushNamed(context, MessagePage.routeName,
+                                                        arguments: MessagePageArguments(
+                                                            fromCustomer: customer,
+                                                            toCustomer: toCustomer,
+                                                            currentLocation: currentLocation,
+                                                            product: product,
+                                                            chatId: chatId,
+                                                            dispatcher: dispatcher));
                                                     Navigator.of(context, rootNavigator: true).pop('dialog');
                                                   } // end if not from message page
                                                 },
