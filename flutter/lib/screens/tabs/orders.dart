@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:resold/constants/ui-constants.dart';
@@ -16,17 +17,24 @@ import 'package:resold/widgets/list/builders/order-widget-builder.dart';
 
 class OrdersPage extends StatelessWidget {
   final CustomerResponse customer;
+  final Position currentLocation;
   final List<Order> purchasedOrders;
   final List<Order> soldOrders;
   final List<FirebaseDeliveryQuote> requestedDeliveries;
   final Function dispatcher;
 
-  OrdersPage({this.customer, this.purchasedOrders, this.soldOrders, this.requestedDeliveries, this.dispatcher});
+  OrdersPage(
+      {this.customer,
+      this.currentLocation,
+      this.purchasedOrders,
+      this.soldOrders,
+      this.requestedDeliveries,
+      this.dispatcher});
 
   @override
   Widget build(BuildContext context) {
     List<Widget> tabs = [
-      DeliveryQuoteWidgetBuilder.buildDeliveryQuoteWidget(customer, requestedDeliveries, dispatcher,
+      DeliveryQuoteWidgetBuilder.buildDeliveryQuoteWidget(customer, currentLocation, requestedDeliveries, dispatcher,
           error: 'You haven\'t requested any deliveries.'),
       OrderWidgetBuilder.buildOrderWidget(customer, purchasedOrders, error: 'You haven\'t purchased any items.'),
       OrderWidgetBuilder.buildOrderWidget(customer, soldOrders, error: 'You haven\'t sold any items.')

@@ -292,6 +292,7 @@ class HomePageState extends State<HomePage> {
                                 soldOrders.sort((Order a, Order b) => b.created.compareTo(a.created));
                                 return OrdersPage(
                                     customer: customer,
+                                    currentLocation: currentLocation,
                                     purchasedOrders: purchasedOrders,
                                     soldOrders: soldOrders,
                                     requestedDeliveries: requestedDeliveries,
