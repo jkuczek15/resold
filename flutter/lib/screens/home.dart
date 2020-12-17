@@ -330,7 +330,6 @@ class HomePageState extends State<HomePage> {
       // handle Firebase push notifications
       firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
-          // todo: don't display notification if message is already opened (message product.id == data.product.id)
           // display notification when app in foreground
           var notification = message['notification'];
           var data = message['data'];
@@ -357,6 +356,9 @@ class HomePageState extends State<HomePage> {
           } else if (Navigator.canPop(context)) {
             return;
           } // end if order update notification
+
+          // todo: check if global key chat id == message chat id
+          // todo: pass message chat ID to state when opening a message
 
           showOverlayNotification((context) {
             return GestureDetector(
