@@ -39,7 +39,6 @@ class SignUpPageState extends State<SignUpPage> {
   final smsVerificationController = TextEditingController();
   final smsHelper = SmsHelper();
   Future<List<Address>> futureAddresses;
-  Future locationInitialized;
   TwilioFlutter twilioFlutter;
   final formKey = GlobalKey<FormState>();
   final Function dispatcher;
@@ -49,17 +48,7 @@ class SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
-    locationInitialized = locationInit();
   } // end function initState
-
-  Future locationInit() async {
-    await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((location) async {
-      if (this.mounted) {
-        futureAddresses =
-            Geocoder.local.findAddressesFromCoordinates(new Coordinates(location.latitude, location.longitude));
-      } // end if mounted
-    });
-  } // end function locationInit
 
   @override
   Widget build(BuildContext context) {
@@ -207,8 +196,8 @@ class SignUpPageState extends State<SignUpPage> {
                       RaisedButton(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                         onPressed: () async {
-                          await locationInitialized;
-                          // show dialog
+                          // todo: form validation
+                          // handle sms verification
                           await smsHelper.handleSmsVerification(
                               phoneController, smsVerificationController, formKey, context, () async {
                             // show a loading indicator
@@ -217,6 +206,15 @@ class SignUpPageState extends State<SignUpPage> {
                                 builder: (BuildContext context) {
                                   return Center(child: Loading());
                                 });
+
+                            // get current position
+                            await Geolocator()
+                                .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+                                .then((location) async {
+                              futureAddresses = Geocoder.local
+                                  .findAddressesFromCoordinates(new Coordinates(location.latitude, location.longitude));
+                            });
+
                             // create customer
                             var addresses = await futureAddresses;
                             var address = addresses.first;

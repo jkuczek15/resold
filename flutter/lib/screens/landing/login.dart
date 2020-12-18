@@ -97,6 +97,7 @@ class LoginPageState extends State<LoginPage> {
                       RaisedButton(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                         onPressed: () async {
+                          // todo: form validation
                           // show a loading indicator
                           showDialog(
                               context: context,
