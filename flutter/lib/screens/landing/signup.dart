@@ -76,7 +76,7 @@ class SignUpPageState extends State<SignUpPage> {
                           Center(
                               child: Text('Buy & sell with on-demand delivery',
                                   style:
-                                      new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
+                                      new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white)))
                         ],
                       )
                     ]),
