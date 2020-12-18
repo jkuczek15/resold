@@ -517,8 +517,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                     // clear from disk
                     await CustomerResponse.clear();
                     Navigator.of(context).popUntil((route) => route.isFirst);
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => LandingPage(dispatcher: dispatcher)));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
                   },
                 ),
                 FlatButton(
@@ -585,8 +584,7 @@ class EditProfilePageState extends State<EditProfilePage> {
                         // clear from disk
                         await CustomerResponse.clear();
                         Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => LandingPage(dispatcher: dispatcher)));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
                         return showDialog<void>(
                             context: context,
                             barrierDismissible: false,
