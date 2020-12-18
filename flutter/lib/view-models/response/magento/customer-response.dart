@@ -61,7 +61,7 @@ class CustomerResponse extends Response {
     return response;
   } // end function load
 
-  static Future clear() async {
+  static Future<CustomerResponse> clear() async {
     try {
       // clear customer settings from disk
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,5 +69,6 @@ class CustomerResponse extends Response {
     } catch (ex) {
       print(ex);
     }
+    return CustomerResponse();
   } // end function clear
 }
