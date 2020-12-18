@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/screens/account/edit-address.dart';
+import 'package:resold/screens/web/resold-web-view.dart';
 import 'package:resold/state/actions/set-account-state.dart';
 import 'package:resold/state/actions/set-customer.dart';
 import 'package:resold/state/screens/account-state.dart';
@@ -19,6 +20,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/services/magento.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class EditProfilePage extends StatefulWidget {
   final CustomerResponse customer;
@@ -63,6 +65,8 @@ class EditProfilePageState extends State<EditProfilePage> {
   File _image;
   final picker = ImagePicker();
   String imagePath;
+  final Completer<WebViewController> controller = Completer<WebViewController>();
+  final String stripeDashboardUrl = 'https://dashboard.stripe.com';
 
   EditProfilePageState(this.customer, this.vendor, this.currentLocation, this.dispatcher);
 
@@ -117,7 +121,7 @@ class EditProfilePageState extends State<EditProfilePage> {
               onSelected: handleMenuClick,
               icon: Icon(Icons.settings),
               itemBuilder: (BuildContext context) {
-                return {'Change Address', 'Logout', 'Delete Profile'}.map((String choice) {
+                return {'Change Address', 'Manage Payments', 'Logout', 'Delete Profile'}.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
                     child: Text(choice),
@@ -497,6 +501,13 @@ class EditProfilePageState extends State<EditProfilePage> {
     switch (value) {
       case 'Change Address':
         Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddressPage(customer, dispatcher)));
+        break;
+      case 'Manage Payments':
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => ResoldWebView(
+                  title: 'Manage Payments',
+                  selectedUrl: 'https://dashboard.stripe.com',
+                )));
         break;
       case 'Logout':
         return showDialog<void>(
