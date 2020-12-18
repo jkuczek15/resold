@@ -114,6 +114,19 @@ class ResoldRest {
   } // end function getVendorOrders
 
   /*
+   * getStripeUrl - Return the Stripe URL
+   * token - Customer identification token
+   */
+  static Future<String> getStripeUrl(String token) async {
+    await config.initialized;
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    var response = await dio.get('${config.baseUrl}/vendor/stripe');
+
+    return response.toString();
+  } // end function getVendorOrders
+
+  /*
    * setDeliveryId - Set the product's delivery ID
    * token - Customer identification token
    * productId - ID of the product to be delivered
