@@ -55,8 +55,8 @@ Future<void> main() async {
   } // end if development
 
   // load customer from disk
-  customer = await CustomerResponse.clear();
-  // customer = await CustomerResponse.load();
+  // customer = await CustomerResponse.clear();
+  customer = await CustomerResponse.load();
 
   // run the app
   runApp(StoreProvider<AppState>(

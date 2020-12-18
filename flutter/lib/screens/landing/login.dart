@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:resold/constants/dev-constants.dart';
 import 'package:resold/constants/ui-constants.dart';
+import 'package:resold/environment.dart';
 import 'package:resold/screens/home.dart';
 import 'package:resold/services/magento.dart';
 import 'package:resold/services/resold-firebase.dart';
@@ -115,7 +117,8 @@ class LoginPageState extends State<LoginPage> {
                             await ResoldFirebase.createOrUpdateUser(customer);
 
                             // initialize application state
-                            AppState initialState = await AppState.initialState(customer);
+                            AppState initialState = await AppState.initialState(customer,
+                                currentLocation: env.isDevelopment ? TestLocations.evanston : null);
                             dispatcher(InitStateAction(initialState));
 
                             // navigate
