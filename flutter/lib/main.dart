@@ -45,6 +45,7 @@ Future<void> main() async {
       androidPayMode: env.stripeAndroidPayMode));
 
   // auto-login/auto-post
+  CustomerResponse customer;
   Position currentLocation;
   if (env.isDevelopment) {
     currentLocation = TestLocations.evanston;
@@ -54,7 +55,8 @@ Future<void> main() async {
   } // end if development
 
   // load customer from disk
-  CustomerResponse customer = await CustomerResponse.load();
+  customer = await CustomerResponse.clear();
+  // customer = await CustomerResponse.load();
 
   // run the app
   runApp(StoreProvider<AppState>(

@@ -243,7 +243,8 @@ class SignUpPageState extends State<SignUpPage> {
                               await ResoldFirebase.createOrUpdateUser(customer);
 
                               // initialize application state
-                              dispatcher(InitStateAction(await AppState.initialState(customer)));
+                              AppState initialState = await AppState.initialState(customer);
+                              dispatcher(InitStateAction(initialState));
 
                               // navigate
                               Navigator.of(context, rootNavigator: true).pop('dialog');
