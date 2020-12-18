@@ -49,9 +49,15 @@ class LoginPageState extends State<LoginPage> {
                               alignment: Alignment.topCenter,
                               child: Image.asset('assets/images/resold-white-logo.png', fit: BoxFit.cover, width: 500)),
                           padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
-                      Center(
-                          child: Text('Buy & sell with on-demand delivery',
-                              style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
+                      Row(
+                        children: [
+                          BackButton(color: Colors.white),
+                          Center(
+                              child: Text('Buy & sell with on-demand delivery',
+                                  style:
+                                      new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)))
+                        ],
+                      )
                     ]),
                     Center(
                         child: Column(children: [
