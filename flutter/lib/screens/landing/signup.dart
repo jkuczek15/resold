@@ -202,45 +202,43 @@ class SignUpPageState extends State<SignUpPage> {
                       RaisedButton(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
                         onPressed: () async {
-                          // todo: form validation
-                          // handle sms verification
-                          await smsHelper.handleSmsVerification(
-                              phoneController, smsVerificationController, formKey, context, () async {
-                            // show a loading indicator
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Center(child: Loading());
-                                });
+                          // show a loading indicator
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Center(child: Loading());
+                              });
 
-                            // get current position
-                            await Geolocator()
-                                .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-                                .then((location) async {
-                              futureAddresses = Geocoder.local
-                                  .findAddressesFromCoordinates(new Coordinates(location.latitude, location.longitude));
-                            });
+                          // get current position
+                          await Geolocator()
+                              .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+                              .then((location) async {
+                            futureAddresses = Geocoder.local
+                                .findAddressesFromCoordinates(new Coordinates(location.latitude, location.longitude));
+                          });
 
-                            // create customer
-                            var addresses = await futureAddresses;
-                            var address = addresses.first;
+                          // create customer
+                          List<Address> addresses = await futureAddresses;
+                          Address address = addresses.first;
 
-                            var customerAddress = CustomerAddress.fromAddress(
-                                address, firstNameController.text, lastNameController.text, phoneController.text);
-                            var regionId =
-                                await Resold.getRegionId(customerAddress.region.regionCode, customerAddress.countryId);
-                            customerAddress.region.regionId = int.parse(regionId);
+                          CustomerAddress customerAddress = CustomerAddress.fromAddress(
+                              address, firstNameController.text, lastNameController.text, phoneController.text);
+                          String regionId =
+                              await Resold.getRegionId(customerAddress.region.regionCode, customerAddress.countryId);
+                          customerAddress.region.regionId = int.parse(regionId);
 
-                            CustomerResponse customer = await Magento.createCustomer(
-                                CustomerRequest(
-                                    email: emailController.text,
-                                    firstname: firstNameController.text,
-                                    lastname: lastNameController.text,
-                                    addresses: [customerAddress]),
-                                passwordController.text,
-                                confirmPasswordController.text);
+                          CustomerResponse customer = await Magento.createCustomer(
+                              CustomerRequest(
+                                  email: emailController.text,
+                                  firstname: firstNameController.text,
+                                  lastname: lastNameController.text,
+                                  addresses: [customerAddress]),
+                              passwordController.text,
+                              confirmPasswordController.text);
 
-                            if (customer.statusCode == 200) {
+                          if (customer.statusCode == 200) {
+                            await smsHelper.handleSmsVerification(
+                                phoneController, smsVerificationController, formKey, context, () async {
                               // signup was successful
                               // store to disk
                               await CustomerResponse.save(customer);
@@ -311,32 +309,32 @@ class SignUpPageState extends State<SignUpPage> {
                                   );
                                 },
                               );
-                            } else {
-                              Navigator.of(context, rootNavigator: true).pop('dialog');
-                              return showDialog<void>(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Sign Up Error'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[Text(customer.error)],
-                                      ),
+                            });
+                          } else {
+                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                            return showDialog<void>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Sign Up Error'),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[Text(customer.error)],
                                     ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Ok'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          });
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                         child: Text('Sign Up',
                             style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
