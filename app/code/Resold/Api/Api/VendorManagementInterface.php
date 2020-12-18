@@ -29,4 +29,10 @@ interface VendorManagementInterface
 	 * @return mixed[]
 	 */
 	public function getVendorOrders();
+
+	/**
+	 * Get Stripe Dashboard URL
+	 * @return string
+	 */
+	public function getStripeUrl();
 }

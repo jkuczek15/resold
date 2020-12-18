@@ -124,4 +124,40 @@ class VendorManagement
 
     return $vendorOrders;
   }// end function getVendorOrders
+
+	/**
+	 * {@inheritdoc}
+	 */
+  public function getStripeUrl()
+	{
+    // load the seller by the customer ID
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $vendor = $this->vendor->loadByCustomerId($this->userContext->getUserId());
+    $vendorId = $vendor->getId();
+
+    $standalone = $objectManager->create('Ced\CsStripePayment\Model\Standalone');
+    $stripe_model = $standalone->load($vendorId, 'vendor_id')->getData();
+
+    if(count($stripe_model) === 0){
+      // check to see if connected to stripe
+      return 'https://resold.us/api/stripe/connect';
+    }// end if user is already connected to stripe
+
+    $stripe_id = $stripe_model['stripe_user_id'];
+
+    // determine Stripe API mode
+    $store = $objectManager->get ( 'Magento\Framework\App\Config\ScopeConfigInterface' );
+    $mode = $store->getValue ( 'payment/ced_csstripe_method_one/gateway_mode' );
+    $skey = "api_{$mode}_secret_key";
+    \Stripe\Stripe::setApiKey ( $store->getValue ( 'payment/ced_csstripe_method_one/' . $skey ) );
+
+    $account = \Stripe\Account::retrieve($stripe_id);
+    if($account['type'] == 'standard'){
+      $dashboardLink = 'https://dashboard.stripe.com';
+      return $dashboardLink;
+    }else{
+      $dashboardLink = $account->login_links->create();
+      return $dashboardLink;
+    }
+  }// end function getVendorOrders
 }

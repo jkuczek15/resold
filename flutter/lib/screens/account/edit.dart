@@ -7,6 +7,7 @@ import 'package:resold/constants/ui-constants.dart';
 import 'package:resold/helpers/sms-helper.dart';
 import 'package:resold/screens/account/edit-address.dart';
 import 'package:resold/screens/web/resold-web-view.dart';
+import 'package:resold/services/resold-rest.dart';
 import 'package:resold/state/actions/set-account-state.dart';
 import 'package:resold/state/actions/set-customer.dart';
 import 'package:resold/state/screens/account-state.dart';
@@ -20,6 +21,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:resold/screens/landing/landing.dart';
 import 'package:resold/services/magento.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:resold/widgets/loading.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -503,10 +505,17 @@ class EditProfilePageState extends State<EditProfilePage> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddressPage(customer, dispatcher)));
         break;
       case 'Manage Payments':
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Center(child: Loading());
+            });
+        String stripeUrl = await ResoldRest.getStripeUrl(customer.token);
+        Navigator.of(context, rootNavigator: true).pop('dialog');
         Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) => ResoldWebView(
                   title: 'Manage Payments',
-                  selectedUrl: 'https://dashboard.stripe.com',
+                  selectedUrl: stripeUrl,
                 )));
         break;
       case 'Logout':
