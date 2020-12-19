@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:geocoder/geocoder.dart';
 import 'customer-address-region.dart';
@@ -33,10 +35,17 @@ class CustomerAddress {
 
   @override
   String toString() {
-    return this.street.first + ', ' + this.city + ', ' + this.region.regionCode + ', ' + this.postcode;
+    return this.street.first +
+        ', ' +
+        this.city +
+        ', ' +
+        this.region.regionCode +
+        ', ' +
+        this.postcode;
   }
 
-  factory CustomerAddress.fromAddress(Address address, String firstName, String lastName, String phoneNumber) {
+  factory CustomerAddress.fromAddress(
+      Address address, String firstName, String lastName, String phoneNumber) {
     var customerAddress = CustomerAddress();
     var customerAddressRegion = CustomerAddressRegion();
 
@@ -64,7 +73,8 @@ class CustomerAddress {
         if (stateParts.length > 1) {
           customerAddressRegion.regionCode = stateParts[0];
           customerAddressRegion.region = address.adminArea;
-          customerAddress.postcode = stateParts[1];
+          customerAddress.postcode =
+              Platform.isAndroid ? stateParts[1] : stateParts[2];
         } // end if we have a state part in the address
       } // end if we have state and postal code
     } // end if we have a full address line
@@ -102,6 +112,7 @@ class CustomerAddress {
     return customerAddress;
   }
 
-  factory CustomerAddress.fromJson(Map<String, dynamic> json) => _$CustomerAddressFromJson(json);
+  factory CustomerAddress.fromJson(Map<String, dynamic> json) =>
+      _$CustomerAddressFromJson(json);
   Map<String, dynamic> toJson() => _$CustomerAddressToJson(this);
 }

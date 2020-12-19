@@ -86,8 +86,9 @@ class MessagePage extends StatelessWidget {
             PopupMenuButton<String>(
               onSelected: (String value) => handleMenuClick(context, value),
               itemBuilder: (BuildContext context) {
-                Set<String> items =
-                    product.deliveryId != null ? {'View Details'} : {'View Details', 'Send Offer', 'Request Delivery'};
+                Set<String> items = product.deliveryId != null
+                    ? {'View Details'}
+                    : {'View Details', 'Send Offer', 'Request Delivery'};
                 return items.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
@@ -118,11 +119,15 @@ class MessagePage extends StatelessWidget {
   Future onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      await ResoldFirebase.sendProductMessage(chatId, fromCustomer, toCustomer, product, content, type, isSeller);
-      await ResoldRest.sendNotificationMessage(
-          fromCustomer.token, toCustomer.deviceToken, product.name, content, product.thumbnail,
+      await ResoldFirebase.sendProductMessage(
+          chatId, fromCustomer, toCustomer, product, content, type, isSeller);
+      await ResoldRest.sendNotificationMessage(fromCustomer.token,
+          toCustomer.deviceToken, product.name, content, product.thumbnail,
           chatId: chatId);
-      listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      if (listScrollController.hasClients) {
+        listScrollController.animateTo(0.0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      }
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     } // end if content is not null
@@ -164,7 +169,7 @@ class MessagePage extends StatelessWidget {
         await showDialog<void>(
             context: context,
             barrierDismissible: false,
-            builder: (BuildContext context) {
+            builder: (BuildContext dialogcontext) {
               return AlertDialog(
                 title: Text('Send an offer'),
                 content: SingleChildScrollView(
@@ -178,11 +183,15 @@ class MessagePage extends StatelessWidget {
                             decoration: InputDecoration(
                                 labelText: 'Enter an offer price *',
                                 labelStyle: TextStyle(color: ResoldBlue),
-                                enabledBorder:
-                                    UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                focusedBorder:
-                                    UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5))),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ResoldBlue, width: 1.5)),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ResoldBlue, width: 1.5)),
+                                border: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ResoldBlue, width: 1.5))),
                             validator: (value) {
                               int offerPrice = int.tryParse(value);
                               if (value.isEmpty || offerPrice < 1) {
@@ -203,15 +212,28 @@ class MessagePage extends StatelessWidget {
                     ),
                     onPressed: () async {
                       if (formKey.currentState.validate()) {
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
 
                         // send offer message
-                        await ResoldFirebase.sendProductMessage(chatId, fromCustomer, toCustomer, product,
-                            fromCustomer.id.toString() + '|' + offerController.text, MessageType.offer, isSeller);
+                        await ResoldFirebase.sendProductMessage(
+                            chatId,
+                            fromCustomer,
+                            toCustomer,
+                            product,
+                            fromCustomer.id.toString() +
+                                '|' +
+                                offerController.text,
+                            MessageType.offer,
+                            isSeller);
 
                         // send a notification message
-                        await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken,
-                            product.name, 'Offer received for \$${offerController.text}.', product.thumbnail,
+                        await ResoldRest.sendNotificationMessage(
+                            fromCustomer.token,
+                            toCustomer.deviceToken,
+                            product.name,
+                            'Offer received for \$${offerController.text}.',
+                            product.thumbnail,
                             chatId: chatId);
                       } // end if valid verification code
                     },
@@ -247,8 +269,8 @@ class MessagePage extends StatelessWidget {
         response.duration.toString();
 
     // send a Firebase message
-    await ResoldFirebase.sendProductMessage(
-        chatId, fromCustomer, toCustomer, product, content, MessageType.deliveryQuote, isSeller);
+    await ResoldFirebase.sendProductMessage(chatId, fromCustomer, toCustomer,
+        product, content, MessageType.deliveryQuote, isSeller);
 
     // request delivery action
     dispatcher(RequestDeliveryAction(
@@ -259,8 +281,12 @@ class MessagePage extends StatelessWidget {
             sellerCustomerId: isSeller ? fromCustomer.id : toCustomer.id)));
 
     // send a notification message
-    await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
-        '${fromCustomer.fullName} has requested a delivery.', product.thumbnail,
+    await ResoldRest.sendNotificationMessage(
+        fromCustomer.token,
+        toCustomer.deviceToken,
+        product.name,
+        '${fromCustomer.fullName} has requested a delivery.',
+        product.thumbnail,
         chatId: chatId);
   } // end function requestDelivery
 
@@ -292,7 +318,8 @@ class MessagePage extends StatelessWidget {
                   listMessage = snapshot.data.documents;
                   return ListView.builder(
                     padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) => buildItem(context, index, listMessage[index]),
+                    itemBuilder: (context, index) =>
+                        buildItem(context, index, listMessage[index]),
                     itemCount: listMessage.length,
                     reverse: true,
                     controller: listScrollController,
@@ -341,7 +368,8 @@ class MessagePage extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 8.0),
               child: IconButton(
                 icon: Icon(Icons.send),
-                onPressed: () => onSendMessage(textEditingController.text, MessageType.text),
+                onPressed: () =>
+                    onSendMessage(textEditingController.text, MessageType.text),
                 color: Colors.black,
               ),
             ),
@@ -351,8 +379,9 @@ class MessagePage extends StatelessWidget {
       ),
       width: double.infinity,
       height: 50.0,
-      decoration:
-          BoxDecoration(border: Border(top: BorderSide(color: Colors.blueGrey, width: 0.5)), color: Colors.white),
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.blueGrey, width: 0.5)),
+          color: Colors.white),
     );
   } // end function buildInput
 
@@ -365,12 +394,18 @@ class MessagePage extends StatelessWidget {
     if (document['messageType'] == MessageType.deliveryQuote.index) {
       // fetch delivery quote message content
       deliveryQuoteStatus = DeliveryQuoteStatus.values[document['status']];
-      deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(document['content'],
-          chatId: document.id, fromCustomer: fromCustomer, toCustomer: toCustomer, product: product);
+      deliveryQuoteMessage = FirebaseHelper.buildDeliveryQuote(
+          document['content'],
+          chatId: document.id,
+          fromCustomer: fromCustomer,
+          toCustomer: toCustomer,
+          product: product);
 
       // check if we need to fetch a new delivery quote
-      if (deliveryQuoteStatus != DeliveryQuoteStatus.paid && deliveryQuoteStatus != DeliveryQuoteStatus.accepted) {
-        DateTime deliveryQuoteSent = DateTime.fromMillisecondsSinceEpoch(int.tryParse(document['timestamp']));
+      if (deliveryQuoteStatus != DeliveryQuoteStatus.paid &&
+          deliveryQuoteStatus != DeliveryQuoteStatus.accepted) {
+        DateTime deliveryQuoteSent = DateTime.fromMillisecondsSinceEpoch(
+            int.tryParse(document['timestamp']));
         Duration difference = DateTime.now().difference(deliveryQuoteSent);
 
         // fetch a new delivery quote
@@ -396,8 +431,12 @@ class MessagePage extends StatelessWidget {
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: 200.0,
-                  decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                  decoration: BoxDecoration(
+                      color: ResoldBlue,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  margin: EdgeInsets.only(
+                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                      right: 10.0),
                 )
               : document['messageType'] == MessageType.canceledDelivery.index
                   ?
@@ -409,8 +448,12 @@ class MessagePage extends StatelessWidget {
                       ),
                       padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                       width: 200.0,
-                      decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
-                      margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                      decoration: BoxDecoration(
+                          color: ResoldBlue,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      margin: EdgeInsets.only(
+                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                          right: 10.0),
                     )
                   : document['messageType'] == MessageType.image.index
                       ?
@@ -448,77 +491,94 @@ class MessagePage extends StatelessWidget {
                                 height: 200.0,
                                 fit: BoxFit.cover,
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
                               clipBehavior: Clip.hardEdge,
                             ),
                             onPressed: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => FullPhoto(product.name, url: document['content'])));
+                                      builder: (context) => FullPhoto(
+                                          product.name,
+                                          url: document['content'])));
                             },
                             padding: EdgeInsets.all(0),
                           ),
-                          margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                          margin: EdgeInsets.only(
+                              bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                              right: 10.0),
                         )
-                      : document['messageType'] == MessageType.deliveryQuote.index
+                      : document['messageType'] ==
+                              MessageType.deliveryQuote.index
                           ?
                           // Delivery Request
                           Container(
                               child: Padding(
-                                  padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
+                                  padding:
+                                      EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
                                   child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              9.0, 0.0, 0.0, 0),
                                           child: isSeller
-                                              ? Text(
-                                                  'You have requested a delivery.' +
-                                                      '\n\nPickup ETA: ' +
-                                                      deliveryQuoteMessage.expectedPickup +
-                                                      '\n\nYour profit: ' +
-                                                      (deliveryQuoteMessage.fee +
-                                                              Money.from(double.tryParse(product.price), currency))
-                                                          .toString(),
-                                                  style: TextStyle(color: Colors.white))
+                                              ? Text('You have requested a delivery.' + '\n\nPickup ETA: ' + deliveryQuoteMessage.expectedPickup + '\n\nYour profit: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white))
                                               :
                                               // buyer, delivery was accepted from the seller
-                                              !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted
+                                              !isSeller &&
+                                                      deliveryQuoteStatus ==
+                                                          DeliveryQuoteStatus
+                                                              .accepted
                                                   ? Text(
                                                       '${toCustomer.fullName} has confirmed your delivery request.' +
                                                           '\n\nDelivery ETA: ' +
-                                                          deliveryQuoteMessage.expectedDropoff +
+                                                          deliveryQuoteMessage
+                                                              .expectedDropoff +
                                                           '\n\nDelivery fee: ' +
-                                                          deliveryQuoteMessage.fee.toString() +
+                                                          deliveryQuoteMessage.fee
+                                                              .toString() +
                                                           '\n\nTotal: ' +
-                                                          (deliveryQuoteMessage.fee +
-                                                                  Money.from(double.tryParse(product.price), currency))
+                                                          (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                               .toString(),
-                                                      style: TextStyle(color: Colors.white))
-                                                  : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
-                                                      ? Text(
-                                                          'Please wait for a driver to deliver your ${product.name}.\n\nDelivery ETA: ${deliveryQuoteMessage.expectedDropoff.trim()}.\n\nTotal: ${(deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString()}',
-                                                          style: TextStyle(color: Colors.white))
+                                                      style: TextStyle(
+                                                          color: Colors.white))
+                                                  : !isSeller &&
+                                                          deliveryQuoteStatus ==
+                                                              DeliveryQuoteStatus
+                                                                  .paid
+                                                      ? Text('Please wait for a driver to deliver your ${product.name}.\n\nDelivery ETA: ${deliveryQuoteMessage.expectedDropoff.trim()}.\n\nTotal: ${(deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString()}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white))
                                                       : Text(
                                                           'You have requested a delivery.' +
                                                               '\n\nDelivery ETA: ' +
-                                                              deliveryQuoteMessage.expectedDropoff +
+                                                              deliveryQuoteMessage
+                                                                  .expectedDropoff +
                                                               '\n\nDelivery fee: ' +
-                                                              deliveryQuoteMessage.fee.toString() +
+                                                              deliveryQuoteMessage.fee
+                                                                  .toString() +
                                                               '\n\nTotal: ' +
-                                                              (deliveryQuoteMessage.fee +
-                                                                      Money.from(
-                                                                          double.tryParse(product.price), currency))
+                                                              (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                                   .toString(),
                                                           style: TextStyle(color: Colors.white)),
                                         ),
                                         Align(
                                             alignment: Alignment.centerLeft,
                                             child: ButtonBar(
-                                              alignment: MainAxisAlignment.start,
-                                              children: !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted
+                                              alignment:
+                                                  MainAxisAlignment.start,
+                                              children: !isSeller &&
+                                                      deliveryQuoteStatus ==
+                                                          DeliveryQuoteStatus
+                                                              .accepted
                                                   ? [
                                                       FlatButton(
                                                         color: Colors.black,
@@ -526,149 +586,235 @@ class MessagePage extends StatelessWidget {
                                                         onPressed: () async {
                                                           if (isSeller) {
                                                             // user is the seller
-                                                            await ResoldFirebase.updateDeliveryQuoteStatus(
-                                                                chatId, DeliveryQuoteStatus.accepted);
+                                                            await ResoldFirebase
+                                                                .updateDeliveryQuoteStatus(
+                                                                    chatId,
+                                                                    DeliveryQuoteStatus
+                                                                        .accepted);
 
                                                             // send notification to buyer that delivery has been accepted
-                                                            await ResoldRest.sendNotificationMessage(
-                                                                fromCustomer.token,
-                                                                toCustomer.deviceToken,
-                                                                product.name,
-                                                                '${fromCustomer.fullName} has accepted your delivery request.',
-                                                                product.thumbnail,
-                                                                chatId: chatId);
+                                                            await ResoldRest
+                                                                .sendNotificationMessage(
+                                                                    fromCustomer
+                                                                        .token,
+                                                                    toCustomer
+                                                                        .deviceToken,
+                                                                    product
+                                                                        .name,
+                                                                    '${fromCustomer.fullName} has accepted your delivery request.',
+                                                                    product
+                                                                        .thumbnail,
+                                                                    chatId:
+                                                                        chatId);
                                                           } else {
                                                             // user is the buyer
                                                             handlePaymentFlow(
-                                                                context, deliveryQuoteMessage.fee, currency);
+                                                                context,
+                                                                deliveryQuoteMessage
+                                                                    .fee,
+                                                                currency);
                                                           } // end if user is seller
                                                         },
-                                                        child: const Text('Accept Delivery'),
+                                                        child: const Text(
+                                                            'Accept Delivery'),
                                                       ),
                                                       FlatButton(
                                                         color: Colors.black,
                                                         textColor: Colors.white,
                                                         onPressed: () async {
                                                           // Perform some action
-                                                          await ResoldFirebase.deleteProductMessage(
-                                                              chatId, document.id);
-                                                          dispatcher(CancelDeliveryAction(chatId));
-                                                          await ResoldFirebase.sendProductMessage(
-                                                              chatId,
-                                                              fromCustomer,
-                                                              toCustomer,
-                                                              product,
-                                                              '',
-                                                              MessageType.canceledDelivery,
-                                                              isSeller);
-                                                        },
-                                                        child: const Text('Decline Delivery'),
-                                                      ),
-                                                    ]
-                                                  : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
-                                                      ? []
-                                                      : [
-                                                          FlatButton(
-                                                            color: Colors.black,
-                                                            textColor: Colors.white,
-                                                            onPressed: () async {
-                                                              await ResoldFirebase.deleteProductMessage(
-                                                                  chatId, document.id);
-                                                              dispatcher(CancelDeliveryAction(chatId));
-                                                              await ResoldFirebase.sendProductMessage(
+                                                          await ResoldFirebase
+                                                              .deleteProductMessage(
+                                                                  chatId,
+                                                                  document.id);
+                                                          dispatcher(
+                                                              CancelDeliveryAction(
+                                                                  chatId));
+                                                          await ResoldFirebase
+                                                              .sendProductMessage(
                                                                   chatId,
                                                                   fromCustomer,
                                                                   toCustomer,
                                                                   product,
                                                                   '',
-                                                                  MessageType.canceledDelivery,
+                                                                  MessageType
+                                                                      .canceledDelivery,
                                                                   isSeller);
+                                                        },
+                                                        child: const Text(
+                                                            'Decline Delivery'),
+                                                      ),
+                                                    ]
+                                                  : !isSeller &&
+                                                          deliveryQuoteStatus ==
+                                                              DeliveryQuoteStatus
+                                                                  .paid
+                                                      ? []
+                                                      : [
+                                                          FlatButton(
+                                                            color: Colors.black,
+                                                            textColor:
+                                                                Colors.white,
+                                                            onPressed:
+                                                                () async {
+                                                              await ResoldFirebase
+                                                                  .deleteProductMessage(
+                                                                      chatId,
+                                                                      document
+                                                                          .id);
+                                                              dispatcher(
+                                                                  CancelDeliveryAction(
+                                                                      chatId));
+                                                              await ResoldFirebase
+                                                                  .sendProductMessage(
+                                                                      chatId,
+                                                                      fromCustomer,
+                                                                      toCustomer,
+                                                                      product,
+                                                                      '',
+                                                                      MessageType
+                                                                          .canceledDelivery,
+                                                                      isSeller);
                                                             },
-                                                            child: const Text('Cancel Delivery'),
+                                                            child: const Text(
+                                                                'Cancel Delivery'),
                                                           ),
                                                         ],
                                             ))
                                       ])),
                               width: 260.0,
-                              margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-                              decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
+                              margin: EdgeInsets.only(
+                                  bottom:
+                                      isLastMessageRight(index) ? 20.0 : 10.0,
+                                  right: 10.0),
+                              decoration: BoxDecoration(
+                                  color: ResoldBlue,
+                                  borderRadius: BorderRadius.circular(8.0)),
                             )
                           :
                           // Offer
                           Container(
                               child: Padding(
-                                  padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
+                                  padding:
+                                      EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
                                   child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                            padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
-                                            child: offerMessage.fromId == fromCustomer.id
-                                                ? Text('You have sent an offer for \$${offerMessage.price}.',
-                                                    style: TextStyle(color: Colors.white))
-                                                : Text('You have received an offer for \$${offerMessage.price}.',
-                                                    style: TextStyle(color: Colors.white))),
+                                            padding: EdgeInsets.fromLTRB(
+                                                9.0, 0.0, 0.0, 0),
+                                            child: offerMessage.fromId ==
+                                                    fromCustomer.id
+                                                ? Text(
+                                                    'You have sent an offer for \$${offerMessage.price}.',
+                                                    style: TextStyle(
+                                                        color: Colors.white))
+                                                : Text(
+                                                    'You have received an offer for \$${offerMessage.price}.',
+                                                    style: TextStyle(
+                                                        color: Colors.white))),
                                         Align(
                                             alignment: Alignment.centerLeft,
                                             child: ButtonBar(
-                                                alignment: MainAxisAlignment.start,
-                                                children: offerMessage.fromId == fromCustomer.id
+                                                alignment:
+                                                    MainAxisAlignment.start,
+                                                children: offerMessage.fromId ==
+                                                        fromCustomer.id
                                                     ? [
                                                         FlatButton(
                                                           color: Colors.black,
-                                                          textColor: Colors.white,
+                                                          textColor:
+                                                              Colors.white,
                                                           onPressed: () async {
-                                                            await ResoldFirebase.deleteProductMessage(
-                                                                chatId, document.id);
+                                                            await ResoldFirebase
+                                                                .deleteProductMessage(
+                                                                    chatId,
+                                                                    document
+                                                                        .id);
                                                           },
-                                                          child: const Text('Cancel Offer'),
+                                                          child: const Text(
+                                                              'Cancel Offer'),
                                                         ),
                                                       ]
                                                     : [
                                                         FlatButton(
                                                           color: Colors.black,
-                                                          textColor: Colors.white,
+                                                          textColor:
+                                                              Colors.white,
                                                           onPressed: () async {
                                                             // show loading dialog
                                                             showDialog(
-                                                                context: context,
-                                                                builder: (BuildContext context) {
-                                                                  return Center(child: Loading());
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return Center(
+                                                                      child:
+                                                                          Loading());
                                                                 });
 
                                                             // set the new price
-                                                            await ResoldRest.setPrice(
-                                                                fromCustomer.token, product.id, offerMessage.price);
+                                                            await ResoldRest
+                                                                .setPrice(
+                                                                    fromCustomer
+                                                                        .token,
+                                                                    product.id,
+                                                                    offerMessage
+                                                                        .price);
 
-                                                            product.price = offerMessage.price.toString();
+                                                            product.price =
+                                                                offerMessage
+                                                                    .price
+                                                                    .toString();
 
                                                             // delete the offer message
-                                                            await ResoldFirebase.deleteProductMessage(
-                                                                chatId, document.id);
+                                                            await ResoldFirebase
+                                                                .deleteProductMessage(
+                                                                    chatId,
+                                                                    document
+                                                                        .id);
 
                                                             // create a delivery message
                                                             await requestDelivery();
 
                                                             // close loading dialog
-                                                            Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                            Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true)
+                                                                .pop('dialog');
                                                           },
-                                                          child: const Text('Accept Offer'),
+                                                          child: const Text(
+                                                              'Accept Offer'),
                                                         ),
                                                         FlatButton(
                                                           color: Colors.black,
-                                                          textColor: Colors.white,
+                                                          textColor:
+                                                              Colors.white,
                                                           onPressed: () async {
-                                                            await ResoldFirebase.deleteProductMessage(
-                                                                chatId, document.id);
+                                                            await ResoldFirebase
+                                                                .deleteProductMessage(
+                                                                    chatId,
+                                                                    document
+                                                                        .id);
                                                           },
-                                                          child: const Text('Decline Offer'),
+                                                          child: const Text(
+                                                              'Decline Offer'),
                                                         )
                                                       ]))
                                       ])),
                               width: 260.0,
-                              margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-                              decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
+                              margin: EdgeInsets.only(
+                                  bottom:
+                                      isLastMessageRight(index) ? 20.0 : 10.0,
+                                  right: 10.0),
+                              decoration: BoxDecoration(
+                                  color: ResoldBlue,
+                                  borderRadius: BorderRadius.circular(8.0)),
                             )
         ],
         mainAxisAlignment: MainAxisAlignment.end,
@@ -686,7 +832,8 @@ class MessagePage extends StatelessWidget {
                             child: FadeInImage(
                                 image: NetworkImage(
                                     'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'),
-                                placeholder: AssetImage('assets/images/avatar-placeholder.png'),
+                                placeholder: AssetImage(
+                                    'assets/images/avatar-placeholder.png'),
                                 width: 35.0,
                                 height: 35.0,
                                 fit: BoxFit.cover),
@@ -705,11 +852,13 @@ class MessagePage extends StatelessWidget {
                         ),
                         padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                         width: 200.0,
-                        decoration:
-                            BoxDecoration(color: const Color(0xffe1e1e1), borderRadius: BorderRadius.circular(8.0)),
+                        decoration: BoxDecoration(
+                            color: const Color(0xffe1e1e1),
+                            borderRadius: BorderRadius.circular(8.0)),
                         margin: EdgeInsets.only(left: 10.0),
                       )
-                    : document['messageType'] == MessageType.canceledDelivery.index
+                    : document['messageType'] ==
+                            MessageType.canceledDelivery.index
                         ?
                         // Text
                         Container(
@@ -717,10 +866,15 @@ class MessagePage extends StatelessWidget {
                               '${toCustomer.fullName} has canceled the delivery.',
                               style: TextStyle(color: Colors.white),
                             ),
-                            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                            padding:
+                                EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                             width: 200.0,
-                            decoration: BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
-                            margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                            decoration: BoxDecoration(
+                                color: ResoldBlue,
+                                borderRadius: BorderRadius.circular(8.0)),
+                            margin: EdgeInsets.only(
+                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0),
                           )
                         : document['messageType'] == MessageType.image.index
                             ? Container(
@@ -739,7 +893,8 @@ class MessagePage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      errorWidget: (context, url, error) => Material(
+                                      errorWidget: (context, url, error) =>
+                                          Material(
                                         child: Image.asset(
                                           'images/img_not_available.jpeg',
                                           width: 200.0,
@@ -756,244 +911,334 @@ class MessagePage extends StatelessWidget {
                                       height: 200.0,
                                       fit: BoxFit.cover,
                                     ),
-                                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8.0)),
                                     clipBehavior: Clip.hardEdge,
                                   ),
                                   onPressed: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => FullPhoto(product.name, url: document['content'])));
+                                            builder: (context) => FullPhoto(
+                                                product.name,
+                                                url: document['content'])));
                                   },
                                   padding: EdgeInsets.all(0),
                                 ),
                                 margin: EdgeInsets.only(left: 10.0),
                               )
-                            : document['messageType'] == MessageType.deliveryQuote.index
+                            : document['messageType'] ==
+                                    MessageType.deliveryQuote.index
                                 ?
                                 // Delivery Quote
                                 Container(
                                     child: Card(
                                         clipBehavior: Clip.antiAlias,
                                         child: Padding(
-                                          padding: EdgeInsets.fromLTRB(2.0, 16.0, 16.0, 0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              2.0, 16.0, 16.0, 0),
                                           child: Column(
                                             children: [
                                               Padding(
-                                                  padding: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0),
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      12.0, 0.0, 0.0, 0),
                                                   child:
                                                       // seller with open delivery quote
-                                                      isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none
+                                                      isSeller &&
+                                                              deliveryQuoteStatus ==
+                                                                  DeliveryQuoteStatus
+                                                                      .none
                                                           ? Text(
                                                               'You have received a delivery request.' +
                                                                   '\n\nPickup ETA: ' +
-                                                                  deliveryQuoteMessage.expectedPickup +
+                                                                  deliveryQuoteMessage
+                                                                      .expectedPickup +
                                                                   '\n\nYour Profit: ' +
                                                                   (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
                                                                       .toString(),
-                                                              style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.6)))
                                                           :
                                                           // seller with accepted delivery quote
                                                           isSeller &&
-                                                                  deliveryQuoteStatus == DeliveryQuoteStatus.accepted
+                                                                  deliveryQuoteStatus ==
+                                                                      DeliveryQuoteStatus
+                                                                          .accepted
                                                               ? Text(
                                                                   'You have accepted the delivery. Please wait for ${toCustomer.fullName} to complete payment.' +
                                                                       '\n\nPickup ETA: ' +
                                                                       deliveryQuoteMessage.expectedPickup +
                                                                       '\n\nYour Profit: ' +
-                                                                      (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
-                                                                          .toString(),
-                                                                  style:
-                                                                      TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                                      (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(),
+                                                                  style: TextStyle(color: Colors.black.withOpacity(0.6)))
                                                               :
                                                               // seller with paid delivery quote
-                                                              isSeller &&
-                                                                      deliveryQuoteStatus == DeliveryQuoteStatus.paid
-                                                                  ? Text(
-                                                                      '${toCustomer.fullName} has completed payment. Please wait for a driver to pickup your ${product.name}.' +
-                                                                          '\n\nPickup ETA: ' +
-                                                                          deliveryQuoteMessage.expectedPickup +
-                                                                          '\n\nYour Profit: ' +
-                                                                          (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency))
-                                                                              .toString(),
-                                                                      style: TextStyle(
-                                                                          color: Colors.black.withOpacity(0.6)))
+                                                              isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                                  ? Text('${toCustomer.fullName} has completed payment. Please wait for a driver to pickup your ${product.name}.' + '\n\nPickup ETA: ' + deliveryQuoteMessage.expectedPickup + '\n\nYour Profit: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
                                                                   :
                                                                   // buyer with opened delivery quote
-                                                                  !isSeller &&
-                                                                          deliveryQuoteStatus ==
-                                                                              DeliveryQuoteStatus.none
-                                                                      ? Text(
-                                                                          'You have received a delivery request.' +
-                                                                              '\n\nDelivery ETA: ' +
-                                                                              deliveryQuoteMessage.expectedDropoff +
-                                                                              '\n\nDelivery fee: ' +
-                                                                              deliveryQuoteMessage.fee.toString() +
-                                                                              '\n\nTotal: ' +
-                                                                              (deliveryQuoteMessage.fee +
-                                                                                      Money.from(double.tryParse(product.price), currency))
-                                                                                  .toString(),
-                                                                          style: TextStyle(color: Colors.black.withOpacity(0.6)))
+                                                                  !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.none
+                                                                      ? Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
                                                                       : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
                                                                           ? Text('Please wait for a driver to deliver your ${product.name}.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))
                                                                           : Text('You have received a delivery request.' + '\n\nDelivery ETA: ' + deliveryQuoteMessage.expectedDropoff + '\n\nDelivery fee: ' + deliveryQuoteMessage.fee.toString() + '\n\nTotal: ' + (deliveryQuoteMessage.fee + Money.from(double.tryParse(product.price), currency)).toString(), style: TextStyle(color: Colors.black.withOpacity(0.6)))),
                                               ButtonBar(
-                                                alignment: MainAxisAlignment.start,
-                                                children: isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                alignment:
+                                                    MainAxisAlignment.start,
+                                                children: isSeller &&
+                                                        deliveryQuoteStatus ==
+                                                            DeliveryQuoteStatus
+                                                                .paid
                                                     ? []
-                                                    : isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.accepted
+                                                    : isSeller &&
+                                                            deliveryQuoteStatus ==
+                                                                DeliveryQuoteStatus
+                                                                    .accepted
                                                         ? [
                                                             FlatButton(
-                                                              color: Colors.black,
-                                                              textColor: Colors.white,
-                                                              onPressed: () async {
-                                                                await ResoldFirebase.deleteProductMessage(
-                                                                    chatId, document.id);
-                                                                dispatcher(CancelDeliveryAction(chatId));
+                                                              color:
+                                                                  Colors.black,
+                                                              textColor:
+                                                                  Colors.white,
+                                                              onPressed:
+                                                                  () async {
+                                                                await ResoldFirebase
+                                                                    .deleteProductMessage(
+                                                                        chatId,
+                                                                        document
+                                                                            .id);
+                                                                dispatcher(
+                                                                    CancelDeliveryAction(
+                                                                        chatId));
                                                                 await ResoldFirebase.sendProductMessage(
                                                                     chatId,
                                                                     fromCustomer,
                                                                     toCustomer,
                                                                     product,
                                                                     '',
-                                                                    MessageType.canceledDelivery,
+                                                                    MessageType
+                                                                        .canceledDelivery,
                                                                     isSeller);
                                                               },
-                                                              child: const Text('Cancel Delivery'),
+                                                              child: const Text(
+                                                                  'Cancel Delivery'),
                                                             ),
                                                           ]
-                                                        : !isSeller && deliveryQuoteStatus == DeliveryQuoteStatus.paid
+                                                        : !isSeller &&
+                                                                deliveryQuoteStatus ==
+                                                                    DeliveryQuoteStatus
+                                                                        .paid
                                                             ? []
                                                             : [
                                                                 FlatButton(
-                                                                  onPressed: () async {
+                                                                  onPressed:
+                                                                      () async {
                                                                     if (isSeller) {
                                                                       // user is the seller
                                                                       await ResoldFirebase.updateDeliveryQuoteStatus(
-                                                                          chatId, DeliveryQuoteStatus.accepted);
+                                                                          chatId,
+                                                                          DeliveryQuoteStatus
+                                                                              .accepted);
 
                                                                       // send notification to buyer that delivery has been accepted
                                                                       await ResoldRest.sendNotificationMessage(
-                                                                          fromCustomer.token,
-                                                                          toCustomer.deviceToken,
-                                                                          product.name,
+                                                                          fromCustomer
+                                                                              .token,
+                                                                          toCustomer
+                                                                              .deviceToken,
+                                                                          product
+                                                                              .name,
                                                                           '${fromCustomer.fullName} has accepted your delivery request.',
-                                                                          product.thumbnail,
-                                                                          chatId: chatId);
+                                                                          product
+                                                                              .thumbnail,
+                                                                          chatId:
+                                                                              chatId);
                                                                     } else {
                                                                       // user is the buyer
                                                                       handlePaymentFlow(
-                                                                          context, deliveryQuoteMessage.fee, currency);
+                                                                          context,
+                                                                          deliveryQuoteMessage
+                                                                              .fee,
+                                                                          currency);
                                                                     } // end if user is seller
                                                                   },
-                                                                  child: const Text('Accept Delivery'),
+                                                                  child: const Text(
+                                                                      'Accept Delivery'),
                                                                 ),
                                                                 FlatButton(
-                                                                  onPressed: () async {
+                                                                  onPressed:
+                                                                      () async {
                                                                     // Perform some action
                                                                     await ResoldFirebase.deleteProductMessage(
-                                                                        chatId, document.id);
-                                                                    dispatcher(CancelDeliveryAction(chatId));
+                                                                        chatId,
+                                                                        document
+                                                                            .id);
+                                                                    dispatcher(
+                                                                        CancelDeliveryAction(
+                                                                            chatId));
                                                                     await ResoldFirebase.sendProductMessage(
                                                                         chatId,
                                                                         fromCustomer,
                                                                         toCustomer,
                                                                         product,
                                                                         '',
-                                                                        MessageType.canceledDelivery,
+                                                                        MessageType
+                                                                            .canceledDelivery,
                                                                         isSeller);
                                                                   },
-                                                                  child: const Text('Decline Delivery'),
+                                                                  child: const Text(
+                                                                      'Decline Delivery'),
                                                                 ),
                                                               ],
                                               )
                                             ],
                                           ),
                                         )),
-                                    padding: EdgeInsets.fromLTRB(0, 10.0, 15.0, 0),
+                                    padding:
+                                        EdgeInsets.fromLTRB(0, 10.0, 15.0, 0),
                                     width: 275.0,
-                                    margin:
-                                        EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
+                                    margin: EdgeInsets.only(
+                                        bottom: isLastMessageRight(index)
+                                            ? 20.0
+                                            : 10.0,
+                                        right: 10.0),
                                   )
                                 :
                                 // Offer
                                 Container(
                                     child: Padding(
-                                        padding: EdgeInsets.fromLTRB(7.0, 16.0, 16.0, 0),
+                                        padding: EdgeInsets.fromLTRB(
+                                            7.0, 16.0, 16.0, 0),
                                         child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Padding(
-                                                  padding: EdgeInsets.fromLTRB(9.0, 0.0, 0.0, 0),
-                                                  child: offerMessage.fromId == fromCustomer.id
-                                                      ? Text('You have sent an offer for \$${offerMessage.price}.',
-                                                          style: TextStyle(color: Colors.white))
-                                                      : Text('You have received an offer for \$${offerMessage.price}.',
-                                                          style: TextStyle(color: Colors.white))),
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      9.0, 0.0, 0.0, 0),
+                                                  child: offerMessage.fromId ==
+                                                          fromCustomer.id
+                                                      ? Text(
+                                                          'You have sent an offer for \$${offerMessage.price}.',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white))
+                                                      : Text(
+                                                          'You have received an offer for \$${offerMessage.price}.',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white))),
                                               Align(
-                                                  alignment: Alignment.centerLeft,
+                                                  alignment:
+                                                      Alignment.centerLeft,
                                                   child: ButtonBar(
-                                                      alignment: MainAxisAlignment.start,
-                                                      children: offerMessage.fromId == fromCustomer.id
-                                                          ? [
-                                                              FlatButton(
-                                                                color: Colors.black,
-                                                                textColor: Colors.white,
-                                                                onPressed: () async {
-                                                                  await ResoldFirebase.deleteProductMessage(
-                                                                      chatId, document.id);
-                                                                },
-                                                                child: const Text('Cancel Offer'),
-                                                              ),
-                                                            ]
-                                                          : [
-                                                              FlatButton(
-                                                                color: Colors.black,
-                                                                textColor: Colors.white,
-                                                                onPressed: () async {
-                                                                  // show loading dialog
-                                                                  showDialog(
-                                                                      context: context,
-                                                                      builder: (BuildContext context) {
-                                                                        return Center(child: Loading());
-                                                                      });
+                                                      alignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children:
+                                                          offerMessage.fromId ==
+                                                                  fromCustomer
+                                                                      .id
+                                                              ? [
+                                                                  FlatButton(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await ResoldFirebase.deleteProductMessage(
+                                                                          chatId,
+                                                                          document
+                                                                              .id);
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Cancel Offer'),
+                                                                  ),
+                                                                ]
+                                                              : [
+                                                                  FlatButton(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    onPressed:
+                                                                        () async {
+                                                                      // show loading dialog
+                                                                      showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return Center(child: Loading());
+                                                                          });
 
-                                                                  // set the new price
-                                                                  await ResoldRest.setPrice(fromCustomer.token,
-                                                                      product.id, offerMessage.price);
+                                                                      // set the new price
+                                                                      await ResoldRest.setPrice(
+                                                                          fromCustomer
+                                                                              .token,
+                                                                          product
+                                                                              .id,
+                                                                          offerMessage
+                                                                              .price);
 
-                                                                  product.price = offerMessage.price.toString();
+                                                                      product.price = offerMessage
+                                                                          .price
+                                                                          .toString();
 
-                                                                  // delete the offer message
-                                                                  await ResoldFirebase.deleteProductMessage(
-                                                                      chatId, document.id);
+                                                                      // delete the offer message
+                                                                      await ResoldFirebase.deleteProductMessage(
+                                                                          chatId,
+                                                                          document
+                                                                              .id);
 
-                                                                  // create a delivery message
-                                                                  await requestDelivery();
+                                                                      // create a delivery message
+                                                                      await requestDelivery();
 
-                                                                  // close loading dialog
-                                                                  Navigator.of(context, rootNavigator: true)
-                                                                      .pop('dialog');
-                                                                },
-                                                                child: const Text('Accept Offer'),
-                                                              ),
-                                                              FlatButton(
-                                                                color: Colors.black,
-                                                                textColor: Colors.white,
-                                                                onPressed: () async {
-                                                                  await ResoldFirebase.deleteProductMessage(
-                                                                      chatId, document.id);
-                                                                },
-                                                                child: const Text('Decline Offer'),
-                                                              )
-                                                            ]))
+                                                                      // close loading dialog
+                                                                      Navigator.of(
+                                                                              context,
+                                                                              rootNavigator: true)
+                                                                          .pop('dialog');
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Accept Offer'),
+                                                                  ),
+                                                                  FlatButton(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    textColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await ResoldFirebase.deleteProductMessage(
+                                                                          chatId,
+                                                                          document
+                                                                              .id);
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Decline Offer'),
+                                                                  )
+                                                                ]))
                                             ])),
                                     width: 260.0,
-                                    margin:
-                                        EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
-                                    decoration:
-                                        BoxDecoration(color: ResoldBlue, borderRadius: BorderRadius.circular(8.0)),
+                                    margin: EdgeInsets.only(
+                                        bottom: isLastMessageRight(index)
+                                            ? 20.0
+                                            : 10.0,
+                                        right: 10.0),
+                                    decoration: BoxDecoration(
+                                        color: ResoldBlue,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0)),
                                   )
               ],
             ),
@@ -1001,9 +1246,13 @@ class MessagePage extends StatelessWidget {
             isLastMessageLeft(index)
                 ? Container(
                     child: Text(
-                      DateFormat('MMM dd, h:mm a')
-                          .format(DateTime.fromMillisecondsSinceEpoch(int.parse(document['timestamp']))),
-                      style: TextStyle(color: Colors.grey, fontSize: 12.0, fontStyle: FontStyle.italic),
+                      DateFormat('MMM dd, h:mm a').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document['timestamp']))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
                   )
@@ -1063,17 +1312,26 @@ class MessagePage extends StatelessWidget {
             dropoff_ready_dt: now.toUtc().toIso8601String(),
             dropoff_deadline_dt: dropoffDeadline.toUtc().toIso8601String(),
             manifest: product.name,
-            manifest_reference:
-                product.id.toString() + '|' + buyerCustomerId.toString() + '|' + sellerCustomerId.toString(),
-            manifest_items: [new ManifestItem(name: product.name, quantity: 1, size: product.getPostmatesItemSize())]),
+            manifest_reference: product.id.toString() +
+                '|' +
+                buyerCustomerId.toString() +
+                '|' +
+                sellerCustomerId.toString(),
+            manifest_items: [
+              new ManifestItem(
+                  name: product.name,
+                  quantity: 1,
+                  size: product.getPostmatesItemSize())
+            ]),
         useRobot: useRobot);
   } // end function getDelivery
 
   handlePaymentFlow(BuildContext context, Money fee, Currency currency) async {
     StripePayment.paymentRequestWithNativePay(
       androidPayOptions: AndroidPayPaymentRequest(
-        totalPrice:
-            (fee + Money.from(double.tryParse(product.price), currency)).toString().replaceAll(new RegExp(r'\$'), ''),
+        totalPrice: (fee + Money.from(double.tryParse(product.price), currency))
+            .toString()
+            .replaceAll(new RegExp(r'\$'), ''),
         currencyCode: 'USD',
       ),
       applePayOptions: ApplePayPaymentOptions(
@@ -1082,9 +1340,10 @@ class MessagePage extends StatelessWidget {
         items: [
           ApplePayItem(
               label: product.name,
-              amount: (fee + Money.from(double.tryParse(product.price), currency))
-                  .toString()
-                  .replaceAll(new RegExp(r'\$'), ''))
+              amount:
+                  (fee + Money.from(double.tryParse(product.price), currency))
+                      .toString()
+                      .replaceAll(new RegExp(r'\$'), ''))
         ],
       ),
     ).then((Token token) async {
@@ -1099,8 +1358,8 @@ class MessagePage extends StatelessWidget {
           });
 
       // create a Magento order
-      String orderResponse =
-          await Magento.createOrder(fromCustomer.token, fromCustomer.addresses.first, product, token, fee);
+      String orderResponse = await Magento.createOrder(fromCustomer.token,
+          fromCustomer.addresses.first, product, token, fee);
       int orderId = int.tryParse(orderResponse);
 
       if (orderId != null) {
@@ -1108,19 +1367,25 @@ class MessagePage extends StatelessWidget {
         Order order = await Magento.getOrderById(orderId);
 
         // update the message as paid
-        await ResoldFirebase.updateDeliveryQuoteStatus(chatId, DeliveryQuoteStatus.paid);
+        await ResoldFirebase.updateDeliveryQuoteStatus(
+            chatId, DeliveryQuoteStatus.paid);
 
         // create a Postmates delivery
         DeliveryResponse delivery = await getDelivery(useRobot: true);
 
         // save the delivery ID to the product
-        await ResoldRest.setDeliveryId(fromCustomer.token, product.id, delivery.id);
+        await ResoldRest.setDeliveryId(
+            fromCustomer.token, product.id, delivery.id);
         product.deliveryId = delivery.id;
         await ResoldFirebase.setMessageProduct(chatId, product);
 
         // send notification to buyer that delivery has been accepted
-        await ResoldRest.sendNotificationMessage(fromCustomer.token, toCustomer.deviceToken, product.name,
-            '${fromCustomer.fullName} has completed payment.', product.thumbnail,
+        await ResoldRest.sendNotificationMessage(
+            fromCustomer.token,
+            toCustomer.deviceToken,
+            product.name,
+            '${fromCustomer.fullName} has completed payment.',
+            product.thumbnail,
             chatId: chatId);
 
         // dispatch payment complete action
@@ -1131,8 +1396,11 @@ class MessagePage extends StatelessWidget {
         Navigator.of(context, rootNavigator: true).pop('dialog');
 
         // send the user to the order details page
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => OrderDetails(order: order, product: product, isSeller: false)));
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(
+                    order: order, product: product, isSeller: false)));
       } else {
         // close loading dialog
         Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -1150,8 +1418,10 @@ class MessagePage extends StatelessWidget {
                           style: TextStyle(color: ResoldBlue),
                         ),
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
                         })
                   ]);
             });
@@ -1171,8 +1441,10 @@ class MessagePage extends StatelessWidget {
                         style: TextStyle(color: ResoldBlue),
                       ),
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
+                        Navigator.of(context, rootNavigator: true)
+                            .pop('dialog');
                       })
                 ]);
           });
@@ -1180,7 +1452,10 @@ class MessagePage extends StatelessWidget {
   } // end function handlePaymentFlow
 
   bool isLastMessageLeft(int index) {
-    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] == fromCustomer.id) || index == 0) {
+    if ((index > 0 &&
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] == fromCustomer.id) ||
+        index == 0) {
       return true;
     } else {
       return false;
@@ -1188,7 +1463,10 @@ class MessagePage extends StatelessWidget {
   } // end function isLastMessageLeft
 
   bool isLastMessageRight(int index) {
-    if ((index > 0 && listMessage != null && listMessage[index - 1]['idFrom'] != fromCustomer.id) || index == 0) {
+    if ((index > 0 &&
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] != fromCustomer.id) ||
+        index == 0) {
       return true;
     } else {
       return false;

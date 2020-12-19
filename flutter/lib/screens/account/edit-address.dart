@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:resold/constants/ui-constants.dart';
@@ -24,7 +25,8 @@ class EditAddressPage extends StatefulWidget {
         super(key: key);
 
   @override
-  EditAddressPageState createState() => EditAddressPageState(customer, dispatcher);
+  EditAddressPageState createState() =>
+      EditAddressPageState(customer, dispatcher);
 }
 
 class EditAddressPageState extends State<EditAddressPage> {
@@ -62,7 +64,9 @@ class EditAddressPageState extends State<EditAddressPage> {
       ),
     );
     addressLine2Controller.value = TextEditingValue(
-      text: customer.addresses.first.street.length > 1 ? customer.addresses.first.street[1] : '',
+      text: customer.addresses.first.street.length > 1
+          ? customer.addresses.first.street[1]
+          : '',
       selection: TextSelection.fromPosition(
         TextPosition(offset: customer.lastName.length),
       ),
@@ -90,7 +94,8 @@ class EditAddressPageState extends State<EditAddressPage> {
             children: [
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('Change Address', style: new TextStyle(color: Colors.white)))
+                  child: Text('Change Address',
+                      style: new TextStyle(color: Colors.white)))
             ],
           ),
           iconTheme: IconThemeData(
@@ -115,12 +120,17 @@ class EditAddressPageState extends State<EditAddressPage> {
                             controller: addressLine1Controller,
                             decoration: InputDecoration(
                               labelText: 'Address Line 1 *',
-                              labelStyle: TextStyle(color: ResoldBlue, fontSize: 16),
-                              enabledBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                              border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                              labelStyle:
+                                  TextStyle(color: ResoldBlue, fontSize: 16),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
+                              border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
                             ),
                             style: TextStyle(color: Colors.black, fontSize: 16),
                             validator: (value) {
@@ -137,14 +147,20 @@ class EditAddressPageState extends State<EditAddressPage> {
                               controller: addressLine2Controller,
                               decoration: InputDecoration(
                                 labelText: 'Adddress Line 2',
-                                labelStyle: TextStyle(color: ResoldBlue, fontSize: 16),
-                                enabledBorder:
-                                    UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                focusedBorder:
-                                    UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                                border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                                labelStyle:
+                                    TextStyle(color: ResoldBlue, fontSize: 16),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ResoldBlue, width: 1.5)),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ResoldBlue, width: 1.5)),
+                                border: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: ResoldBlue, width: 1.5)),
                               ),
-                              style: TextStyle(color: Colors.black, fontSize: 16)),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16)),
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(50, 10, 50, 10),
@@ -152,12 +168,17 @@ class EditAddressPageState extends State<EditAddressPage> {
                             controller: cityController,
                             decoration: InputDecoration(
                               labelText: 'City *',
-                              labelStyle: TextStyle(color: ResoldBlue, fontSize: 16),
-                              enabledBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                              border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                              labelStyle:
+                                  TextStyle(color: ResoldBlue, fontSize: 16),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
+                              border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
                             ),
                             style: TextStyle(color: Colors.black, fontSize: 16),
                             validator: (value) {
@@ -174,9 +195,11 @@ class EditAddressPageState extends State<EditAddressPage> {
                           child: Container(
                               child: DropdownButton<String>(
                                   isExpanded: true,
-                                  hint: Text('Select state...', style: TextStyle(color: Colors.black)),
+                                  hint: Text('Select state...',
+                                      style: TextStyle(color: Colors.black)),
                                   value: selectedState,
-                                  style: TextStyle(color: Colors.black, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
                                   underline: Container(
                                     height: 2,
                                     color: ResoldBlue,
@@ -195,11 +218,15 @@ class EditAddressPageState extends State<EditAddressPage> {
                             decoration: InputDecoration(
                               labelText: 'Zip/Postal Code',
                               labelStyle: TextStyle(color: ResoldBlue),
-                              enabledBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                              focusedBorder:
-                                  UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                              border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
+                              border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ResoldBlue, width: 1.5)),
                             ),
                             style: TextStyle(color: Colors.black, fontSize: 16),
                           ),
@@ -211,7 +238,11 @@ class EditAddressPageState extends State<EditAddressPage> {
                             if (snapshot.hasData) {
                               if (firstBuild) {
                                 countries = snapshot.data;
-                                selectedCountry = countries.where((country) => country.countryCode == 'US').first;
+                                selectedCountry = countries
+                                    .where((country) =>
+                                        country.countryCode ==
+                                        (Platform.isAndroid ? 'US' : 'us'))
+                                    .first;
                                 firstBuild = false;
                               } // end if first build
                               return Padding(
@@ -219,9 +250,11 @@ class EditAddressPageState extends State<EditAddressPage> {
                                 child: Container(
                                     child: DropdownButton<Country>(
                                   isExpanded: true,
-                                  hint: Text('Select country...', style: TextStyle(color: Colors.black)),
+                                  hint: Text('Select country...',
+                                      style: TextStyle(color: Colors.black)),
                                   value: selectedCountry,
-                                  style: TextStyle(color: Colors.black, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
                                   underline: Container(
                                     height: 2,
                                     color: ResoldBlue,
@@ -231,7 +264,9 @@ class EditAddressPageState extends State<EditAddressPage> {
                                       selectedCountry = newValue;
                                     });
                                   },
-                                  items: snapshot.data.map<DropdownMenuItem<Country>>((Country country) {
+                                  items: snapshot.data
+                                      .map<DropdownMenuItem<Country>>(
+                                          (Country country) {
                                     return DropdownMenuItem<Country>(
                                       value: country,
                                       child: Text(country.name),
@@ -249,53 +284,72 @@ class EditAddressPageState extends State<EditAddressPage> {
                           child: ButtonTheme(
                             minWidth: double.infinity,
                             child: RaisedButton(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadiusDirectional.circular(8)),
                               onPressed: () async {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return Center(child: Loading());
                                     });
-                                customer.addresses.first.street[0] = addressLine1Controller.text;
+                                customer.addresses.first.street[0] =
+                                    addressLine1Controller.text;
 
                                 if (addressLine2Controller.text.isNotEmpty) {
-                                  if (customer.addresses.first.street.length == 1) {
-                                    customer.addresses.first.street.add(addressLine2Controller.text);
+                                  if (customer.addresses.first.street.length ==
+                                      1) {
+                                    customer.addresses.first.street
+                                        .add(addressLine2Controller.text);
                                   } else {
-                                    customer.addresses.first.street[1] = addressLine2Controller.text;
+                                    customer.addresses.first.street[1] =
+                                        addressLine2Controller.text;
                                   } // end if we have an address line 2
                                 } // end if we have an address line 2
 
                                 // set the customer's address
-                                customer.addresses.first.city = cityController.text;
-                                customer.addresses.first.countryId = selectedCountry.countryCode;
-                                customer.addresses.first.region.regionCode = selectedState;
-                                customer.addresses.first.region.region = USStates.getName(selectedState);
+                                customer.addresses.first.city =
+                                    cityController.text;
+                                customer.addresses.first.countryId =
+                                    selectedCountry.countryCode;
+                                customer.addresses.first.region.regionCode =
+                                    selectedState;
+                                customer.addresses.first.region.region =
+                                    USStates.getName(selectedState);
 
                                 // try to parse the region ID
                                 try {
-                                  customer.addresses.first.region.regionId = int.tryParse(
-                                      await Resold.getRegionId(selectedState, selectedCountry.countryCode));
+                                  customer.addresses.first.region.regionId =
+                                      int.tryParse(await Resold.getRegionId(
+                                          selectedState,
+                                          selectedCountry.countryCode));
                                 } catch (exception) {
                                   return showDialog<void>(
                                       context: context,
                                       barrierDismissible: false,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                            title: Text('Countries outside of the US are not supported.'),
+                                            title: Text(
+                                                'Countries outside of the US are not supported.'),
                                             actions: <Widget>[
                                               FlatButton(
                                                   child: Text(
                                                     'Ok',
-                                                    style: TextStyle(color: ResoldBlue),
+                                                    style: TextStyle(
+                                                        color: ResoldBlue),
                                                   ),
                                                   onPressed: () {
                                                     setState(() {
                                                       selectedCountry = countries
-                                                          .where((country) => country.countryCode == 'US')
+                                                          .where((country) =>
+                                                              country
+                                                                  .countryCode ==
+                                                              'US')
                                                           .first;
                                                     });
-                                                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                    Navigator.of(context,
+                                                            rootNavigator: true)
+                                                        .pop('dialog');
                                                     Navigator.pop(context);
                                                   })
                                             ]);
@@ -315,15 +369,19 @@ class EditAddressPageState extends State<EditAddressPage> {
 
                                 // dispatch update customer state action
                                 dispatcher(SetCustomerAction(customer));
-                                dispatcher(SetAccountStateAction(await AccountState.initialState(customer)));
+                                dispatcher(SetAccountStateAction(
+                                    await AccountState.initialState(customer)));
 
                                 // navigate
-                                Navigator.of(context, rootNavigator: true).pop('dialog');
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
                                 Navigator.pop(context);
                               },
                               child: Text('Save',
-                                  style:
-                                      new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                                  style: new TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
                               padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
                               color: Colors.black,
                               textColor: Colors.white,
