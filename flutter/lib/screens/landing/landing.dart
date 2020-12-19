@@ -21,7 +21,8 @@ class LandingPage extends StatelessWidget {
         builder: (context, dispatcher, customer) {
           return Scaffold(
               body: Stack(children: [
-            Image.asset('assets/images/login/resold-app-loginpage-background.jpg', fit: BoxFit.cover, width: 500),
+            Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
+                fit: BoxFit.cover, alignment: Alignment.topCenter, height: 2000),
             Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
