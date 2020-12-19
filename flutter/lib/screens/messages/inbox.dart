@@ -164,7 +164,7 @@ class InboxPageState extends State<InboxPage> {
                                                               style: item['unread']
                                                                   ? TextStyle(fontWeight: FontWeight.bold)
                                                                   : TextStyle(fontWeight: FontWeight.normal))),
-                                                      SizedBox(width: 125),
+                                                      SizedBox(width: 115),
                                                       Container(
                                                           child: Text(formattedDate,
                                                               overflow: TextOverflow.ellipsis,
@@ -175,7 +175,7 @@ class InboxPageState extends State<InboxPage> {
                                                   Row(children: [
                                                     SizedBox(width: 5),
                                                     Container(
-                                                        width: 260,
+                                                        width: 250,
                                                         height: 25,
                                                         child: Text(item['messagePreview'],
                                                             overflow: TextOverflow.ellipsis,
