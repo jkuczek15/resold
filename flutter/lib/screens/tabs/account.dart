@@ -37,7 +37,7 @@ class AccountPage extends StatelessWidget {
         Container(
             child: Stack(children: [
           Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
-              fit: BoxFit.cover, height: 600, width: 500),
+              fit: BoxFit.cover, height: 605, width: 500),
           Column(children: [
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

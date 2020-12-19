@@ -118,12 +118,13 @@ class ResoldRest {
    * token - Customer identification token
    */
   static Future<String> getStripeUrl(String token) async {
-    await config.initialized;
+    return 'https://dashboard.stripe.com';
+    // await config.initialized;
 
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    var response = await dio.get('${config.baseUrl}/vendor/stripe');
+    // dio.options.headers['Authorization'] = 'Bearer $token';
+    // var response = await dio.get('${config.baseUrl}/vendor/stripe');
 
-    return response.toString();
+    // return response.toString();
   } // end function getVendorOrders
 
   /*
