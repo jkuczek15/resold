@@ -77,3 +77,4 @@ robots.txt
 /scripts/scrape/csv/Imported/*.csv
 /scripts/scrape/email-sender/db/*
 *.lock
+Resold_signingcert.p12
