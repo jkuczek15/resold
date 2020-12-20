@@ -33,148 +33,177 @@ class AccountPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-        Container(
-            child: Stack(children: [
-          Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
-              fit: BoxFit.cover, height: 605, width: 500),
-          Column(children: [
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                    height: 115,
-                    width: 115,
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: CircleAvatar(
-                          backgroundImage: vendor.profilePicture != 'null'
-                              ? CachedNetworkImageProvider(vendor.getImagePath())
-                              : AssetImage('assets/images/avatar-placeholder.png'),
-                        ))),
-                Padding(
-                    padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
-                    child: Text(customer.fullName,
-                        style: new TextStyle(
-                            fontSize: 14.0, fontFamily: 'Raleway', fontWeight: FontWeight.bold, color: Colors.white)))
-              ]),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 10),
-                                  Row(children: [
-                                    SizedBox(width: 10),
-                                    InkWell(
-                                      child: Column(children: [
-                                        Text(forSaleProducts.length.toString(),
-                                            style: new TextStyle(
-                                                fontSize: 32.0,
-                                                fontFamily: 'Raleway',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white)),
-                                        Text('for sale',
-                                            style: new TextStyle(
-                                                fontSize: 20.0,
-                                                fontFamily: 'Raleway',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white))
-                                      ]),
-                                      onTap: () => dispatcher(SetAccountStateAction(AccountState(
-                                          displayForSale: true,
-                                          vendor: vendor,
-                                          forSaleProducts: forSaleProducts,
-                                          soldProducts: soldProducts))),
-                                    ),
-                                    SizedBox(width: 60),
-                                    InkWell(
-                                      child: Column(children: [
-                                        Text(soldProducts.length.toString(),
-                                            style: new TextStyle(
-                                                fontSize: 32.0,
-                                                fontFamily: 'Raleway',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white)),
-                                        Text('sold',
-                                            style: new TextStyle(
-                                                fontSize: 20.0,
-                                                fontFamily: 'Raleway',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white))
-                                      ]),
-                                      onTap: () => dispatcher(
-                                        SetAccountStateAction(AccountState(
-                                            displayForSale: false,
-                                            vendor: vendor,
-                                            forSaleProducts: forSaleProducts,
-                                            soldProducts: soldProducts)),
-                                      ),
-                                    )
-                                  ])
-                                ]))),
-                    Container(
-                      height: 30,
-                    )
-                  ])
-            ]),
-            SizedBox(height: 10),
-            ButtonTheme(
-                minWidth: 340.0,
-                height: 50.0,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditProfilePage(customer, vendor, currentLocation, dispatcher)));
-                  },
-                  child: Text('Edit Profile',
-                      style: new TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Raleway')),
-                  color: Colors.black,
-                  textColor: Colors.white,
-                )),
-            SizedBox(height: 10),
-            Container(
-                child: Column(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                displayForSale && forSaleProducts.length == 0
-                    ? Center(
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
-                            child: Text('You haven\'t listed any items for sale.',
+            Container(
+                child: Stack(children: [
+              Image.asset(
+                  'assets/images/login/resold-app-loginpage-background.jpg',
+                  fit: BoxFit.fill),
+              Column(children: [
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            height: 115,
+                            width: 115,
+                            child: Padding(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                child: CircleAvatar(
+                                  backgroundImage: vendor.profilePicture !=
+                                          'null'
+                                      ? CachedNetworkImageProvider(
+                                          vendor.getImagePath())
+                                      : AssetImage(
+                                          'assets/images/avatar-placeholder.png'),
+                                ))),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(18, 0, 0, 0),
+                            child: Text(customer.fullName,
                                 style: new TextStyle(
-                                    fontSize: 16.0,
+                                    fontSize: 14.0,
+                                    fontFamily: 'Raleway',
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontFamily: 'Raleway'))))
-                    : !displayForSale && soldProducts.length == 0
+                                    color: Colors.white)))
+                      ]),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            child: Padding(
+                                padding: EdgeInsets.fromLTRB(20, 20, 0, 10),
+                                child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 10),
+                                      Row(children: [
+                                        SizedBox(width: 10),
+                                        InkWell(
+                                          child: Column(children: [
+                                            Text(
+                                                forSaleProducts.length
+                                                    .toString(),
+                                                style: new TextStyle(
+                                                    fontSize: 32.0,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                            Text('for sale',
+                                                style: new TextStyle(
+                                                    fontSize: 20.0,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white))
+                                          ]),
+                                          onTap: () => dispatcher(
+                                              SetAccountStateAction(
+                                                  AccountState(
+                                                      displayForSale: true,
+                                                      vendor: vendor,
+                                                      forSaleProducts:
+                                                          forSaleProducts,
+                                                      soldProducts:
+                                                          soldProducts))),
+                                        ),
+                                        SizedBox(width: 60),
+                                        InkWell(
+                                          child: Column(children: [
+                                            Text(soldProducts.length.toString(),
+                                                style: new TextStyle(
+                                                    fontSize: 32.0,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                            Text('sold',
+                                                style: new TextStyle(
+                                                    fontSize: 20.0,
+                                                    fontFamily: 'Raleway',
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white))
+                                          ]),
+                                          onTap: () => dispatcher(
+                                            SetAccountStateAction(AccountState(
+                                                displayForSale: false,
+                                                vendor: vendor,
+                                                forSaleProducts:
+                                                    forSaleProducts,
+                                                soldProducts: soldProducts)),
+                                          ),
+                                        )
+                                      ])
+                                    ]))),
+                        Container(
+                          height: 30,
+                        )
+                      ])
+                ]),
+                SizedBox(height: 10),
+                ButtonTheme(
+                    minWidth: 340.0,
+                    height: 50.0,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusDirectional.circular(8)),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfilePage(customer,
+                                    vendor, currentLocation, dispatcher)));
+                      },
+                      child: Text('Edit Profile',
+                          style: new TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontFamily: 'Raleway')),
+                      color: Colors.black,
+                      textColor: Colors.white,
+                    )),
+                SizedBox(height: 10),
+                Container(
+                    child: Column(
+                  children: [
+                    displayForSale && forSaleProducts.length == 0
                         ? Center(
                             child: Padding(
                                 padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
-                                child: Text('You haven\'t sold any items.',
+                                child: Text(
+                                    'You haven\'t listed any items for sale.',
                                     style: new TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                         fontFamily: 'Raleway'))))
-                        : ProductGrid(
-                            customer: customer,
-                            currentLocation: currentLocation,
-                            products: displayForSale ? forSaleProducts : soldProducts,
-                            dispatcher: dispatcher)
-              ],
-            ))
-          ]),
-        ])),
-      ])),
+                        : !displayForSale && soldProducts.length == 0
+                            ? Center(
+                                child: Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 120, 0, 0),
+                                    child: Text('You haven\'t sold any items.',
+                                        style: new TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontFamily: 'Raleway'))))
+                            : ProductGrid(
+                                customer: customer,
+                                currentLocation: currentLocation,
+                                products: displayForSale
+                                    ? forSaleProducts
+                                    : soldProducts,
+                                dispatcher: dispatcher)
+                  ],
+                ))
+              ]),
+            ])),
+          ])),
     );
   } // end function build
 }
