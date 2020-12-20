@@ -25,7 +25,8 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController forgotPasswordController = TextEditingController();
+  final TextEditingController forgotPasswordController =
+      TextEditingController();
   final GlobalKey<FormState> forgotPasswordKey = GlobalKey<FormState>();
   final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
   final Function dispatcher;
@@ -38,175 +39,209 @@ class LoginPageState extends State<LoginPage> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             resizeToAvoidBottomPadding: false,
-            body: Stack(children: [
-              Image.asset('assets/images/login/resold-app-loginpage-background.jpg',
-                  fit: BoxFit.cover, alignment: Alignment.topCenter, height: 2000),
-              Form(
-                  key: loginKey,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(children: [
-                          Padding(
-                              child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Image.asset('assets/images/resold-white-logo.png',
-                                      fit: BoxFit.cover, width: 500)),
-                              padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
-                          Row(
-                            children: [
-                              BackButton(color: Colors.white),
-                              Center(
-                                  child: Text('Buy & sell with on-demand delivery',
-                                      style: new TextStyle(
-                                          fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white)))
-                            ],
-                          )
-                        ]),
-                        Center(
-                            child: Column(children: [
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-                              child: TextFormField(
-                                controller: emailController,
-                                decoration: InputDecoration(
-                                    hintText: 'Enter your email...',
-                                    hintStyle: TextStyle(color: Colors.white),
-                                    labelStyle: new TextStyle(
-                                      color: ResoldBlue,
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                    ),
-                                    focusedBorder:
-                                        UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
-                                    border: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                    )),
-                                style: TextStyle(color: Colors.white),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter your email.';
-                                  }
-                                  return null;
-                                },
-                              )),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
-                              child: TextFormField(
-                                obscureText: true,
-                                controller: passwordController,
-                                decoration: InputDecoration(
-                                    hintText: 'Enter your password...',
-                                    hintStyle: TextStyle(color: Colors.white),
-                                    labelStyle: new TextStyle(
-                                      color: ResoldBlue,
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                    ),
-                                    focusedBorder:
-                                        UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 1.5)),
-                                    border: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.white, width: 1.5),
-                                    )),
-                                style: TextStyle(color: Colors.white),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter your password.';
-                                  }
-                                  return null;
-                                },
-                              )),
-                          RaisedButton(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadiusDirectional.circular(8)),
-                            onPressed: () async {
-                              if (!loginKey.currentState.validate()) {
-                                return;
-                              }
-                              // show a loading indicator
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Center(child: Loading());
-                                  });
-
-                              // attempt to login
-                              CustomerResponse customer = await Magento.loginCustomer(
-                                  LoginRequest(username: emailController.text, password: passwordController.text));
-
-                              if (customer.statusCode == 200) {
-                                // login was successful
-                                // store to disk
-                                await CustomerResponse.save(customer);
-
-                                // create a firebase user
-                                await ResoldFirebase.createOrUpdateUser(customer);
-
-                                // initialize application state
-                                AppState initialState = await AppState.initialState(customer,
-                                    currentLocation: env.isDevelopment ? TestLocations.evanston : null);
-                                dispatcher(InitStateAction(initialState));
-
-                                // navigate
-                                Navigator.of(context, rootNavigator: true).pop('dialog');
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => Home(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        return FadeTransition(opacity: animation, child: child);
-                                      },
-                                    ));
-                              } else {
-                                Navigator.of(context, rootNavigator: true).pop('dialog');
-                                return showDialog<void>(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Sign In Error'),
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: <Widget>[Text(customer.error)],
-                                        ),
+            body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/login/resold-app-loginpage-background.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Form(
+                    key: loginKey,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(children: [
+                            Padding(
+                                child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Image.asset(
+                                        'assets/images/resold-white-logo.png',
+                                        fit: BoxFit.cover,
+                                        width: 500)),
+                                padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
+                            Row(
+                              children: [
+                                BackButton(color: Colors.white),
+                                Center(
+                                    child: Text(
+                                        'Buy & sell with on-demand delivery',
+                                        style: new TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)))
+                              ],
+                            )
+                          ]),
+                          Center(
+                              child: Column(children: [
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
+                                child: TextFormField(
+                                  controller: emailController,
+                                  decoration: InputDecoration(
+                                      hintText: 'Enter your email...',
+                                      hintStyle: TextStyle(color: Colors.white),
+                                      labelStyle: new TextStyle(
+                                        color: ResoldBlue,
                                       ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Ok'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.5),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 1.5)),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.5),
+                                      )),
+                                  style: TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter your email.';
+                                    }
+                                    return null;
                                   },
-                                );
-                              }
-                            },
-                            child: Text('Sign In',
-                                style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
-                            padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
-                            color: Colors.black,
-                            textColor: Colors.white,
-                          ),
-                          SizedBox(height: 15),
-                          InkWell(
-                            onTap: forgotPassword,
-                            child: Text('Forgot password?',
-                                style: new TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    decoration: TextDecoration.underline)),
-                          ),
-                          SizedBox(height: 10)
-                        ])),
-                        SizedBox(height: 5)
-                      ]))
-            ])),
+                                )),
+                            Padding(
+                                padding: EdgeInsets.fromLTRB(50, 10, 50, 30),
+                                child: TextFormField(
+                                  obscureText: true,
+                                  controller: passwordController,
+                                  decoration: InputDecoration(
+                                      hintText: 'Enter your password...',
+                                      hintStyle: TextStyle(color: Colors.white),
+                                      labelStyle: new TextStyle(
+                                        color: ResoldBlue,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.5),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 1.5)),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.5),
+                                      )),
+                                  style: TextStyle(color: Colors.white),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter your password.';
+                                    }
+                                    return null;
+                                  },
+                                )),
+                            RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadiusDirectional.circular(8)),
+                              onPressed: () async {
+                                if (!loginKey.currentState.validate()) {
+                                  return;
+                                }
+                                // show a loading indicator
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Center(child: Loading());
+                                    });
+
+                                // attempt to login
+                                CustomerResponse customer =
+                                    await Magento.loginCustomer(LoginRequest(
+                                        username: emailController.text,
+                                        password: passwordController.text));
+
+                                if (customer.statusCode == 200) {
+                                  // login was successful
+                                  // store to disk
+                                  await CustomerResponse.save(customer);
+
+                                  // create a firebase user
+                                  await ResoldFirebase.createOrUpdateUser(
+                                      customer);
+
+                                  // initialize application state
+                                  AppState initialState =
+                                      await AppState.initialState(customer,
+                                          currentLocation: env.isDevelopment
+                                              ? TestLocations.evanston
+                                              : null);
+                                  dispatcher(InitStateAction(initialState));
+
+                                  // navigate
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            Home(),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          return FadeTransition(
+                                              opacity: animation, child: child);
+                                        },
+                                      ));
+                                } else {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                  return showDialog<void>(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Sign In Error'),
+                                        content: SingleChildScrollView(
+                                          child: ListBody(
+                                            children: <Widget>[
+                                              Text(customer.error)
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Ok'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              child: Text('Sign In',
+                                  style: new TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                              padding: EdgeInsets.fromLTRB(105, 30, 105, 30),
+                              color: Colors.black,
+                              textColor: Colors.white,
+                            ),
+                            SizedBox(height: 15),
+                            InkWell(
+                              onTap: forgotPassword,
+                              child: Text('Forgot password?',
+                                  style: new TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.underline)),
+                            ),
+                            SizedBox(height: 10)
+                          ])),
+                          SizedBox(height: 5)
+                        ])))),
         onWillPop: () async {
           Navigator.pop(context);
           return false;
@@ -233,9 +268,15 @@ class LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: 'Enter your email...',
                           labelStyle: TextStyle(color: ResoldBlue),
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
-                          border: UnderlineInputBorder(borderSide: BorderSide(color: ResoldBlue, width: 1.5)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ResoldBlue, width: 1.5)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ResoldBlue, width: 1.5)),
+                          border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: ResoldBlue, width: 1.5)),
                         ),
                         style: TextStyle(color: Colors.black),
                         validator: (value) {
@@ -268,7 +309,8 @@ class LoginPageState extends State<LoginPage> {
                               barrierDismissible: false,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: Text("A password reset email has been sent to $email."),
+                                    title: Text(
+                                        "A password reset email has been sent to $email."),
                                     actions: <Widget>[
                                       FlatButton(
                                           child: Text(
@@ -282,14 +324,16 @@ class LoginPageState extends State<LoginPage> {
                               });
                           // close the dialog
                           forgotPasswordController.value = TextEditingValue();
-                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
                         } else {
                           await showDialog<void>(
                               context: context,
                               barrierDismissible: false,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: Text("The email address could not be found."),
+                                    title: Text(
+                                        "The email address could not be found."),
                                     actions: <Widget>[
                                       FlatButton(
                                           child: Text(

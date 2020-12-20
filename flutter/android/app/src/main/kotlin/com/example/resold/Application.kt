@@ -1,4 +1,4 @@
-package com.example.resold
+package com.resold.resoldapp
 
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry
