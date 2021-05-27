@@ -16,9 +16,6 @@ if [[ -n "$host" ]]; then
 
   # Remove the production dump from the local machine file system
   rm -rf ~/prod-dump.sql
-
-  # Run the local after install after a successful restore
-  /var/www/html/scripts/local_after_install
 else
     echo "Please provide the web server host in order to perform production mysql dump."
 fi

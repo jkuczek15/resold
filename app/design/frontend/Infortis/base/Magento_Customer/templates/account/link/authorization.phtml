@@ -43,7 +43,7 @@ if(strpos($href, 'login') !== FALSE){
   $href = '';
 }
 ?>
-<li class="authorization-link" data-label="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('or')); ?>">
+<li class="authorization-link" data-label="<?php echo $block->escapeHtmlAttr(__('or')); ?>">
     <a style="cursor: pointer" class="social-login sign-in-link" <?= $href ?>>
         <?php echo $label; ?>
     </a>

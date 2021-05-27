@@ -61,8 +61,16 @@ Future<void> main() async {
   // run the app
   runApp(StoreProvider<AppState>(
     store: Store(
-        initialState: await AppState.initialState(customer, currentLocation: currentLocation),
-        blocs: [CustomerReducer(), HomeReducer(), SearchReducer(), SellReducer(), OrderReducer(), AccountReducer()]),
+        initialState: await AppState.initialState(customer,
+            currentLocation: currentLocation),
+        blocs: [
+          CustomerReducer(),
+          HomeReducer(),
+          SearchReducer(),
+          SellReducer(),
+          OrderReducer(),
+          AccountReducer()
+        ]),
     child: OverlaySupport(
         child: MaterialApp(
       theme: ThemeData(fontFamily: 'Raleway'),
@@ -76,7 +84,8 @@ Future autoPost() async {
   CustomerResponse customer = await CustomerResponse.load();
 
   // automatically post a product
-  List<String> imagePaths = await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
+  List<String> imagePaths =
+      await Resold.uploadLocalImages(['assets/images/dev/corgi.png']);
   ResoldRest.postProduct(
       customer.token,
       Product(
@@ -87,7 +96,9 @@ Future autoPost() async {
           vendorId: customer.vendorId,
           latitude: TestLocations.evanston.latitude,
           longitude: TestLocations.evanston.longitude,
-          categoryIds: [int.tryParse(CategoryHelper.getCategoryIdByName('Electronics'))],
+          categoryIds: [
+            int.tryParse(CategoryHelper.getCategoryIdByName('Electronics'))
+          ],
           condition: ConditionHelper.getConditionIdByName('New'),
           localGlobal: LocalGlobalHelper.getLocalGlobal()),
       imagePaths);

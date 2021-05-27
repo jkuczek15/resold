@@ -42,7 +42,7 @@ class LandingPage extends StatelessWidget {
                                       width: 500)),
                               padding: EdgeInsets.fromLTRB(30, 0, 30, 20)),
                           Center(
-                              child: Text('Buy & sell with on-demand delivery',
+                              child: Text('Buy & sell with same-day delivery',
                                   style: new TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold,
