@@ -67,7 +67,7 @@ class LoginPageState extends State<LoginPage> {
                                 BackButton(color: Colors.white),
                                 Center(
                                     child: Text(
-                                        'Buy & sell with on-demand delivery',
+                                        'Buy & sell with same-day delivery',
                                         style: new TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,

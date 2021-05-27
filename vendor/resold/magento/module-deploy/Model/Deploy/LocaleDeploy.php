@@ -27,7 +27,7 @@ use Magento\Framework\Console\Cli;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class LocaleDeploy implements DeployInterface
+class LocaleDeploy
 {
     /**
      * @var int

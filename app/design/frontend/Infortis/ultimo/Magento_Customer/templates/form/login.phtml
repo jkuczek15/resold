@@ -27,18 +27,18 @@
               id="login-form"
               data-mage-init='{"validation":{}}'>
             <?php echo $block->getBlockHtml('formkey'); ?>
-            <fieldset class="fieldset login" data-hasrequired="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('* Required Fields')) ?>">
+            <fieldset class="fieldset login" data-hasrequired="<?php echo $block->escapeHtmlAttr(__('* Required Fields')) ?>">
                 <div class="field note"><?php echo $block->escapeHtml(__('If you have an account, sign in with your email address.')) ?></div>
                 <div class="field email required">
                     <label class="label" for="email"><span><?php echo $block->escapeHtml(__('Email')) ?></span></label>
                     <div class="control">
-                        <input name="login[username]" value="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr($block->getUsername()) ?>" <?php if ($block->isAutocompleteDisabled()) :?> autocomplete="off"<?php endif; ?> id="email" type="email" class="input-text" title="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('Email')) ?>" data-validate="{required:true, 'validate-email':true}">
+                        <input name="login[username]" value="<?php echo $block->escapeHtmlAttr($block->getUsername()) ?>" <?php if ($block->isAutocompleteDisabled()) :?> autocomplete="off"<?php endif; ?> id="email" type="email" class="input-text" title="<?php echo $block->escapeHtmlAttr(__('Email')) ?>" data-validate="{required:true, 'validate-email':true}">
                     </div>
                 </div>
                 <div class="field password required">
                     <label for="pass" class="label"><span><?php echo $block->escapeHtml(__('Password')) ?></span></label>
                     <div class="control">
-                        <input name="login[password]" type="password" <?php if ($block->isAutocompleteDisabled()) :?> autocomplete="off"<?php endif; ?> class="input-text" id="pass" title="<?php echo $this->helper(\Magento\Framework\EscapeHelper::class)->escapeHtmlAttr(__('Password')) ?>" data-validate="{required:true}">
+                        <input name="login[password]" type="password" <?php if ($block->isAutocompleteDisabled()) :?> autocomplete="off"<?php endif; ?> class="input-text" id="pass" title="<?php echo $block->escapeHtmlAttr(__('Password')) ?>" data-validate="{required:true}">
                     </div>
                 </div>
                 <?php echo $block->getChildHtml('form_additional_info'); ?>

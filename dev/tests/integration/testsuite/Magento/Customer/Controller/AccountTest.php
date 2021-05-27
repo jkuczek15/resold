@@ -9,11 +9,17 @@
 namespace Magento\Customer\Controller;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
 {
     /**
@@ -73,6 +79,7 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
      * @magentoConfigFixture current_store customer/password/forgot_email_template customer_password_forgot_email_template
      * @magentoConfigFixture current_store customer/password/forgot_email_identity support
      * @magentoConfigFixture current_store general/store_information/name Test special' characters
+     * @magentoConfigFixture current_store customer/captcha/enable 0
      * @magentoDataFixture Magento/Customer/_files/customer.php
      */
     public function testForgotPasswordEmailMessageWithSpecialCharacters()
@@ -198,6 +205,19 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
     }
 
     /**
+     * Tests that without form key user account won't be created
+     * and user will be redirected on account creation page again.
+     */
+    public function testNoFormKeyCreatePostAction()
+    {
+        $this->fillRequestWithAccountData();
+        $this->dispatch('customer/account/createPost');
+
+        $this->assertNull($this->getCustomerByEmail('test1@email.com'));
+        $this->assertRedirect($this->stringEndsWith('customer/account/create/'));
+    }
+
+    /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
      */
@@ -221,7 +241,6 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         );
 
         $this->fillRequestWithAccountDataAndFormKey();
-
         $this->dispatch('customer/account/createPost');
         $this->assertRedirect($this->stringEndsWith('customer/account/'));
         $this->assertSessionMessages(
@@ -266,8 +285,8 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->assertSessionMessages(
             $this->equalTo([
                 'You must confirm your account. Please check your email for the confirmation link or '
-                . '<a href="http://localhost/index.php/customer/account/confirmation/email/'
-                . 'test1%40email.com/">click here</a> for a new link.'
+                    . '<a href="http://localhost/index.php/customer/account/confirmation/email/'
+                    . 'test1%40email.com/">click here</a> for a new link.'
             ]),
             MessageInterface::TYPE_SUCCESS
         );
@@ -338,6 +357,7 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
      * @magentoConfigFixture current_store customer/password/limit_password_reset_requests_method 0
      * @magentoConfigFixture current_store customer/password/forgot_email_template customer_password_forgot_email_template
      * @magentoConfigFixture current_store customer/password/forgot_email_identity support
+     * @magentoConfigFixture current_store customer/captcha/enable 0
      * @magentoDataFixture Magento/Customer/_files/customer.php
      */
     public function testForgotPasswordPostAction()
@@ -362,6 +382,9 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         );
     }
 
+    /**
+     * @magentoConfigFixture current_store customer/captcha/enable 0
+     */
     public function testForgotPasswordPostWithBadEmailAction()
     {
         $this->getRequest()
@@ -430,12 +453,11 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->dispatch('customer/account/edit');
 
         $body = $this->getResponse()->getBody();
-
         $this->assertEquals(200, $this->getResponse()->getHttpResponseCode(), $body);
         $this->assertContains('<div class="field field-name-firstname required">', $body);
         // Verify the password check box is not checked
         $this->assertContains('<input type="checkbox" name="change_password" id="change-password" '
-            .'data-role="change-password" value="1" title="Change&#x20;Password" class="checkbox" />', $body);
+            . 'data-role="change-password" value="1" title="Change&#x20;Password" class="checkbox" />', $body);
     }
 
     /**
@@ -448,13 +470,13 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->dispatch('customer/account/edit/changepass/1');
 
         $body = $this->getResponse()->getBody();
-        
         $this->assertEquals(200, $this->getResponse()->getHttpResponseCode(), $body);
         $this->assertContains('<div class="field field-name-firstname required">', $body);
         // Verify the password check box is checked
         $this->assertContains(
             '<input type="checkbox" name="change_password" id="change-password" '
-            .'data-role="change-password" value="1" title="Change&#x20;Password" checked="checked" class="checkbox" />',
+            . 'data-role="change-password" value="1" title="Change&#x20;Password" checked="checked" '
+            . 'class="checkbox" />',
             $body
         );
     }
@@ -519,7 +541,8 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->getRequest()
             ->setMethod('POST')
             ->setPostValue([
-                'form_key'         => $this->_objectManager->get(FormKey::class)->getFormKey(),
+                'form_key'         => $this->_objectManager->get(
+                    FormKey::class)->getFormKey(),
                 'firstname'        => 'John',
                 'lastname'         => 'Doe',
                 'email'            => 'johndoe@email.com',
@@ -579,7 +602,8 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->getRequest()
             ->setMethod('POST')
             ->setPostValue([
-                'form_key'         => $this->_objectManager->get(FormKey::class)->getFormKey(),
+                'form_key'         => $this->_objectManager->get(
+                    FormKey::class)->getFormKey(),
                 'firstname'        => 'John',
                 'lastname'         => 'Doe',
                 'email'            => 'johndoe@email.com',
@@ -608,7 +632,8 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->getRequest()
             ->setMethod('POST')
             ->setPostValue([
-                'form_key'         => $this->_objectManager->get(FormKey::class)->getFormKey(),
+                'form_key'         => $this->_objectManager->get(
+                    FormKey::class)->getFormKey(),
                 'firstname'        => 'John',
                 'lastname'         => 'Doe',
                 'email'            => 'johndoe@email.com',
@@ -628,8 +653,6 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
     }
 
     /**
-     * Fill request with account data.
-     * 
      * @return void
      */
     private function fillRequestWithAccountData()
@@ -656,8 +679,6 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
     }
 
     /**
-     * Fill request with account data and form key.
-     * 
      * @return void
      */
     private function fillRequestWithAccountDataAndFormKey()
@@ -665,5 +686,35 @@ class AccountTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->fillRequestWithAccountData();
         $formKey = $this->_objectManager->get(FormKey::class);
         $this->getRequest()->setParam('form_key', $formKey->getFormKey());
+    }
+
+    /**
+     * Returns stored customer by email.
+     *
+     * @param string $email
+     * @return CustomerInterface
+     */
+    private function getCustomerByEmail($email)
+    {
+        /** @var FilterBuilder $filterBuilder */
+        $filterBuilder = $this->_objectManager->get(FilterBuilder::class);
+        $filters = [
+            $filterBuilder->setField(CustomerInterface::EMAIL)
+                ->setValue($email)
+                ->create()
+        ];
+
+        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
+        $searchCriteriaBuilder = $this->_objectManager->get(SearchCriteriaBuilder::class);
+        $searchCriteria = $searchCriteriaBuilder->addFilters($filters)
+            ->create();
+
+        $customerRepository = $this->_objectManager->get(CustomerRepositoryInterface::class);
+        $customers = $customerRepository->getList($searchCriteria)
+            ->getItems();
+
+        $customer = array_pop($customers);
+
+        return $customer;
     }
 }

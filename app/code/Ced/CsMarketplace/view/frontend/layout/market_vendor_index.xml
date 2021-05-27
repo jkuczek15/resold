@@ -29,7 +29,7 @@
         <css src="Ced_CsMarketplace::bower_components/font-awesome/css/font-awesome.min.css"/>
         <css src="Ced_CsMarketplace::css/ced/csmarketplace/vpanel.css"/>
         <css src="Ced_CsMarketplace::css/ced/csmarketplace/vendor_responsive.css"/>
-				<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<css src="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     </head>
     <body>
 		<referenceContainer name="after.body.start">
