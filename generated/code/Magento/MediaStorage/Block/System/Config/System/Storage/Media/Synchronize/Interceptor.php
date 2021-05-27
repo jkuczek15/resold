@@ -17,19 +17,6 @@ class Interceptor extends \Magento\MediaStorage\Block\System\Config\System\Stora
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
-    {
-        $pluginInfo = $this->pluginList->getNext($this->subjectType, 'getTemplate');
-        if (!$pluginInfo) {
-            return parent::getTemplate();
-        } else {
-            return $this->___callPlugins('getTemplate', func_get_args(), $pluginInfo);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function fetchView($fileName)
     {
         $pluginInfo = $this->pluginList->getNext($this->subjectType, 'fetchView');
