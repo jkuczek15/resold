@@ -171,7 +171,7 @@ return array (
     'Resold_Tracking' => 1,
     'Shopial_Facebook' => 1,
     'Swissup_Tippyjs' => 1,
-    'Thai_S3' => 1,
+    'Thai_S3' => 0,
     'Zorn_OptionalTelephone' => 1,
   ),
 );
