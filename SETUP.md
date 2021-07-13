@@ -1,59 +1,53 @@
-##########################################################
-##########################################################
-##########################################################
-# Local Environment Setup
-#
 # Technology Stack:
-#  - Linux/CentOS
-#  - Apache Version 2.4.29
-#  - MySQL Version 5.6
-#  - PHP Version 7.1.3
-#  - Magento Community Edition 2.2
-#  - Flutter + Dart
-#
-# Backend URL: https://server-domain/stm
-# Resold Light blue: #41B8EA
-##########################################################
-##########################################################
-##########################################################
+- Linux/CentOS
+- Apache Version 2.4.29
+- MySQL Version 5.6
+- PHP Version 7.1.3
+- Magento Community Edition 2.2
+- Flutter + Dart
 
-##########################################################
+Backend URL: ```https://server-domain/stm```
+
+Resold Light blue: ```#41B8EA```
+
 # Install Web Server
-##########################################################
+```
 sudo apt-get update
 sudo apt-get install apache2
+```
 
-##########################################################
 # Install PHP and Required Extensions
-##########################################################
+```
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get install php7.1 php7.1-mcrypt php7.1-curl php7.1-intl php7.1-zip php7.1-gd php7.1-mysql php7.1-dom php7.1-cli php7.1-json php7.1-common php7.1-mbstring php7.1-opcache php7.1-readline php7.1-bcmath php7.1-xml php7.1-soap
+```
 
-##########################################################
 # Install PECL and gRPC extension
-##########################################################
+```
 sudo apt-get install autoconf zlib1g-dev php7.1-dev php-pear
 sudo pecl install grpc
 sudo pecl install protobuf
+```
 
-##########################################################
 # Enable SSL/HTTPS in Apache
-##########################################################
+```
 sudo a2enmod ssl
 sudo service apache2 restart
 sudo mkdir /etc/apache2/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
-
-# This will open a file for editing
+```
+- Open SSL file for editing
+```
 sudo gedit /etc/apache2/sites-available/default-ssl.conf
+```
 
-# Ensure 600 permissions on key file
+- Ensure 600 permissions on key file
+```
 sudo chmod 600 ~/.ssh/magento-key-pair.pem
+```
 
-# Replace file contents with the following text:
-##########################
-##### Begin Contents #####
-##########################
+- Replace file contents with the following text:
+```
 <IfModule mod_ssl.c>
     <VirtualHost _default_:443>
         ServerAdmin joe@resold.us
@@ -187,169 +181,178 @@ sudo chmod 600 ~/.ssh/magento-key-pair.pem
     </VirtualHost>
 </IfModule>
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
-##########################
-##### End Contents #######
-##########################
+```
 
-##########################################################
+
 # Finish Enabling SSL/HTTPS in Apache
-##########################################################
+```
 sudo a2ensite default-ssl.conf
 sudo service apache2 restart
+```
 
-##########################################################
 # Enable URL Rewrites in Apache
-##########################################################
+```
 sudo a2enmod rewrite
 sudo service apache2 restart
+```
 
-# This will open a file for editing
+- This will open a file for editing
+```
 sudo gedit /etc/apache2/apache2.conf
+```
 
-# Find the following text:
+- Find the following text:
+```
 <Directory /var/www/>
 	Options Indexes FollowSymLinks
 	AllowOverride None
 	Require all granted
 </Directory>
+```
 
-# Replace the above text with:
+- Replace the above text with:
+```
 <Directory /var/www/>
 	Options Indexes FollowSymLinks
 	AllowOverride All
 	Require all granted
 </Directory>
+```
 
-##########################################################
 # Enable Proxy modules in Apache
-##########################################################
-# Manual step: Copy SSL cert.pem and key.pem from dev.resold.us proxy server
+
+- Manual step: Copy SSL cert.pem and key.pem from dev.resold.us proxy server
+```
 sudo a2enmod proxy
 sudo a2enmod proxy_http
 sudo systemctl restart apache
+```
 
-##########################################################
 # Install MySQL Database Server
-##########################################################
+```
 wget https://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-server_5.6.48-1debian9_amd64.deb-bundle.tar
 dpkg -i mysql-server_5.6.48-1debian9_amd64.deb-bundle.tar
 mysql apt update
 sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu trusty universe'
 sudo apt-get update
 apt-get install mysql-common-5.6 mysql-client-5.6 mysql-server-5.6
+```
 
-##########################################################
 # Prevent MySQL 8.0 database upgrade
-##########################################################
+```
 https://askubuntu.com/questions/1199495/is-it-possible-to-install-mysql-server-5-7-on-ubuntu-19-10/1209971#1209971
+```
 
-##########################################################
 # Reset MySQL root password
-##########################################################
+```
 sudo service mysql stop
 sudo mkdir -p /var/run/mysqld
 sudo chown mysql:mysql /var/run/mysqld
 sudo mysqld_safe --skip-grant-tables --skip-networking &
 mysql -u root
+```
 
-# Logged in to MySQL prompt
+- Logged in to MySQL prompt
+```
 mysql> FLUSH PRIVILEGES;
 mysql> USE mysql;
 mysql> SET PASSWORD FOR 'root'@'localhost' = PASSWORD('Rootroot$');
 mysql> UPDATE user SET authentication_string=PASSWORD("Rootroot$") WHERE User='root';
 mysql> UPDATE user SET plugin="mysql_native_password" WHERE User='root';
 myqsl> quit
+```
 
-# Back to standard shell prompt
+- Back to standard shell prompt
+```
 sudo pkill mysqld
 sudo service mysql start
+```
 
 # Restore local database from production
+```
 ./scripts/mysql_prod_restore <ec2 host>
 Enter production database password
 Enter local database password
+```
 
-##########################################################
-# Configure AWS SSH Keys
-# Private key/configuration: 	     Ask Joe/Justin to send via Onetimesecret
-# Private key file location: 	     ~/Downloads/magento_key_pair.pem
-# SSH configuration file location:   ~/Downloads/config
-##########################################################
-mv ~/Downloads/magento_key_pair.pem ~/Downloads/config ~/.ssh
-
-##########################################################
 # Install AWS Client
-# Public key: <New IAM User public key>
-# Private key: <New IAM User private key>
-##########################################################
+
+- Public key: Create new IAM user public key
+	
+- Private key: Create new IAM user private key
+	
+```
 sudo apt install awscli
 aws configure
+```
 
-##########################################################
-# Download Resold Repo
-##########################################################
+# Download Resold Repo (or clone from Github)
+```
 git config --global credential.helper '!aws codecommit credential-helper $@'
 git config --global credential.UseHttpPath true
 sudo chmod -R 777 /var/www/
 cd /var/www/
 git clone <repo url>
+```
 
-##########################################################
 # Place repo contents under webserver root
-##########################################################
+```
 rm -rf /var/www/html/*
 mv Resold/* html/
 mv Resold/.* html/
 rm -rf Resold
+```
 
-##########################################################
 # Install Composer
-##########################################################
+```
 sudo apt install composer
 gedit ~/.bashrc
+```
 
-##########################################################
 # Configure Magento Access Keys
-##########################################################
+```
 https://marketplace.magento.com/
 composer update
+```
 
-##########################################################
+
 # Configure Magento bash command alias
-##########################################################
+```
 alias magento="/var/www/html/bin/magento"
 source ~/.bashrc
+```
 
-##########################################################
+
 # Install dependencies and Magento framework
-# Public key: <your public key>
-# Private key: <your private key>
-##########################################################
+
+- Public key: Your Magento 2 public key
+
+- Private key: Your Magento 2 private key
+
+```
 cd /var/www/html/
 sudo ./scripts/local_after_install.sh
+```
 
-##########################################################
-##########################################################
 # Extra
-##########################################################
-##########################################################
 
-##########################################################
-# Connect to AWS Web Server via SSH
-##########################################################
+
+- Connect to AWS Web Server via SSH
+```
 ssh -i "~/.ssh/magento-key-pair.pem" <your ec2 URL>
+```
 
-##########################################################
 # Enable AWS S3 Storage for media files
-##########################################################
 Navigate to Stores > Configuration > General > Web
+
 Change Base URL (Media) and Base URL Secure (Media) to: <your s3 bucket url>
 
-##########################################################
+
 # Useful Magento commands
-##########################################################
+```
 magento setup:upgrade 			              -- upgrade modules and application schema
 magento setup:di:compile		              -- compile modules and code
 magento setup:static-content:deploy 	              -- deploy static web files to server
 magento cache:clean			              -- clean the magento cache
 magento cache:flush			              -- flush the magento cache
+```
