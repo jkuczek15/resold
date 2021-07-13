@@ -1,7 +1,7 @@
 # Resold
 DoorDash, but for anything. Resold is a powerful delivery integration that uses Stripe Connect and Postmates APIs.
 
-[![alt text](https://embed.filekitcdn.com/e/sKJvWa4mhcgjAyC9zVb3wu/5B4zu3rNXt2o7hXWdPQX2A)](https://resold.us){:target="_blank"}
+[![alt text](https://embed.filekitcdn.com/e/sKJvWa4mhcgjAyC9zVb3wu/5B4zu3rNXt2o7hXWdPQX2A)](https://resold.us)
 
 # Web Stack
 - Linux
@@ -27,7 +27,5 @@ DoorDash, but for anything. Resold is a powerful delivery integration that uses 
 # Google Cloud
 - Google maps integration
 - Firebase database for real-time messaging
-
-test
 
 To host Resold on your local machine, reference SETUP.md.
