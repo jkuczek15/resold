@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "382379159546",
+    "firebase_url": "<your firebase URL>",
+    "project_id": "<your project ID>",
+    "storage_bucket": "<your storage bucket>"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382379159546:android:758eedaec5513a7906be43",
+        "android_client_info": {
+          "package_name": "com.resold.resoldapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "<your client id>",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuo21V6-jnG3h00ZGubYtftPccFiLAAq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "<your client id>",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

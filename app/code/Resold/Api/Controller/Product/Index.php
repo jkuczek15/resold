@@ -80,8 +80,8 @@ class Index extends \Magento\Framework\App\Action\Action
             'version' => 'latest',
             'region'  => 'us-east-1',
             'credentials' => [
-                'key'    => 'AKIA2BJ6BV3GY43GQJ5G',
-                'secret' => 'MWTOZqfWieup6AXJ69Wg5Tlq4O0SPUiAir/e6q1T'
+                'key'    => '<your aws key>',
+                'secret' => '<your aws secret>'
              ]
         ]);
         $this->directoryList = $directoryList;

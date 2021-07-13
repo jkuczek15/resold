@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# This script sets up a local SSH tunnel pointing dev.<your custom domain>
+# to your local machine, reference SETUP.md to configure this or use replace 
+# REMOTE_TUNNEL variable with 'localhost' for local development
+
+# Script must be ran as root user or using sudo
+SSH_KEY_LOCATION="<your aws SSH key location>"
+REMOTE_TUNNEL="dev.<your custom domain>"
+REMOTE_PORT="4200"
+REVERSE_PROXY="<aws reverse proxy url>"
+
+# Grant permissions to all web files
+chmod -R 674 /var/www/html
+
+# Grant write permissions to cache files
+chmod -R 677 /var/www/html/var
+
+# Remove execute permissions from all files
+chmod -R -x+X * /var/www/html
+
+# Grant write permissions to cache files
+chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/pub/media
+chmod -R u+w /var/www/html/var /var/www/html/vendor /var/www/html/app/etc /var/www/html/pub/media
+
+# Grant all permissions to potato compressor cache folders
+chmod -R 777 /var/www/html/var/cache /var/www/html/var/tmp /var/www/html/var/page_cache /var/www/html/pub/static
+
+# Ensure we have the correct php.ini
+cp /var/www/html/app/etc/local_php.ini /etc/php/7.1/cli/php.ini
+
+# Make the Magento command line tool executable
+chmod u+x /var/www/html/bin/magento
+
+# Update and Install Magento dependencies using composer
+composer install -d /var/www/html
+
+# Copy merge vendor override Filesystem
+rsync -a /var/www/html/vendor/resold/* /var/www/html/vendor/
+
+# Install Magento and apply configuration for AWS cloud server
+/var/www/html/bin/magento setup:install \
+--backend-frontname="<your custom admin uri>"  \
+--db-host="localhost" \
+--db-name="MagentoQuickstartDB" \
+--db-user="<your db user>" \
+--db-password="<your db password>" \
+--admin-firstname="<your firstname>" \
+--admin-lastname="<your lastname>" \
+--admin-email="<your email>" \
+--admin-user="<your username>" \
+--admin-password="<your password>" \
+--base-url="https://${REMOTE_TUNNEL}" \
+--base-url-secure="https://${REMOTE_TUNNEL}" \
+--use-secure="1" \
+--use-secure-admin="1" \
+--use-rewrites="1" \
+--language="en_US" \
+--currency="USD" \
+--timezone="America/Chicago"
+
+# Write permissions to pub/media folder
+chmod -R 777 /var/www/html/pub/media/
+
+# Upgrade Magento module schema
+/var/www/html/bin/magento setup:upgrade
+
+# Compile Magento class files and inject dependencies
+/var/www/html/bin/magento setup:di:compile
+
+# Deploy Magento static content
+cp /var/www/html/app/etc/local_php_no_ext.ini /etc/php/7.1/cli/php.ini
+/var/www/html/bin/magento setup:static-content:deploy -f 
+cp /var/www/html/app/etc/local_php.ini /etc/php/7.1/cli/php.ini
+
+# Create the potato compressor image cache folders
+rm -rf /var/www/html/pub/static/_po_compressor
+mkdir /var/www/html/pub/static/_po_compressor
+mkdir /var/www/html/pub/static/_po_compressor/po_cmp_image_merge
+
+# Grant permissions to all web files
+chmod -R 674 /var/www/html
+
+# Remove execute permissions from all files
+chmod -R -x+X * /var/www/html
+
+# Grant write permissions to cache files
+chmod -R 777 /var/www/html/var
+chmod -R 777 /var/www/html/pub/media
+chmod -R u+w /var/www/html/var /var/www/html/vendor /var/www/html/app/etc /var/www/html/pub/media
+
+# Grant all permissions to potato compressor cache folders
+chmod -R 777 /var/www/html/var/cache /var/www/html/var/tmp /var/www/html/var/page_cache /var/www/html/pub/static
+
+# Make the Magento command line tool executable
+chmod u+x /var/www/html/bin/magento
+
+# Grant execute permissions to all scripts
+chmod +x /var/www/html/scripts/*
+
+# Grant permissions to the git folder
+chmod -R 777 /var/www/html/.git
+
+# Grant all permissions to the tmp directory and catalog
+chmod -R 777 /var/www/html/pub/media/tmp /var/www/html/pub/media/catalog
+
+# Grant all permissions
+chmod -R 777 /var/www/html
+
+# Unlock admin users 
+php bin/magento admin:user:unlock joe &> /dev/null
+
+# Create a public localhost tunnel via port forwarding
+for i in `ps aux | grep ssh | grep -v grep | awk {'print $2'}` ; do kill $i; done
+autossh -M 20000 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -fN -R $REMOTE_TUNNEL:$REMOTE_PORT:localhost:443 -i $SSH_KEY_LOCATION ec2-user@$REVERSE_PROXY
+
+# Output tunnel information
+echo "Localhost URL: https://${REMOTE_TUNNEL}"
