@@ -1,5 +1,5 @@
 # Resold
-DoorDash, but for anything. Resold is a powerful delivery integration that uses Stripe Connect and Postmates APIs.
+DoorDash, for anything. Resold is a powerful delivery integration that uses Stripe Connect and Postmates APIs.
 
 <a href="https://resold.us" target="_blank">
   <img src="https://embed.filekitcdn.com/e/sKJvWa4mhcgjAyC9zVb3wu/5B4zu3rNXt2o7hXWdPQX2A"></img>
