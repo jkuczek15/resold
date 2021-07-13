@@ -208,7 +208,7 @@ class Index extends \Magento\Framework\App\Action\Action
           );
 
           /*
-           Array ( [access_token] => sk_test_6eJ53weZmD6wdefcJDnfP4Dg [livemode] => [refresh_token] => rt_8VOzR1nDhrSpfBM8LPYrFRjiM2Wmeseyg49ZwP04xsjtmdjb [token_type] => bearer [stripe_publishable_key] => pk_test_yCEEPiKjXyOtIuHRnbE8lz6F [stripe_user_id] => acct_188F18Iw2Ylw9dxv [scope] => read_write ) sk_test_6eJ53weZmD6wdefcJDnfP4Dgdfsf
+           Array ( [access_token] => <your access token> [livemode] => [refresh_token] => <refresh token> [token_type] => bearer [stripe_publishable_key] => <your key> [stripe_user_id] => <your account> [scope] => read_write ) <your key>
            */
           // authorization request to stripe
           $req = curl_init('https://connect.stripe.com/oauth/token');
