@@ -28,4 +28,4 @@ DoorDash, but for anything. Resold is a powerful delivery integration that uses 
 - Google maps integration
 - Firebase database for real-time messaging
 
-To host Resold on your local machine, reference SETUP.md.
+To host Resold on your local machine, clone the repo and reference SETUP.md.
