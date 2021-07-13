@@ -24,4 +24,8 @@ DoorDash, but for anything. Resold is a powerful delivery integration that uses 
 - Route53 for DNS pointing to Cloudfront
 - S3 bucket for static assets and images
 
+# Google Cloud
+- Google maps integration
+- Firebase database for real-time messaging
+
 To host Resold on your local machine, reference SETUP.md.
