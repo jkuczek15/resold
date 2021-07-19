@@ -20,18 +20,21 @@ DoorDash, for anything. Resold is a powerful delivery integration that uses Stri
 - MySQL RDS instance (ready to upgrade to Aurora for scalability)
 - CloudFront distribution pointing to ELB
 - ElasticSearch Engine for product indexing
-- Kibana search dashboard for viewing product information
+- ElastiCache in-memory Redis cache
 - Code, CodeDeploy, and CodePipeline + automated build scripts
 - Lambda function for automated Puppeteer scripts
 - Route53 for DNS pointing to Cloudfront
 - S3 bucket for static assets and images
 
 # Google Cloud
-- Google maps integration
 - Firebase database for real-time messaging
+- Google maps integration
 
 # Third-party APIs
 - Stripe Connect
 - Postmates
+- Mapbox
+- Twilio
+- SendGrid
 
 To host Resold on your local machine, clone the repo and reference SETUP.md.
